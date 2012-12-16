@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" >
+<html>
+  <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>主界面</title>
+	<link rel="stylesheet" type="text/css" href="style/common.css">
+	<link rel="stylesheet" type="text/css" href="style/v1/easyui/easyui.css">
+	<link rel="stylesheet" type="text/css" href="style/v1/icon.css">
+	
+	<link rel="stylesheet" type="text/css" href="style/v1/main.css">
+	<script type="text/javascript" src="js/common/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="js/common/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="js/common/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="js/common/jquery.xLazyLoader.js"></script>
+	<script type="text/javascript" src="js/common/serializeForm.js"></script>
+	<script type="text/javascript" src="js/common/lys.core.js"></script>
+	<script type="text/javascript" src="js/main/main.js"></script>
+</head>
+<body class="easyui-layout" id="all-body" >
+<div region="north" id="index-north" border="false">
+	<div  id="index-north-bd">
+			<div id="index-north-bd-left" class="f-l">
+            	<span style="font-size: 25;padding-left: 22px">SSHDemo系统</span>
+            </div>
+            <div id="index-north-bd-right" class="f-r">
+            	 <a href="#" class="easyui-linkbutton" iconCls="icon-reload">风格</a>
+            	 <a href="#" class="easyui-linkbutton" iconCls="icon-reload">修改密码</a>
+                 <a href="#" class="easyui-linkbutton" iconCls="icon-back" id="exitSystem">退出</a>
+            </div>
+    </div>
+</div>
+<div region="west" split="true" title="------------导航菜单------------" icon="icon-none" id="index-left">
+  <ul id="rightTree"></ul>
+</div>
+
+<div region="center" style="overflow: hidden;"  border="false">
+      <div id="tabs" class="easyui-tabs"  fit="true" border="false" >
+                <div title="首页">
+				<div style="padding: 10px">
+					<h1>SSH整合EasyUI1.3Demo</h1> <br>
+				</div>
+				</div>
+        </div>
+</div>
+	<div id="mm" class="easyui-menu" style="width:120px">
+		<div id="mm-tabupdate">刷新</div>
+		<div class="menu-sep"></div>
+		<div id="mm-tabclose">关闭</div>
+		<div id="mm-tabcloseother">关闭其他</div>
+		<div id="mm-tabcloseall">关闭全部</div>
+		<div id="mm-tabcloseright">关闭当前右侧</div>
+		<div id="mm-tabcloseleft">关闭当前左侧</div>
+	</div>
+</body>
+</html>

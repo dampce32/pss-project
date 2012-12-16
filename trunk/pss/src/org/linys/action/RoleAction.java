@@ -1,0 +1,103 @@
+package org.linys.action;
+
+
+import javax.annotation.Resource;
+
+import org.linys.model.Role;
+import org.linys.model.User;
+import org.linys.service.RoleService;
+import org.linys.vo.ServiceResult;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.opensymphony.xwork2.ModelDriven;
+/**
+ * @Description: 角色Action
+ * @Copyright: 福州骏华信息有限公司 (c)2012
+ * @Created Date : 2012-10-27
+ * @author lys
+ * @vesion 1.0
+ */
+@Controller("roleAction")
+@Scope("prototype")
+public class RoleAction extends BaseAction implements ModelDriven<Role> {
+
+	private static final long serialVersionUID = 1L;
+	private Role model = new Role();
+	@Resource
+	private RoleService roleService;
+	public Role getModel() {
+		return model;
+	}
+	/**
+	 * @Description: 添加角色
+	 * @Create: 2012-10-27 下午4:22:08
+	 * @author lys
+	 * @update logs
+	 * @throws Exception
+	 */
+	public void add(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			String userId = getSession(User.LOGIN_USERID)==null?null:getSession(User.LOGIN_USERID).toString();
+			result = roleService.add(model,userId);
+		} catch (Exception e) {
+			result.setMessage("添加角色失败");
+			e.printStackTrace();
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	
+	/**
+	 * @Description: 修改角色
+	 * @Create: 2012-10-27 下午4:22:08
+	 * @author lys
+	 * @update logs
+	 * @throws Exception
+	 */
+	public void update(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = roleService.update(model);
+		} catch (Exception e) {
+			result.setMessage("修改角色失败");
+			e.printStackTrace();
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	/**
+	 * @Description: 删除角色
+	 * @Create: 2012-10-27 下午7:43:08
+	 * @author lys
+	 * @update logs
+	 * @throws Exception
+	 */
+	public void delete(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = roleService.delete(model);
+		} catch (Exception e) {
+			result.setMessage("删除角色失败");
+			e.printStackTrace();
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	/**
+	 * @Description: 查询角色列表
+	 * @Create: 2012-10-27 下午7:50:17
+	 * @author lys
+	 * @update logs
+	 * @throws Exception
+	 */
+	public void query(){
+		try {
+			String jsonString = roleService.query(model);
+			ajaxJson(jsonString);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}

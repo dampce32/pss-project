@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.objectFactory" value="org.apache.struts2.spring.StrutsSpringObjectFactory" />
+	<!-- 后缀 -->
+	<constant name="struts.action.extension" value="do" />
+	
+	<package name="system" namespace="/system" extends="struts-default">
+		<action name="*UserRole" class="userRoleAction" method="{1}"></action>
+		<action name="*RoleRight" class="roleRightAction" method="{1}"></action>
+		<action name="*Right" class="rightAction" method="{1}"></action>
+		<action name="*Role" class="roleAction" method="{1}"></action>
+		
+		<action name="*User" class="userAction" method="{1}"></action>
+		<action name="*">
+			<result>/WEB-INF/system/{1}.html</result>
+		</action>
+	</package>
+	
+	<package name="global" namespace="/" extends="struts-default">
+		<action name="*">
+			<result>/WEB-INF/{1}/{1}.html</result>
+		</action>
+	</package>
+	
+</struts>
