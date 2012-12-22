@@ -62,6 +62,17 @@ public class ServiceResult implements Serializable {
 		result.put("data", data);
 		return result.toString();
 	}
+	/**
+	 * @Description: 添加数据
+	 * @Create: 2012-12-18 下午11:08:30
+	 * @author lys
+	 * @update logs
+	 * @param key
+	 * @param value
+	 */
+	public void addData(String key,Object value){
+		data.put(key, value);
+	}
 
 	public Map<String, Object> getData() {
 		return data;

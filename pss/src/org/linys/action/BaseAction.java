@@ -40,11 +40,11 @@ public class BaseAction extends ActionSupport {
 	/**
 	 * 接受jquery easyui datagrid中的page(第几页）
 	 */
-	protected int page;
+	protected Integer page;
 	/**
 	 * 接受jquery easyui datagrid中的rows(每页显示几行）
 	 */
-	protected int rows;
+	protected Integer rows;
 	
 	/**
 	 * 
@@ -180,5 +180,21 @@ public class BaseAction extends ActionSupport {
 
 	public void setOldIds(String oldIds) {
 		this.oldIds = oldIds;
+	}
+
+	public Integer getPage() {
+		return page;
+	}
+
+	public void setPage(Integer page) {
+		this.page = page;
+	}
+
+	public Integer getRows() {
+		return rows;
+	}
+
+	public void setRows(Integer rows) {
+		this.rows = rows;
 	}
 }
