@@ -49,7 +49,10 @@ public class JSONUtil{
 		JsonConfig jsonConfig = new JsonConfig();
 		jsonConfig.setJsonPropertyFilter(new JSONPropertyFilter(propertyList));
 		JSONArray jsonArray = JSONArray.fromObject(list, jsonConfig);
-		return jsonArray.toString();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("rows", jsonArray);
+		String result = JSONObject.fromObject(map).toString();
+		return result;
 	}
 	/**
 	 * @Description:  将List型数据转化成Json数据,并指定要选取的属性 ( easyui datagrid中使用)
