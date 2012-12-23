@@ -1,7 +1,7 @@
 // 创建一个闭包  
 (function($) {  
   // 插件的定义  
-  $.fn.colorInit = function() {
+  $.fn.sizeInit = function() {
 	  var $this = $(this);
 	  var id = $(this).attr('id');
 	  var selectRow = null;
@@ -30,7 +30,7 @@
 					{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}}
 				],
 		columns:[[
-			{field:'dataDictionaryName',title:'颜色',width:100,align:"center"}
+			{field:'dataDictionaryName',title:'商品规格',width:100,align:"center"}
 		]],
 		onClickRow:function(rowIndex, rowData){
 			selectRow = rowData;
@@ -47,7 +47,7 @@
 	  });
 	//编辑框
 	$(editDialog).dialog({  
-	    title: '编辑商品颜色',  
+	    title: '编辑商品规格',  
 	    width:400,
 	    height:200,
 	    closed: true,  
@@ -72,14 +72,14 @@
 	var onAdd = function(){
 		$(editForm).form('clear');
 		isAdd = true;
-		$('#dataDictionaryKind',editForm).val('color');
+		$('#dataDictionaryKind',editForm).val('size');
 		$(editDialog).dialog('open');
 	}
 	//保存前的赋值操作
 	var setValue = function(){
 		var dataDictionaryName = $.trim($('#dataDictionaryName',editForm).val());
 		if(''==dataDictionaryName){
-			$.messager.alert('提示','请填写颜色','warning');
+			$.messager.alert('提示','请填写商品规格','warning');
 			return false;
 		}
 		return true;
@@ -152,7 +152,7 @@
 	var search = function(flag){
 		var queryContent = $('.queryContent',$this);
 		var dataDictionaryName = $('#dataDictionaryNameSearch',queryContent).val();
-		var content = {dataDictionaryName:dataDictionaryName,dataDictionaryKind:'color'};
+		var content = {dataDictionaryName:dataDictionaryName,dataDictionaryKind:'size'};
 		//取得列表信息
 		var url = 'dict/queryDataDict.do';
 		var result = syncCallService(url,content);

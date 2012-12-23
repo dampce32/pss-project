@@ -1,6 +1,6 @@
 /*
 系统权限
-select 'union	select '''+RightID+''' , '''+RightName+''' , '''+isnull(RightURL,'')+''' , NULL , '+cast(isLeaf as varchar) 
+select '	select '''+RightID+''' , '''+RightName+''' , '''+isnull(RightURL,'')+''' , NULL , '+cast(isLeaf as varchar) 
 from T_Right
 where parentRightID is null
 union all
@@ -15,7 +15,11 @@ union select '402881e53b046217013b048ffca1000c' , '系统管理' , '' , '402881e53aa
 union select '402881e53b04bb98013b04caff8b0001' , '权限管理' , 'system/right.do' , '402881e53b046217013b048ffca1000c' , 1
 union select '402881e53b04bb98013b04cb53a40002' , '角色管理' , 'system/role.do' , '402881e53b046217013b048ffca1000c' , 1
 union select '402881e53b04bb98013b04cbc01c0003' , '用户管理' , 'system/user.do' , '402881e53b046217013b048ffca1000c' , 1
-/*
+union select '402881e53baeee40013baef1c5e50001' , '基础数据' , '' , '402881e53aa31698013aa31fa1980003' , 0
+union select '402881e53baeee40013baef4096f0002' , '商品颜色' , 'dict/color.do' , '402881e53baeee40013baef1c5e50001' , 1
+union select '402881e53bc2fd9b013bc32896e40001' , '商品规格' , 'dict/size.do' , '402881e53baeee40013baef1c5e50001' , 1
+union select '402881e53bc2fd9b013bc329500c0002' , '商品单位' , 'dict/unit.do' , '402881e53baeee40013baef1c5e50001' , 1
+union select '402881e53bc6b3d4013bc6b4a5c40001' , '商品类别' , 'dict/productType.do' , '402881e53baeee40013baef1c5e50001' , 1/*
 角色
 select 'union	select '''+RoleId+''' , '''+RoleName+''''
 from T_Role
@@ -34,6 +38,11 @@ union select  '402881e53aa21d17013aa224b5ed0003','402881e53b046217013b048ffca100
 union select  '402881e53aa21d17013aa224b5ed0003','402881e53b04bb98013b04caff8b0001',1
 union select  '402881e53aa21d17013aa224b5ed0003','402881e53b04bb98013b04cb53a40002',1
 union select  '402881e53aa21d17013aa224b5ed0003','402881e53b04bb98013b04cbc01c0003',1
+union select  '402881e53aa21d17013aa224b5ed0003','402881e53baeee40013baef1c5e50001',1
+union select  '402881e53aa21d17013aa224b5ed0003','402881e53baeee40013baef4096f0002',1
+union select  '402881e53aa21d17013aa224b5ed0003','402881e53bc2fd9b013bc32896e40001',1
+union select  '402881e53aa21d17013aa224b5ed0003','402881e53bc2fd9b013bc329500c0002',1
+union select  '402881e53aa21d17013aa224b5ed0003','402881e53bc6b3d4013bc6b4a5c40001',1
 /*
 用户信息
 select 'union	select '''+userId+''' , '''+userCode+''' , '''+userName+''' , '''+userPwd+''''
@@ -48,3 +57,12 @@ from T_UserRole
 */
 insert into T_UserRole(userId,roleId)
 	select '402881e53b046217013b0490d440000d' , '402881e53aa21d17013aa224b5ed0003'
+	
+/*
+商品类别
+select 'union	select '''+productTypeID+''' , '''+productTypeCode+''' , '''+productTypeName+''',null'
+from T_ProductType
+where parentProductTypeID is null
+*/
+insert into T_ProductType(productTypeID,productTypeCode,productTypeName,parentProductTypeID)
+	select 'fda922bf5f2847a89f9fb58727e99600' , '0','商品类别',null
