@@ -7,6 +7,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
+import org.linys.model.ProductType;
 import org.linys.model.Right;
 import org.linys.model.RoleRight;
 import org.linys.vo.TreeNode;
@@ -116,6 +117,26 @@ public class TreeUtil {
 			treeNode.setState(StateType.closed);
 		}
 		treeNode.getAttributes().put("rightUrl", right.getRightUrl());
+		return treeNode;
+	}
+	/**
+	 * @Description: 将商品类型转化成树节点
+	 * @Create: 2012-12-23 下午3:06:29
+	 * @author lys
+	 * @update logs
+	 * @param right
+	 * @return
+	 */
+	public static TreeNode toTreeNode(ProductType productType){
+		if(productType==null){
+			return null;
+		}
+		TreeNode treeNode = new TreeNode();
+		treeNode.setId(productType.getProductTypeId());
+		treeNode.setText(productType.getProductTypeName());
+		if(!productType.getIsLeaf()){
+			treeNode.setState(StateType.closed);
+		}
 		return treeNode;
 	}
 	/**
@@ -244,6 +265,7 @@ public class TreeUtil {
 		}
 		return treeNode;
 	}
+	
 	
 	
 
