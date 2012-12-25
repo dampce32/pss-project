@@ -8,10 +8,6 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.linys.dao.ProductTypeDAO;
 import org.linys.model.ProductType;
-import org.linys.model.Right;
-import org.linys.model.Role;
-import org.linys.model.RoleRight;
-import org.linys.model.RoleRightId;
 import org.linys.service.ProductTypeService;
 import org.linys.util.JSONUtil;
 import org.linys.util.TreeUtil;
@@ -190,5 +186,19 @@ public class ProductTypeServiceImpl extends BaseServiceImpl<ProductType, String>
 		}
 		result.setIsSuccess(true);
 		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.ProductTypeService#queryCombogrid(org.linys.model.ProductType, java.lang.Integer, java.lang.Integer)
+	 */
+	public String queryCombogrid(ProductType model, Integer page, Integer rows) {
+		List<ProductType> list = productTypeDAO.queryCombogrid(model,page,rows);
+		Long total = productTypeDAO.getTotalCountCombogrid(model);
+		List<String> propertyList = new ArrayList<String>();
+		propertyList.add("productTypeId");
+		propertyList.add("productTypeCode");
+		propertyList.add("productTypeName");
+		String jsonString = JSONUtil.toJson(list,propertyList, total);
+		return jsonString;
 	}
 }

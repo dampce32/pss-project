@@ -113,5 +113,18 @@ public class DataDictionaryServiceImpl extends BaseServiceImpl<DataDictionary, S
 		result.setIsSuccess(true);
 		return result;
 	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.DataDictionaryService#queryByDictionaryKind(java.lang.String)
+	 */
+	public String queryByDictionaryKind(String kind) {
+		List<DataDictionary> list = dataDictionaryDAO.query("dataDictionaryKind", kind);
+		
+		List<String> propertyList = new ArrayList<String>();
+		propertyList.add("dataDictionaryId");
+		propertyList.add("dataDictionaryName");
+		
+		return JSONUtil.toJsonWithoutRows(list,propertyList);
+	}
 
 }

@@ -3,7 +3,6 @@ package org.linys.dao;
 import java.util.List;
 
 import org.linys.model.ProductType;
-import org.linys.model.Right;
 /**
  * @Description:商品类别DAO
  * @Copyright: 福州骏华信息有限公司 (c)2012
@@ -67,5 +66,25 @@ public interface ProductTypeDAO extends BaseDAO<ProductType,String>{
 	 * @return
 	 */
 	Long countChildren(String parentID);
+	/**
+	 * @Description: 分页查询商品类型(用于combogrid)
+	 * @Create: 2012-12-25 下午10:53:25
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	List<ProductType> queryCombogrid(ProductType model, Integer page,Integer rows);
+	/**
+	 * @Description: 统计商品类型(用于combogrid)
+	 * @Create: 2012-12-25 下午10:56:08
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @return
+	 */
+	Long getTotalCountCombogrid(ProductType model);
 
 }

@@ -45,6 +45,10 @@ public class BaseAction extends ActionSupport {
 	 * 接受jquery easyui datagrid中的rows(每页显示几行）
 	 */
 	protected Integer rows;
+	/**
+	 * combogrid查询时，发出的参数
+	 */
+	protected String q;
 	
 	/**
 	 * 
@@ -196,5 +200,13 @@ public class BaseAction extends ActionSupport {
 
 	public void setRows(Integer rows) {
 		this.rows = rows;
+	}
+
+	public String getQ() {
+		return q;
+	}
+
+	public void setQ(String q) {
+		this.q = q;
 	}
 }

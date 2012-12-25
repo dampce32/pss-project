@@ -57,5 +57,14 @@ public interface DataDictionaryService extends BaseService<DataDictionary,String
 	 * @return
 	 */
 	ServiceResult getTotalCount(DataDictionary model);
+	/**
+	 * @Description: 取得字典类型为kind的数据
+	 * @Create: 2012-12-23 下午10:52:24
+	 * @author lys
+	 * @update logs
+	 * @param kind
+	 * @return
+	 */
+	String queryByDictionaryKind(String kind);
 
 }

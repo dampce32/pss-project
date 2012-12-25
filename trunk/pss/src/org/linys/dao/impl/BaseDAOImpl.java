@@ -113,6 +113,24 @@ public abstract class BaseDAOImpl<T,PK extends Serializable> implements BaseDAO<
 		T t = load(pk);
 		delete(t);
 	}
-	
-	
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.BaseDAO#queryAll()
+	 */
+	@SuppressWarnings("unchecked")
+	public List<T> queryAll() {
+		String hql = "from " + entityClass.getName() + " as model";
+		List<T> list = hibernateTemplate.find(hql);
+		return list;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.BaseDAO#query(java.lang.String, java.lang.Object)
+	 */
+	@SuppressWarnings("unchecked")
+	public List<T> query(String propertyName, Object value) {
+		String hql = "from " + entityClass.getName() + " as model where model." + propertyName + " = ?";
+		List<T> list = hibernateTemplate.find(hql, value);
+		return list;
+	}
 }

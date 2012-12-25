@@ -39,11 +39,9 @@ public class DataDictionary extends BaseModel {
 	 * 数据字典名称
 	 */
 	private String dataDictionaryName;
-	private Set<Product> productsForUnitId = new HashSet<Product>(0);
-	private Set<Product> productsForColorId = new HashSet<Product>(0);
+	
 	private Set<RejectDetail> rejectDetails = new HashSet<RejectDetail>(0);
 	private Set<ReceiveDetail> receiveDetails = new HashSet<ReceiveDetail>(0);
-	private Set<Product> productsForSizeId = new HashSet<Product>(0);
 
 	// Constructors
 
@@ -56,20 +54,6 @@ public class DataDictionary extends BaseModel {
 		this.dataDictionaryId = dataDictionaryId;
 	}
 
-	/** full constructor */
-	public DataDictionary(String dataDictionaryId, String dataDictionaryKind,
-			String dataDictionaryName, Set<Product> productsForUnitId,
-			Set<Product> productsForColorId, Set<RejectDetail> rejectDetails,
-			Set<ReceiveDetail> receiveDetails, Set<Product> productsForSizeId) {
-		this.dataDictionaryId = dataDictionaryId;
-		this.dataDictionaryKind = dataDictionaryKind;
-		this.dataDictionaryName = dataDictionaryName;
-		this.productsForUnitId = productsForUnitId;
-		this.productsForColorId = productsForColorId;
-		this.rejectDetails = rejectDetails;
-		this.receiveDetails = receiveDetails;
-		this.productsForSizeId = productsForSizeId;
-	}
 
 	// Property accessors
 	@Id
@@ -102,23 +86,6 @@ public class DataDictionary extends BaseModel {
 		this.dataDictionaryName = dataDictionaryName;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "dataDictionaryByUnitId")
-	public Set<Product> getProductsForUnitId() {
-		return this.productsForUnitId;
-	}
-
-	public void setProductsForUnitId(Set<Product> productsForUnitId) {
-		this.productsForUnitId = productsForUnitId;
-	}
-
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "dataDictionaryByColorId")
-	public Set<Product> getProductsForColorId() {
-		return this.productsForColorId;
-	}
-
-	public void setProductsForColorId(Set<Product> productsForColorId) {
-		this.productsForColorId = productsForColorId;
-	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "dataDictionary")
 	public Set<RejectDetail> getRejectDetails() {
@@ -137,14 +104,4 @@ public class DataDictionary extends BaseModel {
 	public void setReceiveDetails(Set<ReceiveDetail> receiveDetails) {
 		this.receiveDetails = receiveDetails;
 	}
-
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "dataDictionaryBySizeId")
-	public Set<Product> getProductsForSizeId() {
-		return this.productsForSizeId;
-	}
-
-	public void setProductsForSizeId(Set<Product> productsForSizeId) {
-		this.productsForSizeId = productsForSizeId;
-	}
-
 }

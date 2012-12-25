@@ -1,19 +1,21 @@
 package org.linys.action;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 
 import org.linys.model.ProductType;
-import org.linys.model.Right;
 import org.linys.service.ProductTypeService;
-import org.linys.util.TreeUtil;
 import org.linys.vo.ServiceResult;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ModelDriven;
-
+/**
+ * @Description:商品类型Action
+ * @Copyright: 福州骏华信息有限公司 (c)2012
+ * @Created Date : 2012-12-23
+ * @author lys
+ * @vesion 1.0
+ */
 @Controller
 @Scope("prototype")
 public class ProductTypeAction extends BaseAction implements ModelDriven<ProductType> {
@@ -118,5 +120,21 @@ public class ProductTypeAction extends BaseAction implements ModelDriven<Product
 			result.setMessage("批量删除失败");
 		}
 		ajaxJson(result.toJSON());
+	}
+	/**
+	 * @Description: 分页查询商品类型(用于combogrid)
+	 * @Create: 2012-12-25 下午10:48:37
+	 * @author lys
+	 * @update logs
+	 */
+	public void queryCombogrid(){
+		try {
+			model.setProductTypeName(q);
+			String jsonString = productTypeService.queryCombogrid(model,page,rows);
+			ajaxJson(jsonString);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
