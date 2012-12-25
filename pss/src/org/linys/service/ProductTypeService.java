@@ -1,9 +1,6 @@
 package org.linys.service;
 
-import java.util.List;
-
 import org.linys.model.ProductType;
-import org.linys.model.Right;
 import org.linys.vo.ServiceResult;
 /**
  * @Description:商品类别Service
@@ -68,5 +65,16 @@ public interface ProductTypeService extends BaseService<ProductType,String>{
 	 * @return
 	 */
 	ServiceResult mulDelete(String ids);
+	/**
+	 * @Description: 分页查询商品类型(用于combogrid)
+	 * @Create: 2012-12-25 下午10:50:03
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	String queryCombogrid(ProductType model, Integer page, Integer rows);
 
 }

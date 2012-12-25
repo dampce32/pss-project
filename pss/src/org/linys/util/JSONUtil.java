@@ -34,6 +34,26 @@ public class JSONUtil{
 		JSONArray jsonArray = JSONArray.fromObject(list);
 		return jsonArray.toString();
 	}
+	
+	
+	/**
+	 * @Description: 将List型数据转化成Json数据,并指定要选取的属性 
+	 * @Create: 2012-10-27 上午10:48:13
+	 * @author lys
+	 * @update logs
+	 * @param list
+	 * @param filterList
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("rawtypes")
+	public static String toJsonWithoutRows(List list,List<String> propertyList){
+		JsonConfig jsonConfig = new JsonConfig();
+		jsonConfig.setJsonPropertyFilter(new JSONPropertyFilter(propertyList));
+		JSONArray jsonArray = JSONArray.fromObject(list, jsonConfig);
+		String result = jsonArray.toString();
+		return result;
+	}
 	/**
 	 * @Description: 将List型数据转化成Json数据,并指定要选取的属性 
 	 * @Create: 2012-10-27 上午10:48:13

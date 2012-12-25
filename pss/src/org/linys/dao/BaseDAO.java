@@ -1,6 +1,7 @@
 package org.linys.dao;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 基本DAO
@@ -68,4 +69,23 @@ public interface BaseDAO<T,PK extends Serializable> {
 	 * @throws Exception
 	 */
 	public T load(String[] propertyNames, Object[] values);
+	/**
+	 * @Description: 查询所有的model
+	 * @Create: 2012-12-23 下午10:54:57
+	 * @author lys
+	 * @update logs
+	 * @return
+	 */
+	public List<T> queryAll();
+	/**
+	 * @Description: 查询属性propertyName值为value的model
+	 * @Create: 2012-12-23 下午10:58:44
+	 * @author lys
+	 * @update logs
+	 * @param propertyName
+	 * @param value
+	 * @return
+	 */
+	public List<T> query(String propertyName, Object value);
+	
 }
