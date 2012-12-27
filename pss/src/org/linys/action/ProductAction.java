@@ -28,41 +28,23 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 		return model;
 	}
 	/**
-	 * @Description: 添加商品
+	 * @Description: 保存商品
 	 * @Create: 2012-12-23 下午5:42:17
 	 * @author lys
 	 * @update logs
 	 */
-	public void add(){
+	public void save(){
 		ServiceResult result = new ServiceResult(false);
 		try {
-			result = productService.add(model);
+			result = productService.save(model);
 		} catch (Exception e) {
-			result.setMessage("添加商品失败");
+			result.setMessage("保存商品失败");
 			e.printStackTrace();
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	}
 	
-	/**
-	 * @Description: 修改商品
-	 * @Create: 2012-12-18 下午10:55:46
-	 * @author lys
-	 * @update logs
-	 */
-	public void update(){
-		ServiceResult result = new ServiceResult(false);
-		try {
-			result = productService.update(model);
-		} catch (Exception e) {
-			result.setMessage("修改商品失败");
-			result.setIsSuccess(false);
-			e.printStackTrace();
-		}
-		String jsonString = result.toJSON();
-		ajaxJson(jsonString);
-	}
 	/**
 	 * @Description: 删除商品
 	 * @Create: 2012-12-18 下午10:56:44
@@ -110,7 +92,7 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 		try {
 			result = productService.getTotalCount(model);
 		} catch (Exception e) {
-			result.setMessage("查询商品失败");
+			result.setMessage("统计商品失败");
 			result.setIsSuccess(false);
 			e.printStackTrace();
 		}

@@ -4,50 +4,104 @@
   $.fn.productInit = function() {
 	  var $this = $(this);
 	  var id = $(this).attr('id');
-	  var isAdd = false;
-	  
-	  var selectRow = null;
-	  var selectIndex = null;
-	  var pageNumber = 1;
-	  var pageSize = 20;
-	  var editDialog = $('#editDialog',$this);
-	  var editForm = $('#editForm',editDialog);
-	  var productTypeTree =  $('#productTypeTree',$this);
-	  var productTypeList =  $('#productTypeList',$this);
-	  
 	  var width = $(document.body).width();
 	  var height = $(document.body).height();
+	  
+	  var queryContent = $('#queryContent',$this);
+	  var searchBtn = $('#searchBtn',$this);
+	 
+	  var editDialog = $('#editDialog',$this);
+	  var editForm = $('#editForm',editDialog);
+	  
+	  var viewList =  $('#viewList',$this);
+	  var selectRow = null;
+	  var selectIndex = null;
+	  
+	  var pager = $('#pager',$this);
+	  var pageNumber = 1;
+	  var pageSize = 20;
+	  
 	  var result = null;
 	  
 	  //列表
-	  $(productTypeList).datagrid({
-			fit:true,
-			url:'dict/getTreeNodeChildrenProductType.do',
-			idField:'productTypeId',
-			columns:[[{field:'ck',checkbox:true},
-			    {field:'productTypeCode',title:'商品类别编号',width:120,sortable:true},
-				{field:'productTypeName',title:'商品类别名称',width:300,sortable:true}
-			]],
-			rownumbers:true,
-			pagination:true,
-			toolbar:[	
-						{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},
-						{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},
-						{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}}
-					],
-			onDblClickRow:function(rowIndex, rowData){
+	  $(viewList).datagrid({
+		  fit:true,
+		  columns:[[
+			    {field:'productCode',title:'商品编号',width:120,align:"center"},
+				{field:'productName',title:'商品名称',width:300,align:"center"},
+			    {field:'productTypeName',title:'商品类型',width:120,align:"center"},
+			    {field:'unitName',title:'单位',width:120,align:"center"},
+			    {field:'sizeName',title:'规格',width:120,align:"center"},
+			    {field:'colorName',title:'颜色',width:120,align:"center"},
+		  ]],
+		  rownumbers:true,
+		  pagination:false,
+		  toolbar:[	
+				{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},
+				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},
+				{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}}
+		  ],
+		  onDblClickRow:function(rowIndex, rowData){
 				onUpdate();
-			},
-			onClickRow:function(rowIndex, rowData){
+		  },
+		  onClickRow:function(rowIndex, rowData){
 				selectRow = rowData;
 				selectIndex = rowIndex;
-			}
+		  }
 	 });
+	//分页条
+	$(pager).pagination({   
+	    onSelectPage: function(page, rows){
+			pageNumber = page;
+			pageSize = rows;
+			search();
+	    }
+	});
+	//查询
+	$(searchBtn).click(function(){
+		search(true);
+	})
+	//分页操作
+	var search = function(flag){
+		var productCode = $('#productCodeSearch',queryContent).val();
+		var productName = $('#productNameSearch',queryContent).val();
+		
+		var url = "dict/queryProduct.do";
+		var content = {productCode:productCode,productName:productName,page:pageNumber,rows:pageSize};
+		var result = syncCallService(url,content);
+		if(result.isSuccess){
+			var data = result.data;
+			$(viewList).datagrid('loadData',eval("("+data.datagridData+")"));
+			//需要重新重新分页信息
+			if(flag){
+				getTotal(content);
+			}
+		}else{
+			$.messager.alert('提示',result.message,"error");
+		}
+	} 
+	//统计总数
+	var getTotal = function(content){
+		var url = "dict/getTotalCountProduct.do";
+		asyncCallService(url,content,
+		function(result){
+			if(result.isSuccess){
+				var data = result.data;
+				$(pager).pagination({  
+					pageNumber:1,
+					total:data.total
+				});
+			}else{
+				$.messager.alert('提示',result.message,"error");
+			}
+		})
+	}	
+		
 	//编辑框
 	$(editDialog).dialog({  
 	    title: '编辑系统商品信息',  
-	    width:800,
-	    height:500,
+	    width:500,
+	    height:300,
 	    closed: true,  
 	    cache: false,  
 	    modal: true,
@@ -80,21 +134,30 @@
 			valueField:'dataDictionaryId',
 			textField:'dataDictionaryName',
 			width:150,
-			data:result.size
+			data:result.size,
+			onSelect:function(record){
+				$('#sizeId',editDialog).val(record.dataDictionaryId);
+			}
 	  })
 	  //颜色
 	   $('#color',editDialog).combobox({
 			valueField:'dataDictionaryId',
 			textField:'dataDictionaryName',
 			width:150,
-			data:result.color
+			data:result.color,
+			onSelect:function(record){
+				$('#colorId',editDialog).val(record.dataDictionaryId);
+			}
 	  })
 	  //单位
 	   $('#unit',editDialog).combobox({
 			valueField:'dataDictionaryId',
 			textField:'dataDictionaryName',
 			width:150,
-			data:result.unit
+			data:result.unit,
+			onSelect:function(record){
+				$('#unitId',editDialog).val(record.dataDictionaryId);
+			}
 	  })
 	  //商品类型
 	  $('#productType',editForm).combogrid({
@@ -109,45 +172,34 @@
 			    {field:'productTypeCode',title:'商品类型编号',width:80,sortable:true}
 			]],
 			onSelect:function(rowIndex, rowData){
-				
+				$('#productTypeId',editDialog).val(rowData.productTypeId);
 			}
 		});
 		$(editDialog).dialog('open');
 	}
 	//保存前的赋值操作
 	var setValue = function(){
-		var productTypeCode = $.trim($('#productTypeCode',editForm).val());
-		if(productTypeCode==''){
-			$.messager.alert('提示','请填写商品类别编号','warning');
+		var productCode = $.trim($('#productCode',editForm).val());
+		if(productCode==''){
+			$.messager.alert('提示','请填写商品编号','warning');
 			return false;
 		}
-		var productTypeName = $.trim($('#productTypeName',editForm).val());
-		if(productTypeName==''){
-			$.messager.alert('提示','请填写商品类别名称','warning');
+		var productName = $.trim($('#productName',editForm).val());
+		if(productName==''){
+			$.messager.alert('提示','请填写商品名称','warning');
 			return false;
 		}
-		var selectedNote = $(productTypeTree).tree('getSelected');
-		if(selectedNote==null){
-			var root = $(productTypeTree).tree('getRoot');
-			if(root==null){
-				$('#parentID',editForm).val(null);
-			}else{
-				$('#parentID',editForm).val(root.id);
-			}
-		}else{
-			$('#parentID',editForm).val(selectedNote.id);
+		var productTypeId = $('#productType',editForm).combogrid('getValue');
+		if(productTypeId==''){
+			$.messager.alert('提示','请选择商品类别','warning');
+			return false;
 		}
 		return true;
 	}
 	//保存
 	var onSave = function(){
-		var url = null;
-		if(isAdd){
-			url = 'dict/addProductType.do'
-		}else{
-			url = 'dict/updateProductType.do'
-		}
-		 $(editForm).form('submit',{
+		var url = 'dict/saveProduct.do'
+		$(editForm).form('submit',{
 			url: url,
 			onSubmit: function(){
 				return setValue();
@@ -156,34 +208,18 @@
 				var result = eval('('+data+')');
 				if(result.isSuccess){
 					var fn = function(){
-						//新增
-						if(isAdd){
-							var node = $(productTypeTree).tree('getSelected');
-							if(node==null){
-								node = $(productTypeTree).tree('getRoot');
-							}
-							var productTypeName = $('#productTypeName',editForm).val();
-							$(productTypeTree).tree('append',{
-								parent: (node?node.target:null),
-								data:[{
-									id:result.data.productTypeId,
-									text:productTypeName
-								}]
-							});
-							$(productTypeList).datagrid('reload');
+						var productId = $.trim($('#productId',editForm).val());
+						if(productId==''){//新增
+							search(true);
 						}else{
 							var row = $(editForm).serializeObject();
-							$(productTypeList).datagrid('updateRow',{index:selectIndex,row:row});
-							
-							var productTypeId=$("#productTypeId",editForm).val();
-							var productTypeName = $('#productTypeName',editForm).val();
-							var updateNote=$(productTypeTree).tree('find',productTypeId);
-							updateNote.text=productTypeName;
-							$(productTypeTree).tree('update', updateNote);
+							$(viewList).datagrid('updateRow',{index:selectIndex,row:row});	
 						}
+						$(editDialog).dialog('close');
+						$(editForm).form('clear');
 					}
 					$.messager.alert('提示','保存成功','info',fn);
-					$(editDialog).dialog('close');
+					
 				}else{
 					$.messager.alert('提示',result.message,'error');
 				}
@@ -234,32 +270,6 @@
 					}
 				}, "json");
 		});
-	}
-	//查询
-	$('#search',$this).click(function(){
-		search();
-	})
-	//分页操作
-	var search = function(){
-		var queryContent = $('.queryContent',$this);
-		var productTypeCodeSearch = $('#productTypeCodeSearch',queryContent).val();
-		var productTypeNameSearch = $('#productTypeNameSearch',queryContent).val();
-		var productTypeId = '';
-		var selectedNote = $(productTypeTree).tree('getSelected');
-		if(selectedNote==null){
-			var root = $(productTypeTree).tree('getRoot');
-			if(root!=null){
-				productTypeId = root.id;
-			}
-		}else{
-			productTypeId = selectedNote.id;
-		}
-		var content = {productTypeId:productTypeId,productTypeName:productTypeNameSearch,productTypeCode:productTypeCodeSearch,page:pageNumber,rows:pageSize};
-		
-		$(productTypeList).datagrid({
-			queryParams:content
-		});
-		selectRow = null;
 	}
   }
 })(jQuery);   

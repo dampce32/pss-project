@@ -11,24 +11,6 @@ import org.linys.vo.ServiceResult;
  */
 public interface ProductService extends BaseService<Product,String>{
 	/**
-	 * @Description: 添加商品
-	 * @Create: 2012-12-23 下午5:45:03
-	 * @author lys
-	 * @update logs
-	 * @param model
-	 * @return
-	 */
-	ServiceResult add(Product model);
-	/**
-	 * @Description: 修改商品
-	 * @Create: 2012-12-23 下午5:45:27
-	 * @author lys
-	 * @update logs
-	 * @param model
-	 * @return
-	 */
-	ServiceResult update(Product model);
-	/**
 	 * @Description: 删除商品
 	 * @Create: 2012-12-23 下午5:45:43
 	 * @author lys
@@ -57,5 +39,14 @@ public interface ProductService extends BaseService<Product,String>{
 	 * @return
 	 */
 	ServiceResult getTotalCount(Product model);
+	/**
+	 * @Description: 保存商品
+	 * @Create: 2012-12-28 上午12:14:38
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @return
+	 */
+	ServiceResult save(Product model);
 
 }

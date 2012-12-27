@@ -21,11 +21,11 @@ public class ProductDAOImpl extends BaseDAOImpl<Product, String> implements Prod
 	public List<Product> query(Product model, Integer page, Integer rows) {
 		Criteria criteria  = getCurrentSession().createCriteria(Product.class);
 		
-		if(model!=null&&StringUtils.isEmpty(model.getProductCode())){
+		if(model!=null&&StringUtils.isNotEmpty(model.getProductCode())){
 			criteria.add(Restrictions.eq("productCode", model.getProductCode()));
 		}
 		
-		if(model!=null&&StringUtils.isEmpty(model.getProductName())){
+		if(model!=null&&StringUtils.isNotEmpty(model.getProductName())){
 			criteria.add(Restrictions.eq("productName", model.getProductName()));
 		}
 		
@@ -50,15 +50,15 @@ public class ProductDAOImpl extends BaseDAOImpl<Product, String> implements Prod
 	public Long getTotalCount(Product model) {
 		Criteria criteria  = getCurrentSession().createCriteria(Product.class);
 		
-		if(model!=null&&StringUtils.isEmpty(model.getProductCode())){
+		if(model!=null&&StringUtils.isNotEmpty(model.getProductCode())){
 			criteria.add(Restrictions.eq("productCode", model.getProductCode()));
 		}
 		
-		if(model!=null&&StringUtils.isEmpty(model.getProductName())){
+		if(model!=null&&StringUtils.isNotEmpty(model.getProductName())){
 			criteria.add(Restrictions.eq("productName", model.getProductName()));
 		}
 		criteria.setProjection(Projections.rowCount());
-		return (Long) criteria.uniqueResult();
+		return new Long(criteria.uniqueResult().toString());
 	}
 
 }

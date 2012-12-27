@@ -9,6 +9,8 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.linys.model.Right;
 
 /**
@@ -74,6 +76,8 @@ public class JSONUtil{
 		String result = JSONObject.fromObject(map).toString();
 		return result;
 	}
+	
+	
 	/**
 	 * @Description:  将List型数据转化成Json数据,并指定要选取的属性 ( easyui datagrid中使用)
 	 * @Create: 2012-10-27 上午10:50:45
@@ -114,6 +118,67 @@ public class JSONUtil{
 		map.put("rows", jsonArray);
 		String result = JSONObject.fromObject(map).toString();
 		return result;
+	}
+	
+	
+	@SuppressWarnings("rawtypes")
+	public static String toJson(List list,String[] propertiesName){
+		JSONObject object = new JSONObject();
+		JSONArray array = new JSONArray();
+		try {
+			for (Object t : list) {
+				JSONObject item = new JSONObject();
+				for(String property : propertiesName){
+					/*
+					 * 处理property 
+					 * property的规则是:
+					 * 如果包含有：这说明指定了key的别名
+					 * 
+					 * 如果没有则key的名称，要最后一个.后的名称为key
+					 */
+					String key = null;
+					if(property.contains(":")){
+						 key = StringUtils.substringAfter(property, ":");
+						 property =  StringUtils.substringBefore(property, ":");
+					}else{
+						if(property.contains(".")){
+							 key =  StringUtils.substringAfterLast(property, ".");
+						}else{
+							key = property;
+						}
+					}
+					if(property.contains(".")){
+						String propertyPrefix = "";
+						String propertySuffix = property;
+						
+						boolean canGetProperty = true;
+						/*
+						 * 判读.前的属性是否为null，如果为null，则不能读取该属性
+						 * 如果不为null，则需截取.后的属性，继续相同判断，直到最后截取的属性中不含有.
+						 */
+						while(propertySuffix.contains(".")){
+							propertyPrefix = StringUtils.substringBefore(propertySuffix, ".");
+							
+							if(BeanUtils.getProperty(t, propertyPrefix)==null){
+								canGetProperty = false;
+								break;
+							}
+							propertySuffix = StringUtils.substringAfter(propertySuffix, ".");
+						}
+						if(canGetProperty){
+							item.put(key, BeanUtils.getProperty(t, property));
+						}
+					}else{
+						item.put(key, BeanUtils.getProperty(t, property));
+					}
+				}
+				array.add(item);
+			}
+			object.put("rows", array);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return object.toString();
 	}
 	
 	public static void main(String[] args) {
