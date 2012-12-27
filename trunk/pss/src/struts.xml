@@ -10,7 +10,29 @@
 	<!-- 后缀 -->
 	<constant name="struts.action.extension" value="do" />
 	
-	<package name="system" namespace="/system" extends="struts-default">
+	<package name="basePackage" extends="struts-default">
+		<interceptors>
+			<interceptor name="trimInterceptor" class="org.linys.filter.TrimInterceptor"/>
+			<interceptor-stack name="baseStack">
+				<interceptor-ref name="trimInterceptor"/>
+				<interceptor-ref name="defaultStack"/>
+			</interceptor-stack>
+		</interceptors>
+		
+		<default-interceptor-ref name="baseStack"/>
+		
+		<global-results>
+			<result name="login" type="redirect">/login.html</result>
+		</global-results>
+		
+		<global-exception-mappings>
+			<exception-mapping result="error" exception="java.lang.Exception"/>
+		</global-exception-mappings> 
+		
+	</package>
+	
+	
+	<package name="system" namespace="/system" extends="basePackage">
 		<action name="*UserRole" class="userRoleAction" method="{1}"></action>
 		<action name="*RoleRight" class="roleRightAction" method="{1}"></action>
 		<action name="*Right" class="rightAction" method="{1}"></action>
@@ -22,7 +44,8 @@
 		</action>
 	</package>
 	
-	<package name="dict" namespace="/dict" extends="struts-default">
+	<package name="dict" namespace="/dict" extends="basePackage">
+		<action name="*Product" class="productAction" method="{1}"></action>
 		<action name="*ProductType" class="productTypeAction" method="{1}"></action>
 		<action name="*DataDict" class="dataDictionaryAction" method="{1}"></action>
 		<action name="*">
@@ -30,7 +53,7 @@
 		</action>
 	</package>
 	
-	<package name="global" namespace="/" extends="struts-default">
+	<package name="global" namespace="/" extends="basePackage">
 		<action name="*">
 			<result>/WEB-INF/{1}/{1}.html</result>
 		</action>
