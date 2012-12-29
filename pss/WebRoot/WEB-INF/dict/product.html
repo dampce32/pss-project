@@ -30,25 +30,35 @@
 				<tr>
 					<td class="tdTitle">商品类别:</td>
 					<td>
-						<input type="text" id="productType" class="text" style="width: 150px" size="40" />
-						<input type="hidden" name="productType.productTypeId" id="productTypeId" class="text" style="width: 150px" size="40" />
+						<input type="text"  name = "productTypeId" id="productType" class="text" style="width: 150px" size="40" />
+						<input type="hidden" name="productType.productTypeId" id="productTypeId" />
+						<input type="hidden" name="productTypeName" id="productTypeName"  />
 					</td>
 					<td class="tdTitle">单位:</td>
 					<td>
-						<input type="text"  id="unit" class="text" style="width: 150px" size="40" />
-						<input type="hidden" name="unit.dataDictionaryId" id="unitId" class="text" style="width: 150px" size="40" />
+						<input type="text"  name = "unitId" id="unit" class="text" style="width: 150px" size="40" />
+						<input type="hidden" name="unit.dataDictionaryId" id="unitId" />
+						<input type="hidden" name="unitName" id="unitName" id="unitName"  />
 					</td>
 				</tr>
 				<tr>
 					<td class="tdTitle">规格:</td>
 					<td>
-						<input type="text"  id="size" class="text" style="width: 150px" size="40" />
-						<input type="hidden" name="size.dataDictionaryId" id="sizeId" class="text" style="width: 150px" size="40" />
+						<input type="text"    name = "sizeId"  id="size" class="text" style="width: 150px" size="40" />
+						<input type="hidden" name="size.dataDictionaryId" id="sizeId"/>
+						<input type="hidden" name="sizeName" id="sizeName"  id="sizeName"/>
 					</td>
 					<td class="tdTitle">颜色:</td>
 					<td>
-						<input type="text"  id="color" class="text" style="width: 150px" size="40" />
-						<input type="hidden" name="color.dataDictionaryId" id="colorId" class="text" style="width: 150px" size="40" />
+						<input type="text"    name = "colorId"  id="color" class="text" style="width: 150px" size="40" />
+						<input type="hidden" name="color.dataDictionaryId" id="colorId"/>
+						<input type="hidden" name="colorName" id="colorName"  id="colorName"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="tdTitle">备注:</td>
+					<td colspan="3">
+						<textarea style="width: 395px;height: 50px" name="note"></textarea>
 					</td>
 				</tr>
 				

@@ -45,7 +45,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 		
 		List<Product> list = productDAO.query(model,page,rows);
 		
-		String[] properties = {"productId","productCode","productName",
+		String[] properties = {"productId","productCode","productName","note",
 				"productType.productTypeId","productType.productTypeName",
 				"unit.dataDictionaryId:unitId","unit.dataDictionaryName:unitName",
 				"color.dataDictionaryId:colorId","color.dataDictionaryName:colorName",
@@ -113,11 +113,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 			oldModel.setColor(model.getColor());
 			oldModel.setSize(model.getSize());
 			oldModel.setUnit(model.getUnit());
-			oldModel.setQtyStore(model.getQtyStore());
-			oldModel.setAmountStore(model.getAmountStore());
 			oldModel.setNote(model.getNote());
 			
-			productDAO.update(model);
+			productDAO.update(oldModel);
 		}
 		result.setIsSuccess(true);
 		return result;

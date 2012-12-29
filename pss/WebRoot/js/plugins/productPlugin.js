@@ -19,12 +19,13 @@
 	  
 	  var pager = $('#pager',$this);
 	  var pageNumber = 1;
-	  var pageSize = 20;
+	  var pageSize = 10;
 	  
 	  var result = null;
 	  
 	  //列表
 	  $(viewList).datagrid({
+		  singleSelect:true,
 		  fit:true,
 		  columns:[[
 			    {field:'productCode',title:'商品编号',width:120,align:"center"},
@@ -33,6 +34,7 @@
 			    {field:'unitName',title:'单位',width:120,align:"center"},
 			    {field:'sizeName',title:'规格',width:120,align:"center"},
 			    {field:'colorName',title:'颜色',width:120,align:"center"},
+			    {field:'note',title:'备注',width:120,align:"center"}
 		  ]],
 		  rownumbers:true,
 		  pagination:false,
@@ -122,7 +124,6 @@
 	});    
 	//添加
 	var onAdd = function(){
-		isAdd = true;
 		$(editForm).form('clear');
 		if(result==null){
 			var url = 'dict/queryByDictionaryKindsDataDict.do';
@@ -189,11 +190,30 @@
 			$.messager.alert('提示','请填写商品名称','warning');
 			return false;
 		}
+		//商品类别
 		var productTypeId = $('#productType',editForm).combogrid('getValue');
+		var productTypeName = $('#productType',editForm).combogrid('getText');
 		if(productTypeId==''){
 			$.messager.alert('提示','请选择商品类别','warning');
 			return false;
 		}
+		$('#productTypeId',editForm).val(productTypeId);
+		$('#productTypeName',editForm).val(productTypeName);
+		//商品单位
+		var unitId = $('#unit',editForm).combobox('getValue');
+		var unitName = $('#unit',editForm).combobox('getText');
+		$('#unitId',editForm).val(unitId);
+		$('#unitName',editForm).val(unitName);
+		//商品颜色
+		var colorId = $('#color',editForm).combobox('getValue');
+		var colorName = $('#color',editForm).combobox('getText');
+		$('#colorId',editForm).val(colorId);
+		$('#colorName',editForm).val(colorName);
+		//商品尺码
+		var sizeId = $('#size',editForm).combobox('getValue');
+		var sizeName = $('#size',editForm).combobox('getText');
+		$('#sizeId',editForm).val(sizeId);
+		$('#sizeName',editForm).val(sizeName);
 		return true;
 	}
 	//保存
@@ -228,47 +248,75 @@
 	}
 	//修改
 	var onUpdate = function(){
-		isAdd = false;
 		if(selectRow==null){
 			$.messager.alert("提示","请选择数据行","warning");
 			return;
 		}
+		$(editForm).form('clear');
+		if(result==null){
+			var url = 'dict/queryByDictionaryKindsDataDict.do';
+			var content ={ids:'size,color,unit'};
+			result = syncCallService(url,content);
+		}
+		//规格
+	   $('#size',editDialog).combobox({
+			valueField:'dataDictionaryId',
+			textField:'dataDictionaryName',
+			width:150,
+			data:result.size
+	  })
+	  //颜色
+	   $('#color',editDialog).combobox({
+			valueField:'dataDictionaryId',
+			textField:'dataDictionaryName',
+			width:150,
+			data:result.color
+	  })
+	  //单位
+	   $('#unit',editDialog).combobox({
+			valueField:'dataDictionaryId',
+			textField:'dataDictionaryName',
+			width:150,
+			data:result.unit
+	  })
+	  //商品类型
+	  $('#productType',editForm).combogrid({
+		    panelWidth:480, 
+			mode: 'remote',  
+			url: 'dict/queryCombogridProductType.do',
+			idField: 'productTypeId',  
+			textField: 'productTypeName',  
+			pagination:true,
+			columns: [[  
+			    {field:'productTypeName',title:'商品类型',width:80,sortable:true},  
+			    {field:'productTypeCode',title:'商品类型编号',width:80,sortable:true}
+			]]
+		});
+		$(editDialog).dialog('open');
 		$(editForm).form('load',selectRow);
 		$(editDialog).dialog('open');
 	 }
 	//删除
 	var onDelete = function(){
-		var rows = $(productTypeList).datagrid('getSelections');
-		if(rows.length==0){
+		if(selectRow==null){
 			 $.messager.alert('提示',"请选中要删除的纪录","warming");
 			 return;	
 		}
-		$.messager.confirm("提示！","确定要删除选中的记录?",function(t){ 
-			if(!t) return;
-			if(rows.length==0){
-				 $.messager.alert('提示',"请选中要删除的纪录","warming");
-				 return;	
-			}
-			var idArray = new Array();
-			
-			for(var i=0;i<rows.length;i++){
-				idArray.push(rows[i].productTypeId);
-			}
-			var ids = idArray.join(LYS.Join);
-			var url = "dict/mulDeleteProductType.do";
-			var content = {ids:ids};
-			$.post(url,content,
-				function(result){
+		$.messager.confirm("提示","确定要删除选中的记录?",function(t){ 
+			if(t){
+				var url = 'dict/deleteProduct.do';
+				var content ={productId:selectRow.productId};
+				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
-						var rows = $(productTypeList).datagrid('getSelections');
-						for(var i=0;i<rows.length>0;i++){
-							$(productTypeTree).tree('remove',$(productTypeTree).tree('find',rows[i].productTypeId).target);
+						var fn = function(){
+							search(true);
 						}
-						$(productTypeList).datagrid('reload');
+						$.messager.alert('提示','删除成功','info',fn);
 					}else{
-						$.messager.alert('提示',result.message,"error");
+						$.messager.alert('提示',result.message,'error');
 					}
-				}, "json");
+				});
+			}
 		});
 	}
   }
