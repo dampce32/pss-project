@@ -1,128 +1,130 @@
 package org.linys.model;
-// default package
 
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
 
 /**
- * Bank entity. @author MyEclipse Persistence Tools
+ * @Description:银行
+ * @Copyright: 福州骏华信息有限公司 (c)2012
+ * @Created Date : 2012-12-29
+ * @author lys
+ * @vesion 1.0
  */
 @Entity
-@Table(name="T_Bank"
-    ,schema="dbo"
-    ,catalog="pss"
-)
+@Table(name = "T_Bank")
+public class Bank extends BaseModel {
 
-public class Bank  implements java.io.Serializable {
+	// Fields
 
+	private static final long serialVersionUID = 5040093376948032112L;
+	/**
+	 * 银行Id
+	 */
+	private String bankId;
+	/**
+	 * 银行名称
+	 */
+	private String bankName;
+	/**
+	 * 银行名称缩写
+	 */
+	private String bankShortName;
+	/**
+	 * 金额
+	 */
+	private Double amount;
+	private Set<Pay> paies = new HashSet<Pay>(0);
+	private Set<Receive> receives = new HashSet<Receive>(0);
 
-    // Fields    
+	// Constructors
 
-     private String bankId;
-     private String bankName;
-     private String bankShortName;
-     private Double amount;
-     private Set<Pay> paies = new HashSet<Pay>(0);
-     private Set<Receive> receives = new HashSet<Receive>(0);
-
-
-    // Constructors
-
-    /** default constructor */
-    public Bank() {
-    }
+	/** default constructor */
+	public Bank() {
+	}
 
 	/** minimal constructor */
-    public Bank(String bankId) {
-        this.bankId = bankId;
-    }
-    
-    /** full constructor */
-    public Bank(String bankId, String bankName, String bankShortName, Double amount, Set<Pay> paies, Set<Receive> receives) {
-        this.bankId = bankId;
-        this.bankName = bankName;
-        this.bankShortName = bankShortName;
-        this.amount = amount;
-        this.paies = paies;
-        this.receives = receives;
-    }
+	public Bank(String bankId) {
+		this.bankId = bankId;
+	}
 
-   
-    // Property accessors
-    @Id 
-    
-    @Column(name="bankId", unique=true, nullable=false, length=32)
+	/** full constructor */
+	public Bank(String bankId, String bankName, String bankShortName,
+			Double amount, Set<Pay> paies, Set<Receive> receives) {
+		this.bankId = bankId;
+		this.bankName = bankName;
+		this.bankShortName = bankShortName;
+		this.amount = amount;
+		this.paies = paies;
+		this.receives = receives;
+	}
 
-    public String getBankId() {
-        return this.bankId;
-    }
-    
-    public void setBankId(String bankId) {
-        this.bankId = bankId;
-    }
-    
-    @Column(name="bankName", length=100)
+	// Property accessors
+	@Id
+	@Column(name = "bankId", unique = true, nullable = false, length = 32)
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid")
+	public String getBankId() {
+		return this.bankId;
+	}
 
-    public String getBankName() {
-        return this.bankName;
-    }
-    
-    public void setBankName(String bankName) {
-        this.bankName = bankName;
-    }
-    
-    @Column(name="bankShortName", length=50)
+	public void setBankId(String bankId) {
+		this.bankId = bankId;
+	}
 
-    public String getBankShortName() {
-        return this.bankShortName;
-    }
-    
-    public void setBankShortName(String bankShortName) {
-        this.bankShortName = bankShortName;
-    }
-    
-    @Column(name="amount", precision=53, scale=0)
+	@Column(name = "bankName", length = 100)
+	public String getBankName() {
+		return this.bankName;
+	}
 
-    public Double getAmount() {
-        return this.amount;
-    }
-    
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="bank")
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
 
-    public Set<Pay> getPaies() {
-        return this.paies;
-    }
-    
-    public void setPaies(Set<Pay> paies) {
-        this.paies = paies;
-    }
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="bank")
+	@Column(name = "bankShortName", length = 50)
+	public String getBankShortName() {
+		return this.bankShortName;
+	}
 
-    public Set<Receive> getReceives() {
-        return this.receives;
-    }
-    
-    public void setReceives(Set<Receive> receives) {
-        this.receives = receives;
-    }
-   
+	public void setBankShortName(String bankShortName) {
+		this.bankShortName = bankShortName;
+	}
 
+	@Column(name = "amount", precision = 53, scale = 0)
+	public Double getAmount() {
+		return this.amount;
+	}
 
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
 
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bank")
+	public Set<Pay> getPaies() {
+		return this.paies;
+	}
 
+	public void setPaies(Set<Pay> paies) {
+		this.paies = paies;
+	}
 
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bank")
+	public Set<Receive> getReceives() {
+		return this.receives;
+	}
 
-
+	public void setReceives(Set<Receive> receives) {
+		this.receives = receives;
+	}
 
 }
