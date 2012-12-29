@@ -120,5 +120,17 @@ public class SupplierServiceImpl extends BaseServiceImpl<Supplier, String>
 		result.setIsSuccess(true);
 		return result;
 	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.SupplierService#queryCombogrid(java.lang.Integer, java.lang.Integer, org.linys.model.Supplier)
+	 */
+	@Override
+	public String queryCombogrid(Integer page, Integer rows, Supplier model) {
+		List<Supplier> list = supplierDAO.query(model,page,rows);
+		Long total = supplierDAO.getTotalCount(model);
+		String[] properties = {"supplierId","supplierCode","supplierName"};
+		String ajaxString = JSONUtil.toJson(list,properties,total);
+		return ajaxString;
+	}
 
 }

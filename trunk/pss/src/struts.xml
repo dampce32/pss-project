@@ -58,6 +58,13 @@
 		</action>
 	</package>
 	
+	<package name="inWarehouse" namespace="/inWarehouse" extends="basePackage">
+		<action name="*Receive" class="receiveAction" method="{1}"></action>
+		<action name="*">
+			<result>/WEB-INF/inWarehouse/{1}.html</result>
+		</action>
+	</package>
+	
 	<package name="global" namespace="/" extends="basePackage">
 		<action name="*">
 			<result>/WEB-INF/{1}/{1}.html</result>

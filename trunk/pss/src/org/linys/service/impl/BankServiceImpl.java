@@ -112,5 +112,16 @@ public class BankServiceImpl extends BaseServiceImpl<Bank, String> implements
 		result.setIsSuccess(true);
 		return result;
 	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.BankService#queryCombobox()
+	 */
+	@Override
+	public String queryCombobox() {
+		List<Bank> list = bankDAO.queryAll();
+		String[] properties = {"bankId","bankName"};
+		String jsonString = JSONUtil.toJsonWithoutRows(list,properties);
+		return jsonString;
+	}
 
 }

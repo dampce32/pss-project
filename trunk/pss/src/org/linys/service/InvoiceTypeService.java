@@ -48,5 +48,13 @@ public interface InvoiceTypeService extends BaseService<InvoiceType,String>{
 	 * @return
 	 */
 	ServiceResult getTotalCount(InvoiceType model);
+	/**
+	 * @Description: combobox查询
+	 * @Create: 2012-12-29 下午11:30:18
+	 * @author lys
+	 * @update logs
+	 * @return
+	 */
+	String queryCombobox();
 
 }

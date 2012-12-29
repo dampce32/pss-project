@@ -101,5 +101,16 @@ public class SupplierAction extends BaseAction implements ModelDriven<Supplier> 
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	}
+	/**
+	 * @Description: combogrid查询
+	 * @Create: 2012-12-29 下午6:17:47
+	 * @author lys
+	 * @update logs
+	 */
+	public void queryCombogrid(){
+		model.setSupplierName(q);
+		String jsonArray = supplierService.queryCombogrid(page, rows,model);
+		ajaxJson(jsonArray);
+	}
 
 }

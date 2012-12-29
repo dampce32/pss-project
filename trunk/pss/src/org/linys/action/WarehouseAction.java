@@ -102,5 +102,15 @@ public class WarehouseAction extends BaseAction implements
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	}
-
+	/**
+	 * @Description: combobox查询
+	 * @Create: 2012-12-29 下午11:18:19
+	 * @author lys
+	 * @update logs
+	 */
+	public void queryCombobox() {
+		String jsonString = warehouseService.queryCombobox();
+		ajaxJson(jsonString);
+	}
+	
 }
