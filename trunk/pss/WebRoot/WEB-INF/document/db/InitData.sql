@@ -69,9 +69,20 @@ insert into T_UserRole(userId,roleId)
 	
 /*
 商品类别
-select 'union	select '''+productTypeID+''' , '''+productTypeCode+''' , '''+productTypeName+''',null'
-from T_ProductType
-where parentProductTypeID is null
 */
-insert into T_ProductType(productTypeID,productTypeCode,productTypeName,parentProductTypeID)
-	select 'fda922bf5f2847a89f9fb58727e99600' , '0','商品类别',null
+insert into T_ProductType(productTypeID,productTypeCode,productTypeName,parentProductTypeID,isLeaf)
+	select 'fda922bf5f2847a89f9fb58727e99600' , '0','商品类别',null,1
+/*
+发票类型
+select 'union	select '''+invoiceTypeId+''' , '''+invoiceTypeName+''''
+from T_InvoiceType
+*/
+insert into T_InvoiceType(invoiceTypeId,invoiceTypeName)
+	  select '402881e53be5d01c013be5d1b6b70002' , '不开票'
+union select '402881e53be5d01c013be5d1ec720003' , '已开收据'
+union select '402881e53be5d01c013be5d21c630004' , '普票3%'
+union select '402881e53be5d01c013be5d2465f0005' , '增票17%'
+
+
+	
+	
