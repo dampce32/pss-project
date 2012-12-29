@@ -40,7 +40,6 @@ public class Pay  implements java.io.Serializable {
      private String payway;
      private Date payDate;
      private String note;
-     private Set<Employee> employees = new HashSet<Employee>(0);
 
 
     // Constructors
@@ -54,19 +53,6 @@ public class Pay  implements java.io.Serializable {
         this.payId = payId;
     }
     
-    /** full constructor */
-    public Pay(String payId, Receive receive, Bank bank, String payCode, Double payedAmount, Double discountAmount, String payway, Date payDate, String note, Set<Employee> employees) {
-        this.payId = payId;
-        this.receive = receive;
-        this.bank = bank;
-        this.payCode = payCode;
-        this.payedAmount = payedAmount;
-        this.discountAmount = discountAmount;
-        this.payway = payway;
-        this.payDate = payDate;
-        this.note = note;
-        this.employees = employees;
-    }
 
    
     // Property accessors
@@ -161,22 +147,6 @@ public class Pay  implements java.io.Serializable {
     public void setNote(String note) {
         this.note = note;
     }
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="pay")
-
-    public Set<Employee> getEmployees() {
-        return this.employees;
-    }
-    
-    public void setEmployees(Set<Employee> employees) {
-        this.employees = employees;
-    }
    
-
-
-
-
-
-
-
 
 }

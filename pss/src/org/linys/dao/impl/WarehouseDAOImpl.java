@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.linys.dao.WarehouseDAO;
@@ -24,11 +25,11 @@ public class WarehouseDAOImpl extends BaseDAOImpl<Warehouse, String> implements
 		Criteria criteria  = getCurrentSession().createCriteria(Warehouse.class);
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getWarehouseCode())){
-			criteria.add(Restrictions.eq("warehouseCode", model.getWarehouseCode()));
+			criteria.add(Restrictions.like("warehouseCode", model.getWarehouseCode(),MatchMode.ANYWHERE));
 		}
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getWarehouseName())){
-			criteria.add(Restrictions.eq("warehouseName", model.getWarehouseName()));
+			criteria.add(Restrictions.like("warehouseName", model.getWarehouseName(),MatchMode.ANYWHERE));
 		}
 		
 		if(page==null||page<1){
@@ -54,11 +55,11 @@ public class WarehouseDAOImpl extends BaseDAOImpl<Warehouse, String> implements
 		Criteria criteria  = getCurrentSession().createCriteria(Warehouse.class);
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getWarehouseCode())){
-			criteria.add(Restrictions.eq("warehouseCode", model.getWarehouseCode()));
+			criteria.add(Restrictions.like("warehouseCode", model.getWarehouseCode(),MatchMode.ANYWHERE));
 		}
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getWarehouseName())){
-			criteria.add(Restrictions.eq("warehouseName", model.getWarehouseName()));
+			criteria.add(Restrictions.like("warehouseName", model.getWarehouseName(),MatchMode.ANYWHERE));
 		}
 		criteria.setProjection(Projections.rowCount());
 		return new Long(criteria.uniqueResult().toString());

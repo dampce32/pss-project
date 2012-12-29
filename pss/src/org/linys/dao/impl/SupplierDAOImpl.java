@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.linys.dao.SupplierDAO;
@@ -30,11 +31,11 @@ public class SupplierDAOImpl extends BaseDAOImpl<Supplier, String> implements
 		Criteria criteria  = getCurrentSession().createCriteria(Supplier.class);
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getSupplierCode())){
-			criteria.add(Restrictions.eq("supplierCode", model.getSupplierCode()));
+			criteria.add(Restrictions.like("supplierCode", model.getSupplierCode(),MatchMode.ANYWHERE));
 		}
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getSupplierName())){
-			criteria.add(Restrictions.eq("supplierName", model.getSupplierName()));
+			criteria.add(Restrictions.like("supplierName", model.getSupplierName(),MatchMode.ANYWHERE));
 		}
 		
 		if(page==null||page<1){
@@ -60,11 +61,11 @@ public class SupplierDAOImpl extends BaseDAOImpl<Supplier, String> implements
 		Criteria criteria  = getCurrentSession().createCriteria(Supplier.class);
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getSupplierCode())){
-			criteria.add(Restrictions.eq("supplierCode", model.getSupplierCode()));
+			criteria.add(Restrictions.like("supplierCode", model.getSupplierCode(),MatchMode.ANYWHERE));
 		}
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getSupplierName())){
-			criteria.add(Restrictions.eq("supplierName", model.getSupplierName()));
+			criteria.add(Restrictions.like("supplierName", model.getSupplierName(),MatchMode.ANYWHERE));
 		}
 		criteria.setProjection(Projections.rowCount());
 		return new Long(criteria.uniqueResult().toString());
