@@ -106,7 +106,10 @@ public class WarehouseServiceImpl extends BaseServiceImpl<Warehouse, String>
 		result.setIsSuccess(true);
 		return result;
 	}
-
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.WarehouseService#getTotalCount(org.linys.model.Warehouse)
+	 */
 	@Override
 	public ServiceResult getTotalCount(Warehouse model) {
 		ServiceResult result = new ServiceResult(false);
@@ -114,5 +117,16 @@ public class WarehouseServiceImpl extends BaseServiceImpl<Warehouse, String>
 		result.addData("total", data);
 		result.setIsSuccess(true);
 		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.WarehouseService#queryCombobox()
+	 */
+	@Override
+	public String queryCombobox() {
+		List<Warehouse> list = warehouseDAO.queryAll();
+		String[] properties = {"warehouseId","warehouseName"};
+		String jsonString = JSONUtil.toJsonWithoutRows(list,properties);
+		return jsonString;
 	}
 }

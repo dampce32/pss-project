@@ -1,0 +1,92 @@
+<div class="easyui-layout plugins" data-options="fit:true" ui="receiveInit" id="${id}">
+	<div class="easyui-layout"  data-options="region:'center'">
+		<div data-options="region:'north',border:false" style="height: 35px;overflow: hidden;padding:5px" id="queryContent"> 
+			入库单号:&nbsp;&nbsp;<input id="receiveCodeSearch" type="text" size="12"/>&nbsp;&nbsp;&nbsp;
+			<a href="#" class="easyui-linkbutton" id="searchBtn" data-options="iconCls:'icon-search'" style="cursor: pointer;">查 询</a>
+		</div>
+		<div data-options="region:'center',border:false" style="width: 100%;height:100%">
+			<div id="viewList"></div>
+		</div>
+		<div data-options="region:'south',border:false" style="height: 32">
+			<div class="easyui-pagination" id="pager" style="background:#efefef;border:1px solid #ccc;"></div>
+		</div>
+	</div>
+	
+	<div id="editDialog">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'north',border:false" style="height: 160px;overflow: hidden;padding:5px"> 
+				<form id = "editForm">
+					<input type="hidden" name="receiveId" id="receiveId" />
+					<table border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td class="tdTitle">入库单号:</td>
+							<td>
+								<input type="text" name="receiveCode" id="receiveCode"  style="width: 150px" size="40" />
+							</td>
+							<td class="tdTitle">送货单号:</td>
+							<td>
+								<input type="text" name="deliverCode" id="deliverCode"  style="width: 150px" size="40" />
+							</td>
+							<td class="tdTitle">审核状态:</td>
+							<td>
+								<input type="text" name="shzt" id="shzt"  style="width: 150px" size="40" />
+							</td>
+							
+						</tr>
+						<tr>
+							<td class="tdTitle">供应商:</td>
+							<td>
+								<input type="text" name="supplier" id="supplier"  style="width: 150px" size="40" />
+							</td>
+							<td class="tdTitle">存放仓库:</td>
+							<td>
+								<input type="text" name="warehouse" id="warehouse"  style="width: 150px" size="40" />
+							</td>
+							<td class="tdTitle">收货日期:</td>
+							<td>
+								<input type="text" name="receiveDate" id="receiveDate"  style="width: 150px" size="40" />
+							</td>
+						</tr>
+						<tr>
+							<td class="tdTitle">应付金额:</td>
+							<td>
+								<input type="text" name="amount" id="amount"  style="width: 150px" size="40" />
+							</td>
+							<td class="tdTitle">优惠金额:</td>
+							<td>
+								<input type="text" name="discountAmount" id="discountAmount"  style="width: 150px" size="40" />
+							</td>
+							<td class="tdTitle">实付金额:</td>
+							<td>
+								<input type="text" name="payAmount" id="payAmount"  style="width: 150px" size="40" />
+							</td>
+						</tr>
+						<tr>
+							<td class="tdTitle">银行:</td>
+							<td>
+								<input type="text" name="bank" id="bank"  style="width: 150px" size="40" />
+							</td>
+							<td class="tdTitle">经办人:</td>
+							<td>
+								<input type="text" name="employee" id="employee"  style="width: 150px" size="40" />
+							</td>
+							<td class="tdTitle">发票:</td>
+							<td>
+								<input type="text" name="invoiceType" id="invoiceType"  style="width: 150px" size="40" />
+							</td>
+						</tr>
+						<tr>
+							<td class="tdTitle">备注:</td>
+							<td colspan="5">
+								<input type="text" name="note" id="note"  style="width: 600px" size="40" />
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+			<div data-options="region:'center'" style="width: 100%;height:100%">
+				adaf
+			</div>
+		</div>
+	</div>
+</div>

@@ -48,5 +48,16 @@ public interface SupplierService extends BaseService<Supplier,String>{
 	 * @return
 	 */
 	ServiceResult getTotalCount(Supplier model);
+	/**
+	 * @Description: combogrid查询
+	 * @Create: 2012-12-29 下午6:18:49
+	 * @author lys
+	 * @update logs
+	 * @param page
+	 * @param rows
+	 * @param model
+	 * @return
+	 */
+	String queryCombogrid(Integer page, Integer rows, Supplier model);
 
 }

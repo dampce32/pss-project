@@ -97,4 +97,15 @@ public class InvoiceTypeServiceImpl extends
 		result.setIsSuccess(true);
 		return result;
 	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.InvoiceTypeService#queryCombobox()
+	 */
+	@Override
+	public String queryCombobox() {
+		List<InvoiceType> list = invoiceTypeDAO.queryAll();
+		String[] properties = {"invoiceTypeId","invoiceTypeName"};
+		String jsonString = JSONUtil.toJsonWithoutRows(list,properties);
+		return jsonString;
+	}
 }

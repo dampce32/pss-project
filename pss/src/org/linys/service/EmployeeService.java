@@ -49,5 +49,13 @@ public interface EmployeeService extends BaseService<Employee,String>{
 	 * @return
 	 */
 	ServiceResult getTotalCount(Employee model);
+	/**
+	 * @Description: combobox查询
+	 * @Create: 2012-12-29 下午11:32:24
+	 * @author lys
+	 * @update logs
+	 * @return
+	 */
+	String queryCombobox();
 
 }

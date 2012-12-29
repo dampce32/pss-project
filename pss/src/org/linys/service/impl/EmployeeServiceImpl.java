@@ -96,5 +96,16 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee, String>
 		result.setIsSuccess(true);
 		return result;
 	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.EmployeeService#queryCombobox()
+	 */
+	@Override
+	public String queryCombobox() {
+		List<Employee> list = employeeDAO.queryAll();
+		String[] properties = {"employeeId","employeeName"};
+		String jsonString = JSONUtil.toJsonWithoutRows(list,properties);
+		return jsonString;
+	}
 
 }

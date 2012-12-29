@@ -48,5 +48,13 @@ public interface WarehouseService extends BaseService<Warehouse,String>{
 	 * @return
 	 */
 	ServiceResult getTotalCount(Warehouse model);
+	/**
+	 * @Description: combobox查询
+	 * @Create: 2012-12-29 下午11:19:25
+	 * @author lys
+	 * @update logs
+	 * @return
+	 */
+	String queryCombobox();
 
 }
