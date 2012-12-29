@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.linys.dao.BankDAO;
@@ -22,11 +23,11 @@ public class BankDAOImpl extends BaseDAOImpl<Bank, String> implements BankDAO {
 		Criteria criteria  = getCurrentSession().createCriteria(Bank.class);
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getBankShortName())){
-			criteria.add(Restrictions.eq("bankShortName", model.getBankShortName()));
+			criteria.add(Restrictions.like("bankShortName", model.getBankShortName(),MatchMode.ANYWHERE));
 		}
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getBankName())){
-			criteria.add(Restrictions.eq("bankName", model.getBankName()));
+			criteria.add(Restrictions.like("bankName", model.getBankName(),MatchMode.ANYWHERE));
 		}
 		
 		if(page==null||page<1){
@@ -52,11 +53,11 @@ public class BankDAOImpl extends BaseDAOImpl<Bank, String> implements BankDAO {
 		Criteria criteria  = getCurrentSession().createCriteria(Bank.class);
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getBankShortName())){
-			criteria.add(Restrictions.eq("bankShortName", model.getBankShortName()));
+			criteria.add(Restrictions.like("bankShortName", model.getBankShortName(),MatchMode.ANYWHERE));
 		}
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getBankName())){
-			criteria.add(Restrictions.eq("bankName", model.getBankName()));
+			criteria.add(Restrictions.like("bankName", model.getBankName(),MatchMode.ANYWHERE));
 		}
 		criteria.setProjection(Projections.rowCount());
 		return new Long(criteria.uniqueResult().toString());

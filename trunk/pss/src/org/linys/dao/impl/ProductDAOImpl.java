@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.linys.dao.ProductDAO;
@@ -27,11 +28,11 @@ public class ProductDAOImpl extends BaseDAOImpl<Product, String> implements Prod
 		criteria.createAlias("productType", "productType", CriteriaSpecification.LEFT_JOIN);
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getProductCode())){
-			criteria.add(Restrictions.eq("productCode", model.getProductCode()));
+			criteria.add(Restrictions.like("productCode", model.getProductCode(),MatchMode.ANYWHERE));
 		}
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getProductName())){
-			criteria.add(Restrictions.eq("productName", model.getProductName()));
+			criteria.add(Restrictions.like("productName", model.getProductName(),MatchMode.ANYWHERE));
 		}
 		
 		if(page==null||page<1){
@@ -56,11 +57,11 @@ public class ProductDAOImpl extends BaseDAOImpl<Product, String> implements Prod
 		Criteria criteria  = getCurrentSession().createCriteria(Product.class);
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getProductCode())){
-			criteria.add(Restrictions.eq("productCode", model.getProductCode()));
+			criteria.add(Restrictions.like("productCode", model.getProductCode(),MatchMode.ANYWHERE));
 		}
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getProductName())){
-			criteria.add(Restrictions.eq("productName", model.getProductName()));
+			criteria.add(Restrictions.like("productName", model.getProductName(),MatchMode.ANYWHERE));
 		}
 		criteria.setProjection(Projections.rowCount());
 		return new Long(criteria.uniqueResult().toString());
