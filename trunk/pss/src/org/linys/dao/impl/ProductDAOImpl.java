@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.linys.dao.ProductDAO;
@@ -20,6 +21,10 @@ public class ProductDAOImpl extends BaseDAOImpl<Product, String> implements Prod
 	@SuppressWarnings("unchecked")
 	public List<Product> query(Product model, Integer page, Integer rows) {
 		Criteria criteria  = getCurrentSession().createCriteria(Product.class);
+		criteria.createAlias("color", "color", CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("size", "size", CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("unit", "unit", CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("productType", "productType", CriteriaSpecification.LEFT_JOIN);
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getProductCode())){
 			criteria.add(Restrictions.eq("productCode", model.getProductCode()));
