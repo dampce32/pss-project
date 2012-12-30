@@ -24,3 +24,4 @@ LYS.initContent = function (el) {
 		     } 
      });
 };
+LYS.ClearUrl='common/clearDatagridCommon.do';

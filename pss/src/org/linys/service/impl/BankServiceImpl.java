@@ -119,7 +119,7 @@ public class BankServiceImpl extends BaseServiceImpl<Bank, String> implements
 	@Override
 	public String queryCombobox() {
 		List<Bank> list = bankDAO.queryAll();
-		String[] properties = {"bankId","bankName"};
+		String[] properties = {"bankId","bankShortName"};
 		String jsonString = JSONUtil.toJsonWithoutRows(list,properties);
 		return jsonString;
 	}

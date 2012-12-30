@@ -126,5 +126,16 @@ public class DataDictionaryServiceImpl extends BaseServiceImpl<DataDictionary, S
 		
 		return JSONUtil.toJsonWithoutRows(list,propertyList);
 	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.DataDictionaryService#queryByKindCombobox(java.lang.String)
+	 */
+	@Override
+	public String queryByKindCombobox(String kind) {
+		List<DataDictionary> list = dataDictionaryDAO.query("dataDictionaryKind", kind);
+		
+		String[] properties = {"dataDictionaryId:"+kind+"Id","dataDictionaryName:"+kind+"Name"};
+		return JSONUtil.toJsonWithoutRows(list,properties);
+	}
 
 }

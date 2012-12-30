@@ -133,5 +133,20 @@ public class DataDictionaryAction extends BaseAction implements ModelDriven<Data
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * @Description: 根据字典类型查询字典信息(用于Combogox)
+	 * @Create: 2012-12-30 下午6:12:54
+	 * @author lys
+	 * @update logs
+	 */
+	public void queryByKindCombobox() {
+		try {
+			String kind = getParameter("kind");
+			String jsonString = dataDictionaryService.queryByKindCombobox(kind);
+			ajaxJson(jsonString);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
 
 }

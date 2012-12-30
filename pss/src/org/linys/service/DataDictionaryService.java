@@ -66,5 +66,14 @@ public interface DataDictionaryService extends BaseService<DataDictionary,String
 	 * @return
 	 */
 	String queryByDictionaryKind(String kind);
+	/**
+	 * @Description: 根据字典类型查询字典信息(用于Combogox)
+	 * @Create: 2012-12-30 下午6:14:03
+	 * @author lys
+	 * @update logs
+	 * @param kind
+	 * @return
+	 */
+	String queryByKindCombobox(String kind);
 
 }

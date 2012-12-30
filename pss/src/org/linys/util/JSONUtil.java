@@ -21,7 +21,7 @@ import org.linys.model.Right;
  * @vesion 1.0
  */
 public class JSONUtil{
-	public static final String EMPTYJSON = "{}";
+	public static final String EMPTYJSON = "{\"rows\":[],\"total\":0}";
 	/**
 	 * @Description: 将List型数据转化成Json数据
 	 * @Create: 2012-10-27 上午10:26:14
