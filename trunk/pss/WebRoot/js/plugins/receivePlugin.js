@@ -98,25 +98,12 @@
 	//编辑框
 	$(editDialog).dialog({  
 	    title: '采购入库单',  
-	    width:800,
+	    width:width,
 	    height:height,
 	    closed: true,  
 	    cache: false,  
 	    modal: true,
-	    closable:false,
-	    toolbar:[{
-			text:'保存',
-			iconCls:'icon-save',
-			handler:function(){
-				onSave();
-			}
-		},'-',{
-			text:'退出',
-			iconCls:'icon-cancel',
-			handler:function(){
-				$(editDialog).dialog('close');
-			}
-		}]
+	    closable:false
 	});    
 	//添加
 	var onAdd = function(){
@@ -150,7 +137,7 @@
 		}
 		$('#bank',editDialog).combobox({
 			valueField:'bankId',
-			textField:'bankName',
+			textField:'bankShortName',
 			width:150,
 			data:bankData
 		})		  
@@ -175,7 +162,10 @@
 			textField:'invoiceTypeName',
 			width:150,
 			data:invoiceTypeData
-		})		
+		})
+		$('#amount',editForm).val(0);
+		$('#discountAmount',editForm).val(0);
+		$('#payAmount',editForm).val(0);
 		$(editDialog).dialog('open');
 	}
 	//保存前的赋值操作
@@ -251,5 +241,206 @@
 			}
 		});
 	}
+	//-----收货明细----------
+	var receiveDetail = $('#receiveDetail',editDialog);
+	var selectDialog = $('#selectDialog',$this);
+	var productList = $('#productList');
+	var lastIndex=null;
+	var colors=PSS.getColorList();
+	function colorFormatter(value){
+		for(var i=0; i<colors.length; i++){
+			if (colors[i].colorId == value) return colors[i].colorName;
+		}
+		return value;
+	}
+	$(receiveDetail).datagrid({
+	  singleSelect:true,	
+	  fit:true,
+	  columns:[[
+		    {field:'productCode',title:'商品编号',width:90,align:"center"},
+			{field:'productName',title:'商品名称',width:200,align:"center"},
+		    {field:'unitName',title:'单位',width:90,align:"center"},
+		    {field:'sizeName',title:'规格',width:90,align:"center"},
+		    {field:'colorId',title:'颜色',width:90,align:"center",editor:{type:'combobox',options:{valueField:'colorId',
+				textField:'colorName',
+				data:colors}},formatter:colorFormatter},
+		    {field:'qty',title:'数量',width:90,align:"center",editor:{type:'numberbox',options:{precision:2}}},
+		    {field:'price',title:'单价',width:90,align:"center",editor:{type:'numberbox',options:{precision:2}}},
+		    {field:'amount',title:'金额',width:90,align:"center",editor:{type:'numberbox',options:{disabled:true,precision:2,onChange:function(newValue,oldValue){
+		    	 var totalAmount = 0 ;
+				 var rows =  $(receiveDetail).datagrid('getRows');
+				 var row = $(receiveDetail).datagrid('getSelected');
+				 var rowIndex = $(receiveDetail).datagrid('getRowIndex',row); 
+				 for ( var int = 0; int < rows.length; int++) {
+					 if(int!=rowIndex){
+						row = rows[int];
+						totalAmount += parseFloat(row.amount);
+					 }
+				}
+				totalAmount+=parseFloat(newValue); 
+		    	$('#amount',editForm).val(totalAmount);
+		    	$('#amount',editForm).change();
+		    }}}},
+		    {field:'note1',title:'备注1',width:120,align:"center",editor:{type:'text'}},
+		    {field:'note2',title:'备注2',width:120,align:"center",editor:{type:'text'}},
+		    {field:'note3',title:'备注3',width:120,align:"center",editor:{type:'text'}}
+	  ]],
+	  rownumbers:true,
+	  pagination:false,
+	  toolbar:[	
+			{text:'添加商品',iconCls:'icon-add',handler:function(){onSelectProduct()}},'-',
+			{text:'删除商品',iconCls:'icon-remove',handler:function(){onDeleteProduct()}},'-',
+			{text:'保存',iconCls:'icon-save',handler:function(){
+					onSave();
+				}
+			},'-',{text:'退出',iconCls:'icon-cancel',handler:function(){
+					$(editDialog).dialog('close');
+					$(editForm).form('clear');
+					$(receiveDetail).datagrid({url:LYS.ClearUrl});
+				}
+			}
+	  ],
+	  onBeforeLoad:function(){
+			$(this).datagrid('rejectChanges');
+	  },
+	  onClickRow:function(rowIndex){
+		if (lastIndex != rowIndex){
+			$(receiveDetail).datagrid('endEdit', lastIndex);
+			$(receiveDetail).datagrid('beginEdit', rowIndex);
+			setEditing(rowIndex);
+		}
+		lastIndex = rowIndex;
+	  }
+	 });
+	function setEditing(rowIndex){  
+	    var editors = $(receiveDetail).datagrid('getEditors', rowIndex);  
+	    var qtyEditor = editors[1];  
+	    var priceEditor = editors[2];  
+	    var amountEditor = editors[3];  
+	    qtyEditor.target.bind('change', function(){  
+	        calculate(rowIndex);  
+	    });  
+	    priceEditor.target.bind('change', function(){  
+	        calculate(rowIndex);  
+	    });  
+	    function calculate(rowIndex){  
+	        var cost = qtyEditor.target.val() * priceEditor.target.val();  
+	        $(amountEditor.target).numberbox('setValue',cost);
+	    }  
+	}  
+	//编辑框
+	$(selectDialog).dialog({  
+	    title: '选择商品',  
+	    width:800,
+	    height:height,
+	    closed: true,  
+	    cache: false,  
+	    modal: true,
+	    closable:false
+	});
+	$(productList).datagrid({
+		  fit:true,
+		  cache: false, 
+		  columns:[[
+			    {field:'ck',checkbox:true},
+			    {field:'productCode',title:'商品编号',width:90,align:"center"},
+				{field:'productName',title:'商品名称',width:120,align:"center"},
+			    {field:'productTypeName',title:'商品类型',width:120,align:"center"},
+			    {field:'unitName',title:'单位',width:90,align:"center"},
+			    {field:'sizeName',title:'规格',width:90,align:"center"},
+			    {field:'colorName',title:'颜色',width:90,align:"center"},
+			    {field:'note',title:'备注',width:90,align:"center"}
+		  ]],
+		  rownumbers:true,
+		  pagination:true,
+		  toolbar:[	
+				{text:'选择',iconCls:'icon-save',handler:function(){onSelectOKProduct()}},
+				{text:'退出',iconCls:'icon-cancel',handler:function(){
+					onExitSelectProduct();
+				}}
+		  ]
+	 });
+	 var onSelectProduct = function(){
+		 $(selectDialog).dialog('open');
+	 }
+	 //查询
+	 $('#searchBtnSelectDialog',selectDialog).click(function(){
+		 searchBtnSelect();
+	 })
+	 var searchBtnSelect = function(){
+		var productCode = $('#productCodeSelectDialog',selectDialog).val();
+		var productName = $('#productNameSelectDialog',selectDialog).val();
+		
+		var url = "dict/selectProduct.do";
+		var content = {productCode:productCode,productName:productName};
+		var result = syncCallService(url,content);
+		if(result.isSuccess){
+			var data = result.data;
+			$(productList).datagrid('loadData',eval("("+data.datagridData+")"));
+		}else{
+			$.messager.alert('提示',result.message,"error");
+		}
+	 }
+	 //选择商品
+	 var onSelectOKProduct = function(){
+		 var rows = $(productList).datagrid('getSelections');
+		 if(rows.length==0){
+			 $.messager.alert('提示','请选择商品',"warning");
+			 return;
+		 }
+		 for ( var int = 0; int < rows.length; int++) {
+			var row = rows[int];
+			 $(receiveDetail).datagrid('appendRow',{
+				 productCode:row.productCode,
+				 productName:row.productName,
+				 unitName:row.unitName,
+				 sizeName:row.sizeName,
+				 colorId:row.colorId,
+				 qty:0,
+				 price:0,
+				 amount:0,
+				 note1:'',
+				 note2:'',
+				 note3:''
+			});
+		}
+		 $(receiveDetail).datagrid('endEdit', lastIndex);
+		 $(receiveDetail).datagrid('unselectAll');
+		lastIndex = null;
+		onExitSelectProduct();
+	 }
+	 //退出选择商品界面
+	 var onExitSelectProduct = function(){
+		 $(selectDialog).dialog('close');
+		 $(productList).datagrid({url:LYS.ClearUrl});
+	 }
+	 //删除商品
+	 var onDeleteProduct = function(){
+		 var row = $(receiveDetail).datagrid('getSelected');
+		 var rowIndex = $(receiveDetail).datagrid('getRowIndex',row);
+		 $(receiveDetail).datagrid('deleteRow',rowIndex);
+		 lastIndex = null;
+		 //统计删除后的应付金额
+		 var totalAmount = 0 ;
+		 var rows =  $(receiveDetail).datagrid('getRows');
+		 for ( var int = 0; int < rows.length; int++) {
+			var row = rows[int];
+			totalAmount += parseFloat(row.amount);
+		}
+		$('#amount',editForm).val(totalAmount);
+		$('#amount',editForm).change();
+	 }
+	 //应付金额发生改变
+	 $('#amount',editForm).change( function() {
+		 var amount = $('#amount',editForm).val();
+		 var discountAmount = $('#discountAmount',editForm).val();
+		 $('#payAmount',editForm).val(amount-discountAmount);
+	});
+	 $('#discountAmount',editForm).change( function() {
+		 var amount = $('#amount',editForm).val();
+		 var discountAmount = $('#discountAmount',editForm).val();
+		 $('#payAmount',editForm).val(amount-discountAmount);
+	});
+	 
   }
 })(jQuery);   

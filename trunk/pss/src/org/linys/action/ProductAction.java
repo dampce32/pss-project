@@ -99,5 +99,23 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	}
+	/**
+	 * @Description: 选择商品
+	 * @Create: 2012-12-30 上午10:24:19
+	 * @author lys
+	 * @update logs
+	 */
+	public void select(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = productService.select(model,page,rows);
+		} catch (Exception e) {
+			result.setMessage("查询商品失败");
+			result.setIsSuccess(false);
+			e.printStackTrace();
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
 
 }

@@ -65,6 +65,9 @@
 		</action>
 	</package>
 	
+	<package name="common" namespace="/common" extends="basePackage">
+		<action name="*Common" class="commonAction" method="{1}"></action>
+	</package>
 	<package name="global" namespace="/" extends="basePackage">
 		<action name="*">
 			<result>/WEB-INF/{1}/{1}.html</result>

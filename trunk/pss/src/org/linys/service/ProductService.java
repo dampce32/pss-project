@@ -48,5 +48,16 @@ public interface ProductService extends BaseService<Product,String>{
 	 * @return
 	 */
 	ServiceResult save(Product model);
+	/**
+	 * @Description: 选择商品
+	 * @Create: 2012-12-30 上午10:25:02
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	ServiceResult select(Product model, Integer page, Integer rows);
 
 }
