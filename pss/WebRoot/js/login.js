@@ -14,6 +14,12 @@ $(function() {
 	$("#loginCaptchaImage").click( function() {
 		loginCaptchaImageRefresh();
 	});
+	$(document).keydown(function(e){ 
+		var curKey = e.which; 
+		if(curKey == 13){ 
+			$('#loginBtn').click();
+		} 
+	}); 
 	$("#loginBtn").click(function(){
 		$('#loginForm').form('submit', {
 			url : 'system/loginUser.do',

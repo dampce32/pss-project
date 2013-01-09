@@ -30,5 +30,44 @@ public interface ReceiveService extends BaseService<Receive,String>{
 	 * @return
 	 */
 	ServiceResult getTotalCount(Receive model);
+	/**
+	 * @Description: 保存收货单
+	 * @Create: 2013-1-3 上午10:45:08
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @param receiveDetailIds
+	 * @param delReceiveDetailIds
+	 * @param productIds
+	 * @param colorIds
+	 * @param qtys
+	 * @param prices
+	 * @param note1s
+	 * @param note2s
+	 * @param note3s
+	 * @return
+	 */
+	ServiceResult save(Receive model, String receiveDetailIds,
+			String delReceiveDetailIds, String productIds, String colorIds,
+			String qtys, String prices, String note1s, String note2s,
+			String note3s);
+	/**
+	 * @Description: 打开初始化
+	 * @Create: 2013-1-8 下午10:29:50
+	 * @author lys
+	 * @update logs
+	 * @param receiveId
+	 * @return
+	 */
+	ServiceResult init(String receiveId);
+	/**
+	 * @Description: 批量删除
+	 * @Create: 2013-1-9 下午10:30:39
+	 * @author lys
+	 * @update logs
+	 * @param ids
+	 * @return
+	 */
+	ServiceResult mulDel(String ids);
 
 }

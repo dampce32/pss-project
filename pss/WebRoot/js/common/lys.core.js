@@ -1,9 +1,9 @@
-var LYS={};
+var LYS = App = APP = app = {};;
 LYS.id_index = 0;
 LYS.genId = function () {
     return 'LYS_UI_' + (LYS.id_index++);
 };
-LYS.Join = ',';
+LYS.join ='^'; 
 LYS.initContent = function (el) {
 	var athis = $(el);
 	 $('[ui]', el).each(function () {

@@ -28,8 +28,6 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 	public Receive getModel() {
 		return model;
 	}
-	
-	
 	/**
 	 * @Description:分页查询收货 
 	 * @Create: 2012-12-18 下午10:58:02
@@ -66,5 +64,69 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	}
-
+	/**
+	 * @Description:保存收货单
+	 * @Create: 2013-1-3 上午10:22:16
+	 * @author lys
+	 * @update logs
+	 */
+	public void save(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			String receiveDetailIds = getParameter("receiveDetailIds");
+			String delReceiveDetailIds = getParameter("delReceiveDetailIds");
+			String productIds = getParameter("productIds");
+			String colorIds = getParameter("colorIds");
+			String qtys = getParameter("qtys");
+			String prices = getParameter("prices");
+			String note1s = getParameter("note1s");
+			String note2s = getParameter("note2s");
+			String note3s = getParameter("note3s");
+			
+			result = receiveService.save(model,receiveDetailIds,delReceiveDetailIds,
+					productIds,colorIds,qtys,prices,note1s,note2s,note3s);
+		} catch (Exception e) {
+			result.setMessage("保存收货单失败");
+			result.setIsSuccess(false);
+			e.printStackTrace();
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	/**
+	 * @Description: 打开初始化
+	 * @Create: 2013-1-8 下午10:28:15
+	 * @author lys
+	 * @update logs
+	 */
+	public void init(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = receiveService.init(model.getReceiveId());
+		} catch (Exception e) {
+			result.setMessage("打开初始化失败");
+			result.setIsSuccess(false);
+			e.printStackTrace();
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	/**
+	 * @Description: 批量删除
+	 * @Create: 2013-1-8 下午10:28:15
+	 * @author lys
+	 * @update logs
+	 */
+	public void mulDel(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = receiveService.mulDel(ids);
+		} catch (Exception e) {
+			result.setMessage("批量删除");
+			result.setIsSuccess(false);
+			e.printStackTrace();
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
 }

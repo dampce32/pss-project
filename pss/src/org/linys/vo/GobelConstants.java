@@ -11,4 +11,7 @@ public interface GobelConstants {
 	public static int DEFAULTPAGESIZE = 10;
 	
 	public static String SPLIT=",";
+	public static String SPLIT_SEPARATOR ="^";
+	
+	
 }
