@@ -1,15 +1,9 @@
 package org.linys.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -39,9 +33,6 @@ public class DataDictionary extends BaseModel {
 	 * 数据字典名称
 	 */
 	private String dataDictionaryName;
-	
-	private Set<RejectDetail> rejectDetails = new HashSet<RejectDetail>(0);
-	private Set<ReceiveDetail> receiveDetails = new HashSet<ReceiveDetail>(0);
 
 	// Constructors
 
@@ -86,22 +77,4 @@ public class DataDictionary extends BaseModel {
 		this.dataDictionaryName = dataDictionaryName;
 	}
 
-
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "dataDictionary")
-	public Set<RejectDetail> getRejectDetails() {
-		return this.rejectDetails;
-	}
-
-	public void setRejectDetails(Set<RejectDetail> rejectDetails) {
-		this.rejectDetails = rejectDetails;
-	}
-
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "dataDictionary")
-	public Set<ReceiveDetail> getReceiveDetails() {
-		return this.receiveDetails;
-	}
-
-	public void setReceiveDetails(Set<ReceiveDetail> receiveDetails) {
-		this.receiveDetails = receiveDetails;
-	}
 }

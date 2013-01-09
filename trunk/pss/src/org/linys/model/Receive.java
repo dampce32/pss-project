@@ -82,6 +82,8 @@ public class Receive extends BaseModel {
 	private InvoiceType invoiceType;
 	/**
 	 * 审核状态
+	 * 0--未审核
+	 * 1--已审核
 	 */
 	private Integer shzt;
 	/**
@@ -164,7 +166,7 @@ public class Receive extends BaseModel {
 		this.receiveCode = receiveCode;
 	}
 
-	@Column(name = "deliverCode", length = 50)
+	@Column(name = "deliverCode", length = 50,unique = true)
 	public String getDeliverCode() {
 		return this.deliverCode;
 	}
