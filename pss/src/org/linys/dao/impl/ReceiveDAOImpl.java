@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -22,6 +23,11 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 	@Override
 	public List<Receive> query(Receive model, Integer page, Integer rows) {
 		Criteria criteria  = getCurrentSession().createCriteria(Receive.class);
+		
+		criteria.createAlias("warehouse", "warehouse",CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("supplier", "supplier",CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("employee", "employee",CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("invoiceType", "invoiceType",CriteriaSpecification.LEFT_JOIN);
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getReceiveCode())){
 			criteria.add(Restrictions.like("receiveCode", model.getReceiveCode(),MatchMode.ANYWHERE));

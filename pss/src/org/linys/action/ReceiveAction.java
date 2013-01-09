@@ -129,4 +129,23 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	}
+	/**
+	 * @Description: 批量修改审核状态
+	 * @Create: 2013-1-9 下午11:50:34
+	 * @author lys
+	 * @update logs
+	 */
+	public void mulUpdateShzt(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = receiveService.mulUpdateShzt(ids,model);
+		} catch (Exception e) {
+			result.setMessage("批量修改审核状态失败");
+			result.setIsSuccess(false);
+			e.printStackTrace();
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	
 }
