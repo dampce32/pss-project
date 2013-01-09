@@ -1,5 +1,7 @@
 package org.linys.model;
 
+import java.text.DecimalFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -166,7 +168,8 @@ public class ReceiveDetail extends BaseModel {
 	@Transient
 	public Double getAmount() {
 		this.amount = this.qty*this.price;
-		return amount;
+		DecimalFormat df = new DecimalFormat("######0.00");
+		return Double.parseDouble(df.format(amount));
 	}
 
 	public void setAmount(Double amount) {

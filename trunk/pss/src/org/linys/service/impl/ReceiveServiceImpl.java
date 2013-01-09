@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.linys.dao.ProductDAO;
 import org.linys.dao.ReceiveDAO;
 import org.linys.dao.ReceiveDetailDAO;
 import org.linys.model.DataDictionary;
@@ -27,6 +28,8 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	private ReceiveDAO receiveDAO;
 	@Resource
 	private ReceiveDetailDAO receiveDetailDAO;
+	@Resource
+	private ProductDAO productDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.ReceiveService#query(org.linys.model.Receive, java.lang.Integer, java.lang.Integer)
@@ -37,7 +40,9 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		
 		List<Receive> list = receiveDAO.query(model,page,rows);
 		
-		String[] properties = {"receiveId","receiveCode","receiveDate"};
+		String[] properties = {"receiveId","receiveCode","receiveDate","deliverCode",
+				"warehouse.warehouseName","supplier.supplierName","amount","payAmount","discountAmount",
+				"employee.employeeName","note","shzt","invoiceType.invoiceTypeName"};
 		String data = JSONUtil.toJson(list,properties);
 		result.addData("datagridData", data);
 		
@@ -298,6 +303,63 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		}
 		if(!haveDel){
 			result.setMessage("没有可删除的收货单");
+			return result;
+		}
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.ReceiveService#mulUpdateShzt(java.lang.String, org.linys.model.Receive)
+	 */
+	@Override
+	public ServiceResult mulUpdateShzt(String ids, Receive model) {
+		ServiceResult result = new ServiceResult(false);
+		if(StringUtils.isEmpty(ids)){
+			result.setMessage("请选择要修改审核状态的收货单");
+			return result;
+		}
+		String[] idArray =StringUtil.split(ids,GobelConstants.SPLIT_SEPARATOR);
+		if(idArray.length==0){
+			result.setMessage("请选择要修改审核状态的收货单");
+			return result;
+		}
+		if(model==null||model.getShzt()==null){
+			result.setMessage("请选择要修改成的审核状态");
+			return result;
+		}
+		boolean haveUpdateShzt = false;
+		for (String id : idArray) {
+			Receive oldReceive = receiveDAO.load(id);
+			if(oldReceive!=null&&oldReceive.getShzt()!=model.getShzt()){
+				if(model.getShzt()==1){//如果是由未审改为已审
+					//将该收货单下的商品入库
+					List<ReceiveDetail> receiveDetailList = receiveDetailDAO.queryByReceiveId(id);
+					//更新对应商品的库存数量
+					for (ReceiveDetail receiveDetail : receiveDetailList) {
+						Product oldProduct = productDAO.load(receiveDetail.getProduct().getProductId());
+						oldProduct.setQtyStore(oldProduct.getQtyStore()+receiveDetail.getQty());
+						oldProduct.setAmountStore(oldProduct.getAmountStore()+receiveDetail.getAmount());
+						productDAO.update(oldProduct);
+					}
+				}else if(model.getShzt()==0){//如果是由已审改为未审
+					//将该收货单下的商品入库
+					List<ReceiveDetail> receiveDetailList = receiveDetailDAO.queryByReceiveId(id);
+					//更新对应商品的库存数量
+					for (ReceiveDetail receiveDetail : receiveDetailList) {
+						Product oldProduct = productDAO.load(receiveDetail.getProduct().getProductId());
+						oldProduct.setQtyStore(oldProduct.getQtyStore()-receiveDetail.getQty());
+						oldProduct.setAmountStore(oldProduct.getAmountStore()-receiveDetail.getAmount());
+						productDAO.update(oldProduct);
+					}
+				}
+				oldReceive.setShzt(model.getShzt());
+				receiveDAO.update(oldReceive);
+				haveUpdateShzt = true;
+			}
+		}
+		if(!haveUpdateShzt){
+			result.setMessage("没有可修改审核状态的收货单");
 			return result;
 		}
 		result.setIsSuccess(true);

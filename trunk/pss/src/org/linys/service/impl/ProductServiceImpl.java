@@ -49,7 +49,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 				"productType.productTypeId","productType.productTypeName",
 				"unit.dataDictionaryId:unitId","unit.dataDictionaryName:unitName",
 				"color.dataDictionaryId:colorId","color.dataDictionaryName:colorName",
-				"size.dataDictionaryId:sizeId","size.dataDictionaryName:sizeName"};
+				"size.dataDictionaryId:sizeId","size.dataDictionaryName:sizeName",
+				"qtyStore","priceStore","amountStore"};
 		String data = JSONUtil.toJson(list,properties);
 		result.addData("datagridData", data);
 		

@@ -33,14 +33,39 @@
 		  columns:[[
 		        {field:'ck',title:'选择',checkbox:true},
 				{field:'receiveCode',title:'入库单号',width:120,align:"center"},
-				{field:'receiveDate',title:'入库日期',width:90,align:"center"}
+				{field:'receiveDate',title:'入库日期',width:80,align:"center"},
+				{field:'deliverCode',title:'送货单号',width:120,align:"center"},
+				{field:'warehouseName',title:'存入仓库',width:90,align:"center"},
+				{field:'supplierName',title:'供应商',width:90,align:"center"},
+				{field:'amount',title:'应付款',width:80,align:"center"},
+				{field:'payAmount',title:'已付款',width:80,align:"center"},
+				{field:'discountAmount',title:'优惠',width:80,align:"center"},
+				{field:'noPayAmount',title:'欠款',width:80,align:"center",
+					formatter: function(value,row,index){
+						return row.amount-row.payAmount-row.discountAmount;
+					}
+				},
+				{field:'employeeName',title:'经手人',width:90,align:"center"},
+				{field:'note',title:'备注',width:90,align:"center"},
+				{field:'shzt',title:'状态',width:80,align:"center",
+					formatter: function(value,row,index){
+						if(row.shzt==0){
+							return '未审';
+						}else if(row.shzt==1){
+							return '已审';
+						}
+					}},
+				{field:'payzt',title:'付款',width:80,align:"center"},
+				{field:'invoiceTypeName',title:'开票信息',width:90,align:"center"}
 		  ]],
 		  rownumbers:true,
 		  pagination:false,
 		  toolbar:[	
-				{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},
-				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},
-				{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}}
+				{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},'-',
+				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},'-',
+				{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}},'-',
+				{text:'已审',iconCls:'icon-edit',handler:function(){onUpdateShzt(1)}},'-',
+				{text:'反审',iconCls:'icon-edit',handler:function(){onUpdateShzt(0)}}
 		  ],
 		  onDblClickRow:function(rowIndex, rowData){
 				onUpdate();
@@ -336,6 +361,40 @@
 							search(true);
 						}
 						$.messager.alert('提示','删除成功','info',fn);
+					}else{
+						$.messager.alert('提示',result.message,'error');
+					}
+				});
+			}
+		});
+	}
+	//修改审核状态
+	var onUpdateShzt = function(shzt){
+		var rows =  $(viewList).datagrid('getSelections');
+		var msg = '';
+		if(shzt==1){
+			msg = '已审';
+		}else{
+			msg = '反审';
+		}
+		if(rows.length==0){
+			$.messager.alert("提示","请选择要"+msg+"的数据行","warning");
+			return;
+		}
+		var idArray = new Array();
+		for ( var int = 0; int < rows.length; int++) {
+			idArray.push(rows[int].receiveId);
+		}
+		$.messager.confirm("提示","确定要"+msg+"选中的记录?审核后单据不能再修改和删除，系统将进行库存和财务计算!!",function(t){ 
+			if(t){
+				var url = 'inWarehouse/mulUpdateShztReceive.do';
+				var content ={ids:idArray.join(LYS.join),shzt:shzt};
+				asyncCallService(url,content,function(result){
+					if(result.isSuccess){
+						var fn = function(){
+							search(true);
+						}
+						$.messager.alert('提示',msg+'成功','info',fn);
 					}else{
 						$.messager.alert('提示',result.message,'error');
 					}

@@ -69,5 +69,15 @@ public interface ReceiveService extends BaseService<Receive,String>{
 	 * @return
 	 */
 	ServiceResult mulDel(String ids);
+	/**
+	 * @Description: 批量修改状态
+	 * @Create: 2013-1-9 下午11:51:15
+	 * @author lys
+	 * @update logs
+	 * @param ids
+	 * @param model
+	 * @return
+	 */
+	ServiceResult mulUpdateShzt(String ids, Receive model);
 
 }

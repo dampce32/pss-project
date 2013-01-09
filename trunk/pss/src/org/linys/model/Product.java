@@ -1,5 +1,6 @@
 package org.linys.model;
 
+import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -65,6 +67,10 @@ public class Product extends BaseModel {
 	 * 库存金额
 	 */
 	private Double amountStore;
+	/**
+	 * 库存单价
+	 */
+	private Double priceStore;
 	/**
 	 * 备注
 	 */
@@ -203,6 +209,16 @@ public class Product extends BaseModel {
 
 	public void setUnit(DataDictionary unit) {
 		this.unit = unit;
+	}
+	@Transient
+	public Double getPriceStore() {
+		this.priceStore =this.qtyStore==0?0:this.amountStore/this.qtyStore;
+		DecimalFormat df = new DecimalFormat("##########0.00");
+		return Double.parseDouble(df.format(this.priceStore));
+	}
+
+	public void setPriceStore(Double priceStore) {
+		this.priceStore = priceStore;
 	}
 
 }
