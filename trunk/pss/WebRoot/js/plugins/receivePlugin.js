@@ -2,6 +2,7 @@
 (function($) {  
   // 插件的定义  
   $.fn.receiveInit = function() {
+	  
 	  var $this = $(this);
 	  var id = $(this).attr('id');
 	  var width = $(document.body).width();
@@ -28,10 +29,11 @@
 	  
 	  //列表
 	  $(viewList).datagrid({
-		  singleSelect:true,
 		  fit:true,
 		  columns:[[
-				{field:'receiveCode',title:'入库单号',width:200,align:"center"}
+		        {field:'ck',title:'选择',checkbox:true},
+				{field:'receiveCode',title:'入库单号',width:120,align:"center"},
+				{field:'receiveDate',title:'入库日期',width:90,align:"center"}
 		  ]],
 		  rownumbers:true,
 		  pagination:false,
@@ -103,11 +105,22 @@
 	    closed: true,  
 	    cache: false,  
 	    modal: true,
-	    closable:false
-	});    
+	    closable:false,
+	    onClose:function(){
+	    	lastIndex = null;
+	    }
+	}); 
 	//添加
 	var onAdd = function(){
 		$(editForm).form('clear');
+		initChoose();
+		$('#amount',editForm).val(0);
+		$('#discountAmount',editForm).val(0);
+		$('#payAmount',editForm).val(0);
+		$(editDialog).dialog('open');
+	}
+	
+	var initChoose = function(){
 		//供应商
 		$('#supplier',editForm).combogrid({  
 		    panelWidth:450,  
@@ -163,23 +176,115 @@
 			width:150,
 			data:invoiceTypeData
 		})
-		$('#amount',editForm).val(0);
-		$('#discountAmount',editForm).val(0);
-		$('#payAmount',editForm).val(0);
-		$(editDialog).dialog('open');
 	}
 	//保存前的赋值操作
 	var setValue = function(){
-		var receiveName = $.trim($('#receiveName',editForm).val());
-		if(receiveName==''){
-			$.messager.alert('提示','请填写采购入库名称','warning');
+		//供应商
+		var supplierId = $('#supplier',editForm).combogrid('getValue');
+		if(supplierId==''){
+			$.messager.alert('提示','请选择供应商','warning');
 			return false;
 		}
+		$('#supplierId',editForm).val(supplierId);
+		//存放仓库
+		var warehouseId = $('#warehouse',editForm).combobox('getValue');
+		if(warehouseId==''){
+			$.messager.alert('提示','请选择存放仓库','warning');
+			return false;
+		}
+		$('#warehouseId',editForm).val(warehouseId);
+		//收货日期
+		var receiveDate = $('#receiveDate',editForm).val();
+		if(receiveDate==''){
+			$.messager.alert('提示','请选择收货日期','warning');
+			return false;
+		}
+		//银行
+		var bankId = $('#bank',editForm).combobox('getValue');
+		if(bankId==''){
+			$.messager.alert('提示','请选择银行','warning');
+			return false;
+		}
+		$('#bankId',editForm).val(bankId);
+		//经办人
+		var employeeId = $('#employee',editForm).combobox('getValue');
+		if(employeeId==''){
+			$.messager.alert('提示','请选择经办人','warning');
+			return false;
+		}
+		$('#employeeId',editForm).val(employeeId);
+		//发票
+		var invoiceTypeId = $('#invoiceType',editForm).combobox('getValue');
+		if(invoiceTypeId==''){
+			$.messager.alert('提示','请选择发票','warning');
+			return false;
+		}
+		$('#invoiceTypeId',editForm).val(invoiceTypeId);
+		//验证添加的商品行
+		$(receiveDetail).datagrid('endEdit', lastIndex);
+		 $(receiveDetail).datagrid('unselectAll');
+		lastIndex = null;
+		var rows = $(receiveDetail).datagrid('getRows');
+		if(rows.length==0){
+			$.messager.alert('提示','请选择添加商品','warning');
+			return false;
+		}
+		for ( var int = 0; int < rows.length; int++) {
+			var row = rows[int];
+			if(row.qty==0){
+				var msg = '第'+(int+1)+'行商品的数量为0,请输入';
+				$.messager.alert('提示',msg,'warning');
+				return false;
+			}
+		}
+		var receiveDetailIdArray = new Array();
+		var productIdArray = new Array();
+		var colorIdArray = new Array();
+		var qtyArray = new Array();
+		var priceArray = new Array();
+		var note1Array = new Array();
+		var note2Array = new Array();
+		var note3Array = new Array();
+		for ( var i = 0; i < rows.length; i++) {
+			receiveDetailIdArray.push(rows[i].receiveDetailId);
+			productIdArray.push(rows[i].productId);
+			colorIdArray.push(rows[i].colorId);
+			qtyArray.push(rows[i].qty);
+			priceArray.push(rows[i].price);
+			note1Array.push(rows[i].note1);
+			note2Array.push(rows[i].note2);
+			note3Array.push(rows[i].note3);
+		}
+		
+		delReceiveDetailIdArray = new Array();
+		//统计原记录中被删除的记录
+		for ( var int = 0; int < oldReceiveDetailIdArray.length; int++) {
+			var haveDel = true;
+			for(var i=0;i<rows.length;i++){
+				if(oldReceiveDetailIdArray[int]==rows[i].receiveDetailId){
+					haveDel = false;
+					break;
+				}
+			}
+			if(haveDel){
+				delReceiveDetailIdArray.push(oldReceiveDetailIdArray[int]);
+			}
+		}
+		$('#receiveDetailIds',editForm).val(receiveDetailIdArray.join(LYS.join));
+		$('#delReceiveDetailIds',editForm).val(delReceiveDetailIdArray.join(LYS.join));
+		$('#productIds',editForm).val(productIdArray.join(LYS.join));
+		$('#colorIds',editForm).val(colorIdArray.join(LYS.join));
+		$('#qtys',editForm).val(qtyArray.join(LYS.join));
+		$('#prices',editForm).val(priceArray.join(LYS.join));
+		$('#note1s',editForm).val(note1Array.join(LYS.join));
+		$('#note2s',editForm).val(note2Array.join(LYS.join));
+		$('#note3s',editForm).val(note3Array.join(LYS.join));
+		
 		return true;
 	}
 	//保存
 	var onSave = function(){
-		var url = 'dict/savereceive.do'
+		var url = 'inWarehouse/saveReceive.do'
 		$(editForm).form('submit',{
 			url: url,
 			onSubmit: function(){
@@ -189,18 +294,11 @@
 				var result = eval('('+data+')');
 				if(result.isSuccess){
 					var fn = function(){
-						var receiveId = $.trim($('#receiveId',editForm).val());
-						if(receiveId==''){//新增
-							search(true);
-						}else{
-							var row = $(editForm).serializeObject();
-							$(viewList).datagrid('updateRow',{index:selectIndex,row:row});	
-						}
-						$(editDialog).dialog('close');
-						$(editForm).form('clear');
+						var data = result.data;
+						//赋值receiveId，并加载receiveDetail
+						onOpen(data.receiveId);
 					}
 					$.messager.alert('提示','保存成功','info',fn);
-					
 				}else{
 					$.messager.alert('提示',result.message,'error');
 				}
@@ -213,21 +311,25 @@
 			$.messager.alert("提示","请选择数据行","warning");
 			return;
 		}
-		$(editForm).form('clear');
-		$(editDialog).dialog('open');
-		$(editForm).form('load',selectRow);
+		initChoose();
+		onOpen(selectRow.receiveId);
 		$(editDialog).dialog('open');
 	 }
 	//删除
 	var onDelete = function(){
-		if(selectRow==null){
-			 $.messager.alert('提示',"请选中要删除的纪录","warming");
-			 return;	
+		var rows =  $(viewList).datagrid('getSelections');
+		if(rows.length==0){
+			$.messager.alert("提示","请选择要删除的数据行","warning");
+			return;
+		}
+		var idArray = new Array();
+		for ( var int = 0; int < rows.length; int++) {
+			idArray.push(rows[int].receiveId);
 		}
 		$.messager.confirm("提示","确定要删除选中的记录?",function(t){ 
 			if(t){
-				var url = 'dict/deletereceive.do';
-				var content ={receiveId:selectRow.receiveId};
+				var url = 'inWarehouse/mulDelReceive.do';
+				var content ={ids:idArray.join(LYS.join)};
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
 						var fn = function(){
@@ -238,6 +340,43 @@
 						$.messager.alert('提示',result.message,'error');
 					}
 				});
+			}
+		});
+	}
+	//打开
+	var onOpen = function(receiveId){
+		var url = 'inWarehouse/initReceive.do';
+		var content ={receiveId:receiveId};
+		asyncCallService(url,content,function(result){
+			if(result.isSuccess){
+				var data = result.data;
+				var receiveData = eval("("+data.receiveData+")");
+				$('#receiveId',editDialog).val(receiveData.receiveId);
+				$('#receiveCode',editDialog).val(receiveData.receiveCode);
+				$('#receiveDate',editDialog).val(receiveData.receiveDate);
+				$('#deliverCode',editDialog).val(receiveData.deliverCode);
+				if(receiveData.shzt==1){
+					$('#shzt',editDialog).val('已审核');
+				}else{
+					$('#shzt',editDialog).val('未审核');
+				}
+				
+				$('#supplier',editDialog).combogrid('setValue',receiveData.supplierId);
+				$('#warehouse',editDialog).combobox('setValue',receiveData.warehouseId);
+				
+				$('#amount',editDialog).val(receiveData.amount);
+				$('#discountAmount',editDialog).val(receiveData.discountAmount);
+				$('#payAmount',editDialog).val(receiveData.payAmount);
+				
+				$('#bank',editDialog).combobox('setValue',receiveData.bankId);
+				$('#employee',editDialog).combobox('setValue',receiveData.employeeId);
+				$('#invoiceType',editDialog).combobox('setValue',receiveData.invoiceTypeId);
+				$('#note',editDialog).val(receiveData.note);
+				
+				var detailData = eval("("+data.detailData+")");
+				$(receiveDetail).datagrid('loadData',detailData);
+			}else{
+				$.messager.alert('提示',result.message,'error');
 			}
 		});
 	}
@@ -253,6 +392,7 @@
 		}
 		return value;
 	}
+	var oldReceiveDetailIdArray = new Array();
 	$(receiveDetail).datagrid({
 	  singleSelect:true,	
 	  fit:true,
@@ -310,7 +450,13 @@
 			setEditing(rowIndex);
 		}
 		lastIndex = rowIndex;
-	  }
+	  },onLoadSuccess:function(data){
+			var rows = data.rows;
+			oldReceiveDetailIdArray = new Array();
+			for ( var int = 0; int < rows.length; int++) {
+				oldReceiveDetailIdArray.push(rows[int].receiveDetailId);
+			}
+		}
 	 });
 	function setEditing(rowIndex){  
 	    var editors = $(receiveDetail).datagrid('getEditors', rowIndex);  
@@ -391,6 +537,8 @@
 		 for ( var int = 0; int < rows.length; int++) {
 			var row = rows[int];
 			 $(receiveDetail).datagrid('appendRow',{
+				 receiveDetailId:'',
+				 productId:row.productId,
 				 productCode:row.productCode,
 				 productName:row.productName,
 				 unitName:row.unitName,

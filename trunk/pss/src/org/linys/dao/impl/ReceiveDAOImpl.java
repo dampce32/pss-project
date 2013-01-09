@@ -55,5 +55,17 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 		criteria.setProjection(Projections.rowCount());
 		return new Long(criteria.uniqueResult().toString());
 	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.ReceiveDAO#newCode(java.lang.String)
+	 */
+	@Override
+	public String getMaxCode(String receiveCode) {
+		Criteria criteria  = getCurrentSession().createCriteria(Receive.class);
+		
+		criteria.add(Restrictions.like("receiveCode", receiveCode,MatchMode.START));
+		criteria.setProjection(Projections.max("receiveCode"));
+		return criteria.uniqueResult()==null?null:criteria.uniqueResult().toString();
+	}
 
 }

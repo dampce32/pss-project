@@ -31,5 +31,14 @@ public interface ReceiveDAO extends BaseDAO<Receive,String>{
 	 * @return
 	 */
 	Long getTotalCount(Receive model);
+	/**
+	 * @Description: 取得当天最大的收货单编号
+	 * @Create: 2013-1-7 下午10:16:20
+	 * @author lys
+	 * @update logs
+	 * @param receiveCode
+	 * @return
+	 */
+	String getMaxCode(String receiveCode);
 
 }
