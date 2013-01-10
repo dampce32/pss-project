@@ -21,7 +21,7 @@ public interface ReceiveDAO extends BaseDAO<Receive,String>{
 	 * @param rows
 	 * @return
 	 */
-	List<Receive> query(Receive model, Integer page, Integer rows);
+	List<Receive> query(String kind,Receive model, Integer page, Integer rows);
 	/**
 	 * @Description: 统计收货
 	 * @Create: 2012-12-29 下午9:58:32
@@ -30,7 +30,7 @@ public interface ReceiveDAO extends BaseDAO<Receive,String>{
 	 * @param model
 	 * @return
 	 */
-	Long getTotalCount(Receive model);
+	Long getTotalCount(String kind,Receive model);
 	/**
 	 * @Description: 取得当天最大的收货单编号
 	 * @Create: 2013-1-7 下午10:16:20

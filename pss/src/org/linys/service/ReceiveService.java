@@ -14,26 +14,29 @@ public interface ReceiveService extends BaseService<Receive,String>{
 	 * @Description: 分页查询收货
 	 * @Create: 2012-12-29 下午9:55:19
 	 * @author lys
+	 * @param kind 
 	 * @update logs
 	 * @param model
 	 * @param page
 	 * @param rows
 	 * @return
 	 */
-	ServiceResult query(Receive model, Integer page, Integer rows);
+	ServiceResult query(String kind, Receive model, Integer page, Integer rows);
 	/**
 	 * @Description: 统计收货
 	 * @Create: 2012-12-29 下午9:55:30
 	 * @author lys
+	 * @param kind 
 	 * @update logs
 	 * @param model
 	 * @return
 	 */
-	ServiceResult getTotalCount(Receive model);
+	ServiceResult getTotalCount(String kind, Receive model);
 	/**
 	 * @Description: 保存收货单
 	 * @Create: 2013-1-3 上午10:45:08
 	 * @author lys
+	 * @param kind 
 	 * @update logs
 	 * @param model
 	 * @param receiveDetailIds
@@ -47,7 +50,7 @@ public interface ReceiveService extends BaseService<Receive,String>{
 	 * @param note3s
 	 * @return
 	 */
-	ServiceResult save(Receive model, String receiveDetailIds,
+	ServiceResult save(String kind, Receive model, String receiveDetailIds,
 			String delReceiveDetailIds, String productIds, String colorIds,
 			String qtys, String prices, String note1s, String note2s,
 			String note3s);

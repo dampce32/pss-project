@@ -37,7 +37,8 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 	public void query(){
 		ServiceResult result = new ServiceResult(false);
 		try {
-			result = receiveService.query(model,page,rows);
+			String kind = getParameter("kind");
+			result = receiveService.query(kind,model,page,rows);
 		} catch (Exception e) {
 			result.setMessage("查询收货失败");
 			result.setIsSuccess(false);
@@ -55,7 +56,8 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 	public void getTotalCount(){
 		ServiceResult result = new ServiceResult(false);
 		try {
-			result = receiveService.getTotalCount(model);
+			String kind = getParameter("kind");
+			result = receiveService.getTotalCount(kind,model);
 		} catch (Exception e) {
 			result.setMessage("统计收货失败");
 			result.setIsSuccess(false);
@@ -82,8 +84,9 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 			String note1s = getParameter("note1s");
 			String note2s = getParameter("note2s");
 			String note3s = getParameter("note3s");
+			String kind = getParameter("kind");
 			
-			result = receiveService.save(model,receiveDetailIds,delReceiveDetailIds,
+			result = receiveService.save(kind,model,receiveDetailIds,delReceiveDetailIds,
 					productIds,colorIds,qtys,prices,note1s,note2s,note3s);
 		} catch (Exception e) {
 			result.setMessage("保存收货单失败");

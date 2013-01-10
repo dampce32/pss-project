@@ -35,10 +35,10 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	 * @see org.linys.service.ReceiveService#query(org.linys.model.Receive, java.lang.Integer, java.lang.Integer)
 	 */
 	@Override
-	public ServiceResult query(Receive model, Integer page, Integer rows) {
+	public ServiceResult query(String kind,Receive model, Integer page, Integer rows) {
 		ServiceResult result = new ServiceResult(false);
 		
-		List<Receive> list = receiveDAO.query(model,page,rows);
+		List<Receive> list = receiveDAO.query(kind,model,page,rows);
 		
 		String[] properties = {"receiveId","receiveCode","receiveDate","deliverCode",
 				"warehouse.warehouseName","supplier.supplierName","amount","payAmount","discountAmount",
@@ -54,9 +54,9 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	 * @see org.linys.service.ReceiveService#getTotalCount(org.linys.model.Receive)
 	 */
 	@Override
-	public ServiceResult getTotalCount(Receive model) {
+	public ServiceResult getTotalCount(String kind,Receive model) {
 		ServiceResult result = new ServiceResult(false);
-		Long data = receiveDAO.getTotalCount(model);
+		Long data = receiveDAO.getTotalCount(kind,model);
 		result.addData("total", data);
 		result.setIsSuccess(true);
 		return result;
@@ -66,19 +66,29 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	 * @see org.linys.service.ReceiveService#save(org.linys.model.Receive, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public ServiceResult save(Receive model, String receiveDetailIds,
+	public ServiceResult save(String kind,Receive model, String receiveDetailIds,
 			String delReceiveDetailIds, String productIds, String colorIds,
 			String qtys, String prices, String note1s, String note2s,
 			String note3s) {
 		ServiceResult result = new ServiceResult(false);
 		if(model==null){
-			result.setMessage("请填写收货单明细");
+			result.setMessage("请填写收货单信息");
 			return result;
 		}
 		
-		if(model.getSupplier()==null||StringUtils.isEmpty(model.getSupplier().getSupplierId())){
-			result.setMessage("请选择供应商");
-			return result;
+		if(!"other".equals(kind)){
+			if(model.getSupplier()==null||StringUtils.isEmpty(model.getSupplier().getSupplierId())){
+				result.setMessage("请选择供应商");
+				return result;
+			}
+			if(model.getBank()==null||StringUtils.isEmpty(model.getBank().getBankId())){
+				result.setMessage("请选择银行");
+				return result;
+			}
+			if(model.getInvoiceType()==null||StringUtils.isEmpty(model.getInvoiceType().getInvoiceTypeId())){
+				result.setMessage("请选择发票");
+				return result;
+			}
 		}
 		
 		if(model.getWarehouse()==null||StringUtils.isEmpty(model.getWarehouse().getWarehouseId())){
@@ -89,20 +99,10 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			result.setMessage("请选择收货日期");
 			return result;
 		}
-		
-		if(model.getBank()==null||StringUtils.isEmpty(model.getBank().getBankId())){
-			result.setMessage("请选择银行");
-			return result;
-		}
 		if(model.getEmployee()==null||StringUtils.isEmpty(model.getEmployee().getEmployeeId())){
 			result.setMessage("请选择经办人");
 			return result;
 		}
-		if(model.getInvoiceType()==null||StringUtils.isEmpty(model.getInvoiceType().getInvoiceTypeId())){
-			result.setMessage("请选择发票");
-			return result;
-		}
-		
 		if(StringUtils.isEmpty(productIds)){
 			result.setMessage("请选择商品");
 			return result;
@@ -130,10 +130,17 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		}
 		if(StringUtils.isEmpty(model.getReceiveId())){//新增
 			//取得入库单号
-			String receiveCode = "CJ"+DateUtils.dateToString(new Date(),"yyyyMMdd");
+			String receiveCode = null;
+			String prefix = null;
+			if(!"other".equals(kind)){
+				prefix = "CJ";
+			}else{
+				prefix = "QR";
+			}
+			receiveCode = prefix + DateUtils.dateToString(new Date(),"yyyyMMdd");
 			receiveCode = receiveDAO.getMaxCode(receiveCode);
 			
-			receiveCode = newReceiveCode(receiveCode);
+			receiveCode = newReceiveCode(prefix,receiveCode);
 			model.setShzt(0);
 			model.setReceiveCode(receiveCode);
 			receiveDAO.save(model);
@@ -247,12 +254,12 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	 * @param receiveCode
 	 * @return
 	 */
-	private String newReceiveCode(String receiveCode) {
+	private String newReceiveCode(String prefix,String receiveCode) {
 		int index = 0;
 		if(receiveCode!=null){
 			index = Integer.parseInt(receiveCode.substring(10, receiveCode.length()));	
 		}
-		return "CJ"+DateUtils.dateToString(new Date(),"yyyyMMdd")+String.format("%04d", index+1);
+		return prefix+DateUtils.dateToString(new Date(),"yyyyMMdd")+String.format("%04d", index+1);
 	}
 	/*
 	 * (non-Javadoc)   
