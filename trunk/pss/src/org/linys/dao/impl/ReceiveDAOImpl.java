@@ -21,7 +21,7 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Receive> query(Receive model, Integer page, Integer rows) {
+	public List<Receive> query(String kind,Receive model, Integer page, Integer rows) {
 		Criteria criteria  = getCurrentSession().createCriteria(Receive.class);
 		
 		criteria.createAlias("warehouse", "warehouse",CriteriaSpecification.LEFT_JOIN);
@@ -31,6 +31,11 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getReceiveCode())){
 			criteria.add(Restrictions.like("receiveCode", model.getReceiveCode(),MatchMode.ANYWHERE));
+		}
+		if("other".equals(kind)){
+			criteria.add(Restrictions.isNull("supplier"));
+		}else{
+			criteria.add(Restrictions.isNotNull("supplier"));
 		}
 		
 		if(page==null||page<1){
@@ -52,11 +57,16 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 	 * @see org.linys.dao.ReceiveDAO#getTotalCount(org.linys.model.Receive)
 	 */
 	@Override
-	public Long getTotalCount(Receive model) {
+	public Long getTotalCount(String kind,Receive model) {
 		Criteria criteria  = getCurrentSession().createCriteria(Receive.class);
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getReceiveCode())){
 			criteria.add(Restrictions.like("receiveCode", model.getReceiveCode(),MatchMode.ANYWHERE));
+		}
+		if("other".equals(kind)){
+			criteria.add(Restrictions.isNull("supplier"));
+		}else{
+			criteria.add(Restrictions.isNotNull("supplier"));
 		}
 		criteria.setProjection(Projections.rowCount());
 		return new Long(criteria.uniqueResult().toString());
