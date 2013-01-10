@@ -1,15 +1,34 @@
 <div class="easyui-layout plugins" data-options="fit:true" ui="receiveInit" id="${id}">
-	<div class="easyui-layout"  data-options="region:'center'">
-		<div data-options="region:'north',border:false" style="height: 35px;overflow: hidden;padding:5px" id="queryContent"> 
-			入库单号:&nbsp;&nbsp;<input id="receiveCodeSearch" type="text" size="12"/>&nbsp;&nbsp;&nbsp;
-			<a href="#" class="easyui-linkbutton" id="searchBtn" data-options="iconCls:'icon-search'" style="cursor: pointer;">查 询</a>
+	<div data-options="region:'north',border:false" style="height: 35px;overflow: hidden;padding:5px" id="queryContent"> 
+		入库单号:&nbsp;&nbsp;<input id="receiveCodeSearch" type="text" size="12"/>&nbsp;&nbsp;&nbsp;
+		<a href="#" class="easyui-linkbutton" id="searchBtn" data-options="iconCls:'icon-search'" style="cursor: pointer;">查询</a>
+		<a href="#" class="easyui-linkbutton" id="mulSearchBtn" data-options="iconCls:'icon-search'" style="cursor: pointer;">高级查询</a>
+		<div class = "easyui-panel" id="mulSearchPanel"  closed="true" style="padding: 3px;margin-top: 6px">
+			<div class="mul-search-hd">
+           		 <span style="font-size: 30px">高级查询
+           		 	<a href="#" class="easyui-linkbutton" iconCls="icon-search" id="mulSearch" style="padding-top: -13px">查询</a>
+                    <a href="#" class="easyui-linkbutton" iconCls="icon-undo" id="mulSearchClear">清空</a>
+           		 </span>
+            </div>
+            <div class="mul-search-bd" style="margin-top: 6px">
+              <form id="mulSearchForm" method="post">
+            	<table width="100%" >
+	                <tr>
+						<td class="table-title" style="width:80px"> 入库单号:</td>
+						<td class="table-value"> 
+							<input type="text" name="receiveCode" id="receiveCodeMulSearch" style="width:200px">
+						</td>
+					</tr>
+               </table>
+               </form>
+              </div>
 		</div>
-		<div data-options="region:'center',border:false" style="width: 100%;height:100%">
-			<div id="viewList"></div>
-		</div>
-		<div data-options="region:'south',border:false" style="height: 32">
-			<div class="easyui-pagination" id="pager" style="background:#efefef;border:1px solid #ccc;"></div>
-		</div>
+	</div>
+	<div data-options="region:'center',border:false" style="width: 100%;height:100%">
+		<div id="viewList"></div>
+	</div>
+	<div data-options="region:'south',border:false" style="height: 32">
+		<div class="easyui-pagination" id="pager" style="background:#efefef;border:1px solid #ccc;"></div>
 	</div>
 	
 	<div id="editDialog">

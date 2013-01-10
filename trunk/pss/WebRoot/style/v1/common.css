@@ -38,7 +38,6 @@ margin:3px ;
 width:500;
 height:200px;
 padding:10px;
-
 }
 .mul-search-hd h2{
 float:left;}
@@ -46,7 +45,8 @@ float:left;}
 margin:-8px 3px 0px 15px;
 }
 .mul-search-bd{
-clear:both}
+clear:both;
+margin-top:5px}
 .selectarrcols {
 	width: 202px;
 	height: 23px;
