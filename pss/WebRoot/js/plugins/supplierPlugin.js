@@ -24,6 +24,10 @@
 	  //列表
 	  $(viewList).datagrid({
 		  singleSelect:true,
+		  method:"POST",
+		  nowrap:true,
+		  striped: true,
+		  collapsible:true,
 		  fit:true,
 		  columns:[[
 			    {field:'supplierCode',title:'供应商编号',width:120,align:"center"},

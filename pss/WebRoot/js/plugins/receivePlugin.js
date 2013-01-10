@@ -10,6 +10,7 @@
 	  
 	  var queryContent = $('#queryContent',$this);
 	  var searchBtn = $('#searchBtn',$this);
+	  var mulSearchBtn = $('#mulSearchBtn',$this);
 	 
 	  var editDialog = $('#editDialog',$this);
 	  var editForm = $('#editForm',editDialog);
@@ -27,9 +28,15 @@
 	  var employeeData = null;
 	  var invoiceTypeData = null;
 	  
+	  var changeSearch = false;
+	  
 	  //列表
 	  $(viewList).datagrid({
 		  fit:true,
+		  nowrap:true,
+			striped: true,
+			collapsible:true,
+			rownumbers:true,
 		  columns:[[
 		        {field:'ck',title:'选择',checkbox:true},
 				{field:'receiveCode',title:'入库单号',width:120,align:"center"},
@@ -82,6 +89,47 @@
 			pageSize = rows;
 			search();
 	    }
+	});
+	//高级查询
+	$(mulSearchBtn).click(function(){
+		if(changeSearch){
+			$('#mulSearchPanel',$this).panel('close');
+			$('#'+id).layout('panel','north').panel('resize',{
+				height: 32
+			});
+			$('#'+id).layout('resize');
+			changeSearch = false;
+		}else{
+			$('#mulSearchPanel',$this).panel('open');
+			$('#'+id).layout('panel','north').panel('resize',{
+				height: 110
+			});
+			$('#'+id).layout('resize');
+			changeSearch = true;
+		}
+	})
+	
+	$("#mulSearch",$this).click(function(){
+		var receiveCode = $('#receiveCodeMulSearch',$this).val();
+		
+		var url = "inWarehouse/queryReceive.do";
+		var content = {receiveCode:receiveCode,page:pageNumber,rows:pageSize};
+		var result = syncCallService(url,content);
+		if(result.isSuccess){
+			var data = result.data;
+			$(viewList).datagrid('loadData',eval("("+data.datagridData+")"));
+			//需要重新重新分页信息
+			if(flag){
+				getTotal(content);
+			}
+		}else{
+			$.messager.alert('提示',result.message,"error");
+		}
+	})
+	
+	$("#mulSearchClear").click(function(){
+		$("#mulSearchForm").form('clear');
+		return false;
 	});
 	//查询
 	$(searchBtn).click(function(){
