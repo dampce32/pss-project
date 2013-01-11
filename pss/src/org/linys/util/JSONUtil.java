@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -258,6 +259,102 @@ public class JSONUtil{
 		System.out.println(JSONUtil.toJson(list,filterList));
 		
 		System.out.println(JSONUtil.toJson(list,filterList,1L));
+	}
+	/**
+	 * @Description: 将List<Map>数据转化成json数据
+	 * @Create: 2013-1-11 下午11:04:41
+	 * @author lys
+	 * @update logs
+	 * @param listMap
+	 * @return
+	 */
+	public static String toJsonFromListMap(List<Map<String, Object>> listMap) {
+		if(listMap==null||listMap.size()==0){
+			return EMPTYJSON;
+		}
+		JSONObject object = new JSONObject();
+		JSONArray array = new JSONArray();
+		JSONObject item = null;
+		Set<String> keySet = listMap.get(0).keySet();
+		try {
+			for (Map<String,Object> map : listMap) {
+				item = new JSONObject();
+				Object value = null;
+				for(String key : keySet){
+					value = map.get(key);
+					item.put(key, value);
+				}
+				array.add(item);
+			}
+			object.put("rows", array);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return object.toString();
+	}
+	/**
+	 * @Description: 将List<Map>数据转化成json数据(不带rows)
+	 * @Create: 2013-1-11 下午11:04:41
+	 * @author lys
+	 * @update logs
+	 * @param listMap
+	 * @return
+	 */
+	public static String toJsonFromListMapWithOutRows(List<Map<String, Object>> listMap) {
+		if(listMap==null||listMap.size()==0){
+			return EMPTYJSON;
+		}
+		JSONArray array = new JSONArray();
+		JSONObject item = null;
+		Set<String> keySet = listMap.get(0).keySet();
+		try {
+			for (Map<String,Object> map : listMap) {
+				item = new JSONObject();
+				Object value = null;
+				for(String key : keySet){
+					value = map.get(key);
+					item.put(key, value);
+				}
+				array.add(item);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return array.toString();
+	}
+	
+	/**
+	 * @Description: 将List<Map> total数据转化成json数据
+	 * @Create: 2013-1-11 下午11:04:41
+	 * @author lys
+	 * @update logs
+	 * @param listMap
+	 * @return
+	 */
+	public static String toJsonFromListMap(List<Map<String, Object>> listMap,Long total) {
+		if(listMap==null||listMap.size()==0){
+			return EMPTYJSON;
+		}
+		JSONObject object = new JSONObject();
+		JSONArray array = new JSONArray();
+		JSONObject item = null;
+		Set<String> keySet = listMap.get(0).keySet();
+		try {
+			for (Map<String,Object> map : listMap) {
+				item = new JSONObject();
+				Object value = null;
+				for(String key : keySet){
+					value = map.get(key);
+					item.put(key, value);
+				}
+				array.add(item);
+			}
+			object.put("rows", array);
+			object.put("total", total);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return object.toString();
 	}
 	
 }

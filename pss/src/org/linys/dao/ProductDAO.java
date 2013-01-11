@@ -31,5 +31,25 @@ public interface ProductDAO extends BaseDAO<Product,String>{
 	 * @return
 	 */
 	Long getTotalCount(Product model);
+	/**
+	 * @Description: 退货分页查询商品
+	 * @Create: 2013-1-11 下午12:49:59
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	List<Product> queryReject(Product model, Integer page, Integer rows);
+	/**
+	 * @Description: 退货统计商品
+	 * @Create: 2013-1-11 下午12:50:23
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @return
+	 */
+	Long getTotalCountReject(Product model);
 
 }

@@ -117,5 +117,23 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	}
+	/**
+	 * @Description: 退货选择商品
+	 * @Create: 2013-1-11 下午12:48:15
+	 * @author lys
+	 * @update logs
+	 */
+	public void selectReject(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = productService.selectReject(model,page,rows);
+		} catch (Exception e) {
+			result.setMessage("退货选择商品失败");
+			result.setIsSuccess(false);
+			e.printStackTrace();
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
 
 }

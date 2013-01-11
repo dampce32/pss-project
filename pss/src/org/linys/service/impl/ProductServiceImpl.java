@@ -136,7 +136,31 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 				"productType.productTypeId","productType.productTypeName",
 				"unit.dataDictionaryId:unitId","unit.dataDictionaryName:unitName",
 				"color.dataDictionaryId:colorId","color.dataDictionaryName:colorName",
-				"size.dataDictionaryId:sizeId","size.dataDictionaryName:sizeName"};
+				"size.dataDictionaryId:sizeId","size.dataDictionaryName:sizeName",
+				"qtyStore"};
+		String data = JSONUtil.toJson(list,properties,total);
+		result.addData("datagridData", data);
+		
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.ProductService#selectReject(org.linys.model.Product, java.lang.Integer, java.lang.Integer)
+	 */
+	@Override
+	public ServiceResult selectReject(Product model, Integer page, Integer rows) {
+		ServiceResult result = new ServiceResult(false);
+		
+		List<Product> list = productDAO.queryReject(model,page,rows);
+		Long total = productDAO.getTotalCountReject(model);
+		
+		String[] properties = {"productId","productCode","productName","note",
+				"productType.productTypeId","productType.productTypeName",
+				"unit.dataDictionaryId:unitId","unit.dataDictionaryName:unitName",
+				"color.dataDictionaryId:colorId","color.dataDictionaryName:colorName",
+				"size.dataDictionaryId:sizeId","size.dataDictionaryName:sizeName",
+				"qtyStore"};
 		String data = JSONUtil.toJson(list,properties,total);
 		result.addData("datagridData", data);
 		
