@@ -65,6 +65,21 @@
 		</action>
 	</package>
 	
+	<package name="outWarehouse" namespace="/outWarehouse" extends="basePackage">
+		<action name="*Reject" class="rejectAction" method="{1}"></action>
+		<action name="*">
+			<result>/WEB-INF/outWarehouse/{1}.html</result>
+		</action>
+	</package>
+	
+	<package name="store" namespace="/store" extends="basePackage">
+		<action name="*Store" class="storeAction" method="{1}"></action>
+		<action name="*">
+			<result>/WEB-INF/store/{1}.html</result>
+		</action>
+	</package>
+	
+	
 	<package name="common" namespace="/common" extends="basePackage">
 		<action name="*Common" class="commonAction" method="{1}"></action>
 	</package>

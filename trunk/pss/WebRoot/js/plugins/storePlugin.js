@@ -1,7 +1,7 @@
 // 创建一个闭包  
 (function($) {  
   // 插件的定义  
-  $.fn.productStoreInit = function() {
+  $.fn.storeInit = function() {
 	  var $this = $(this);
 	  var id = $(this).attr('id');
 	  var width = $(document.body).width();
@@ -30,12 +30,14 @@
 			    {field:'productCode',title:'商品编号',width:120,align:"center"},
 				{field:'productName',title:'商品名称',width:300,align:"center"},
 			    {field:'productTypeName',title:'商品类型',width:120,align:"center"},
-			    {field:'unitName',title:'单位',width:120,align:"center"},
-			    {field:'sizeName',title:'规格',width:120,align:"center"},
-			    {field:'colorName',title:'颜色',width:120,align:"center"},
-			    {field:'priceStore',title:'库存单价',width:120,align:"center"},
-			    {field:'qtyStore',title:'库存数量',width:120,align:"center"},
-			    {field:'amountStore',title:'库存总价',width:120,align:"center"}
+			    {field:'unitName',title:'单位',width:90,align:"center"},
+			    {field:'sizeName',title:'规格',width:90,align:"center"},
+			    {field:'colorName',title:'颜色',width:90,align:"center"},
+			    {field:'price',title:'库存单价',width:90,align:"center",formatter: function(value,row,index){
+					return (row.amount/row.qty).toFixed(2);
+				}},
+			    {field:'qty',title:'库存数量',width:90,align:"center"},
+			    {field:'amount',title:'库存总价',width:90,align:"center"}
 		  ]],
 		  rownumbers:true,
 		  pagination:false,
@@ -61,8 +63,8 @@
 		var productCode = $('#productCodeSearch',queryContent).val();
 		var productName = $('#productNameSearch',queryContent).val();
 		
-		var url = "dict/queryProduct.do";
-		var content = {productCode:productCode,productName:productName,page:pageNumber,rows:pageSize};
+		var url = "store/queryStore.do";
+		var content = {'product.productCode':productCode,'product.productName':productName,page:pageNumber,rows:pageSize};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
 			var data = result.data;
@@ -77,7 +79,7 @@
 	} 
 	//统计总数
 	var getTotal = function(content){
-		var url = "dict/getTotalCountProduct.do";
+		var url = "store/getTotalCountStore.do";
 		asyncCallService(url,content,
 		function(result){
 			if(result.isSuccess){

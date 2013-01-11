@@ -52,6 +52,7 @@ public interface ProductService extends BaseService<Product,String>{
 	 * @Description: 选择商品
 	 * @Create: 2012-12-30 上午10:25:02
 	 * @author lys
+	 * @param kind 
 	 * @update logs
 	 * @param model
 	 * @param page
@@ -59,5 +60,16 @@ public interface ProductService extends BaseService<Product,String>{
 	 * @return
 	 */
 	ServiceResult select(Product model, Integer page, Integer rows);
+	/**
+	 * @Description: 退货选择商品
+	 * @Create: 2013-1-11 下午12:48:49
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	ServiceResult selectReject(Product model, Integer page, Integer rows);
 
 }

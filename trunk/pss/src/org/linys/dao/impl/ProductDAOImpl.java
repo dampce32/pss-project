@@ -66,5 +66,62 @@ public class ProductDAOImpl extends BaseDAOImpl<Product, String> implements Prod
 		criteria.setProjection(Projections.rowCount());
 		return new Long(criteria.uniqueResult().toString());
 	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.ProductDAO#queryReject(org.linys.model.Product, java.lang.Integer, java.lang.Integer)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Product> queryReject(Product model, Integer page, Integer rows) {
+		Criteria criteria  = getCurrentSession().createCriteria(Product.class);
+		criteria.createAlias("color", "color", CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("size", "size", CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("unit", "unit", CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("productType", "productType", CriteriaSpecification.LEFT_JOIN);
+		
+		criteria.add(Restrictions.not(Restrictions.eq("qtyStore", 0.0)));
+		
+		if(model!=null&&StringUtils.isNotEmpty(model.getProductCode())){
+			criteria.add(Restrictions.like("productCode", model.getProductCode(),MatchMode.ANYWHERE));
+		}
+		
+		if(model!=null&&StringUtils.isNotEmpty(model.getProductName())){
+			criteria.add(Restrictions.like("productName", model.getProductName(),MatchMode.ANYWHERE));
+		}
+		
+		if(page==null||page<1){
+			page = 1;
+		}
+		if(rows==null||rows<0){
+			rows = GobelConstants.DEFAULTPAGESIZE;
+		}
+		
+		Integer begin = (page-1)*rows;
+		
+		criteria.setFirstResult(begin);
+		criteria.setMaxResults(rows);
+		
+		return criteria.list();
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.ProductDAO#getTotalCountReject(org.linys.model.Product)
+	 */
+	@Override
+	public Long getTotalCountReject(Product model) {
+		Criteria criteria  = getCurrentSession().createCriteria(Product.class);
+		
+		criteria.add(Restrictions.not(Restrictions.eq("qtyStore", 0.0)));
+		
+		if(model!=null&&StringUtils.isNotEmpty(model.getProductCode())){
+			criteria.add(Restrictions.like("productCode", model.getProductCode(),MatchMode.ANYWHERE));
+		}
+		
+		if(model!=null&&StringUtils.isNotEmpty(model.getProductName())){
+			criteria.add(Restrictions.like("productName", model.getProductName(),MatchMode.ANYWHERE));
+		}
+		criteria.setProjection(Projections.rowCount());
+		return new Long(criteria.uniqueResult().toString());
+	}
 
 }

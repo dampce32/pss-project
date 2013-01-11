@@ -6,13 +6,14 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
-import org.linys.dao.ProductDAO;
 import org.linys.dao.ReceiveDAO;
 import org.linys.dao.ReceiveDetailDAO;
+import org.linys.dao.StoreDAO;
 import org.linys.model.DataDictionary;
 import org.linys.model.Product;
 import org.linys.model.Receive;
 import org.linys.model.ReceiveDetail;
+import org.linys.model.Store;
 import org.linys.service.ReceiveService;
 import org.linys.util.DateUtils;
 import org.linys.util.JSONUtil;
@@ -29,7 +30,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	@Resource
 	private ReceiveDetailDAO receiveDetailDAO;
 	@Resource
-	private ProductDAO productDAO;
+	private StoreDAO storeDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.ReceiveService#query(org.linys.model.Receive, java.lang.Integer, java.lang.Integer)
@@ -342,22 +343,38 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 				if(model.getShzt()==1){//如果是由未审改为已审
 					//将该收货单下的商品入库
 					List<ReceiveDetail> receiveDetailList = receiveDetailDAO.queryByReceiveId(id);
-					//更新对应商品的库存数量
+					//将对应商品入库
 					for (ReceiveDetail receiveDetail : receiveDetailList) {
-						Product oldProduct = productDAO.load(receiveDetail.getProduct().getProductId());
-						oldProduct.setQtyStore(oldProduct.getQtyStore()+receiveDetail.getQty());
-						oldProduct.setAmountStore(oldProduct.getAmountStore()+receiveDetail.getAmount());
-						productDAO.update(oldProduct);
+						/*
+						 * 查找商品在仓库中是否已有记录，如果有则修改库存数量和库存金额，	
+						 * 如果没有，则修改新增库存记录
+						*/
+						String[] propertyNames = {"warehouse.warehouseId","product.productId"};
+						Object[] values = {oldReceive.getWarehouse().getWarehouseId(),receiveDetail.getProduct().getProductId()};
+						Store store = storeDAO.load(propertyNames, values);
+						if(store==null){
+							store = new Store();
+							store.setWarehouse(oldReceive.getWarehouse());
+							store.setProduct(receiveDetail.getProduct());
+							store.setQty(0.0);
+							store.setAmount(0.0);
+							storeDAO.save(store);
+						}
+						store.setQty(store.getQty()+receiveDetail.getQty());
+						store.setAmount(store.getAmount()+receiveDetail.getAmount());
+						storeDAO.update(store);
 					}
 				}else if(model.getShzt()==0){//如果是由已审改为未审
 					//将该收货单下的商品入库
 					List<ReceiveDetail> receiveDetailList = receiveDetailDAO.queryByReceiveId(id);
 					//更新对应商品的库存数量
 					for (ReceiveDetail receiveDetail : receiveDetailList) {
-						Product oldProduct = productDAO.load(receiveDetail.getProduct().getProductId());
-						oldProduct.setQtyStore(oldProduct.getQtyStore()-receiveDetail.getQty());
-						oldProduct.setAmountStore(oldProduct.getAmountStore()-receiveDetail.getAmount());
-						productDAO.update(oldProduct);
+						String[] propertyNames = {"warehouse.warehouseId","product.productId"};
+						Object[] values = {oldReceive.getWarehouse().getWarehouseId(),receiveDetail.getProduct().getProductId()};
+						Store store = storeDAO.load(propertyNames, values);
+						store.setQty(store.getQty()-receiveDetail.getQty());
+						store.setAmount(store.getAmount()-receiveDetail.getAmount());
+						storeDAO.update(store);
 					}
 				}
 				oldReceive.setShzt(model.getShzt());
