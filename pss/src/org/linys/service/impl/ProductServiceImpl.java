@@ -50,7 +50,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 				"unit.dataDictionaryId:unitId","unit.dataDictionaryName:unitName",
 				"color.dataDictionaryId:colorId","color.dataDictionaryName:colorName",
 				"size.dataDictionaryId:sizeId","size.dataDictionaryName:sizeName",
-				"qtyStore","priceStore","amountStore"};
+				"qtyStore","priceStore","amountStore","buyingPrice","salePrice"};
 		String data = JSONUtil.toJson(list,properties);
 		result.addData("datagridData", data);
 		
@@ -115,6 +115,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 			oldModel.setSize(model.getSize());
 			oldModel.setUnit(model.getUnit());
 			oldModel.setNote(model.getNote());
+			oldModel.setBuyingPrice(model.getBuyingPrice());
+			oldModel.setSalePrice(model.getSalePrice());
 			
 			productDAO.update(oldModel);
 		}

@@ -34,6 +34,8 @@
 			    {field:'unitName',title:'单位',width:120,align:"center"},
 			    {field:'sizeName',title:'规格',width:120,align:"center"},
 			    {field:'colorName',title:'颜色',width:120,align:"center"},
+			    {field:'buyingPrice',title:'预设进价',width:120,align:"center"},
+			    {field:'salePrice',title:'零售单价',width:120,align:"center"},
 			    {field:'note',title:'备注',width:120,align:"center"}
 		  ]],
 		  rownumbers:true,
@@ -176,6 +178,8 @@
 				$('#productTypeId',editDialog).val(rowData.productTypeId);
 			}
 		});
+	   	$('#buyingPrice',editDialog).numberbox('setValue',0.0);
+	   	$('#salePrice',editDialog).numberbox('setValue',0.0);
 		$(editDialog).dialog('open');
 	}
 	//保存前的赋值操作
@@ -294,6 +298,8 @@
 		});
 		$(editDialog).dialog('open');
 		$(editForm).form('load',selectRow);
+		$('#buyingPrice',editDialog).numberbox('setValue',selectRow.buyingPrice);
+	   	$('#salePrice',editDialog).numberbox('setValue',selectRow.salePrice);
 		$(editDialog).dialog('open');
 	 }
 	//删除

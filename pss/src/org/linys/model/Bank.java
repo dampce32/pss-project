@@ -44,7 +44,6 @@ public class Bank extends BaseModel {
 	 * 金额
 	 */
 	private Double amount;
-	private Set<Pay> paies = new HashSet<Pay>(0);
 	private Set<Receive> receives = new HashSet<Receive>(0);
 
 	// Constructors
@@ -58,16 +57,6 @@ public class Bank extends BaseModel {
 		this.bankId = bankId;
 	}
 
-	/** full constructor */
-	public Bank(String bankId, String bankName, String bankShortName,
-			Double amount, Set<Pay> paies, Set<Receive> receives) {
-		this.bankId = bankId;
-		this.bankName = bankName;
-		this.bankShortName = bankShortName;
-		this.amount = amount;
-		this.paies = paies;
-		this.receives = receives;
-	}
 
 	// Property accessors
 	@Id
@@ -109,14 +98,6 @@ public class Bank extends BaseModel {
 		this.amount = amount;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bank")
-	public Set<Pay> getPaies() {
-		return this.paies;
-	}
-
-	public void setPaies(Set<Pay> paies) {
-		this.paies = paies;
-	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bank")
 	public Set<Receive> getReceives() {
