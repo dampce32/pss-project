@@ -2,10 +2,21 @@
 <!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
 
 <hibernate-reverse-engineering>
-<table name="T_InvoiceType" schema="dbo" catalog="pss"
-	class="InvoiceType">
+	<table name="T_InvoiceType" schema="dbo" catalog="pss"
+		class="InvoiceType">
+		<primary-key>
+			<generator class="uuid.string"></generator>
+		</primary-key>
+	</table>
+<table name="T_Buy" schema="dbo" catalog="pss" class="Buy">
 	<primary-key>
 		<generator class="uuid.string"></generator>
 	</primary-key>
 </table>
+<table name="T_BuyDetail" schema="dbo" catalog="pss"
+		class="BuyDetail">
+		<primary-key>
+			<generator class="uuid.string"></generator>
+		</primary-key>
+	</table>
 </hibernate-reverse-engineering>

@@ -59,6 +59,7 @@
 	</package>
 	
 	<package name="inWarehouse" namespace="/inWarehouse" extends="basePackage">
+		<action name="*Buy" class="buyAction" method="{1}"></action>
 		<action name="*Receive" class="receiveAction" method="{1}"></action>
 		<action name="*">
 			<result>/WEB-INF/inWarehouse/{1}.html</result>
