@@ -2,6 +2,7 @@ package org.linys.action;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.linys.model.Employee;
 import org.linys.service.EmployeeService;
 import org.linys.vo.ServiceResult;
@@ -21,6 +22,7 @@ import com.opensymphony.xwork2.ModelDriven;
 public class EmployeeAction extends BaseAction implements ModelDriven<Employee> {
 	
 	private static final long serialVersionUID = -4977568026797413934L;
+	private static final Logger logger = Logger.getLogger(EmployeeAction.class);
 	@Resource
 	private EmployeeService employeeService;
 	Employee model = new Employee();
@@ -40,7 +42,7 @@ public class EmployeeAction extends BaseAction implements ModelDriven<Employee> 
 			result = employeeService.save(model);
 		} catch (Exception e) {
 			result.setMessage("保存员工失败");
-			e.printStackTrace();
+			logger.error("保存员工失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -59,7 +61,7 @@ public class EmployeeAction extends BaseAction implements ModelDriven<Employee> 
 		} catch (Exception e) {
 			result.setMessage("删除员工失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("删除员工失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -77,7 +79,7 @@ public class EmployeeAction extends BaseAction implements ModelDriven<Employee> 
 		} catch (Exception e) {
 			result.setMessage("查询员工失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("查询员工失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -95,7 +97,7 @@ public class EmployeeAction extends BaseAction implements ModelDriven<Employee> 
 		} catch (Exception e) {
 			result.setMessage("统计员工失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("统计员工失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);

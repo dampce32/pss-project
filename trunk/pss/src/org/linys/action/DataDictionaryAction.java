@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import net.sf.json.JSONObject;
 
+import org.apache.log4j.Logger;
 import org.linys.model.DataDictionary;
 import org.linys.service.DataDictionaryService;
 import org.linys.vo.ServiceResult;
@@ -17,6 +18,7 @@ import com.opensymphony.xwork2.ModelDriven;
 public class DataDictionaryAction extends BaseAction implements ModelDriven<DataDictionary> {
 	
 	private static final long serialVersionUID = 7057554927263572080L;
+	private static final Logger logger = Logger.getLogger(DataDictionaryAction.class);
 	DataDictionary model = new DataDictionary();
 	@Resource
 	private DataDictionaryService dataDictionaryService;
@@ -37,7 +39,7 @@ public class DataDictionaryAction extends BaseAction implements ModelDriven<Data
 		} catch (Exception e) {
 			result.setMessage("添加数据字典失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("添加数据字典失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -55,7 +57,7 @@ public class DataDictionaryAction extends BaseAction implements ModelDriven<Data
 		} catch (Exception e) {
 			result.setMessage("添加数据字典失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("添加数据字典失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -73,7 +75,7 @@ public class DataDictionaryAction extends BaseAction implements ModelDriven<Data
 		} catch (Exception e) {
 			result.setMessage("删除数据字典失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("删除数据字典失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -91,7 +93,7 @@ public class DataDictionaryAction extends BaseAction implements ModelDriven<Data
 		} catch (Exception e) {
 			result.setMessage("查询数据字典失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("查询数据字典失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -107,9 +109,9 @@ public class DataDictionaryAction extends BaseAction implements ModelDriven<Data
 		try {
 			result = dataDictionaryService.getTotalCount(model);
 		} catch (Exception e) {
-			result.setMessage("查询数据字典失败");
+			result.setMessage("统计数据字典失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("统计数据字典失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -130,7 +132,7 @@ public class DataDictionaryAction extends BaseAction implements ModelDriven<Data
 			}
 			ajaxJson(jsonObject.toString());
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("取得字典类型为kinds的数据失败", e);
 		}
 	}
 	/**
@@ -145,7 +147,7 @@ public class DataDictionaryAction extends BaseAction implements ModelDriven<Data
 			String jsonString = dataDictionaryService.queryByKindCombobox(kind);
 			ajaxJson(jsonString);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("根据字典类型查询字典信息(用于Combogox)", e);
 		}
 	}
 

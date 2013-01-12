@@ -2,6 +2,7 @@ package org.linys.action;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.linys.model.UserRole;
 import org.linys.service.UserRoleService;
 import org.linys.vo.ServiceResult;
@@ -22,6 +23,7 @@ import com.opensymphony.xwork2.ModelDriven;
 public class UserRoleAction extends BaseAction implements ModelDriven<UserRole>{
 	
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = Logger.getLogger(UserRoleAction.class);
 	private UserRole model = new UserRole();
 	@Resource
 	private UserRoleService userRoleService;
@@ -53,6 +55,7 @@ public class UserRoleAction extends BaseAction implements ModelDriven<UserRole>{
 			result =userRoleService.updateRole(model,ids,oldIds);
 		} catch (RuntimeException e) {
 			result.setMessage("更新用户角色失败");
+			logger.error("更新用户角色失败", e);
 		}
 		ajaxJson(result.toJSON());
 	}

@@ -2,6 +2,7 @@ package org.linys.action;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.linys.model.Warehouse;
 import org.linys.service.WarehouseService;
 import org.linys.vo.ServiceResult;
@@ -22,6 +23,7 @@ public class WarehouseAction extends BaseAction implements
 		ModelDriven<Warehouse> {
 	
 	private static final long serialVersionUID = 3845037671376044135L;
+	private static final Logger logger = Logger.getLogger(WarehouseAction.class);
 	@Resource
 	private WarehouseService warehouseService;
 	Warehouse model = new Warehouse();
@@ -42,7 +44,7 @@ public class WarehouseAction extends BaseAction implements
 			result = warehouseService.save(model);
 		} catch (Exception e) {
 			result.setMessage("保存仓库失败");
-			e.printStackTrace();
+			logger.error("保存仓库失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -61,7 +63,7 @@ public class WarehouseAction extends BaseAction implements
 		} catch (Exception e) {
 			result.setMessage("删除仓库失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("删除仓库失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -79,7 +81,7 @@ public class WarehouseAction extends BaseAction implements
 		} catch (Exception e) {
 			result.setMessage("查询仓库失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("查询仓库失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -97,7 +99,7 @@ public class WarehouseAction extends BaseAction implements
 		} catch (Exception e) {
 			result.setMessage("统计仓库失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("统计仓库失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);

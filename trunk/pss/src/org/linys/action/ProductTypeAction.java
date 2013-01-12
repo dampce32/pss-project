@@ -2,6 +2,7 @@ package org.linys.action;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.linys.model.ProductType;
 import org.linys.service.ProductTypeService;
 import org.linys.vo.ServiceResult;
@@ -21,6 +22,7 @@ import com.opensymphony.xwork2.ModelDriven;
 public class ProductTypeAction extends BaseAction implements ModelDriven<ProductType> {
 	
 	private static final long serialVersionUID = 7361849093296061199L;
+	private static final Logger logger = Logger.getLogger(ProductTypeAction.class);
 	@Resource
 	private ProductTypeService productTypeService;
 	ProductType model = new  ProductType();
@@ -40,7 +42,7 @@ public class ProductTypeAction extends BaseAction implements ModelDriven<Product
 			String jsonString = productTypeService.selectRoot();
 			ajaxJson(jsonString);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("选择商品类别的跟节点失败", e);
 		}
 	}
 	/**
@@ -67,7 +69,7 @@ public class ProductTypeAction extends BaseAction implements ModelDriven<Product
 			result = productTypeService.add(model);
 		} catch (Exception e) {
 			result.setMessage("添加商品类别失败");
-			e.printStackTrace();
+			logger.error("添加商品类别失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -84,7 +86,7 @@ public class ProductTypeAction extends BaseAction implements ModelDriven<Product
 			String jsonArray = productTypeService.query(page, rows, model);
 			ajaxJson(jsonArray);
 		} catch (Throwable e) {
-			e.printStackTrace();
+			logger.error("取得树节点下的孩子节点失败", e);
 		}
 	}
 	
@@ -100,7 +102,7 @@ public class ProductTypeAction extends BaseAction implements ModelDriven<Product
 		try {
 			result = productTypeService.update(model);
 		} catch (Exception e) {
-			result.setMessage("修改系统商品类别出错失败");
+			result.setMessage("更新商品类别失败");
 		}
 		ajaxJson(result.toJSON());
 	}
@@ -116,8 +118,8 @@ public class ProductTypeAction extends BaseAction implements ModelDriven<Product
 		try {
 			result = productTypeService.mulDelete(ids);
 		} catch (Throwable e) {
-			e.printStackTrace();
-			result.setMessage("批量删除失败");
+			logger.error("删除银行失败", e);
+			result.setMessage("删除银行失败");
 		}
 		ajaxJson(result.toJSON());
 	}
@@ -133,8 +135,7 @@ public class ProductTypeAction extends BaseAction implements ModelDriven<Product
 			String jsonString = productTypeService.queryCombogrid(model,page,rows);
 			ajaxJson(jsonString);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("分页查询商品类型(用于combogrid)失败", e);
 		}
 	}
 }

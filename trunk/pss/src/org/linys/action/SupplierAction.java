@@ -2,6 +2,7 @@ package org.linys.action;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.linys.model.Supplier;
 import org.linys.service.SupplierService;
 import org.linys.vo.ServiceResult;
@@ -21,6 +22,7 @@ import com.opensymphony.xwork2.ModelDriven;
 public class SupplierAction extends BaseAction implements ModelDriven<Supplier> {
 	
 	private static final long serialVersionUID = -1441552064249569286L;
+	private static final Logger logger = Logger.getLogger(SupplierAction.class);
 	@Resource
 	private SupplierService supplierService;
 	Supplier model = new Supplier();
@@ -41,7 +43,7 @@ public class SupplierAction extends BaseAction implements ModelDriven<Supplier> 
 			result = supplierService.save(model);
 		} catch (Exception e) {
 			result.setMessage("保存供应商失败");
-			e.printStackTrace();
+			logger.error("保存供应商失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -60,7 +62,7 @@ public class SupplierAction extends BaseAction implements ModelDriven<Supplier> 
 		} catch (Exception e) {
 			result.setMessage("删除供应商失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("删除供应商失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -78,7 +80,7 @@ public class SupplierAction extends BaseAction implements ModelDriven<Supplier> 
 		} catch (Exception e) {
 			result.setMessage("分页查询供应商失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("分页查询供应商失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -96,7 +98,7 @@ public class SupplierAction extends BaseAction implements ModelDriven<Supplier> 
 		} catch (Exception e) {
 			result.setMessage("统计供应商失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("统计供应商失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);

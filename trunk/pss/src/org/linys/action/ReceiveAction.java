@@ -2,6 +2,7 @@ package org.linys.action;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.linys.model.Receive;
 import org.linys.service.ReceiveService;
 import org.linys.vo.ServiceResult;
@@ -21,6 +22,7 @@ import com.opensymphony.xwork2.ModelDriven;
 public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 
 	private static final long serialVersionUID = 142847601850026947L;
+	private static final Logger logger = Logger.getLogger(ReceiveAction.class);
 	@Resource
 	private ReceiveService receiveService;
 	Receive model = new Receive();
@@ -42,7 +44,7 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 		} catch (Exception e) {
 			result.setMessage("查询收货失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("查询收货失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -61,7 +63,7 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 		} catch (Exception e) {
 			result.setMessage("统计收货失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("统计收货失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -91,7 +93,7 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 		} catch (Exception e) {
 			result.setMessage("保存收货单失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("保存收货单失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -109,7 +111,7 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 		} catch (Exception e) {
 			result.setMessage("打开初始化失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("打开初始化失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -127,7 +129,7 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 		} catch (Exception e) {
 			result.setMessage("批量删除");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("批量删除失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -146,10 +148,29 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 		} catch (Exception e) {
 			result.setMessage("批量修改审核状态失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("批量修改审核状态失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	}
+	/**
+	 * @Description: 批量清款
+	 * @Create: 2013-1-12 下午3:33:29
+	 * @author lys
+	 * @update logs
+	 */
+	public void mulUpdateIsPay(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = receiveService.mulUpdateShzt(ids,model);
+		} catch (Exception e) {
+			result.setMessage("批量清款失败");
+			result.setIsSuccess(false);
+			logger.error("批量清款失败", e);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	
 	
 }

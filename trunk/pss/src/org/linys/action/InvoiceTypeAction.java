@@ -2,6 +2,7 @@ package org.linys.action;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.linys.model.InvoiceType;
 import org.linys.service.InvoiceTypeService;
 import org.linys.vo.ServiceResult;
@@ -21,6 +22,7 @@ import com.opensymphony.xwork2.ModelDriven;
 public class InvoiceTypeAction extends BaseAction implements
 		ModelDriven<InvoiceType> {
 	private static final long serialVersionUID = -8602019585327076685L;
+	private static final Logger logger = Logger.getLogger(InvoiceTypeAction.class);
 	@Resource
 	private InvoiceTypeService invoiceTypeService;
 	InvoiceType model = new InvoiceType();
@@ -41,7 +43,7 @@ public class InvoiceTypeAction extends BaseAction implements
 			result = invoiceTypeService.save(model);
 		} catch (Exception e) {
 			result.setMessage("保存发票类型失败");
-			e.printStackTrace();
+			logger.error("保存发票类型失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -60,7 +62,7 @@ public class InvoiceTypeAction extends BaseAction implements
 		} catch (Exception e) {
 			result.setMessage("删除发票类型失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("删除发票类型失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -78,7 +80,7 @@ public class InvoiceTypeAction extends BaseAction implements
 		} catch (Exception e) {
 			result.setMessage("查询发票类型失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("查询发票类型失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -96,7 +98,7 @@ public class InvoiceTypeAction extends BaseAction implements
 		} catch (Exception e) {
 			result.setMessage("统计发票类型失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("统计发票类型失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);

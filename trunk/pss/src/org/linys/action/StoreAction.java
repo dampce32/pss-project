@@ -2,6 +2,7 @@ package org.linys.action;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.linys.model.Store;
 import org.linys.service.StoreService;
 import org.linys.vo.ServiceResult;
@@ -21,6 +22,7 @@ import com.opensymphony.xwork2.ModelDriven;
 public class StoreAction extends BaseAction implements ModelDriven<Store> {
 	
 	private static final long serialVersionUID = 2214715720182823741L;
+	private static final Logger logger = Logger.getLogger(StoreAction.class);
 	@Resource
 	private StoreService storeService;
 	Store model = new Store();
@@ -41,7 +43,7 @@ public class StoreAction extends BaseAction implements ModelDriven<Store> {
 		} catch (Exception e) {
 			result.setMessage("分页查询当前库存失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("分页查询当前库存失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -59,7 +61,7 @@ public class StoreAction extends BaseAction implements ModelDriven<Store> {
 		} catch (Exception e) {
 			result.setMessage("统计当前库存失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("统计当前库存失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -77,7 +79,7 @@ public class StoreAction extends BaseAction implements ModelDriven<Store> {
 		} catch (Exception e) {
 			result.setMessage("采购退货选择商品失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("采购退货选择商品失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -95,7 +97,7 @@ public class StoreAction extends BaseAction implements ModelDriven<Store> {
 		} catch (Exception e) {
 			result.setMessage("查询商品的在各个仓库的当前库存情况失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("查询商品的在各个仓库的当前库存情况失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
