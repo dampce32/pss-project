@@ -72,6 +72,14 @@ public class Product extends BaseModel {
 	 */
 	private Double priceStore;
 	/**
+	 * 预设进价
+	 */
+	private Double buyingPrice;
+	/**
+	 * 零售单价
+	 */
+	private Double salePrice;
+	/**
 	 * 备注
 	 */
 	private String note;
@@ -219,6 +227,23 @@ public class Product extends BaseModel {
 
 	public void setPriceStore(Double priceStore) {
 		this.priceStore = priceStore;
+	}
+	@Column(name = "buyingPrice", precision = 53, scale = 0)
+	public Double getBuyingPrice() {
+		return buyingPrice;
+	}
+
+	public void setBuyingPrice(Double buyingPrice) {
+		this.buyingPrice = buyingPrice;
+	}
+	
+	@Column(name = "salePrice", precision = 53, scale = 0)
+	public Double getSalePrice() {
+		return salePrice;
+	}
+
+	public void setSalePrice(Double salePrice) {
+		this.salePrice = salePrice;
 	}
 
 }

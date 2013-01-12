@@ -94,7 +94,6 @@ public class Receive extends BaseModel {
 	 * 备注
 	 */
 	private String note;
-	private Set<Pay> paies = new HashSet<Pay>(0);
 	private Set<ReceiveDetail> receiveDetails = new HashSet<ReceiveDetail>(0);
 
 	// Constructors
@@ -234,14 +233,6 @@ public class Receive extends BaseModel {
 		this.note = note;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "receive")
-	public Set<Pay> getPaies() {
-		return this.paies;
-	}
-
-	public void setPaies(Set<Pay> paies) {
-		this.paies = paies;
-	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "receive")
 	public Set<ReceiveDetail> getReceiveDetails() {
