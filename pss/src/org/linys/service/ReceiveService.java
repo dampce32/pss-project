@@ -78,9 +78,10 @@ public interface ReceiveService extends BaseService<Receive,String>{
 	 * @author lys
 	 * @update logs
 	 * @param ids
+	 * @param kind  用来区分是否审核的是其他入库
 	 * @param model
 	 * @return
 	 */
-	ServiceResult mulUpdateShzt(String ids, Receive model);
+	ServiceResult mulUpdateShzt(String kind, String ids, Receive model);
 
 }

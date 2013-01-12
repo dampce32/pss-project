@@ -141,7 +141,8 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 	public void mulUpdateShzt(){
 		ServiceResult result = new ServiceResult(false);
 		try {
-			result = receiveService.mulUpdateShzt(ids,model);
+			String kind  = getParameter("kind");
+			result = receiveService.mulUpdateShzt(kind,ids,model);
 		} catch (Exception e) {
 			result.setMessage("批量修改审核状态失败");
 			result.setIsSuccess(false);
