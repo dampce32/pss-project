@@ -369,7 +369,7 @@
 		$.messager.confirm("提示","确定要"+msg+"选中的记录?审核后单据不能再修改和删除，系统将进行库存和财务计算!!",function(t){ 
 			if(t){
 				var url = 'inWarehouse/mulUpdateShztReceive.do';
-				var content ={ids:idArray.join(LYS.join),shzt:shzt};
+				var content ={ids:idArray.join(LYS.join),shzt:shzt,kind:'other'};
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
 						var fn = function(){

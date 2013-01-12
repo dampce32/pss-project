@@ -6,9 +6,11 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.linys.dao.BankDAO;
 import org.linys.dao.RejectDAO;
 import org.linys.dao.RejectDetailDAO;
 import org.linys.dao.StoreDAO;
+import org.linys.model.Bank;
 import org.linys.model.DataDictionary;
 import org.linys.model.Product;
 import org.linys.model.Reject;
@@ -30,6 +32,8 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 	private RejectDetailDAO rejectDetailDAO;
 	@Resource
 	private StoreDAO storeDAO;
+	@Resource
+	private BankDAO bankDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.RejectService#query(org.linys.model.Reject, java.lang.Integer, java.lang.Integer)
@@ -330,6 +334,15 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 						storeDAO.update(store);
 					}
 				}
+				
+				Bank oldBank = bankDAO.load(oldReject.getBank().getBankId());
+				//更新对应银行的账户金额
+				if(model.getShzt()==1){//如果是由未审改为已审
+					oldBank.setAmount(oldBank.getAmount()+oldReject.getPayAmount());
+				}else if(model.getShzt()==0){//如果是由已审改为未审
+					oldBank.setAmount(oldBank.getAmount()-oldReject.getPayAmount());
+				}
+				bankDAO.update(oldBank);
 				oldReject.setShzt(model.getShzt());
 				rejectDAO.update(oldReject);
 				haveUpdateShzt = true;

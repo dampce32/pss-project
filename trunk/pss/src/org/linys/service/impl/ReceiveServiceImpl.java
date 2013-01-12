@@ -6,10 +6,12 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.linys.dao.BankDAO;
 import org.linys.dao.ProductDAO;
 import org.linys.dao.ReceiveDAO;
 import org.linys.dao.ReceiveDetailDAO;
 import org.linys.dao.StoreDAO;
+import org.linys.model.Bank;
 import org.linys.model.DataDictionary;
 import org.linys.model.Product;
 import org.linys.model.Receive;
@@ -34,6 +36,8 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	private StoreDAO storeDAO;
 	@Resource
 	private ProductDAO productDAO;
+	@Resource
+	private BankDAO bankDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.ReceiveService#query(org.linys.model.Receive, java.lang.Integer, java.lang.Integer)
@@ -324,7 +328,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	 * @see org.linys.service.ReceiveService#mulUpdateShzt(java.lang.String, org.linys.model.Receive)
 	 */
 	@Override
-	public ServiceResult mulUpdateShzt(String ids, Receive model) {
+	public ServiceResult mulUpdateShzt(String kind,String ids, Receive model) {
 		ServiceResult result = new ServiceResult(false);
 		if(StringUtils.isEmpty(ids)){
 			result.setMessage("请选择要修改审核状态的收货单");
@@ -387,6 +391,16 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 						oldProduct.setAmountStore(oldProduct.getAmountStore()-receiveDetail.getAmount());
 						productDAO.update(oldProduct);
 					}
+				}
+				if(!"other".equals(kind)){
+					Bank oldBank = bankDAO.load(oldReceive.getBank().getBankId());
+					//更新对应银行的账户金额
+					if(model.getShzt()==1){//如果是由未审改为已审
+						oldBank.setAmount(oldBank.getAmount()-oldReceive.getPayAmount());
+					}else if(model.getShzt()==0){//如果是由已审改为未审
+						oldBank.setAmount(oldBank.getAmount()+oldReceive.getPayAmount());
+					}
+					bankDAO.update(oldBank);
 				}
 				oldReceive.setShzt(model.getShzt());
 				receiveDAO.update(oldReceive);
