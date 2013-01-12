@@ -3,6 +3,7 @@ package org.linys.action;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.linys.model.User;
 import org.linys.service.UserService;
 import org.linys.util.JCaptchaEngine;
@@ -27,6 +28,7 @@ import com.opensymphony.xwork2.ModelDriven;
 public class UserAction extends BaseAction implements ModelDriven<User> {
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = Logger.getLogger(UserAction.class);
 	private User model = new User();
 
 	@Resource
@@ -79,7 +81,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 			result = userService.add(model);
 		} catch (Throwable e) {
 			result.setMessage("添加用户失败");
-			e.printStackTrace();
+			logger.error("添加用户失败", e);
 		}
 		String ajaxString = result.toJSON();
 		ajaxJson(ajaxString);
@@ -108,7 +110,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 			result = userService.update(model);
 		} catch (Throwable e) {
 			result.setMessage("修改用户失败");
-			e.printStackTrace();
+			logger.error("修改用户失败", e);
 		}
 		String ajaxString = result.toJSON();
 		ajaxJson(ajaxString);
@@ -126,7 +128,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 			result = userService.delete(model);
 		} catch (Throwable e) {
 			result.setMessage("删除用户失败");
-			e.printStackTrace();
+			logger.error("删除用户失败", e);
 		}
 		String ajaxString = result.toJSON();
 		ajaxJson(ajaxString);

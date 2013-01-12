@@ -2,6 +2,7 @@ package org.linys.action;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.linys.model.RoleRight;
 import org.linys.service.RoleRightService;
 import org.linys.vo.ServiceResult;
@@ -22,6 +23,7 @@ public class RoleRightAction extends BaseAction implements
 		ModelDriven<RoleRight> {
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = Logger.getLogger(RoleRightAction.class);
 	private RoleRight model = new RoleRight();
 	private String id;
 	@Resource
@@ -37,12 +39,8 @@ public class RoleRightAction extends BaseAction implements
 	 * @throws Exception
 	 */
 	public void queryRoot(){
-		try {
-			String jsonString = roleRightService.queryRoot(model);
-			ajaxJson(jsonString);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		String jsonString = roleRightService.queryRoot(model);
+		ajaxJson(jsonString);
 	}
 	/**
 	 * @Description: 查询树某节点下的子节点
@@ -68,7 +66,7 @@ public class RoleRightAction extends BaseAction implements
 			result = roleRightService.updateState(model);
 		} catch (Exception e) {
 			result.setMessage("更新角色权限状态失败");
-			e.printStackTrace();
+			logger.error("更新角色权限状态失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);

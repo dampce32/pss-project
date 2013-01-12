@@ -50,7 +50,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		
 		String[] properties = {"receiveId","receiveCode","receiveDate","deliverCode",
 				"warehouse.warehouseName","supplier.supplierName","amount","payAmount","discountAmount",
-				"employee.employeeName","note","shzt","invoiceType.invoiceTypeName"};
+				"employee.employeeName","note","shzt","invoiceType.invoiceTypeName","isPay"};
 		String data = JSONUtil.toJson(list,properties);
 		result.addData("datagridData", data);
 		
@@ -150,6 +150,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			
 			receiveCode = newReceiveCode(prefix,receiveCode);
 			model.setShzt(0);
+			model.setIsPay(0);
 			model.setReceiveCode(receiveCode);
 			receiveDAO.save(model);
 			for (int i = 0; i < productIdArray.length; i++) {
@@ -279,7 +280,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		Receive receive = receiveDAO.load(receiveId);
 		String[] propertiesReceive = {"receiveId","receiveCode","receiveDate","deliverCode",
 				"supplier.supplierId","warehouse.warehouseId","amount","discountAmount","payAmount",
-				"bank.bankId","invoiceType.invoiceTypeId","employee.employeeId","note"};
+				"bank.bankId","invoiceType.invoiceTypeId","employee.employeeId","note","shzt"};
 		String receiveData = JSONUtil.toJson(receive,propertiesReceive);
 		result.addData("receiveData",receiveData);
 		
@@ -346,7 +347,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		boolean haveUpdateShzt = false;
 		for (String id : idArray) {
 			Receive oldReceive = receiveDAO.load(id);
-			if(oldReceive!=null&&oldReceive.getShzt()!=model.getShzt()){
+			if(oldReceive!=null&&oldReceive.getShzt().intValue()!=model.getShzt().intValue()){
 				if(model.getShzt()==1){//如果是由未审改为已审
 					//将该收货单下的商品入库
 					List<ReceiveDetail> receiveDetailList = receiveDetailDAO.queryByReceiveId(id);
@@ -375,6 +376,9 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 						oldProduct.setAmountStore(oldProduct.getAmountStore()+receiveDetail.getAmount());
 						productDAO.update(oldProduct);
 					}
+					if(oldReceive.getAmount()-oldReceive.getPayAmount()-oldReceive.getDiscountAmount()<=0){
+						oldReceive.setIsPay(1);
+					}
 				}else if(model.getShzt()==0){//如果是由已审改为未审
 					//将该收货单下的商品入库
 					List<ReceiveDetail> receiveDetailList = receiveDetailDAO.queryByReceiveId(id);
@@ -391,6 +395,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 						oldProduct.setAmountStore(oldProduct.getAmountStore()-receiveDetail.getAmount());
 						productDAO.update(oldProduct);
 					}
+					oldReceive.setIsPay(0);
 				}
 				if(!"other".equals(kind)){
 					Bank oldBank = bankDAO.load(oldReceive.getBank().getBankId());
@@ -409,6 +414,42 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		}
 		if(!haveUpdateShzt){
 			result.setMessage("没有可修改审核状态的收货单");
+			return result;
+		}
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.ReceiveService#mulUpdateShzt(java.lang.String, org.linys.model.Receive)
+	 */
+	@Override
+	public ServiceResult mulUpdateShzt(String ids, Receive model) {
+		ServiceResult result = new ServiceResult(false);
+		if(StringUtils.isEmpty(ids)){
+			result.setMessage("请选择要清款的收货单");
+			return result;
+		}
+		String[] idArray =StringUtil.split(ids,GobelConstants.SPLIT_SEPARATOR);
+		if(idArray.length==0){
+			result.setMessage("请选择要清款的收货单");
+			return result;
+		}
+		if(model==null||model.getIsPay()==null){
+			result.setMessage("请选择要修改成的审核状态");
+			return result;
+		}
+		boolean haveUpdateShzt = false;
+		for (String id : idArray) {
+			Receive oldReceive = receiveDAO.load(id);
+			if(oldReceive!=null&&oldReceive.getIsPay()!=model.getIsPay()){
+				oldReceive.setIsPay(model.getIsPay());
+				receiveDAO.update(oldReceive);
+				haveUpdateShzt = true;
+			}
+		}
+		if(!haveUpdateShzt){
+			result.setMessage("没有可清款的收货单");
 			return result;
 		}
 		result.setIsSuccess(true);

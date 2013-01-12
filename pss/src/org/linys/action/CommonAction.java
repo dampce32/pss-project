@@ -2,6 +2,7 @@ package org.linys.action;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.linys.service.CommonService;
 import org.linys.util.JSONUtil;
 import org.linys.vo.ServiceResult;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Controller;
 public class CommonAction extends BaseAction {
 
 	private static final long serialVersionUID = -7485373143593963699L;
+	private static final Logger logger = Logger.getLogger(CommonAction.class);
 	@Resource
 	private CommonService commonService;
 	/**
@@ -45,7 +47,7 @@ public class CommonAction extends BaseAction {
 			result = commonService.getCode(type,code);
 		} catch (Throwable e) {
 			result.setMessage("取得编号失败");
-			e.printStackTrace();
+			logger.error("取得编号失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);

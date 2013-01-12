@@ -62,7 +62,14 @@
 							return '已审';
 						}
 					}},
-				{field:'payzt',title:'付款',width:80,align:"center"},
+				{field:'isPay',title:'付款',width:80,align:"center",
+						formatter: function(value,row,index){
+							if(row.isPay==0){
+								return '未付';
+							}else if(row.isPay==1){
+								return '已付';
+							}
+						}},
 				{field:'invoiceTypeName',title:'开票信息',width:90,align:"center"}
 		  ]],
 		  rownumbers:true,
@@ -72,7 +79,8 @@
 				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},'-',
 				{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}},'-',
 				{text:'已审',iconCls:'icon-edit',handler:function(){onUpdateShzt(1)}},'-',
-				{text:'反审',iconCls:'icon-edit',handler:function(){onUpdateShzt(0)}}
+				{text:'反审',iconCls:'icon-edit',handler:function(){onUpdateShzt(0)}},'-',
+				{text:'清款',iconCls:'icon-edit',handler:function(){onIsPay()}}
 		  ],
 		  onDblClickRow:function(rowIndex, rowData){
 				onUpdate();
@@ -464,6 +472,10 @@
 				$('#deliverCode',editDialog).val(receiveData.deliverCode);
 				if(receiveData.shzt==1){
 					$('#shzt',editDialog).val('已审核');
+					//灰掉按钮
+					$('#addProduct_'+id).linkbutton('disable');
+					$('#deleteProduct_'+id).linkbutton('disable');
+					$('#saveProduct_'+id).linkbutton('disable');
 				}else{
 					$('#shzt',editDialog).val('未审核');
 				}
@@ -535,9 +547,9 @@
 	  rownumbers:true,
 	  pagination:false,
 	  toolbar:[	
-			{text:'添加商品',iconCls:'icon-add',handler:function(){onSelectProduct()}},'-',
-			{text:'删除商品',iconCls:'icon-remove',handler:function(){onDeleteProduct()}},'-',
-			{text:'保存',iconCls:'icon-save',handler:function(){
+			{id:'addProduct_'+id,text:'添加商品',iconCls:'icon-add',handler:function(){onSelectProduct()}},'-',
+			{id:'deleteProduct_'+id,text:'删除商品',iconCls:'icon-remove',handler:function(){onDeleteProduct()}},'-',
+			{id:'saveProduct_'+id,text:'保存',iconCls:'icon-save',handler:function(){
 					onSave();
 				}
 			},'-',{text:'退出',iconCls:'icon-cancel',handler:function(){
@@ -696,6 +708,34 @@
 		 var discountAmount = $('#discountAmount',editForm).val();
 		 $('#payAmount',editForm).val(amount-discountAmount);
 	});
+	//清款
+	var onIsPay = function(){
+		var rows =  $(viewList).datagrid('getSelections');
+		if(rows.length==0){
+			$.messager.alert("提示","请选择要清款的数据行","warning");
+			return;
+		}
+		var idArray = new Array();
+		for ( var int = 0; int < rows.length; int++) {
+			idArray.push(rows[int].receiveId);
+		}
+		$.messager.confirm("提示","确定要清款选中的记录?",function(t){ 
+			if(t){
+				var url = 'inWarehouse/mulUpdateIsPayReceive.do';
+				var content ={ids:idArray.join(LYS.join),isPay:1};
+				asyncCallService(url,content,function(result){
+					if(result.isSuccess){
+						var fn = function(){
+							search(true);
+						}
+						$.messager.alert('提示','清款成功','info',fn);
+					}else{
+						$.messager.alert('提示',result.message,'error');
+					}
+				});
+			}
+		});
+	}
 	 
   }
 })(jQuery);   

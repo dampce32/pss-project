@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.linys.model.Right;
 import org.linys.service.RightService;
 import org.linys.util.TreeUtil;
@@ -24,6 +25,7 @@ import com.opensymphony.xwork2.ModelDriven;
 public class RightAction extends BaseAction implements ModelDriven<Right> {
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = Logger.getLogger(RightAction.class);
 	private Right model = new Right();
 
 	@Resource
@@ -40,12 +42,8 @@ public class RightAction extends BaseAction implements ModelDriven<Right> {
 	 * @throws Exception
 	 */
 	public void selectRoot() {
-		try {
-			String jsonString = rightService.selectRoot();
-			ajaxJson(jsonString);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		String jsonString = rightService.selectRoot();
+		ajaxJson(jsonString);
 	}
 	/**
 	 * @Description: 单击选择展开树节点
@@ -72,7 +70,7 @@ public class RightAction extends BaseAction implements ModelDriven<Right> {
 			result = rightService.add(model);
 		} catch (Exception e) {
 			result.setMessage("添加权限失败");
-			e.printStackTrace();
+			logger.error("添加权限失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -85,12 +83,8 @@ public class RightAction extends BaseAction implements ModelDriven<Right> {
 	 * @throws Exception
 	 */
 	public void getTreeNodeChildren(){
-		try {
-			String jsonArray = rightService.query(page, rows, model);
-			ajaxJson(jsonArray);
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		String jsonArray = rightService.query(page, rows, model);
+		ajaxJson(jsonArray);
 	}
 	/**
 	 * @Description: 更新权限
@@ -105,6 +99,7 @@ public class RightAction extends BaseAction implements ModelDriven<Right> {
 			result = rightService.update(model);
 		} catch (Exception e) {
 			result.setMessage("修改系统权限出错失败");
+			logger.error("修改系统权限出错失败", e);
 		}
 		ajaxJson(result.toJSON());
 	}
@@ -120,8 +115,8 @@ public class RightAction extends BaseAction implements ModelDriven<Right> {
 		try {
 			result = rightService.mulDelete(ids);
 		} catch (Throwable e) {
-			e.printStackTrace();
 			result.setMessage("批量删除失败");
+			logger.error("批量删除失败", e);
 		}
 		ajaxJson(result.toJSON());
 	}

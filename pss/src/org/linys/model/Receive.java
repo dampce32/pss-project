@@ -87,6 +87,10 @@ public class Receive extends BaseModel {
 	 */
 	private Integer shzt;
 	/**
+	 * 是否付款
+	 */
+	private Integer isPay;
+	/**
 	 * 备注
 	 */
 	private String note;
@@ -256,6 +260,14 @@ public class Receive extends BaseModel {
 
 	public void setInvoiceType(InvoiceType invoiceType) {
 		this.invoiceType = invoiceType;
+	}
+	@Column(name = "isPay")
+	public Integer getIsPay() {
+		return isPay;
+	}
+
+	public void setIsPay(Integer isPay) {
+		this.isPay = isPay;
 	}
 
 }

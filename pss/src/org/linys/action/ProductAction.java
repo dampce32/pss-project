@@ -2,6 +2,7 @@ package org.linys.action;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.linys.model.Product;
 import org.linys.service.ProductService;
 import org.linys.vo.ServiceResult;
@@ -21,6 +22,7 @@ import com.opensymphony.xwork2.ModelDriven;
 public class ProductAction extends BaseAction implements ModelDriven<Product> {
 	
 	private static final long serialVersionUID = -7463394380104260815L;
+	private static final Logger logger = Logger.getLogger(ProductAction.class);
 	@Resource
 	private ProductService productService;
 	Product model = new Product();
@@ -39,7 +41,7 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 			result = productService.save(model);
 		} catch (Exception e) {
 			result.setMessage("保存商品失败");
-			e.printStackTrace();
+			logger.error("保存商品失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -58,7 +60,7 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 		} catch (Exception e) {
 			result.setMessage("删除商品失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("删除商品失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -76,7 +78,7 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 		} catch (Exception e) {
 			result.setMessage("查询商品失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("查询商品失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -94,7 +96,7 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 		} catch (Exception e) {
 			result.setMessage("统计商品失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("统计商品失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -110,9 +112,9 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 		try {
 			result = productService.select(model,page,rows);
 		} catch (Exception e) {
-			result.setMessage("查询商品失败");
+			result.setMessage("选择商品失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("选择商品失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -130,7 +132,7 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 		} catch (Exception e) {
 			result.setMessage("退货选择商品失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("退货选择商品失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -148,7 +150,7 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 		} catch (Exception e) {
 			result.setMessage("查询当前库存的商品失败");
 			result.setIsSuccess(false);
-			e.printStackTrace();
+			logger.error("查询当前库存的商品失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);

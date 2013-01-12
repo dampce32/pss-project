@@ -3,6 +3,7 @@ package org.linys.action;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.linys.model.Role;
 import org.linys.model.User;
 import org.linys.service.RoleService;
@@ -23,6 +24,7 @@ import com.opensymphony.xwork2.ModelDriven;
 public class RoleAction extends BaseAction implements ModelDriven<Role> {
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = Logger.getLogger(RoleAction.class);
 	private Role model = new Role();
 	@Resource
 	private RoleService roleService;
@@ -43,7 +45,7 @@ public class RoleAction extends BaseAction implements ModelDriven<Role> {
 			result = roleService.add(model,userId);
 		} catch (Exception e) {
 			result.setMessage("添加角色失败");
-			e.printStackTrace();
+			logger.error("添加角色失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -62,7 +64,7 @@ public class RoleAction extends BaseAction implements ModelDriven<Role> {
 			result = roleService.update(model);
 		} catch (Exception e) {
 			result.setMessage("修改角色失败");
-			e.printStackTrace();
+			logger.error("修改角色失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -80,7 +82,7 @@ public class RoleAction extends BaseAction implements ModelDriven<Role> {
 			result = roleService.delete(model);
 		} catch (Exception e) {
 			result.setMessage("删除角色失败");
-			e.printStackTrace();
+			logger.error("删除角色失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -97,7 +99,7 @@ public class RoleAction extends BaseAction implements ModelDriven<Role> {
 			String jsonString = roleService.query(model);
 			ajaxJson(jsonString);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("查询角色列表失败", e);
 		}
 	}
 }
