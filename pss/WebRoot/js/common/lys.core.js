@@ -25,3 +25,4 @@ LYS.initContent = function (el) {
      });
 };
 LYS.ClearUrl='common/clearDatagridCommon.do';
+LYS.ClearData ={rows:[],total:0};

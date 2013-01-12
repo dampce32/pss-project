@@ -32,5 +32,25 @@ public interface StoreDAO extends BaseDAO<Store,String>{
 	 * @return
 	 */
 	Long getTotalCount(Store model);
+	/**
+	 * @Description: 采购退货分页选择商品
+	 * @Create: 2013-1-12 上午9:48:21
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	List<Store> selectReject(Store model, Integer page, Integer rows);
+	/**
+	 * @Description: 采购退货统计商品
+	 * @Create: 2013-1-12 上午9:48:53
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @return
+	 */
+	Long getTotalCountSelectReject(Store model);
 
 }

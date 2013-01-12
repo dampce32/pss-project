@@ -71,5 +71,16 @@ public interface ProductService extends BaseService<Product,String>{
 	 * @return
 	 */
 	ServiceResult selectReject(Product model, Integer page, Integer rows);
+	/**
+	 * @Description: 查询当前库存的商品
+	 * @Create: 2013-1-12 下午1:45:28
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	ServiceResult queryStore(Product model, Integer page, Integer rows);
 
 }

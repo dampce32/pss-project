@@ -64,4 +64,40 @@ public class StoreAction extends BaseAction implements ModelDriven<Store> {
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	}
+	/**
+	 * @Description: 采购退货选择商品
+	 * @Create: 2013-1-12 上午9:45:12
+	 * @author lys
+	 * @update logs
+	 */
+	public void selectReject(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = storeService.selectReject(model,page,rows);
+		} catch (Exception e) {
+			result.setMessage("采购退货选择商品失败");
+			result.setIsSuccess(false);
+			e.printStackTrace();
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	/**
+	 * @Description: 查询商品的在各个仓库的当前库存情况
+	 * @Create: 2013-1-12 下午1:47:49
+	 * @author lys
+	 * @update logs
+	 */
+	public void queryByProduct(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = storeService.queryByProduct(model,page,rows);
+		} catch (Exception e) {
+			result.setMessage("查询商品的在各个仓库的当前库存情况失败");
+			result.setIsSuccess(false);
+			e.printStackTrace();
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
 }

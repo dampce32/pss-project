@@ -30,5 +30,27 @@ public interface StoreService extends BaseService<Store,String>{
 	 * @return
 	 */
 	ServiceResult getTotalCount(Store model);
+	/**
+	 * @Description: 采购退货选择商品
+	 * @Create: 2013-1-12 上午9:46:21
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	ServiceResult selectReject(Store model, Integer page, Integer rows);
+	/**
+	 * @Description: 查询商品的在各个仓库的当前库存情况
+	 * @Create: 2013-1-12 下午1:49:16
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	ServiceResult queryByProduct(Store model, Integer page, Integer rows);
 
 }

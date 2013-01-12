@@ -135,5 +135,22 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	}
-
+	/**
+	 * @Description: 查询当前库存的商品
+	 * @Create: 2013-1-12 下午1:44:38
+	 * @author lys
+	 * @update logs
+	 */
+	public void queryStore(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = productService.queryStore(model,page,rows);
+		} catch (Exception e) {
+			result.setMessage("查询当前库存的商品失败");
+			result.setIsSuccess(false);
+			e.printStackTrace();
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
 }

@@ -474,7 +474,7 @@
 			}
 		});
 	}
-	//-----收货明细----------
+	//-----退货明细----------
 	var rejectDetail = $('#rejectDetail',editDialog);
 	var selectDialog = $('#selectDialog',$this);
 	var productList = $('#productList');
@@ -589,7 +589,7 @@
 			    {field:'unitName',title:'单位',width:90,align:"center"},
 			    {field:'sizeName',title:'规格',width:90,align:"center"},
 			    {field:'colorName',title:'颜色',width:90,align:"center"},
-			    {field:'qtyStore',title:'库存数量',width:100,align:"center"},
+			    {field:'qty',title:'库存数量',width:100,align:"center"},
 			    {field:'note',title:'备注',width:90,align:"center"}
 		  ]],
 		  rownumbers:true,
@@ -602,6 +602,11 @@
 		  ]
 	 });
 	 var onSelectProduct = function(){
+		 var warehouseId = $('#warehouse',editDialog).combobox('getValue'); 
+		if(warehouseId==''){
+			 $.messager.alert('提示','请先选择要退货仓库',"warning");
+			 return;
+		}
 		 $(selectDialog).dialog('open');
 	 }
 	 //查询
@@ -609,12 +614,13 @@
 		 searchBtnSelect();
 	 })
 	 var searchBtnSelect = function(){
+		var warehouseId = $('#warehouse',editDialog).combobox('getValue'); 
 		var productCode = $('#productCodeSelectDialog',selectDialog).val();
 		var productName = $('#productNameSelectDialog',selectDialog).val();
 		
-		var url = "dict/selectRejectProduct.do";
+		var url = "store/selectRejectStore.do";
 		
-		var content = {productCode:productCode,productName:productName,kind:'reject'};
+		var content = {'warehouse.warehouseId':warehouseId,'product.productCode':productCode,'product.productName':productName};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
 			var data = result.data;
@@ -640,7 +646,7 @@
 				 unitName:row.unitName,
 				 sizeName:row.sizeName,
 				 colorId:row.colorId,
-				 qty:row.qtyStore,
+				 qty:row.qty,
 				 price:0,
 				 amount:0,
 				 note1:'',
