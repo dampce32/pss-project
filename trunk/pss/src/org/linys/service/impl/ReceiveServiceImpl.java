@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.linys.dao.ProductDAO;
 import org.linys.dao.ReceiveDAO;
 import org.linys.dao.ReceiveDetailDAO;
 import org.linys.dao.StoreDAO;
@@ -31,6 +32,8 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	private ReceiveDetailDAO receiveDetailDAO;
 	@Resource
 	private StoreDAO storeDAO;
+	@Resource
+	private ProductDAO productDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.ReceiveService#query(org.linys.model.Receive, java.lang.Integer, java.lang.Integer)
@@ -361,8 +364,12 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 							storeDAO.save(store);
 						}
 						store.setQty(store.getQty()+receiveDetail.getQty());
-						store.setAmount(store.getAmount()+receiveDetail.getAmount());
 						storeDAO.update(store);
+						//更新商品总的库存数量和金额
+						Product oldProduct = productDAO.load(receiveDetail.getProduct().getProductId());
+						oldProduct.setQtyStore(oldProduct.getQtyStore()+receiveDetail.getQty());
+						oldProduct.setAmountStore(oldProduct.getAmountStore()+receiveDetail.getAmount());
+						productDAO.update(oldProduct);
 					}
 				}else if(model.getShzt()==0){//如果是由已审改为未审
 					//将该收货单下的商品入库
@@ -373,8 +380,12 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 						Object[] values = {oldReceive.getWarehouse().getWarehouseId(),receiveDetail.getProduct().getProductId()};
 						Store store = storeDAO.load(propertyNames, values);
 						store.setQty(store.getQty()-receiveDetail.getQty());
-						store.setAmount(store.getAmount()-receiveDetail.getAmount());
 						storeDAO.update(store);
+						//更新商品总的库存数量和金额
+						Product oldProduct = productDAO.load(receiveDetail.getProduct().getProductId());
+						oldProduct.setQtyStore(oldProduct.getQtyStore()-receiveDetail.getQty());
+						oldProduct.setAmountStore(oldProduct.getAmountStore()-receiveDetail.getAmount());
+						productDAO.update(oldProduct);
 					}
 				}
 				oldReceive.setShzt(model.getShzt());

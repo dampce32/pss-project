@@ -6,13 +6,14 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
-import org.linys.dao.ProductDAO;
 import org.linys.dao.RejectDAO;
 import org.linys.dao.RejectDetailDAO;
+import org.linys.dao.StoreDAO;
 import org.linys.model.DataDictionary;
 import org.linys.model.Product;
 import org.linys.model.Reject;
 import org.linys.model.RejectDetail;
+import org.linys.model.Store;
 import org.linys.service.RejectService;
 import org.linys.util.DateUtils;
 import org.linys.util.JSONUtil;
@@ -28,7 +29,7 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 	@Resource
 	private RejectDetailDAO rejectDetailDAO;
 	@Resource
-	private ProductDAO productDAO;
+	private StoreDAO storeDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.RejectService#query(org.linys.model.Reject, java.lang.Integer, java.lang.Integer)
@@ -115,7 +116,6 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 				result.setMessage("第"+(i+1)+"行商品数量不能为0");
 				return result;
 			}
-			
 		}
 		if(StringUtils.isEmpty(model.getRejectId())){//新增
 			//取得入库单号
@@ -310,20 +310,24 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 					List<RejectDetail> rejectDetailList = rejectDetailDAO.queryByRejectId(id);
 					//更新对应商品的库存数量
 					for (RejectDetail rejectDetail : rejectDetailList) {
-						Product oldProduct = productDAO.load(rejectDetail.getProduct().getProductId());
-						oldProduct.setQtyStore(oldProduct.getQtyStore()+rejectDetail.getQty());
-						oldProduct.setAmountStore(oldProduct.getAmountStore()+rejectDetail.getAmount());
-						productDAO.update(oldProduct);
+						String[] propertyNames = {"warehouse.warehouseId","product.productId"};
+						Object[] values = {oldReject.getWarehouse().getWarehouseId(),rejectDetail.getProduct().getProductId()};
+						Store store = storeDAO.load(propertyNames, values);
+						store.setQty(store.getQty()-rejectDetail.getQty());
+						store.setAmount(store.getAmount()-rejectDetail.getAmount());
+						storeDAO.update(store);
 					}
 				}else if(model.getShzt()==0){//如果是由已审改为未审
 					//将该退货单下的商品入库
 					List<RejectDetail> rejectDetailList = rejectDetailDAO.queryByRejectId(id);
 					//更新对应商品的库存数量
 					for (RejectDetail rejectDetail : rejectDetailList) {
-						Product oldProduct = productDAO.load(rejectDetail.getProduct().getProductId());
-						oldProduct.setQtyStore(oldProduct.getQtyStore()-rejectDetail.getQty());
-						oldProduct.setAmountStore(oldProduct.getAmountStore()-rejectDetail.getAmount());
-						productDAO.update(oldProduct);
+						String[] propertyNames = {"warehouse.warehouseId","product.productId"};
+						Object[] values = {oldReject.getWarehouse().getWarehouseId(),rejectDetail.getProduct().getProductId()};
+						Store store = storeDAO.load(propertyNames, values);
+						store.setQty(store.getQty()+rejectDetail.getQty());
+						store.setAmount(store.getAmount()+rejectDetail.getAmount());
+						storeDAO.update(store);
 					}
 				}
 				oldReject.setShzt(model.getShzt());
