@@ -1,6 +1,5 @@
 package org.linys.service.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -9,13 +8,14 @@ import org.apache.commons.lang.StringUtils;
 import org.linys.dao.BankDAO;
 import org.linys.dao.BuyDAO;
 import org.linys.dao.BuyDetailDAO;
+import org.linys.dao.CommonDAO;
 import org.linys.model.Bank;
 import org.linys.model.Buy;
 import org.linys.model.BuyDetail;
 import org.linys.model.DataDictionary;
 import org.linys.model.Product;
 import org.linys.service.BuyService;
-import org.linys.util.DateUtils;
+import org.linys.util.CommonUtil;
 import org.linys.util.JSONUtil;
 import org.linys.util.StringUtil;
 import org.linys.vo.GobelConstants;
@@ -31,6 +31,8 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 	private BuyDetailDAO buyDetailDAO;
 	@Resource
 	private BankDAO bankDAO;
+	@Resource
+	private CommonDAO commonDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.BuyService#query(org.linys.model.Buy, java.lang.Integer, java.lang.Integer)
@@ -128,15 +130,8 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 		}
 		if(StringUtils.isEmpty(model.getBuyId())){//新增
 			//取得入库单号
-			String buyCode = null;
-			String prefix = null;
-			prefix = "CD";
-			buyCode = prefix + DateUtils.dateToString(new Date(),"yyyyMMdd");
-			buyCode = buyDAO.getMaxCode(buyCode);
-			
-			buyCode = newBuyCode(prefix,buyCode);
+			model.setBuyCode(commonDAO.getCode("Buy", "buyCode", CommonUtil.getCodePrefix("buy")));
 			model.setStatus(0);
-			model.setBuyCode(buyCode);
 			buyDAO.save(model);
 			for (int i = 0; i < productIdArray.length; i++) {
 				String productId = productIdArray[i];
@@ -161,6 +156,8 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 				buyDetail.setNote1(note1);
 				buyDetail.setNote2(note2);
 				buyDetail.setNote3(note3);
+				buyDetail.setReceiveQty(0.0);
+				buyDetail.setIsReceiveAll(0);
 				buyDetailDAO.save(buyDetail);
 			}
 		}else{
@@ -238,21 +235,6 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 		result.addData("buyId", model.getBuyId());
 		result.setIsSuccess(true);
 		return result;
-	}
-	/**
-	 * @Description: 生成新的采购单编号
-	 * @Create: 2013-1-7 下午10:24:00
-	 * @author lys
-	 * @update logs
-	 * @param buyCode
-	 * @return
-	 */
-	private String newBuyCode(String prefix,String buyCode) {
-		int index = 0;
-		if(buyCode!=null){
-			index = Integer.parseInt(buyCode.substring(10, buyCode.length()));	
-		}
-		return prefix+DateUtils.dateToString(new Date(),"yyyyMMdd")+String.format("%04d", index+1);
 	}
 	/*
 	 * (non-Javadoc)   

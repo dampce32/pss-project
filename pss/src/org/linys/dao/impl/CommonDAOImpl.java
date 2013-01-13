@@ -1,8 +1,6 @@
 package org.linys.dao.impl;
 
-import java.util.List;
-
-import org.hibernate.SQLQuery;
+import org.hibernate.Query;
 import org.linys.dao.CommonDAO;
 import org.linys.model.BaseModel;
 import org.springframework.stereotype.Repository;
@@ -11,17 +9,23 @@ import org.springframework.stereotype.Repository;
 public class CommonDAOImpl extends BaseDAOImpl<BaseModel,String> implements CommonDAO {
 	/*
 	 * (non-Javadoc)   
-	 * @see org.linys.dao.CommonDAO#getCode(java.lang.String, java.lang.String)
+	 * @see org.linys.dao.CommonDAO#getMaxCode(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public String getCode(String type, String code) {
-		StringBuilder sqlsb = new StringBuilder();
-		sqlsb.append("{Call P_GetCode('a','a')}");
-		SQLQuery  query = getCurrentSession().createSQLQuery(sqlsb.toString());
-//		 query.setString("type", type);
-//		 query.setString("code", code);
-		List list = query.list();
-		return (String) query.uniqueResult();
+	public String getCode(String table, String field,String filedPrefix) {
+		StringBuilder hql = new StringBuilder();
+		hql.append("select max("+field+") " );
+		hql.append("from " +table+" ");
+		hql.append("where  " +field+" like :prefex");
+		Query query = getCurrentSession().createQuery(hql.toString());
+		query.setString("prefex", filedPrefix+"%");
+		String maxCode = query.uniqueResult()==null?null:query.uniqueResult().toString();
+		int index = 0;
+		if(maxCode!=null){
+			index = Integer.parseInt(maxCode.substring(10, maxCode.length()));	
+		}
+		maxCode = filedPrefix+String.format("%04d", index+1);
+		return maxCode;
 	}
 
 }
