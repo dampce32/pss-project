@@ -11,14 +11,14 @@ import org.linys.model.BaseModel;
  */
 public interface CommonDAO extends BaseDAO<BaseModel,String>{
 	/**
-	 * @Description: 取得编号
-	 * @Create: 2013-1-5 下午9:35:26
+	 * @Description: 取得最大编号
+	 * @Create: 2013-1-13 上午9:08:43
 	 * @author lys
 	 * @update logs
-	 * @param type
-	 * @param code
+	 * @param table
+	 * @param field
 	 * @return
 	 */
-	String getCode(String type, String code);
+	String getCode(String table,String field,String fieldPrefix);
 
 }

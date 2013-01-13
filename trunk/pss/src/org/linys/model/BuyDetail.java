@@ -68,6 +68,14 @@ public class BuyDetail extends BaseModel {
 	 * 备注3
 	 */
 	private String note3;
+	/**
+	 * 已收货数量
+	 */
+	private Double receiveQty;
+	/**
+	 * 是否已全部收货
+	 */
+	private Integer isReceiveAll;
 
 	// Constructors
 
@@ -171,6 +179,22 @@ public class BuyDetail extends BaseModel {
 
 	public void setAmount(Double amount) {
 		this.amount = amount;
+	}
+
+	public Double getReceiveQty() {
+		return receiveQty;
+	}
+
+	public void setReceiveQty(Double receiveQty) {
+		this.receiveQty = receiveQty;
+	}
+
+	public Integer getIsReceiveAll() {
+		return isReceiveAll;
+	}
+
+	public void setIsReceiveAll(Integer isReceiveAll) {
+		this.isReceiveAll = isReceiveAll;
 	}
 
 }
