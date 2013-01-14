@@ -63,9 +63,9 @@
 		  toolbar:[	
 				{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},'-',
 				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},'-',
-				{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}},'-',
-				{text:'已审',iconCls:'icon-edit',handler:function(){onUpdateShzt(1)}},'-',
-				{text:'反审',iconCls:'icon-edit',handler:function(){onUpdateShzt(0)}}
+				{text:'删除',iconCls:'icon-remove',handler:function(){onMulDelete()}},'-',
+				{text:'已审',iconCls:'icon-edit',handler:function(){onMulUpdateShzt(1)}},'-',
+				{text:'反审',iconCls:'icon-edit',handler:function(){onMulUpdateShzt(0)}}
 		  ],
 		  onDblClickRow:function(rowIndex, rowData){
 				onUpdate();
@@ -73,6 +73,8 @@
 		  onClickRow:function(rowIndex, rowData){
 				selectRow = rowData;
 				selectIndex = rowIndex;
+				$(viewList).datagrid('unselectAll');
+				$(viewList).datagrid('selectRow',selectIndex);
 		  }
 	 });
 	//分页条
@@ -174,15 +176,65 @@
 	    closable:false,
 	    onClose:function(){
 	    	lastIndex = null;
-	    }
+	    	$(editForm).form('clear');
+			$(buyDetail).datagrid({url:LYS.ClearUrl});
+	    },
+	    toolbar:[	
+	 			{id:'save'+id,text:'保存',iconCls:'icon-save',handler:function(){onSave();}},'-',
+	 			{id:'add'+id,text:'新增',iconCls:'icon-remove',handler:function(){onAdd();}},'-',
+	 			{id:'delete'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDelete();}},'-',
+	 			{id:'sh'+id,text:'审核',iconCls:'icon-edit',handler:function(){onUpdateStatus(1);}},'-',
+	 			{id:'fs'+id,text:'反审',iconCls:'icon-edit',handler:function(){onUpdateStatus(0);}},'-',
+	 			{id:'pre'+id,text:'上一笔',iconCls:'icon-edit',handler:function(){onOpenIndex(-1);}},'-',
+	 			{id:'next'+id,text:'下一笔',iconCls:'icon-edit',handler:function(){onOpenIndex(1);}},'-',
+	 			{text:'退出',iconCls:'icon-cancel',handler:function(){
+	 					$(editDialog).dialog('close');
+	 				}
+	 			}
+	 	  ]
 	}); 
+	//新增时，按钮的状态
+	var addBtnStatus = function(){
+		$('#save'+id).linkbutton('enable');
+		$('#add'+id).linkbutton('disable');
+		$('#delete'+id).linkbutton('disable');
+		$('#sh'+id).linkbutton('disable');
+		$('#fs'+id).linkbutton('disable');
+		$('#pre'+id).linkbutton('disable');
+		$('#next'+id).linkbutton('disable');
+		$('#addProduct'+id).linkbutton('enable');
+		$('#deleteProduct'+id).linkbutton('enable');
+	}
+	//审核通过按钮的状态
+	var shBtn = function(){
+		$('#save'+id).linkbutton('disable');
+		$('#add'+id).linkbutton('enable');
+		$('#delete'+id).linkbutton('disable');
+		$('#sh'+id).linkbutton('disable');
+		$('#fs'+id).linkbutton('enable');
+		$('#addProduct'+id).linkbutton('disable');
+		$('#deleteProduct'+id).linkbutton('disable');
+		
+	}
+	//反审后的按钮状态
+	var fsBtn = function(){
+		$('#save'+id).linkbutton('enable');
+		$('#add'+id).linkbutton('enable');
+		$('#delete'+id).linkbutton('enable');
+		$('#sh'+id).linkbutton('enable');
+		$('#fs'+id).linkbutton('disable');
+		$('#addProduct'+id).linkbutton('enable');
+		$('#deleteProduct'+id).linkbutton('enable');
+	}
 	//添加
 	var onAdd = function(){
 		$(editForm).form('clear');
+		$(buyDetail).datagrid('loadData',LYS.ClearData);
 		initChoose();
 		$('#otherAmount',editForm).numberbox('setValue', 0.0);
 		$('#amount',editForm).numberbox('setValue', 0.0);
 		$('#payAmount',editForm).numberbox('setValue', 0.0);
+		addBtnStatus();
 		$(editDialog).dialog('open');
 	}
 	
@@ -367,10 +419,79 @@
 		}
 		initChoose();
 		onOpen(selectRow.buyId);
+		
 		$(editDialog).dialog('open');
 	 }
+	//打开
+	var onOpen = function(buyId){
+		var url = 'inWarehouse/initBuy.do';
+		var content ={buyId:buyId};
+		asyncCallService(url,content,function(result){
+			if(result.isSuccess){
+				if(selectIndex==0){
+					$('#pre'+id).linkbutton('disable');
+					$('#next'+id).linkbutton('enable');
+				}
+				var rows = $(viewList).datagrid('getRows');
+				if(selectIndex==rows.length-1){
+					$('#pre'+id).linkbutton('enable');
+					$('#next'+id).linkbutton('disable');
+				}
+				var data = result.data;
+				var buyData = eval("("+data.buyData+")");
+				$('#buyId',editDialog).val(buyData.buyId);
+				$('#buyCode',editDialog).val(buyData.buyCode);
+				$('#buyDate',editDialog).val(buyData.buyDate);
+				$('#receiveDate',editDialog).val(buyData.receiveDate);
+				$('#sourceCode',editDialog).val(buyData.sourceCode);
+				if(buyData.status==1){
+					$('#status',editDialog).val('已审核');
+					shBtn();
+				}else{
+					fsBtn();
+					$('#status',editDialog).val('未审核'); 
+				}
+				
+				$('#supplier',editDialog).combogrid('setValue',buyData.supplierId);
+				
+				$('#otherAmount',editDialog).numberbox('setValue',buyData.otherAmount);
+				$('#amount',editDialog).numberbox('setValue',buyData.amount);
+				$('#payAmount',editDialog).numberbox('setValue',buyData.payAmount);
+				
+				$('#bank',editDialog).combobox('setValue',buyData.bankId);
+				$('#employee',editDialog).combobox('setValue',buyData.employeeId);
+				$('#invoiceType',editDialog).combobox('setValue',buyData.invoiceTypeId);
+				$('#note',editDialog).val(buyData.note);
+				
+				var detailData = eval("("+data.detailData+")");
+				$(buyDetail).datagrid('loadData',detailData);
+			}else{
+				$.messager.alert('提示',result.message,'error');
+			}
+		});
+	}
 	//删除
 	var onDelete = function(){
+		if(selectRow==null){
+			$.messager.alert("提示","请选择数据行","warning");
+			return;
+		}
+		var url = 'inWarehouse/deleteBuy.do';
+		var content ={buyId:selectRow.buyId};
+		asyncCallService(url,content,function(result){
+			if(result.isSuccess){
+				var fn = function(){
+					$(editDialog).dialog('close');
+					search(true);
+				}
+				$.messager.alert('提示','删除成功','info',fn);
+			}else{
+				$.messager.alert('提示',result.message,'error');
+			}
+		});
+	 }
+	//删除多个
+	var onMulDelete = function(){
 		var rows =  $(viewList).datagrid('getSelections');
 		if(rows.length==0){
 			$.messager.alert("提示","请选择要删除的数据行","warning");
@@ -397,8 +518,8 @@
 			}
 		});
 	}
-	//修改审核状态
-	var onUpdateShzt = function(status){
+	//修改多个审核状态
+	var onMulUpdateShzt = function(status){
 		var rows =  $(viewList).datagrid('getSelections');
 		var msg = '';
 		if(status==1){
@@ -431,46 +552,46 @@
 			}
 		});
 	}
-	//打开
-	var onOpen = function(buyId){
-		var url = 'inWarehouse/initBuy.do';
-		var content ={buyId:buyId};
-		asyncCallService(url,content,function(result){
-			if(result.isSuccess){
-				var data = result.data;
-				var buyData = eval("("+data.buyData+")");
-				$('#buyId',editDialog).val(buyData.buyId);
-				$('#buyCode',editDialog).val(buyData.buyCode);
-				$('#buyDate',editDialog).val(buyData.buyDate);
-				$('#receiveDate',editDialog).val(buyData.receiveDate);
-				$('#sourceCode',editDialog).val(buyData.sourceCode);
-				if(buyData.shzt==1){
-					$('#status',editDialog).val('已审核');
-					//灰掉按钮
-					$('#addProduct_'+id).linkbutton('disable');
-					$('#deleteProduct_'+id).linkbutton('disable');
-					$('#saveProduct_'+id).linkbutton('disable');
-				}else{
-					$('#status',editDialog).val('未审核');
-				}
-				
-				$('#supplier',editDialog).combogrid('setValue',buyData.supplierId);
-				
-				$('#otherAmount',editDialog).numberbox('setValue',buyData.otherAmount);
-				$('#amount',editDialog).numberbox('setValue',buyData.amount);
-				$('#payAmount',editDialog).numberbox('setValue',buyData.payAmount);
-				
-				$('#bank',editDialog).combobox('setValue',buyData.bankId);
-				$('#employee',editDialog).combobox('setValue',buyData.employeeId);
-				$('#invoiceType',editDialog).combobox('setValue',buyData.invoiceTypeId);
-				$('#note',editDialog).val(buyData.note);
-				
-				var detailData = eval("("+data.detailData+")");
-				$(buyDetail).datagrid('loadData',detailData);
-			}else{
-				$.messager.alert('提示',result.message,'error');
+	//更新状态
+	var onUpdateStatus = function(status){
+		if(selectRow==null){
+			$.messager.alert("提示","请选择数据行","warning");
+			return;
+		}
+		var msg = '';
+		if(status==1){
+			msg = '已审';
+		}else{
+			msg = '反审';
+		}
+		$.messager.confirm("提示","确定要"+msg+"选中的记录?审核后单据不能再修改和删除，系统将进行库存和财务计算!!",function(t){ 
+			if(t){
+				var url = 'inWarehouse/updateStatusBuy.do';
+				var content ={buyId:selectRow.buyId,status:status};
+				asyncCallService(url,content,function(result){
+					if(result.isSuccess){
+						var fn = function(){
+							if(status==1){
+								shBtn();
+							}else{
+								fsBtn();
+							}
+						}
+						$.messager.alert('提示',msg+'成功','info',fn);
+					}else{
+						$.messager.alert('提示',result.message,'error');
+					}
+				});
 			}
 		});
+	 }
+	//上下一笔
+	var onOpenIndex = function(index){
+		var rows = $(viewList).datagrid('getRows');
+		selectIndex = selectIndex + index;
+		selectRow = rows[selectIndex];
+		onOpen(selectRow.buyId);
+		//界面选中
 	}
 	//-----收货明细----------
 	var buyDetail = $('#buyDetail',editDialog);
@@ -515,24 +636,24 @@
 		    	$('#amount',editForm).numberbox('setValue',totalAmount);
 		    	$('#amount',editForm).change();
 		    }}}},
-		    {field:'note1',title:'备注1',width:120,align:"center",editor:{type:'text'}},
-		    {field:'note2',title:'备注2',width:120,align:"center",editor:{type:'text'}},
-		    {field:'note3',title:'备注3',width:120,align:"center",editor:{type:'text'}}
+		    {field:'note1',title:'备注1',width:80,align:"center",editor:{type:'text'}},
+		    {field:'note2',title:'备注2',width:80,align:"center",editor:{type:'text'}},
+		    {field:'note3',title:'备注3',width:80,align:"center",editor:{type:'text'}},
+		    {field:'receiveQty',title:'已入库',width:80,align:"center"},
+			{field:'isReceiveAll',title:'进度',width:80,align:"center",
+				formatter: function(value,row,index){
+					if(row.isReceiveAll==0){
+						return '未完成';
+					}else if(row.isReceiveAll==1){
+						return '已完成';
+					}
+				}}
 	  ]],
 	  rownumbers:true,
 	  pagination:false,
 	  toolbar:[	
-			{id:'addProduct_'+id,text:'添加商品',iconCls:'icon-add',handler:function(){onSelectProduct()}},'-',
-			{id:'deleteProduct_'+id,text:'删除商品',iconCls:'icon-remove',handler:function(){onDeleteProduct()}},'-',
-			{id:'saveProduct_'+id,text:'保存',iconCls:'icon-save',handler:function(){
-					onSave();
-				}
-			},'-',{text:'退出',iconCls:'icon-cancel',handler:function(){
-					$(editDialog).dialog('close');
-					$(editForm).form('clear');
-					$(buyDetail).datagrid({url:LYS.ClearUrl});
-				}
-			}
+			{id:'addProduct'+id,text:'添加商品',iconCls:'icon-add',handler:function(){onSelectProduct()}},'-',
+			{id:'deleteProduct'+id,text:'删除商品',iconCls:'icon-remove',handler:function(){onDeleteProduct()}}
 	  ],
 	  onBeforeLoad:function(){
 			$(this).datagrid('rejectChanges');
@@ -644,7 +765,9 @@
 				 amount:0,
 				 note1:'',
 				 note2:'',
-				 note3:''
+				 note3:'',
+				 receiveQty:0,
+				 isReceiveAll:0
 			});
 		}
 		 $(buyDetail).datagrid('endEdit', lastIndex);
@@ -687,6 +810,11 @@
 			 $('#amount',editForm).numberbox('setValue',totalAmount);
 		 }
 	});
+	//修改审核状态
+	var onUpdateStatus = function(status){
+		alert(status);
+	} 
+	
 	 
   }
 })(jQuery);   

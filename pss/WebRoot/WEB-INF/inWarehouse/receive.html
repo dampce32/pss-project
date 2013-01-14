@@ -69,20 +69,6 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="tdTitle">应付金额:</td>
-							<td>
-								<input type="text" name="amount" id="amount"  style="width: 150px" size="40" readonly="readonly" value="0"/>
-							</td>
-							<td class="tdTitle">优惠金额:</td>
-							<td>
-								<input type="text" name="discountAmount" id="discountAmount"  style="width: 150px" size="40" />
-							</td>
-							<td class="tdTitle">实付金额:</td>
-							<td>
-								<input type="text" name="payAmount" id="payAmount"  style="width: 150px" size="40" />
-							</td>
-						</tr>
-						<tr>
 							<td class="tdTitle">银行:</td>
 							<td>
 								<input type="text" id="bank"  style="width: 150px" size="40" />
@@ -93,16 +79,34 @@
 								<input type="text"  id="employee"  style="width: 150px" size="40" />
 								<input type="hidden" name="employee.employeeId" id="employeeId" />
 							</td>
+							<td class="tdTitle">运费:</td>
+							<td>
+								<input type="text" name="otherAmount" id="otherAmount"  style="width: 150px" size="40"  class="easyui-numberbox"  data-options="min:0,precision:2"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="tdTitle">应付金额:</td>
+							<td>
+								<input type="text" name="amount" id="amount"  style="width: 150px" size="40" readonly="readonly" class="easyui-numberbox"  data-options="min:0,precision:2"/>
+							</td>
+							<td class="tdTitle">优惠金额:</td>
+							<td>
+								<input type="text" name="discountAmount" id="discountAmount"  style="width: 150px" size="40" class="easyui-numberbox"  data-options="min:0,precision:2"/>
+							</td>
+							<td class="tdTitle">实付金额:</td>
+							<td>
+								<input type="text" name="payAmount" id="payAmount"  style="width: 150px" size="40" class="easyui-numberbox"  data-options="min:0,precision:2"/>
+							</td>
+						</tr>
+						<tr>
 							<td class="tdTitle">发票:</td>
 							<td>
 								<input type="text" id="invoiceType"  style="width: 150px" size="40" />
 								<input type="hidden" name="invoiceType.invoiceTypeId" id="invoiceTypeId" />
 							</td>
-						</tr>
-						<tr>
 							<td class="tdTitle">备注:</td>
-							<td colspan="5">
-								<input type="text" name="note" id="note"  style="width: 600px" size="40" />
+							<td colspan="3">
+								<input type="text" name="note" id="note"  style="width: 400px" size="40" />
 							</td>
 						</tr>
 					</table>

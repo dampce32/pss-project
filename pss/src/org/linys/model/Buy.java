@@ -159,7 +159,7 @@ public class Buy extends BaseModel {
 		this.bank = bank;
 	}
 
-	@Column(name = "buyCode", nullable = false, length = 20)
+	@Column(name = "buyCode", nullable = false, length = 50)
 	public String getBuyCode() {
 		return this.buyCode;
 	}

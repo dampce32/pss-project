@@ -195,9 +195,10 @@
 	var onAdd = function(){
 		$(editForm).form('clear');
 		initChoose();
-		$('#amount',editForm).val(0);
-		$('#discountAmount',editForm).val(0);
-		$('#payAmount',editForm).val(0);
+		$('#otherAmount',editForm).numberbox('setValue', 0.0);
+		$('#amount',editForm).numberbox('setValue', 0.0);
+		$('#discountAmount',editForm).numberbox('setValue', 0.0);
+		$('#payAmount',editForm).numberbox('setValue', 0.0);
 		$(editDialog).dialog('open');
 	}
 	
@@ -483,9 +484,10 @@
 				$('#supplier',editDialog).combogrid('setValue',receiveData.supplierId);
 				$('#warehouse',editDialog).combobox('setValue',receiveData.warehouseId);
 				
-				$('#amount',editDialog).val(receiveData.amount);
-				$('#discountAmount',editDialog).val(receiveData.discountAmount);
-				$('#payAmount',editDialog).val(receiveData.payAmount);
+				$('#otherAmount',editDialog).numberbox('setValue',receiveData.otherAmount);
+				$('#amount',editDialog).numberbox('setValue',receiveData.amount);
+				$('#discountAmount',editDialog).numberbox('setValue',receiveData.discountAmount);
+				$('#payAmount',editDialog).numberbox('setValue',receiveData.payAmount);
 				
 				$('#bank',editDialog).combobox('setValue',receiveData.bankId);
 				$('#employee',editDialog).combobox('setValue',receiveData.employeeId);
@@ -537,12 +539,14 @@
 					 }
 				}
 				totalAmount+=parseFloat(newValue); 
-		    	$('#amount',editForm).val(totalAmount);
-		    	$('#amount',editForm).change();
+				var otherAmount = $('#otherAmount',editForm).numberbox('getValue');
+				totalAmount+=parseFloat(otherAmount); 
+		    	$('#amount',editForm).numberbox('setValue',totalAmount);
 		    }}}},
+		    {field:'buyCode',title:'采购单号',width:120,align:"center"},
 		    {field:'note1',title:'备注1',width:120,align:"center",editor:{type:'text'}},
 		    {field:'note2',title:'备注2',width:120,align:"center",editor:{type:'text'}},
-		    {field:'note3',title:'备注3',width:120,align:"center",editor:{type:'text'}}
+		    {field:'note3',title:'备注3',width:120,align:"center",editor:{type:'text'}},
 	  ]],
 	  rownumbers:true,
 	  pagination:false,
@@ -596,7 +600,7 @@
 	//编辑框
 	$(selectDialog).dialog({  
 	    title: '选择商品',  
-	    width:800,
+	    width:1000,
 	    height:height,
 	    closed: true,  
 	    cache: false,  
@@ -614,6 +618,7 @@
 			    {field:'unitName',title:'单位',width:90,align:"center"},
 			    {field:'sizeName',title:'规格',width:90,align:"center"},
 			    {field:'colorName',title:'颜色',width:90,align:"center"},
+			    {field:'buyingPrice',title:'预设进价',width:90,align:"center"},
 			    {field:'note',title:'备注',width:90,align:"center"}
 		  ]],
 		  rownumbers:true,
@@ -664,8 +669,9 @@
 				 sizeName:row.sizeName,
 				 colorId:row.colorId,
 				 qty:0,
-				 price:0,
+				 price:row.buyingPrice,
 				 amount:0,
+				 buyCode:'',
 				 note1:'',
 				 note2:'',
 				 note3:''
@@ -698,15 +704,33 @@
 		$('#amount',editForm).change();
 	 }
 	 //应付金额发生改变
-	 $('#amount',editForm).change( function() {
-		 var amount = $('#amount',editForm).val();
-		 var discountAmount = $('#discountAmount',editForm).val();
-		 $('#payAmount',editForm).val(amount-discountAmount);
+	 $('#amount',editForm).numberbox({
+		 onChange:function(newValue,oldValue){
+			 var discountAmount = $('#discountAmount',editForm).numberbox('getValue');
+			 $('#payAmount',editForm).numberbox('setValue',newValue-parseFloat(discountAmount));
+		 }
 	});
-	 $('#discountAmount',editForm).change( function() {
-		 var amount = $('#amount',editForm).val();
-		 var discountAmount = $('#discountAmount',editForm).val();
-		 $('#payAmount',editForm).val(amount-discountAmount);
+	//优惠金额发生改变
+	 $('#discountAmount',editForm).numberbox({
+		 onChange:function(newValue,oldValue){
+			 var amount = $('#amount',editForm).numberbox('getValue');
+			 $('#payAmount',editForm).numberbox('setValue',amount-newValue);
+		 }
+	});
+	//运费发生改变
+	 $('#otherAmount',editForm).numberbox({
+		 onChange:function(newValue,oldValue){
+			 var totalAmount = 0 ;
+			 var rows =  $(receiveDetail).datagrid('getRows');
+			 var row = $(receiveDetail).datagrid('getSelected');
+			 var rowIndex = $(receiveDetail).datagrid('getRowIndex',row); 
+			 for ( var int = 0; int < rows.length; int++) {
+				row = rows[int];
+				totalAmount += parseFloat(row.amount);
+			}
+			totalAmount+=parseFloat(newValue); 
+			 $('#amount',editForm).numberbox('setValue',totalAmount);
+		 }
 	});
 	//清款
 	var onIsPay = function(){

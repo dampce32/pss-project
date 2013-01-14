@@ -144,7 +144,7 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 		ServiceResult result = new ServiceResult(false);
 		try {
 			String kind  = getParameter("kind");
-			result = receiveService.mulUpdateShzt(kind,ids,model);
+			result = receiveService.mulUpdateStatus(kind,ids,model);
 		} catch (Exception e) {
 			result.setMessage("批量修改审核状态失败");
 			result.setIsSuccess(false);
@@ -162,7 +162,7 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 	public void mulUpdateIsPay(){
 		ServiceResult result = new ServiceResult(false);
 		try {
-			result = receiveService.mulUpdateShzt(ids,model);
+			result = receiveService.mulUpdateStatus(ids,model);
 		} catch (Exception e) {
 			result.setMessage("批量清款失败");
 			result.setIsSuccess(false);

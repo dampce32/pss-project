@@ -253,7 +253,7 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 		List<BuyDetail> buyDetailList = buyDetailDAO.queryByBuyId(buyId);
 		String[] propertiesDetail = {"buyDetailId","product.productId","product.productCode","product.productName",
 				"product.size.dataDictionaryName:sizeName","product.unit.dataDictionaryName:unitName","color.dataDictionaryName:colorName","color.dataDictionaryId:colorId",
-				"qty","price","amount","note1","note2","note3"};
+				"qty","price","amount","note1","note2","note3","receiveQty","isReceiveAll"};
 		String detailData = JSONUtil.toJson(buyDetailList,propertiesDetail);
 		result.addData("detailData", detailData);
 		result.setIsSuccess(true);

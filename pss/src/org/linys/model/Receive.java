@@ -65,6 +65,10 @@ public class Receive extends BaseModel {
 	 */
 	private Date receiveDate;
 	/**
+	 * 其他费用：运费
+	 */
+	private Double otherAmount;
+	/**
 	 * 应付金额
 	 */
 	private Double amount;
@@ -85,7 +89,7 @@ public class Receive extends BaseModel {
 	 * 0--未审核
 	 * 1--已审核
 	 */
-	private Integer shzt;
+	private Integer status;
 	/**
 	 * 是否付款
 	 */
@@ -215,15 +219,6 @@ public class Receive extends BaseModel {
 		this.payAmount = payAmount;
 	}
 
-	@Column(name = "shzt")
-	public Integer getShzt() {
-		return this.shzt;
-	}
-
-	public void setShzt(Integer shzt) {
-		this.shzt = shzt;
-	}
-
 	@Column(name = "note", length = 50)
 	public String getNote() {
 		return this.note;
@@ -259,6 +254,21 @@ public class Receive extends BaseModel {
 
 	public void setIsPay(Integer isPay) {
 		this.isPay = isPay;
+	}
+	@Column(name = "otherAmount", precision = 53, scale = 0)
+	public Double getOtherAmount() {
+		return otherAmount;
+	}
+	public void setOtherAmount(Double otherAmount) {
+		this.otherAmount = otherAmount;
+	}
+	@Column(name = "status")
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
 }
