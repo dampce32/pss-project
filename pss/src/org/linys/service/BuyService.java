@@ -81,6 +81,24 @@ public interface BuyService extends BaseService<Buy,String>{
 	 * @param model
 	 * @return
 	 */
-	ServiceResult mulUpdateShzt(String ids, Buy model);
+	ServiceResult mulUpdateStatus(String ids, Buy model);
+	/**
+	 * @Description: 删除
+	 * @Create: 2013-1-14 下午9:25:01
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @return
+	 */
+	ServiceResult delete(Buy model);
+	/**
+	 * @Description: 更新审核状态
+	 * @Create: 2013-1-14 下午9:29:56
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @return
+	 */
+	ServiceResult updateStatus(Buy model);
 
 }

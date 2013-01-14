@@ -295,7 +295,7 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 	 * @see org.linys.service.BuyService#mulUpdateShzt(java.lang.String, org.linys.model.Buy)
 	 */
 	@Override
-	public ServiceResult mulUpdateShzt(String ids, Buy model) {
+	public ServiceResult mulUpdateStatus(String ids, Buy model) {
 		ServiceResult result = new ServiceResult(false);
 		if(StringUtils.isEmpty(ids)){
 			result.setMessage("请选择要修改审核状态的采购单");
@@ -329,6 +329,53 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 		if(!haveUpdateShzt){
 			result.setMessage("没有可修改审核状态的采购单");
 			return result;
+		}
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.BuyService#delete(org.linys.model.Buy)
+	 */
+	@Override
+	public ServiceResult delete(Buy model) {
+		ServiceResult result = new ServiceResult(false);
+		if(model==null||StringUtils.isEmpty(model.getBuyId())){
+			result.setMessage("请选择要删除的采购单");
+			return result;
+		}
+		Buy oldModel = buyDAO.load(model.getBuyId());
+		if(oldModel==null){
+			result.setMessage("要删除的采购单已不存在");
+			return result;
+		}else{
+			buyDAO.delete(oldModel);
+		}
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.BuyService#updateStatus(org.linys.model.Buy)
+	 */
+	@Override
+	public ServiceResult updateStatus(Buy model) {
+		ServiceResult result = new ServiceResult(false);
+		if(model==null||StringUtils.isEmpty(model.getBuyId())){
+			result.setMessage("请选择要更新审核状态的采购单");
+			return result;
+		}
+		Buy oldBuy = buyDAO.load(model.getBuyId());
+		Bank oldBank = bankDAO.load(oldBuy.getBank().getBankId());
+		if(oldBuy!=null&&oldBuy.getStatus().intValue()!=model.getStatus().intValue()){
+			if(model.getStatus()==1){//如果是由未审改为已审
+				oldBank.setAmount(oldBank.getAmount()-oldBuy.getPayAmount());
+			}else if(model.getStatus()==0){//如果是由已审改为未审
+				oldBank.setAmount(oldBank.getAmount()+oldBuy.getPayAmount());
+			}
+			bankDAO.update(oldBank);
+			oldBuy.setStatus(model.getStatus());
+			buyDAO.update(oldBuy);
 		}
 		result.setIsSuccess(true);
 		return result;
