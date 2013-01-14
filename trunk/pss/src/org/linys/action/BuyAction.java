@@ -114,6 +114,24 @@ public class BuyAction extends BaseAction implements ModelDriven<Buy> {
 		ajaxJson(jsonString);
 	}
 	/**
+	 * @Description: 删除
+	 * @Create: 2013-1-14 下午9:24:13
+	 * @author lys
+	 * @update logs
+	 */
+	public void delete(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = buyService.delete(model);
+		} catch (Exception e) {
+			result.setMessage("删除失败");
+			result.setIsSuccess(false);
+			logger.error("删除失败", e);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	/**
 	 * @Description: 批量删除
 	 * @Create: 2013-1-8 下午10:28:15
 	 * @author lys
@@ -132,15 +150,33 @@ public class BuyAction extends BaseAction implements ModelDriven<Buy> {
 		ajaxJson(jsonString);
 	}
 	/**
+	 * @Description: 更新审核状态
+	 * @Create: 2013-1-14 下午9:24:13
+	 * @author lys
+	 * @update logs
+	 */
+	public void updateStatus(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = buyService.updateStatus(model);
+		} catch (Exception e) {
+			result.setMessage("更新审核状态失败");
+			result.setIsSuccess(false);
+			logger.error("更新审核状态失败", e);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	/**
 	 * @Description: 批量修改审核状态
 	 * @Create: 2013-1-9 下午11:50:34
 	 * @author lys
 	 * @update logs
 	 */
-	public void mulUpdateShzt(){
+	public void mulUpdateStatus(){
 		ServiceResult result = new ServiceResult(false);
 		try {
-			result = buyService.mulUpdateShzt(ids,model);
+			result = buyService.mulUpdateStatus(ids,model);
 		} catch (Exception e) {
 			result.setMessage("批量修改审核状态失败");
 			result.setIsSuccess(false);

@@ -164,7 +164,6 @@
 			}
 		})
 	}	
-		
 	//编辑框
 	$(editDialog).dialog({  
 	    title: '编辑采购单',  
@@ -214,7 +213,6 @@
 		$('#fs'+id).linkbutton('enable');
 		$('#addProduct'+id).linkbutton('disable');
 		$('#deleteProduct'+id).linkbutton('disable');
-		
 	}
 	//反审后的按钮状态
 	var fsBtn = function(){
@@ -428,15 +426,27 @@
 		var content ={buyId:buyId};
 		asyncCallService(url,content,function(result){
 			if(result.isSuccess){
+				var preDisable = false;
+				var nextDisable = false;
 				if(selectIndex==0){
-					$('#pre'+id).linkbutton('disable');
-					$('#next'+id).linkbutton('enable');
+					preDisable = true;
+					
 				}
 				var rows = $(viewList).datagrid('getRows');
 				if(selectIndex==rows.length-1){
-					$('#pre'+id).linkbutton('enable');
-					$('#next'+id).linkbutton('disable');
+					nextDisable = true;
 				}
+				if(preDisable){
+					$('#pre'+id).linkbutton('disable');
+				}else{
+					$('#pre'+id).linkbutton('enable');
+				}
+				if(nextDisable){
+					$('#next'+id).linkbutton('disable');
+				}else{
+					$('#next'+id).linkbutton('enable');
+				}
+				
 				var data = result.data;
 				var buyData = eval("("+data.buyData+")");
 				$('#buyId',editDialog).val(buyData.buyId);
@@ -476,17 +486,23 @@
 			$.messager.alert("提示","请选择数据行","warning");
 			return;
 		}
-		var url = 'inWarehouse/deleteBuy.do';
-		var content ={buyId:selectRow.buyId};
-		asyncCallService(url,content,function(result){
-			if(result.isSuccess){
-				var fn = function(){
-					$(editDialog).dialog('close');
-					search(true);
-				}
-				$.messager.alert('提示','删除成功','info',fn);
-			}else{
-				$.messager.alert('提示',result.message,'error');
+		$.messager.confirm("提示","确定要删除选中的记录?",function(t){ 
+			if(t){
+				var url = 'inWarehouse/deleteBuy.do';
+				var content ={buyId:selectRow.buyId};
+				asyncCallService(url,content,function(result){
+					if(result.isSuccess){
+						var fn = function(){
+							selectRow = null;
+							selectIndex = null;
+							$(editDialog).dialog('close');
+							search(true);
+						}
+						$.messager.alert('提示','删除成功','info',fn);
+					}else{
+						$.messager.alert('提示',result.message,'error');
+					}
+				});
 			}
 		});
 	 }
@@ -518,6 +534,46 @@
 			}
 		});
 	}
+	//修改审核状态
+	var onUpdateStatus = function(status){
+		var msg = '';
+		if(status==1){
+			msg ='审核';
+		}else{
+			msg = '反审';
+		}
+		if(selectRow==null){
+			$.messager.alert("提示","请选择需要"+msg+"数据行","warning");
+			return;
+		}
+		$.messager.confirm("提示","确定要"+msg+"选中的记录?审核后单据不能再修改和删除，系统将进行财务计算!!",function(t){ 
+			if(t){
+				var url = 'inWarehouse/updateStatusBuy.do';
+				var content ={buyId:selectRow.buyId,status:status};
+				asyncCallService(url,content,function(result){
+					if(result.isSuccess){
+						var fn = function(){
+							if(status==1){
+								shBtn();
+								$('#status',editDialog).val('已审核');
+							}else{
+								fsBtn();
+								$('#status',editDialog).val('未审核'); 
+							}
+							selectRow.status = status;
+							$(viewList).datagrid('updateRow',{
+								index: selectIndex,
+								row: selectRow
+							});
+						}
+						$.messager.alert('提示',msg+'成功','info',fn);
+					}else{
+						$.messager.alert('提示',result.message,'error');
+					}
+				});
+			}
+		});
+	 }
 	//修改多个审核状态
 	var onMulUpdateShzt = function(status){
 		var rows =  $(viewList).datagrid('getSelections');
@@ -552,39 +608,6 @@
 			}
 		});
 	}
-	//更新状态
-	var onUpdateStatus = function(status){
-		if(selectRow==null){
-			$.messager.alert("提示","请选择数据行","warning");
-			return;
-		}
-		var msg = '';
-		if(status==1){
-			msg = '已审';
-		}else{
-			msg = '反审';
-		}
-		$.messager.confirm("提示","确定要"+msg+"选中的记录?审核后单据不能再修改和删除，系统将进行库存和财务计算!!",function(t){ 
-			if(t){
-				var url = 'inWarehouse/updateStatusBuy.do';
-				var content ={buyId:selectRow.buyId,status:status};
-				asyncCallService(url,content,function(result){
-					if(result.isSuccess){
-						var fn = function(){
-							if(status==1){
-								shBtn();
-							}else{
-								fsBtn();
-							}
-						}
-						$.messager.alert('提示',msg+'成功','info',fn);
-					}else{
-						$.messager.alert('提示',result.message,'error');
-					}
-				});
-			}
-		});
-	 }
 	//上下一笔
 	var onOpenIndex = function(index){
 		var rows = $(viewList).datagrid('getRows');
@@ -592,6 +615,8 @@
 		selectRow = rows[selectIndex];
 		onOpen(selectRow.buyId);
 		//界面选中
+		$(viewList).datagrid('unselectAll');
+		$(viewList).datagrid('selectRow',selectIndex);
 	}
 	//-----收货明细----------
 	var buyDetail = $('#buyDetail',editDialog);
@@ -810,10 +835,6 @@
 			 $('#amount',editForm).numberbox('setValue',totalAmount);
 		 }
 	});
-	//修改审核状态
-	var onUpdateStatus = function(status){
-		alert(status);
-	} 
 	
 	 
   }
