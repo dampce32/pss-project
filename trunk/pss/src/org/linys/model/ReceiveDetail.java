@@ -66,6 +66,10 @@ public class ReceiveDetail extends BaseModel {
 	 * 金额
 	 */
 	private Double amount;
+	/**
+	 * 采购明细
+	 */
+	private BuyDetail buyDetail;
 
 	// Constructors
 
@@ -174,6 +178,15 @@ public class ReceiveDetail extends BaseModel {
 
 	public void setAmount(Double amount) {
 		this.amount = amount;
+	}
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "buyDetailId")
+	public BuyDetail getBuyDetail() {
+		return buyDetail;
+	}
+
+	public void setBuyDetail(BuyDetail buyDetail) {
+		this.buyDetail = buyDetail;
 	}
 
 }

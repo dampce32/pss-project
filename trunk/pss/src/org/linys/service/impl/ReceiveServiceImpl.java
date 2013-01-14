@@ -149,7 +149,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			receiveCode = receiveDAO.getMaxCode(receiveCode);
 			
 			receiveCode = newReceiveCode(prefix,receiveCode);
-			model.setShzt(0);
+			model.setStatus(0);
 			model.setIsPay(0);
 			model.setReceiveCode(receiveCode);
 			receiveDAO.save(model);
@@ -190,6 +190,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 				oldReceive.setWarehouse(model.getWarehouse());
 				oldReceive.setReceiveDate(model.getReceiveDate());
 				oldReceive.setDiscountAmount(model.getDiscountAmount());
+				oldReceive.setOtherAmount(model.getOtherAmount());
 				oldReceive.setPayAmount(model.getPayAmount());
 				oldReceive.setAmount(model.getAmount());
 				oldReceive.setBank(model.getBank());
@@ -279,7 +280,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		ServiceResult result = new ServiceResult(false);
 		Receive receive = receiveDAO.load(receiveId);
 		String[] propertiesReceive = {"receiveId","receiveCode","receiveDate","deliverCode",
-				"supplier.supplierId","warehouse.warehouseId","amount","discountAmount","payAmount",
+				"supplier.supplierId","warehouse.warehouseId","amount","discountAmount","payAmount","otherAmount",
 				"bank.bankId","invoiceType.invoiceTypeId","employee.employeeId","note","shzt"};
 		String receiveData = JSONUtil.toJson(receive,propertiesReceive);
 		result.addData("receiveData",receiveData);
@@ -312,7 +313,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		boolean haveDel = false;
 		for (String id : idArray) {
 			Receive oldReceive = receiveDAO.load(id);
-			if(oldReceive!=null&&oldReceive.getShzt()==0){
+			if(oldReceive!=null&&oldReceive.getStatus()==0){
 				receiveDAO.delete(oldReceive);
 				haveDel = true;
 			}
@@ -326,10 +327,10 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	}
 	/*
 	 * (non-Javadoc)   
-	 * @see org.linys.service.ReceiveService#mulUpdateShzt(java.lang.String, org.linys.model.Receive)
+	 * @see org.linys.service.ReceiveService#mulUpdateStatus(java.lang.String, org.linys.model.Receive)
 	 */
 	@Override
-	public ServiceResult mulUpdateShzt(String kind,String ids, Receive model) {
+	public ServiceResult mulUpdateStatus(String kind,String ids, Receive model) {
 		ServiceResult result = new ServiceResult(false);
 		if(StringUtils.isEmpty(ids)){
 			result.setMessage("请选择要修改审核状态的收货单");
@@ -340,15 +341,15 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			result.setMessage("请选择要修改审核状态的收货单");
 			return result;
 		}
-		if(model==null||model.getShzt()==null){
+		if(model==null||model.getStatus()==null){
 			result.setMessage("请选择要修改成的审核状态");
 			return result;
 		}
-		boolean haveUpdateShzt = false;
+		boolean haveUpdateStatus = false;
 		for (String id : idArray) {
 			Receive oldReceive = receiveDAO.load(id);
-			if(oldReceive!=null&&oldReceive.getShzt().intValue()!=model.getShzt().intValue()){
-				if(model.getShzt()==1){//如果是由未审改为已审
+			if(oldReceive!=null&&oldReceive.getStatus().intValue()!=model.getStatus().intValue()){
+				if(model.getStatus()==1){//如果是由未审改为已审
 					//将该收货单下的商品入库
 					List<ReceiveDetail> receiveDetailList = receiveDetailDAO.queryByReceiveId(id);
 					//将对应商品入库
@@ -379,7 +380,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 					if(oldReceive.getAmount()-oldReceive.getPayAmount()-oldReceive.getDiscountAmount()<=0){
 						oldReceive.setIsPay(1);
 					}
-				}else if(model.getShzt()==0){//如果是由已审改为未审
+				}else if(model.getStatus()==0){//如果是由已审改为未审
 					//将该收货单下的商品入库
 					List<ReceiveDetail> receiveDetailList = receiveDetailDAO.queryByReceiveId(id);
 					//更新对应商品的库存数量
@@ -400,19 +401,19 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 				if(!"other".equals(kind)){
 					Bank oldBank = bankDAO.load(oldReceive.getBank().getBankId());
 					//更新对应银行的账户金额
-					if(model.getShzt()==1){//如果是由未审改为已审
+					if(model.getStatus()==1){//如果是由未审改为已审
 						oldBank.setAmount(oldBank.getAmount()-oldReceive.getPayAmount());
-					}else if(model.getShzt()==0){//如果是由已审改为未审
+					}else if(model.getStatus()==0){//如果是由已审改为未审
 						oldBank.setAmount(oldBank.getAmount()+oldReceive.getPayAmount());
 					}
 					bankDAO.update(oldBank);
 				}
-				oldReceive.setShzt(model.getShzt());
+				oldReceive.setStatus(model.getStatus());
 				receiveDAO.update(oldReceive);
-				haveUpdateShzt = true;
+				haveUpdateStatus = true;
 			}
 		}
-		if(!haveUpdateShzt){
+		if(!haveUpdateStatus){
 			result.setMessage("没有可修改审核状态的收货单");
 			return result;
 		}
@@ -421,10 +422,10 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	}
 	/*
 	 * (non-Javadoc)   
-	 * @see org.linys.service.ReceiveService#mulUpdateShzt(java.lang.String, org.linys.model.Receive)
+	 * @see org.linys.service.ReceiveService#mulUpdateStatus(java.lang.String, org.linys.model.Receive)
 	 */
 	@Override
-	public ServiceResult mulUpdateShzt(String ids, Receive model) {
+	public ServiceResult mulUpdateStatus(String ids, Receive model) {
 		ServiceResult result = new ServiceResult(false);
 		if(StringUtils.isEmpty(ids)){
 			result.setMessage("请选择要清款的收货单");
@@ -439,16 +440,16 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			result.setMessage("请选择要修改成的审核状态");
 			return result;
 		}
-		boolean haveUpdateShzt = false;
+		boolean haveUpdateStatus = false;
 		for (String id : idArray) {
 			Receive oldReceive = receiveDAO.load(id);
 			if(oldReceive!=null&&oldReceive.getIsPay()!=model.getIsPay()){
 				oldReceive.setIsPay(model.getIsPay());
 				receiveDAO.update(oldReceive);
-				haveUpdateShzt = true;
+				haveUpdateStatus = true;
 			}
 		}
-		if(!haveUpdateShzt){
+		if(!haveUpdateStatus){
 			result.setMessage("没有可清款的收货单");
 			return result;
 		}

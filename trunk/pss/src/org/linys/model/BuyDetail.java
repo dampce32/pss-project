@@ -1,7 +1,10 @@
 package org.linys.model;
 
 import java.text.DecimalFormat;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -76,7 +80,11 @@ public class BuyDetail extends BaseModel {
 	 * 是否已全部收货
 	 */
 	private Integer isReceiveAll;
-
+	/**
+	 * 收货明细
+	 */
+	private Set<ReceiveDetail> receiveDetails = new HashSet<ReceiveDetail>(0);
+ 
 	// Constructors
 
 	/** default constructor */
@@ -195,6 +203,14 @@ public class BuyDetail extends BaseModel {
 
 	public void setIsReceiveAll(Integer isReceiveAll) {
 		this.isReceiveAll = isReceiveAll;
+	}
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "buyDetail")
+	public Set<ReceiveDetail> getReceiveDetails() {
+		return receiveDetails;
+	}
+
+	public void setReceiveDetails(Set<ReceiveDetail> receiveDetails) {
+		this.receiveDetails = receiveDetails;
 	}
 
 }
