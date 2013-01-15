@@ -817,8 +817,8 @@
 					{text:'退出',iconCls:'icon-cancel',handler:function(){$(selectBuyDialog).dialog('close');}}
 			  ],
 	    onClose:function(){
-	    	$(selectBuyDialog).dialog('clear');
 	    	$(buyList).datagrid('loadData',LYS.ClearData);
+	    	$(selectBuyDialog).dialog('clear');
 	    }
 	});
 	$(buyList).datagrid({
@@ -826,7 +826,8 @@
 		  cache: false, 
 		  columns:[[
 			    {field:'ck',checkbox:true},
-			    {field:'buyCode',title:'采购单编号',width:90,align:"center"},
+			    {field:'buyCode',title:'采购单编号',width:150,align:"center"},
+			    {field:'buyDate',title:'采购日期',width:90,align:"center"},
 			    {field:'note',title:'备注',width:90,align:"center"}
 		  ]],
 		  rownumbers:true,
@@ -835,7 +836,49 @@
 	 });
 	//从采购单添加商品
 	var onSelectBuyProduct = function(){
+		//供应商
+		var supplierId = $('#supplier',editForm).combogrid('getValue');
+		if(supplierId==''){
+			$.messager.alert('提示','请选择供应商','warning');
+			return;
+		}
 		$(selectBuyDialog).dialog('open');
 	}
+	//查询
+	 $('#searchBtnSelectBuyDialog',selectBuyDialog).click(function(){
+		 searchBtnSelectBuy();
+	 })
+	 var searchBtnSelectBuy = function(){
+		var beginDate = $('#beginDate',selectBuyDialog).val();
+		if(beginDate==''){
+			$.messager.alert('提示','请选择采购单开始日期','warning');
+			return;
+		}
+		var endDate = $('#endDate',selectBuyDialog).val();
+		if(endDate==''){
+			$.messager.alert('提示','请选择采购单结束日期','warning');
+			return;
+		}
+		var rows = $(receiveDetail).datagrid('getRows');
+		var idArray = new Array();
+		for ( var int = 0; int < rows.length; int++) {
+			var row = rows[int];
+			if(''!=row.buyDetailId){
+				idArray.push(row.buyDetailId);
+			}
+		}
+		var supplierId = $('#supplier',editForm).combogrid('getValue');
+		var buyCode = $('#buyCodeSelectBuyDialog',selectBuyDialog).val();
+		
+		var url = "inWarehouse/queryReceiveBuy.do";
+		var content = {beginDate:beginDate,endDate:endDate,ids:idArray.join(LYS.join),supplierId:supplierId,buyCode:buyCode};
+		var result = syncCallService(url,content);
+		if(result.isSuccess){
+			var data = result.data;
+			$(buyList).datagrid('loadData',eval("("+data.datagridData+")"));
+		}else{
+			$.messager.alert('提示',result.message,"error");
+		}
+	 }
   }
 })(jQuery);   

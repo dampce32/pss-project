@@ -1,6 +1,7 @@
 package org.linys.util;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -345,7 +346,11 @@ public class JSONUtil{
 				Object value = null;
 				for(String key : keySet){
 					value = map.get(key);
-					item.put(key, value);
+					if(value instanceof Date){
+						item.put(key, value.toString());
+					}else{
+						item.put(key, value);
+					}
 				}
 				array.add(item);
 			}

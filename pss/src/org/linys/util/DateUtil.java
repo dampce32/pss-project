@@ -80,7 +80,7 @@ public class DateUtil {
 	 * @throws ParseException
 	 */
 	public static Date toDate(String dateString) throws ParseException{
-		return toDate("yyyy-MM-dd");
+		return toDate("yyyy-MM-dd",dateString);
 	}
 	
 	

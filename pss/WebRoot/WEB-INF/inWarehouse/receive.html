@@ -143,9 +143,10 @@
 	<div id="selectBuyDialog">
 		<div class="easyui-layout" data-options="fit:true">
 			<div data-options="region:'north',border:false" style="height: 35px;overflow: hidden;padding:5px"> 
-				商品编号:&nbsp;&nbsp;<input id="productCodeSelectDialog" type="text" size="12"/>&nbsp;&nbsp;&nbsp;
-				商品名称:&nbsp;&nbsp;<input id="productNameSelectDialog" type="text" size="12"/>&nbsp;&nbsp;&nbsp;
-				<a href="#" class="easyui-linkbutton" id="searchBtnSelectDialog" data-options="iconCls:'icon-search'" style="cursor: pointer;">查 询</a>
+				采购单日期:<input type="text"  id="beginDate"  style="width: 100px" size="40" class="Wdate" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'endDate\');}'});" />
+				至:<input type="text"  id="endDate"  style="width: 100px" size="40" class="Wdate" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'beginDate\');}'});" />
+				采购单编号:&nbsp;&nbsp;<input id="buyCodeSelectBuyDialog" type="text" size="12"/>&nbsp;&nbsp;&nbsp;
+				<a href="#" class="easyui-linkbutton" id="searchBtnSelectBuyDialog" data-options="iconCls:'icon-search'" style="cursor: pointer;">查 询</a>
 			</div>
 			<div data-options="region:'center',border:false" style="width: 100%;height:100%">
 				<div id="buyList"></div>
