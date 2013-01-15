@@ -369,6 +369,7 @@
 			}
 		}
 		var receiveDetailIdArray = new Array();
+		var buyDetailIdArray = new Array();
 		var productIdArray = new Array();
 		var colorIdArray = new Array();
 		var qtyArray = new Array();
@@ -377,6 +378,7 @@
 		var note2Array = new Array();
 		var note3Array = new Array();
 		for ( var i = 0; i < rows.length; i++) {
+			buyDetailIdArray.push(rows[i].buyDetailId);
 			receiveDetailIdArray.push(rows[i].receiveDetailId);
 			productIdArray.push(rows[i].productId);
 			colorIdArray.push(rows[i].colorId);
@@ -402,6 +404,7 @@
 			}
 		}
 		$('#receiveDetailIds',editForm).val(receiveDetailIdArray.join(LYS.join));
+		$('#buyDetailIds',editForm).val(buyDetailIdArray.join(LYS.join));
 		$('#delReceiveDetailIds',editForm).val(delReceiveDetailIdArray.join(LYS.join));
 		$('#productIds',editForm).val(productIdArray.join(LYS.join));
 		$('#colorIds',editForm).val(colorIdArray.join(LYS.join));
@@ -813,7 +816,7 @@
 	    modal: true,
 	    closable:false,
 	    toolbar:[	
-					{text:'选择',iconCls:'icon-save',handler:function(){onSelectOKProduct()}},
+					{text:'选择',iconCls:'icon-save',handler:function(){onSelectOKBuy()}},
 					{text:'退出',iconCls:'icon-cancel',handler:function(){$(selectBuyDialog).dialog('close');}}
 			  ],
 	    onClose:function(){
@@ -879,6 +882,64 @@
 		}else{
 			$.messager.alert('提示',result.message,"error");
 		}
+	 }
+	 //选择采购单
+	 var onSelectOKBuy = function(){
+		 var rows = $(buyList).datagrid('getSelections');
+		 if(rows.length==0){
+			 $.messager.alert('提示','请选择采购单','warning');
+			 return;
+		 }
+		 var ids = null;
+		 var ids2 = null;
+		 var idArray = new Array();
+		 var idArray2 = new Array();
+		 for ( var int = 0; int < rows.length; int++) {
+			var row = rows[int];
+			idArray.push(row.buyId);
+		 }
+		 ids = idArray.join(LYS.join);
+		 rows = $(receiveDetail).datagrid('getRows');
+		for ( var int = 0; int < rows.length; int++) {
+			var row = rows[int];
+			if(''!=row.buyDetailId){
+				idArray2.push(row.buyDetailId);
+			}
+		}
+		ids2 = idArray2.join(LYS.join);
+		
+		var url = "inWarehouse/querySelectBuyDetailReceive.do";
+		var content = {ids:ids,ids2:ids2};
+		var result = syncCallService(url,content);
+		if(result.isSuccess){
+			var data = result.data;
+			var datagridData = eval("("+data.datagridData+")");
+			for ( var int = 0; int < datagridData.length; int++) {
+				var row = datagridData[int];
+				 $(receiveDetail).datagrid('appendRow',{
+					 receiveDetailId:'',
+					 productId:row.productId,
+					 productCode:row.productCode,
+					 productName:row.productName,
+					 unitName:row.unitName,
+					 sizeName:row.sizeName,
+					 colorId:row.colorId,
+					 qty:row.qty,
+					 price:row.price,
+					 amount:row.qty*row.price,
+					 buyCode:row.buyCode,
+					 buyDetailId:row.buyDetailId,
+					 note1:'',
+					 note2:'',
+					 note3:''
+				});
+			}
+			$(selectBuyDialog).dialog('close');
+		}else{
+			$.messager.alert('提示',result.message,"error");
+		}
+		 
+		 
 	 }
   }
 })(jQuery);   
