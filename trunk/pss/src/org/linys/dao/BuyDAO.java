@@ -50,5 +50,14 @@ public interface BuyDAO extends BaseDAO<Buy,String>{
 	List<Map<String, Object>> queryReceive(Date beginDateDate,
 			Date endDateDate, String supplierId, String[] idArray, Buy model,
 			Integer page, Integer rows);
+	/**
+	 * @Description: 打开初始化采购单
+	 * @Create: 2013-1-15 下午8:40:20
+	 * @author lys
+	 * @update logs
+	 * @param buyId
+	 * @return
+	 */
+	Buy init(String buyId);
 
 }
