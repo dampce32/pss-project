@@ -426,12 +426,11 @@
 			if(result.isSuccess){
 				var preDisable = false;
 				var nextDisable = false;
-				if(selectIndex==0){
+				if(selectIndex==0||selectIndex==null){
 					preDisable = true;
-					
 				}
 				var rows = $(viewList).datagrid('getRows');
-				if(selectIndex==rows.length-1){
+				if(selectIndex==rows.length-1||selectIndex==null){
 					nextDisable = true;
 				}
 				if(preDisable){
@@ -657,20 +656,15 @@
 				var otherAmount = $('#otherAmount',editForm).numberbox('getValue');
 				totalAmount+=parseFloat(otherAmount); 
 		    	$('#amount',editForm).numberbox('setValue',totalAmount);
-		    	$('#amount',editForm).change();
 		    }}}},
 		    {field:'note1',title:'备注1',width:80,align:"center",editor:{type:'text'}},
 		    {field:'note2',title:'备注2',width:80,align:"center",editor:{type:'text'}},
 		    {field:'note3',title:'备注3',width:80,align:"center",editor:{type:'text'}},
-		    {field:'receiveQty',title:'已入库',width:80,align:"center"},
-			{field:'isReceiveAll',title:'进度',width:80,align:"center",
+		    {field:'receiveQty',title:'已入库',width:80,align:"center",editor:{type:'numberbox',options:{disabled:true,precision:2}}},
+			{field:'unReceiveQty',title:'未完成',width:80,align:"center",
 				formatter: function(value,row,index){
-					if(row.isReceiveAll==0){
-						return '未完成';
-					}else if(row.isReceiveAll==1){
-						return '已完成';
-					}
-				}}
+					return row.qty-row.receiveQty;
+				},editor:{type:'numberbox',options:{disabled:true,precision:2}}}
 	  ]],
 	  rownumbers:true,
 	  pagination:false,
@@ -701,6 +695,8 @@
 	    var qtyEditor = editors[1];  
 	    var priceEditor = editors[2];  
 	    var amountEditor = editors[3];  
+	    var receiveQtyEditor = editors[7];  
+	    var unReceiveQtyEditor = editors[8];  
 	    qtyEditor.target.bind('change', function(){  
 	        calculate(rowIndex);  
 	    });  
@@ -710,6 +706,8 @@
 	    function calculate(rowIndex){  
 	        var cost = qtyEditor.target.val() * priceEditor.target.val();  
 	        $(amountEditor.target).numberbox('setValue',cost);
+	        //更新未完成
+	        $(unReceiveQtyEditor.target).numberbox('setValue', qtyEditor.target.val()- receiveQtyEditor.target.val());
 	    }  
 	}  
 	//编辑框
@@ -790,7 +788,7 @@
 				 note2:'',
 				 note3:'',
 				 receiveQty:0,
-				 isReceiveAll:0
+				 unReceiveQty:0
 			});
 		}
 		 $(buyDetail).datagrid('endEdit', lastIndex);

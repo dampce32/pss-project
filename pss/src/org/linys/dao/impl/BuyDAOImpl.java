@@ -76,6 +76,21 @@ public class BuyDAOImpl extends BaseDAOImpl<Buy, String> implements
 		
 		return null;
 	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.BuyDAO#init(java.lang.String)
+	 */
+	@Override
+	public Buy init(String buyId) {
+		Criteria criteria  = getCurrentSession().createCriteria(Buy.class);
+		criteria.add(Restrictions.eq("buyId", buyId));
+		criteria.createAlias("supplier", "supplier",CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("bank", "bank",CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("employee", "employee",CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("invoiceType", "invoiceType",CriteriaSpecification.LEFT_JOIN);
+		
+		return (Buy) criteria.uniqueResult();
+	}
 	
 	
 
