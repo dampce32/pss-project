@@ -173,4 +173,25 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 	}
 	
 	
+//	/**
+//	 * @Description: 将选择的采购单中的采购明细，添加到收货单明细中
+//	 * @Create: 2013-1-14 下午11:42:39
+//	 * @author lys
+//	 * @update logs
+//	 */
+//	public void querySelectBuyDetail(){
+//		ServiceResult result = new ServiceResult(false);
+//		try {
+//			String supplierId  = getParameter("supplierId");
+//			result = receiveService.querySelectBuyDetail(ids,ids2);
+//		} catch (Exception e) {
+//			result.setMessage("将选择的采购单中的采购明细，添加到收货单明细中失败");
+//			result.setIsSuccess(false);
+//			logger.error("将选择的采购单中的采购明细，添加到收货单明细中失败", e);
+//		}
+//		String jsonString = result.toJSON();
+//		ajaxJson(jsonString);
+//	} 
+	
+	
 }

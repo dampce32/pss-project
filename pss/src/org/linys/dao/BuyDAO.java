@@ -1,6 +1,8 @@
 package org.linys.dao;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.linys.model.Buy;
 /**
@@ -32,13 +34,21 @@ public interface BuyDAO extends BaseDAO<Buy,String>{
 	 */
 	Long getTotalCount(Buy model);
 	/**
-	 * @Description: 取得当天最大的采购单编号
-	 * @Create: 2013-1-7 下午10:16:20
+	 * @Description: 从采购单添加商品“查询还没有完成采购单任务的采购单
+	 * @Create: 2013-1-15 上午12:09:59
 	 * @author lys
 	 * @update logs
-	 * @param BuyCode
+	 * @param beginDateDate
+	 * @param endDateDate
+	 * @param supplierId
+	 * @param idArray
+	 * @param model
+	 * @param page
+	 * @param rows
 	 * @return
 	 */
-	String getMaxCode(String BuyCode);
+	List<Map<String, Object>> queryReceive(Date beginDateDate,
+			Date endDateDate, String supplierId, String[] idArray, Buy model,
+			Integer page, Integer rows);
 
 }

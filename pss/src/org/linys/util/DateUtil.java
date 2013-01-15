@@ -1,5 +1,6 @@
 package org.linys.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,7 +12,7 @@ import java.util.Date;
  * @author lys
  * @vesion 1.0
  */
-public class DateUtils {
+public class DateUtil {
 
 	/**
 	 * @Description: 计算两日期相差的天数
@@ -54,4 +55,33 @@ public class DateUtils {
 	public static String dateToString(Date date){
 		return dateToString(date,"yyyy-MM-dd");
 	}
+	
+	/**
+	 * @Description: 将类型是pattern的日期字符串转化成Date型数据
+	 * @Create: 2013-1-14 下午11:58:24
+	 * @author lys
+	 * @update logs
+	 * @param pattern
+	 * @param dateString
+	 * @return
+	 * @throws ParseException
+	 */
+	public static Date toDate(String pattern,String dateString) throws ParseException{
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		return sdf.parse(dateString);
+	}
+	/**
+	 * @Description:将类型是yyyy-MM-dd的日期字符串转化成Date型数据 
+	 * @Create: 2013-1-14 下午11:59:34
+	 * @author lys
+	 * @update logs
+	 * @param dateString
+	 * @return
+	 * @throws ParseException
+	 */
+	public static Date toDate(String dateString) throws ParseException{
+		return toDate("yyyy-MM-dd");
+	}
+	
+	
 }

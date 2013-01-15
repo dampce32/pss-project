@@ -1,21 +1,63 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
-/* Created on:     2013-01-11 21:34:46                          */
+/* Created on:     2013-01-15 00:26:51                          */
 /*==============================================================*/
 
 
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('T_Employee') and o.name = 'FK_T_EMPLOY_REFERENCE_T_PAY')
-alter table T_Employee
-   drop constraint FK_T_EMPLOY_REFERENCE_T_PAY
+   where r.fkeyid = object_id('T_Buy') and o.name = 'FK_T_BUY_REFERENCE_T_SUPPLI')
+alter table T_Buy
+   drop constraint FK_T_BUY_REFERENCE_T_SUPPLI
 go
 
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('T_Pay') and o.name = 'FK_T_PAY_REFERENCE_T_RECEIV')
+   where r.fkeyid = object_id('T_Buy') and o.name = 'FK_T_BUY_REFERENCE_T_EMPLOY')
+alter table T_Buy
+   drop constraint FK_T_BUY_REFERENCE_T_EMPLOY
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('T_Buy') and o.name = 'FK_T_BUY_REFERENCE_T_INVOIC')
+alter table T_Buy
+   drop constraint FK_T_BUY_REFERENCE_T_INVOIC
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('T_Buy') and o.name = 'FK_T_BUY_REFERENCE_T_BANK')
+alter table T_Buy
+   drop constraint FK_T_BUY_REFERENCE_T_BANK
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('T_BuyDetail') and o.name = 'FK_T_BUYDET_REFERENCE_T_PRODUC')
+alter table T_BuyDetail
+   drop constraint FK_T_BUYDET_REFERENCE_T_PRODUC
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('T_BuyDetail') and o.name = 'FK_T_BUYDET_REFERENCE_T_DATADI')
+alter table T_BuyDetail
+   drop constraint FK_T_BUYDET_REFERENCE_T_DATADI
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('T_BuyDetail') and o.name = 'FK_T_BUYDET_REFERENCE_T_BUY')
+alter table T_BuyDetail
+   drop constraint FK_T_BUYDET_REFERENCE_T_BUY
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('T_Pay') and o.name = 'FK_T_PAY_REFERENCE_T_SUPPLI')
 alter table T_Pay
-   drop constraint FK_T_PAY_REFERENCE_T_RECEIV
+   drop constraint FK_T_PAY_REFERENCE_T_SUPPLI
 go
 
 if exists (select 1
@@ -23,6 +65,20 @@ if exists (select 1
    where r.fkeyid = object_id('T_Pay') and o.name = 'FK_T_PAY_REFERENCE_T_BANK')
 alter table T_Pay
    drop constraint FK_T_PAY_REFERENCE_T_BANK
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('T_Pay') and o.name = 'FK_T_PAY_REFERENCE_T_EMPLOY')
+alter table T_Pay
+   drop constraint FK_T_PAY_REFERENCE_T_EMPLOY
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('T_Pay') and o.name = 'FK_T_PAY_REFERENCE_T_RECEIV')
+alter table T_Pay
+   drop constraint FK_T_PAY_REFERENCE_T_RECEIV
 go
 
 if exists (select 1
@@ -114,6 +170,13 @@ if exists (select 1
    where r.fkeyid = object_id('T_ReceiveDetail') and o.name = 'FK_T_RECEIV_REFERENCE_T_DATADI')
 alter table T_ReceiveDetail
    drop constraint FK_T_RECEIV_REFERENCE_T_DATADI
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('T_ReceiveDetail') and o.name = 'FK_T_RECEIV_REFERENCE_T_BUYDET')
+alter table T_ReceiveDetail
+   drop constraint FK_T_RECEIV_REFERENCE_T_BUYDET
 go
 
 if exists (select 1
@@ -219,6 +282,20 @@ if exists (select 1
            where  id = object_id('T_Bank')
             and   type = 'U')
    drop table T_Bank
+go
+
+if exists (select 1
+            from  sysobjects
+           where  id = object_id('T_Buy')
+            and   type = 'U')
+   drop table T_Buy
+go
+
+if exists (select 1
+            from  sysobjects
+           where  id = object_id('T_BuyDetail')
+            and   type = 'U')
+   drop table T_BuyDetail
 go
 
 if exists (select 1
@@ -347,6 +424,15 @@ if exists (select 1
    drop table T_Warehouse
 go
 
+execute sp_revokedbaccess dbo
+go
+
+/*==============================================================*/
+/* User: dbo                                                    */
+/*==============================================================*/
+execute sp_grantdbaccess dbo
+go
+
 /*==============================================================*/
 /* Table: T_Bank                                                */
 /*==============================================================*/
@@ -356,6 +442,46 @@ create table T_Bank (
    bankShortName        varchar(50)          null,
    amount               float                null,
    constraint PK_T_BANK primary key (bankId)
+)
+go
+
+/*==============================================================*/
+/* Table: T_Buy                                                 */
+/*==============================================================*/
+create table T_Buy (
+   buyId                varchar(32)          not null,
+   supplierId           varchar(32)          null,
+   employeeId           varchar(32)          null,
+   invoiceTypeId        varchar(32)          null,
+   bankId               varchar(32)          null,
+   buyCode              varchar(50)          not null,
+   sourceCode           varchar(50)          null,
+   buyDate              date                 not null,
+   receiveDate          date                 null,
+   otherAmount          float                null,
+   amount               float                null,
+   payAmount            float                null,
+   statue               int                  null,
+   note                 varchar(100)         null,
+   constraint PK_T_BUY primary key (buyId)
+)
+go
+
+/*==============================================================*/
+/* Table: T_BuyDetail                                           */
+/*==============================================================*/
+create table T_BuyDetail (
+   buyDetailId          varchar(32)          not null,
+   buyId                varchar(32)          null,
+   productId            varchar(32)          null,
+   colorId              varchar(32)          null,
+   qty                  float                null,
+   price                float                null,
+   note1                varchar(50)          null,
+   note2                varchar(50)          null,
+   note3                varchar(50)          null,
+   receiveQty           float                null,
+   constraint PK_T_BUYDETAIL primary key (buyDetailId)
 )
 go
 
@@ -385,7 +511,6 @@ go
 /*==============================================================*/
 create table T_Employee (
    employeeId           varchar(32)          not null,
-   payId                varchar(3)           null,
    employeeName         varchar(50)          null,
    constraint PK_T_EMPLOYEE primary key (employeeId)
 )
@@ -406,8 +531,10 @@ go
 /*==============================================================*/
 create table T_Pay (
    payId                varchar(3)           not null,
-   receiveId            varchar(32)          null,
+   supplierId           varchar(32)          null,
    bankId               varchar(32)          null,
+   employeeId           varchar(32)          null,
+   receiveId            varchar(32)          null,
    payCode              varchar(50)          null,
    payedAmount          float                null,
    discountAmount       float                null,
@@ -431,6 +558,8 @@ create table T_Product (
    productName          varchar(100)         null,
    qtyStore             float                null,
    amountStore          float                null,
+   buyingPrice          float                null,
+   salePrice            float                null,
    note                 varchar(50)          null,
    constraint PK_T_PRODUCT primary key (productId)
 )
@@ -440,12 +569,12 @@ go
 /* Table: T_ProductType                                         */
 /*==============================================================*/
 create table T_ProductType (
-   productTypeID        varchar(32)          not null,
-   parentProductTypeID  varchar(32)          null,
+   productTypeId        varchar(32)          not null,
+   parentProductTypeId  varchar(32)          null,
    productTypeName      varchar(50)          null,
    productTypeCode      varchar(50)          null,
    isLeaf               int                  null,
-   constraint PK_PRODUCTTYPE primary key (productTypeID)
+   constraint PK_PRODUCTTYPE primary key (productTypeId)
 )
 go
 
@@ -466,6 +595,7 @@ create table T_Receive (
    discountAmount       float                null,
    payAmount            float                null,
    shzt                 int                  null,
+   isPay                int                  null,
    note                 varchar(50)          null,
    constraint PK_T_RECEIVE primary key (receiveId)
 )
@@ -479,6 +609,7 @@ create table T_ReceiveDetail (
    receiveId            varchar(32)          null,
    productId            varchar(32)          null,
    colorId              varchar(32)          null,
+   buyDetailId          varchar(32)          null,
    qty                  float                null,
    price                float                null,
    note1                varchar(50)          null,
@@ -554,7 +685,7 @@ go
 create table T_RoleRight (
    rightId              varchar(32)          not null,
    roleId               varchar(32)          not null,
-   state                bit                  null,
+   state                int                  null,
    constraint PK_T_ROLERIGHT primary key (rightId, roleId)
 )
 go
@@ -621,19 +752,59 @@ create table T_Warehouse (
 )
 go
 
-alter table T_Employee
-   add constraint FK_T_EMPLOY_REFERENCE_T_PAY foreign key (payId)
-      references T_Pay (payId)
+alter table T_Buy
+   add constraint FK_T_BUY_REFERENCE_T_SUPPLI foreign key (supplierId)
+      references T_Supplier (supplierId)
+go
+
+alter table T_Buy
+   add constraint FK_T_BUY_REFERENCE_T_EMPLOY foreign key (employeeId)
+      references T_Employee (employeeId)
+go
+
+alter table T_Buy
+   add constraint FK_T_BUY_REFERENCE_T_INVOIC foreign key (invoiceTypeId)
+      references T_InvoiceType (invoiceTypeId)
+go
+
+alter table T_Buy
+   add constraint FK_T_BUY_REFERENCE_T_BANK foreign key (bankId)
+      references T_Bank (bankId)
+go
+
+alter table T_BuyDetail
+   add constraint FK_T_BUYDET_REFERENCE_T_PRODUC foreign key (productId)
+      references T_Product (productId)
+go
+
+alter table T_BuyDetail
+   add constraint FK_T_BUYDET_REFERENCE_T_DATADI foreign key (colorId)
+      references T_DataDictionary (dataDictionaryId)
+go
+
+alter table T_BuyDetail
+   add constraint FK_T_BUYDET_REFERENCE_T_BUY foreign key (buyId)
+      references T_Buy (buyId)
 go
 
 alter table T_Pay
-   add constraint FK_T_PAY_REFERENCE_T_RECEIV foreign key (receiveId)
-      references T_Receive (receiveId)
+   add constraint FK_T_PAY_REFERENCE_T_SUPPLI foreign key (supplierId)
+      references T_Supplier (supplierId)
 go
 
 alter table T_Pay
    add constraint FK_T_PAY_REFERENCE_T_BANK foreign key (bankId)
       references T_Bank (bankId)
+go
+
+alter table T_Pay
+   add constraint FK_T_PAY_REFERENCE_T_EMPLOY foreign key (employeeId)
+      references T_Employee (employeeId)
+go
+
+alter table T_Pay
+   add constraint FK_T_PAY_REFERENCE_T_RECEIV foreign key (receiveId)
+      references T_Receive (receiveId)
 go
 
 alter table T_Product
@@ -643,7 +814,7 @@ go
 
 alter table T_Product
    add constraint FK_T_PRODUC_REFERENCE_PRODUCTT foreign key (productTypeID)
-      references T_ProductType (productTypeID)
+      references T_ProductType (productTypeId)
 go
 
 alter table T_Product
@@ -657,8 +828,8 @@ alter table T_Product
 go
 
 alter table T_ProductType
-   add constraint FK_PRODUCTT_REFERENCE_PRODUCTT foreign key (parentProductTypeID)
-      references T_ProductType (productTypeID)
+   add constraint FK_PRODUCTT_REFERENCE_PRODUCTT foreign key (parentProductTypeId)
+      references T_ProductType (productTypeId)
 go
 
 alter table T_Receive
@@ -699,6 +870,11 @@ go
 alter table T_ReceiveDetail
    add constraint FK_T_RECEIV_REFERENCE_T_DATADI foreign key (colorId)
       references T_DataDictionary (dataDictionaryId)
+go
+
+alter table T_ReceiveDetail
+   add constraint FK_T_RECEIV_REFERENCE_T_BUYDET foreign key (buyDetailId)
+      references T_BuyDetail (buyDetailId)
 go
 
 alter table T_Reject

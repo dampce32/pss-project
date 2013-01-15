@@ -40,7 +40,7 @@ public class CommonUtil {
 	 * @return
 	 */
 	public static String getCodePrefix(String tableKey){
-		String codePrefix =getValue(tableKey)+ DateUtils.dateToString(new Date(),"yyyyMMdd");
+		String codePrefix =getValue(tableKey)+ DateUtil.dateToString(new Date(),"yyyyMMdd");
 		return codePrefix;
 	}
 	/**

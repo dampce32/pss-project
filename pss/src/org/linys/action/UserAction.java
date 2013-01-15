@@ -166,9 +166,13 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	 * @update logs
 	 */
 	public void getRootRightMain(){
-		String userId = getSession(User.LOGIN_USERID).toString();
-		String jsonArray = userService.getRootRightMain(userId);
-		ajaxJson(jsonArray);
+		try {
+			String userId = getSession(User.LOGIN_USERID).toString();
+			String jsonArray = userService.getRootRightMain(userId);
+			ajaxJson(jsonArray);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	/**
 	 * @Description: 退出系统

@@ -1,10 +1,11 @@
 package org.linys.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.linys.vo.GobelConstants;
 
 public class StringUtil {
 	/**
-	 * @Description: 
+	 * @Description: 将字符串source根据separator分割成字符串数组
 	 * @Create: 2013-1-8 下午2:28:10
 	 * @author lys
 	 * @update logs
@@ -23,6 +24,17 @@ public class StringUtil {
 			distArray[distArray.length-1] = "";
 		}
 		return distArray;
+	}
+	/**
+	 * @Description: 将字符串source根据全局变量GobelConstants.SPLIT_SEPARATOR分割成字符串数组
+	 * @Create: 2013-1-15 上午12:06:52
+	 * @author lys
+	 * @update logs
+	 * @param source
+	 * @return
+	 */
+	public static String[] split(String source){
+		return split(source,GobelConstants.SPLIT_SEPARATOR);
 	}
 
 }

@@ -18,7 +18,7 @@ import org.linys.model.Receive;
 import org.linys.model.ReceiveDetail;
 import org.linys.model.Store;
 import org.linys.service.ReceiveService;
-import org.linys.util.DateUtils;
+import org.linys.util.DateUtil;
 import org.linys.util.JSONUtil;
 import org.linys.util.StringUtil;
 import org.linys.vo.GobelConstants;
@@ -145,7 +145,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			}else{
 				prefix = "QR";
 			}
-			receiveCode = prefix + DateUtils.dateToString(new Date(),"yyyyMMdd");
+			receiveCode = prefix + DateUtil.dateToString(new Date(),"yyyyMMdd");
 			receiveCode = receiveDAO.getMaxCode(receiveCode);
 			
 			receiveCode = newReceiveCode(prefix,receiveCode);
@@ -269,7 +269,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		if(receiveCode!=null){
 			index = Integer.parseInt(receiveCode.substring(10, receiveCode.length()));	
 		}
-		return prefix+DateUtils.dateToString(new Date(),"yyyyMMdd")+String.format("%04d", index+1);
+		return prefix+DateUtil.dateToString(new Date(),"yyyyMMdd")+String.format("%04d", index+1);
 	}
 	/*
 	 * (non-Javadoc)   

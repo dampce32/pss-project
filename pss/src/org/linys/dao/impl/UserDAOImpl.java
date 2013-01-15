@@ -78,7 +78,7 @@ public class UserDAOImpl  extends BaseDAOImpl<User,String> implements UserDAO{
 	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getRooRight(String userId) {
 		StringBuilder sql = new StringBuilder();
-		sql.append( "select b.RightID,MAX(b.State) State,c.IsLeaf,c.RightName,c.RightURL ");
+		sql.append( "select b.rightID,MAX(b.State) State,c.isLeaf,c.rightName,c.rightURL ");
 		sql.append( "from(select RoleId from T_UserRole ");
 		sql.append( "where userId = :userId) a ");
 		sql.append( "left join T_RoleRight b on a.RoleId = b.RoleID ");
@@ -94,7 +94,7 @@ public class UserDAOImpl  extends BaseDAOImpl<User,String> implements UserDAO{
 	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getChildrenRight(String userId,String rightId) {
 		StringBuilder sql = new StringBuilder();
-		sql.append( "select b.RightID,MAX(b.State) State,c.IsLeaf,c.RightName,c.RightURL ");
+		sql.append( "select b.rightID,MAX(b.State) state,c.isLeaf,c.rightName,c.rightURL ");
 		sql.append( "from(select RoleId from T_UserRole ");
 		sql.append( "where userId = :userId) a ");
 		sql.append( "left join T_RoleRight b on a.RoleId = b.RoleID ");

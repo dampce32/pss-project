@@ -17,7 +17,7 @@ import org.linys.model.Reject;
 import org.linys.model.RejectDetail;
 import org.linys.model.Store;
 import org.linys.service.RejectService;
-import org.linys.util.DateUtils;
+import org.linys.util.DateUtil;
 import org.linys.util.JSONUtil;
 import org.linys.util.StringUtil;
 import org.linys.vo.GobelConstants;
@@ -125,7 +125,7 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 			//取得入库单号
 			String rejectCode = null;
 			String prefix = "CT";
-			rejectCode = prefix + DateUtils.dateToString(new Date(),"yyyyMMdd");
+			rejectCode = prefix + DateUtil.dateToString(new Date(),"yyyyMMdd");
 			rejectCode = rejectDAO.getMaxCode(rejectCode);
 			
 			rejectCode = newRejectCode(prefix,rejectCode);
@@ -369,7 +369,7 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 		if(rejectCode!=null){
 			index = Integer.parseInt(rejectCode.substring(10, rejectCode.length()));	
 		}
-		return prefix+DateUtils.dateToString(new Date(),"yyyyMMdd")+String.format("%04d", index+1);
+		return prefix+DateUtil.dateToString(new Date(),"yyyyMMdd")+String.format("%04d", index+1);
 	}
 
 }

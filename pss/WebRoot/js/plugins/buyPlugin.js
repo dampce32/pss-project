@@ -226,8 +226,6 @@
 	}
 	//添加
 	var onAdd = function(){
-		$(editForm).form('clear');
-		$(buyDetail).datagrid('loadData',LYS.ClearData);
 		initChoose();
 		$('#otherAmount',editForm).numberbox('setValue', 0.0);
 		$('#amount',editForm).numberbox('setValue', 0.0);
