@@ -100,5 +100,21 @@ public interface BuyService extends BaseService<Buy,String>{
 	 * @return
 	 */
 	ServiceResult updateStatus(Buy model);
+	/**
+	 * @Description: “从采购单添加商品“查询还没有完成采购单任务的采购单
+	 * @Create: 2013-1-14 下午11:53:08
+	 * @author lys
+	 * @update logs
+	 * @param beginDate
+	 * @param endDate
+	 * @param supplierId
+	 * @param ids
+	 * @param model
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	ServiceResult queryReceive(String beginDate, String endDate,
+			String supplierId, String ids, Buy model, Integer page, Integer rows);
 
 }

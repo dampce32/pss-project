@@ -1,4 +1,4 @@
-use pss
+
 /*
 系统权限
 select '	select '''+RightID+''' , '''+RightName+''' , '''+isnull(RightURL,'')+''' , NULL , '+cast(isLeaf as varchar) 
@@ -79,6 +79,8 @@ insert into T_User(userId,userCode,userName,userPwd)
 select 'union	select '''+userId+''' , '''+roleId+''''
 from T_UserRole
 */
+
+
 insert into T_UserRole(userId,roleId)
 	select '402881e53b046217013b0490d440000d' , '402881e53aa21d17013aa224b5ed0003'
 	

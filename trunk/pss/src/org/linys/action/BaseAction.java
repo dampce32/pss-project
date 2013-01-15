@@ -34,6 +34,10 @@ public class BaseAction extends ActionSupport {
 	 */
 	protected String ids;
 	/**
+	 * 接受从界面传递的ids2
+	 */
+	protected String ids2;
+	/**
 	 * 接受从界面传递的oldIds
 	 */
 	protected String oldIds;
@@ -49,6 +53,14 @@ public class BaseAction extends ActionSupport {
 	 * combogrid查询时，发出的参数
 	 */
 	protected String q;
+	/**
+	 * 开始时间
+	 */
+	protected String beginDate;
+	/**
+	 * 结束时间
+	 */
+	protected String endDate;
 	
 	/**
 	 * 
@@ -208,5 +220,29 @@ public class BaseAction extends ActionSupport {
 
 	public void setQ(String q) {
 		this.q = q;
+	}
+
+	public String getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(String beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getIds2() {
+		return ids2;
+	}
+
+	public void setIds2(String ids2) {
+		this.ids2 = ids2;
 	}
 }

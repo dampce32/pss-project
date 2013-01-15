@@ -1,6 +1,9 @@
 package org.linys.service.impl;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -16,6 +19,7 @@ import org.linys.model.DataDictionary;
 import org.linys.model.Product;
 import org.linys.service.BuyService;
 import org.linys.util.CommonUtil;
+import org.linys.util.DateUtil;
 import org.linys.util.JSONUtil;
 import org.linys.util.StringUtil;
 import org.linys.vo.GobelConstants;
@@ -157,7 +161,6 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 				buyDetail.setNote2(note2);
 				buyDetail.setNote3(note3);
 				buyDetail.setReceiveQty(0.0);
-				buyDetail.setIsReceiveAll(0);
 				buyDetailDAO.save(buyDetail);
 			}
 		}else{
@@ -377,6 +380,47 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 			oldBuy.setStatus(model.getStatus());
 			buyDAO.update(oldBuy);
 		}
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.BuyService#queryReceive(java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.linys.model.Buy, java.lang.Integer, java.lang.Integer)
+	 */
+	@Override
+	public ServiceResult queryReceive(String beginDate, String endDate,
+			String supplierId, String ids, Buy model, Integer page, Integer rows) {
+		ServiceResult result = new ServiceResult(false);
+		if(StringUtils.isEmpty(beginDate)){
+			result.setMessage("请选择开始日期");
+			return result;
+		}
+		Date beginDateDate = null;
+		try {
+			beginDateDate = DateUtil.toDate(beginDate);
+		} catch (ParseException e) {
+			result.setMessage("请输入正确的开始日期");
+			return result;
+		}
+		Date endDateDate = null;
+		try {
+			endDateDate = DateUtil.toDate(endDate);
+		} catch (ParseException e) {
+			result.setMessage("请输入正确的结束日期");
+			return result;
+		}
+		if(StringUtils.isEmpty(supplierId)){
+			result.setMessage("请选择供应商");
+			return result;
+		}
+		String[] idArray = null;
+		if(StringUtils.isNotEmpty(ids)){
+			idArray = StringUtil.split(ids);
+		}
+		List<Map<String,Object>> listMap = buyDAO.queryReceive(beginDateDate,endDateDate,supplierId,idArray,
+				model,page,rows);
+		
+		
 		result.setIsSuccess(true);
 		return result;
 	}

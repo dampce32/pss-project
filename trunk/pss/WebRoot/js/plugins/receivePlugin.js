@@ -189,16 +189,65 @@
 	    closable:false,
 	    onClose:function(){
 	    	lastIndex = null;
-	    }
+	    	$(editForm).form('clear');
+			$(receiveDetail).datagrid('loadData',LYS.ClearData);
+	    },
+	    toolbar:[	
+		 			{id:'save'+id,text:'保存',iconCls:'icon-save',handler:function(){onSave();}},'-',
+		 			{id:'add'+id,text:'新增',iconCls:'icon-remove',handler:function(){onAdd();}},'-',
+		 			{id:'delete'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDelete();}},'-',
+		 			{id:'sh'+id,text:'审核',iconCls:'icon-edit',handler:function(){onUpdateStatus(1);}},'-',
+		 			{id:'fs'+id,text:'反审',iconCls:'icon-edit',handler:function(){onUpdateStatus(0);}},'-',
+		 			{id:'isPay'+id,text:'清款',iconCls:'icon-edit',handler:function(){onUpdateIsPay(1);}},'-',
+		 			{id:'pre'+id,text:'上一笔',iconCls:'icon-edit',handler:function(){onOpenIndex(-1);}},'-',
+		 			{id:'next'+id,text:'下一笔',iconCls:'icon-edit',handler:function(){onOpenIndex(1);}},'-',
+		 			{text:'退出',iconCls:'icon-cancel',handler:function(){
+		 					$(editDialog).dialog('close');
+		 				}
+		 			}
+		 	  ]
 	}); 
+	//新增时，按钮的状态
+	var addBtnStatus = function(){
+		$('#save'+id).linkbutton('enable');
+		$('#add'+id).linkbutton('disable');
+		$('#delete'+id).linkbutton('disable');
+		$('#sh'+id).linkbutton('disable');
+		$('#fs'+id).linkbutton('disable');
+		$('#isPay'+id).linkbutton('disable');
+		$('#pre'+id).linkbutton('disable');
+		$('#next'+id).linkbutton('disable');
+		$('#addProduct'+id).linkbutton('enable');
+		$('#deleteProduct'+id).linkbutton('enable');
+	}
+	//审核通过按钮的状态
+	var shBtnStatus = function(){
+		$('#save'+id).linkbutton('disable');
+		$('#add'+id).linkbutton('enable');
+		$('#delete'+id).linkbutton('disable');
+		$('#sh'+id).linkbutton('disable');
+		$('#fs'+id).linkbutton('enable');
+		$('#addProduct'+id).linkbutton('disable');
+		$('#deleteProduct'+id).linkbutton('disable');
+	}
+	//反审后的按钮状态
+	var fsBtnStatus = function(){
+		$('#save'+id).linkbutton('enable');
+		$('#add'+id).linkbutton('enable');
+		$('#delete'+id).linkbutton('enable');
+		$('#sh'+id).linkbutton('enable');
+		$('#fs'+id).linkbutton('disable');
+		$('#addProduct'+id).linkbutton('enable');
+		$('#deleteProduct'+id).linkbutton('enable');
+	}
 	//添加
 	var onAdd = function(){
-		$(editForm).form('clear');
 		initChoose();
 		$('#otherAmount',editForm).numberbox('setValue', 0.0);
 		$('#amount',editForm).numberbox('setValue', 0.0);
 		$('#discountAmount',editForm).numberbox('setValue', 0.0);
 		$('#payAmount',editForm).numberbox('setValue', 0.0);
+		addBtnStatus();
 		$(editDialog).dialog('open');
 	}
 	
@@ -551,18 +600,9 @@
 	  rownumbers:true,
 	  pagination:false,
 	  toolbar:[	
-			{id:'addProduct_'+id,text:'添加商品',iconCls:'icon-add',handler:function(){onSelectProduct()}},'-',
-			{id:'deleteProduct_'+id,text:'删除商品',iconCls:'icon-remove',handler:function(){onDeleteProduct()}},'-',
-			{id:'saveProduct_'+id,text:'保存',iconCls:'icon-save',handler:function(){
-					onSave();
-				}
-			},'-',{text:'退出',iconCls:'icon-cancel',handler:function(){
-					$(editDialog).dialog('close');
-					$(editForm).form('clear');
-					$(receiveDetail).datagrid({url:LYS.ClearUrl});
-				}
-			}
-	  ],
+			{id:'addBuyProduct'+id,text:'从采购单添加商品',iconCls:'icon-add',handler:function(){onSelectBuyProduct()}},'-',
+			{id:'addProduct'+id,text:'添加商品',iconCls:'icon-add',handler:function(){onSelectProduct()}},'-',
+			{id:'deleteProduct'+id,text:'删除商品',iconCls:'icon-remove',handler:function(){onDeleteProduct()}},'-'	  ],
 	  onBeforeLoad:function(){
 			$(this).datagrid('rejectChanges');
 	  },
@@ -685,7 +725,7 @@
 	 //退出选择商品界面
 	 var onExitSelectProduct = function(){
 		 $(selectDialog).dialog('close');
-		 $(productList).datagrid({url:LYS.ClearUrl});
+		 $(productList).datagrid('loadData',LYS.ClearData);
 	 }
 	 //删除商品
 	 var onDeleteProduct = function(){
@@ -760,6 +800,42 @@
 			}
 		});
 	}
-	 
+	//-----------从采购单选择添加商品--------------
+	var selectBuyDialog = $('#selectBuyDialog',$this);
+	var buyList = $('#buyList',selectBuyDialog);
+	//编辑框
+	$(selectBuyDialog).dialog({  
+	    title: '选择采购单',  
+	    width:1000,
+	    height:height,
+	    closed: true,  
+	    cache: false,  
+	    modal: true,
+	    closable:false,
+	    toolbar:[	
+					{text:'选择',iconCls:'icon-save',handler:function(){onSelectOKProduct()}},
+					{text:'退出',iconCls:'icon-cancel',handler:function(){$(selectBuyDialog).dialog('close');}}
+			  ],
+	    onClose:function(){
+	    	$(selectBuyDialog).dialog('clear');
+	    	$(buyList).datagrid('loadData',LYS.ClearData);
+	    }
+	});
+	$(buyList).datagrid({
+		  fit:true,
+		  cache: false, 
+		  columns:[[
+			    {field:'ck',checkbox:true},
+			    {field:'buyCode',title:'采购单编号',width:90,align:"center"},
+			    {field:'note',title:'备注',width:90,align:"center"}
+		  ]],
+		  rownumbers:true,
+		  pagination:true,
+		  
+	 });
+	//从采购单添加商品
+	var onSelectBuyProduct = function(){
+		$(selectBuyDialog).dialog('open');
+	}
   }
 })(jQuery);   

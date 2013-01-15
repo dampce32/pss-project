@@ -158,19 +158,19 @@ public class UserServiceImpl extends BaseServiceImpl<User,String> implements Use
 			return null;
 		}
 		Right right = new Right();
-		right.setRightId(treeNodeMap.get("RightID").toString());
-		right.setRightName(treeNodeMap.get("RightName").toString());
-		if(treeNodeMap.get("RightURL")!=null&&StringUtils.isNotEmpty(treeNodeMap.get("RightURL").toString())){
-			right.setRightUrl(treeNodeMap.get("RightURL").toString());
+		right.setRightId(treeNodeMap.get("rightId").toString());
+		right.setRightName(treeNodeMap.get("rightName").toString());
+		if(treeNodeMap.get("rightUrl")!=null&&StringUtils.isNotEmpty(treeNodeMap.get("rightUrl").toString())){
+			right.setRightUrl(treeNodeMap.get("rightUrl").toString());
 		}
-		String isLeaf = treeNodeMap.get("IsLeaf").toString();
+		String isLeaf = treeNodeMap.get("isLeaf").toString();
 		if("1".equals(isLeaf)){
 			right.setIsLeaf(new Boolean(true));
 		}else{
 			right.setIsLeaf(new Boolean(false));
 		}
 		
-		String state = treeNodeMap.get("State").toString();
+		String state = treeNodeMap.get("state").toString();
 		if("1".equals(state)){
 			right.setState(new Boolean(true));
 		}else{
@@ -221,7 +221,7 @@ public class UserServiceImpl extends BaseServiceImpl<User,String> implements Use
 		String result = "[]";
 		List<Map<String,Object>> rootList = userDAO.getRooRight(userId); 
 		if(rootList!=null&&rootList.size()!=0){
-			String rightId = rootList.get(0).get("RightID").toString();
+			String rightId = rootList.get(0).get("rightId").toString();
 			List<Map<String,Object>> children = userDAO.getChildrenRight(userId,rightId);
 			List<Right> childrenRightList = toRightList(children);
 			result = TreeUtil.toJSONRightList(childrenRightList);

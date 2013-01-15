@@ -77,10 +77,6 @@ public class BuyDetail extends BaseModel {
 	 */
 	private Double receiveQty;
 	/**
-	 * 是否已全部收货
-	 */
-	private Integer isReceiveAll;
-	/**
 	 * 收货明细
 	 */
 	private Set<ReceiveDetail> receiveDetails = new HashSet<ReceiveDetail>(0);
@@ -197,13 +193,6 @@ public class BuyDetail extends BaseModel {
 		this.receiveQty = receiveQty;
 	}
 
-	public Integer getIsReceiveAll() {
-		return isReceiveAll;
-	}
-
-	public void setIsReceiveAll(Integer isReceiveAll) {
-		this.isReceiveAll = isReceiveAll;
-	}
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "buyDetail")
 	public Set<ReceiveDetail> getReceiveDetails() {
 		return receiveDetails;

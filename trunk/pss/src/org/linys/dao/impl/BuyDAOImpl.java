@@ -1,6 +1,8 @@
 package org.linys.dao.impl;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
@@ -62,15 +64,19 @@ public class BuyDAOImpl extends BaseDAOImpl<Buy, String> implements
 	}
 	/*
 	 * (non-Javadoc)   
-	 * @see org.linys.dao.BuyDAO#newCode(java.lang.String)
+	 * @see org.linys.dao.BuyDAO#queryReceive(java.util.Date, java.util.Date, java.lang.String, java.lang.String[], org.linys.model.Buy, java.lang.Integer, java.lang.Integer)
 	 */
 	@Override
-	public String getMaxCode(String buyCode) {
-		Criteria criteria  = getCurrentSession().createCriteria(Buy.class);
+	public List<Map<String, Object>> queryReceive(Date beginDateDate,
+			Date endDateDate, String supplierId, String[] idArray, Buy model,
+			Integer page, Integer rows) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("");
 		
-		criteria.add(Restrictions.like("buyCode", buyCode,MatchMode.START));
-		criteria.setProjection(Projections.max("buyCode"));
-		return criteria.uniqueResult()==null?null:criteria.uniqueResult().toString();
+		
+		return null;
 	}
+	
+	
 
 }
