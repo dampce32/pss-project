@@ -48,9 +48,10 @@ public interface ReceiveService extends BaseService<Receive,String>{
 	 * @param note1s
 	 * @param note2s
 	 * @param note3s
+	 * @param note3s2 
 	 * @return
 	 */
-	ServiceResult save(String kind, Receive model, String receiveDetailIds,
+	ServiceResult save(String kind, Receive model, String receiveDetailIds, String buyDetailIds,
 			String delReceiveDetailIds, String productIds, String colorIds,
 			String qtys, String prices, String note1s, String note2s,
 			String note3s);
@@ -93,5 +94,15 @@ public interface ReceiveService extends BaseService<Receive,String>{
 	 * @return
 	 */
 	ServiceResult mulUpdateStatus(String ids, Receive model);
+	/**
+	 * @Description: 将选择的采购单中的采购明细，添加到收货单明细中
+	 * @Create: 2013-1-15 下午10:02:09
+	 * @author lys
+	 * @update logs
+	 * @param ids --选择的采购单
+	 * @param ids2 --已添加入库单的采购明细
+	 * @return
+	 */
+	ServiceResult querySelectBuyDetail(String ids, String ids2);
 
 }

@@ -1,24 +1,26 @@
 package org.linys.service.impl;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.linys.dao.BankDAO;
+import org.linys.dao.CommonDAO;
 import org.linys.dao.ProductDAO;
 import org.linys.dao.ReceiveDAO;
 import org.linys.dao.ReceiveDetailDAO;
 import org.linys.dao.StoreDAO;
 import org.linys.model.Bank;
+import org.linys.model.BuyDetail;
 import org.linys.model.DataDictionary;
 import org.linys.model.Product;
 import org.linys.model.Receive;
 import org.linys.model.ReceiveDetail;
 import org.linys.model.Store;
 import org.linys.service.ReceiveService;
-import org.linys.util.DateUtil;
+import org.linys.util.CommonUtil;
 import org.linys.util.JSONUtil;
 import org.linys.util.StringUtil;
 import org.linys.vo.GobelConstants;
@@ -38,6 +40,8 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	private ProductDAO productDAO;
 	@Resource
 	private BankDAO bankDAO;
+	@Resource
+	private CommonDAO commonDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.ReceiveService#query(org.linys.model.Receive, java.lang.Integer, java.lang.Integer)
@@ -74,7 +78,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	 * @see org.linys.service.ReceiveService#save(org.linys.model.Receive, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public ServiceResult save(String kind,Receive model, String receiveDetailIds,
+	public ServiceResult save(String kind,Receive model, String receiveDetailIds,String buyDetailIds,
 			String delReceiveDetailIds, String productIds, String colorIds,
 			String qtys, String prices, String note1s, String note2s,
 			String note3s) {
@@ -118,6 +122,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		String[] productIdArray = StringUtil.split(productIds, GobelConstants.SPLIT_SEPARATOR);
 		String[] delReceiveDetailIdArray = StringUtil.split(delReceiveDetailIds, GobelConstants.SPLIT_SEPARATOR);
 		String[] receiveDetailIdArray = StringUtil.split(receiveDetailIds, GobelConstants.SPLIT_SEPARATOR);
+		String[] buyDetailIdArray = StringUtil.split(buyDetailIds, GobelConstants.SPLIT_SEPARATOR);
 		String[] colorIdArray = StringUtil.split(colorIds, GobelConstants.SPLIT_SEPARATOR);
 		String[] qtyArray = StringUtil.split(qtys, GobelConstants.SPLIT_SEPARATOR);
 		String[] priceArray = StringUtil.split(prices, GobelConstants.SPLIT_SEPARATOR);
@@ -138,24 +143,18 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		}
 		if(StringUtils.isEmpty(model.getReceiveId())){//新增
 			//取得入库单号
-			String receiveCode = null;
-			String prefix = null;
-			if(!"other".equals(kind)){
-				prefix = "CJ";
-			}else{
-				prefix = "QR";
-			}
-			receiveCode = prefix + DateUtil.dateToString(new Date(),"yyyyMMdd");
-			receiveCode = receiveDAO.getMaxCode(receiveCode);
-			
-			receiveCode = newReceiveCode(prefix,receiveCode);
 			model.setStatus(0);
 			model.setIsPay(0);
-			model.setReceiveCode(receiveCode);
+			if(!"other".equals(kind)){
+				model.setReceiveCode(commonDAO.getCode("Receive", "receiveCode", CommonUtil.getCodePrefix("receive")));
+			}else{
+				model.setReceiveCode(commonDAO.getCode("Receive", "receiveCode", CommonUtil.getCodePrefix("receiveOther")));
+			}
 			receiveDAO.save(model);
 			for (int i = 0; i < productIdArray.length; i++) {
 				String productId = productIdArray[i];
 				String colorId = colorIdArray[i];
+				String buyDetailId = buyDetailIdArray[i];
 				String qty = qtyArray[i];
 				String price = priceArray[i];
 				String note1 = note1Array[i];
@@ -176,6 +175,11 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 				receiveDetail.setNote1(note1);
 				receiveDetail.setNote2(note2);
 				receiveDetail.setNote3(note3);
+				if(StringUtils.isNotEmpty(buyDetailId)){
+					BuyDetail buyDetail = new BuyDetail();
+					buyDetail.setBuyDetailId(buyDetailId);
+					receiveDetail.setBuyDetail(buyDetail);
+				}
 				receiveDetailDAO.save(receiveDetail);
 			}
 		}else{
@@ -184,21 +188,24 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			if(oldReceive==null){
 				result.setMessage("要更新的收货单已不存在");
 				return result;
-			}else{
-				oldReceive.setDeliverCode(model.getDeliverCode());
-				oldReceive.setSupplier(model.getSupplier());
-				oldReceive.setWarehouse(model.getWarehouse());
-				oldReceive.setReceiveDate(model.getReceiveDate());
-				oldReceive.setDiscountAmount(model.getDiscountAmount());
-				oldReceive.setOtherAmount(model.getOtherAmount());
-				oldReceive.setPayAmount(model.getPayAmount());
-				oldReceive.setAmount(model.getAmount());
-				oldReceive.setBank(model.getBank());
-				oldReceive.setInvoiceType(model.getInvoiceType());
-				oldReceive.setEmployee(model.getEmployee());
-				oldReceive.setNote(model.getNote());
-				receiveDAO.update(oldReceive);
 			}
+			if(oldReceive.getStatus()==1){
+				result.setMessage("要更新的收货单已审核已不能修改");
+				return result;
+			}
+			oldReceive.setDeliverCode(model.getDeliverCode());
+			oldReceive.setSupplier(model.getSupplier());
+			oldReceive.setWarehouse(model.getWarehouse());
+			oldReceive.setReceiveDate(model.getReceiveDate());
+			oldReceive.setDiscountAmount(model.getDiscountAmount());
+			oldReceive.setOtherAmount(model.getOtherAmount());
+			oldReceive.setPayAmount(model.getPayAmount());
+			oldReceive.setAmount(model.getAmount());
+			oldReceive.setBank(model.getBank());
+			oldReceive.setInvoiceType(model.getInvoiceType());
+			oldReceive.setEmployee(model.getEmployee());
+			oldReceive.setNote(model.getNote());
+			receiveDAO.update(oldReceive);
 			
 			//删除已删的收货单明细
 			if(!"".equals(delReceiveDetailIds)){
@@ -212,6 +219,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			//根据收货单明细Id更新或新增
 			for (int i = 0 ;i<receiveDetailIdArray.length;i++) {
 				String receiveDetailId = receiveDetailIdArray[i];
+				String buyDetailId = buyDetailIdArray[i];
 				String productId = productIdArray[i];
 				String colorId = colorIdArray[i];
 				String qty = qtyArray[i];
@@ -234,6 +242,11 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 						receiveDetail.setNote1(note1);
 						receiveDetail.setNote2(note2);
 						receiveDetail.setNote3(note3);
+						if(StringUtils.isNotEmpty(buyDetailId)){
+							BuyDetail buyDetail = new BuyDetail();
+							buyDetail.setBuyDetailId(buyDetailId);
+							receiveDetail.setBuyDetail(buyDetail);
+						}
 						receiveDetailDAO.save(receiveDetail);
 				}else{
 					ReceiveDetail oldModel = receiveDetailDAO.load(receiveDetailId);
@@ -256,21 +269,6 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		result.setIsSuccess(true);
 		return result;
 	}
-	/**
-	 * @Description: 生成新的收货单编号
-	 * @Create: 2013-1-7 下午10:24:00
-	 * @author lys
-	 * @update logs
-	 * @param receiveCode
-	 * @return
-	 */
-	private String newReceiveCode(String prefix,String receiveCode) {
-		int index = 0;
-		if(receiveCode!=null){
-			index = Integer.parseInt(receiveCode.substring(10, receiveCode.length()));	
-		}
-		return prefix+DateUtil.dateToString(new Date(),"yyyyMMdd")+String.format("%04d", index+1);
-	}
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.ReceiveService#init(java.lang.String)
@@ -288,7 +286,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		List<ReceiveDetail> receiveDetailList = receiveDetailDAO.queryByReceiveId(receiveId);
 		String[] propertiesDetail = {"receiveDetailId","product.productId","product.productCode","product.productName",
 				"product.size.dataDictionaryName:sizeName","product.unit.dataDictionaryName:unitName","color.dataDictionaryName:colorName","color.dataDictionaryId:colorId",
-				"qty","price","amount","note1","note2","note3"};
+				"qty","price","amount","note1","note2","note3","buyDetail.buyDetailId","buyDetail.buy.buyCode"};
 		String detailData = JSONUtil.toJson(receiveDetailList,propertiesDetail);
 		result.addData("detailData", detailData);
 		result.setIsSuccess(true);
@@ -453,6 +451,30 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			result.setMessage("没有可清款的收货单");
 			return result;
 		}
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.ReceiveService#querySelectBuyDetail(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public ServiceResult querySelectBuyDetail(String ids, String ids2) {
+		ServiceResult result = new ServiceResult(false);
+		String[] idArray = {""};
+		if(StringUtils.isNotEmpty(ids)){
+			idArray = StringUtil.split(ids);
+		}
+		
+		String[] idArray2 = {""};
+		if(StringUtils.isNotEmpty(ids2)){
+			idArray2 = StringUtil.split(ids2);
+		}
+		
+		List<Map<String,Object>> listMap = receiveDAO.querySelectBuyDetail(idArray,idArray2);
+		
+		String datagridData = JSONUtil.toJsonFromListMapWithOutRows(listMap);
+		result.addData("datagridData", datagridData); 
 		result.setIsSuccess(true);
 		return result;
 	}

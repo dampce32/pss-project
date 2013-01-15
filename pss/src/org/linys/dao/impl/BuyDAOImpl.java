@@ -144,8 +144,6 @@ public class BuyDAOImpl extends BaseDAOImpl<Buy, String> implements
 			sb.append("where b.buyCode like :buyCode ");
 		}
 		
-		sb.append("order by b.buyDate,b.buyCode");
-		
 		Query query = getCurrentSession().createSQLQuery(sb.toString());
 		query.setDate("beginDate", beginDate);
 		query.setDate("endDate", endDate);

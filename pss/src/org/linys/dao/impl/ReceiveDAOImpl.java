@@ -1,13 +1,16 @@
 package org.linys.dao.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.linys.dao.ReceiveDAO;
 import org.linys.model.Receive;
 import org.linys.vo.GobelConstants;
@@ -82,6 +85,31 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 		criteria.add(Restrictions.like("receiveCode", receiveCode,MatchMode.START));
 		criteria.setProjection(Projections.max("receiveCode"));
 		return criteria.uniqueResult()==null?null:criteria.uniqueResult().toString();
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.ReceiveDAO#querySelectBuyDetail(java.lang.String, java.lang.String)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Map<String, Object>> querySelectBuyDetail(String[] idArray, String[] idArray2) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select a.buyId,b.buyCode,a.buyDetailId,a.productId,c.productCode,c.productName, ");
+		sb.append("d.dataDictionaryName unitName,e.dataDictionaryName sizeName,a.colorId,f.dataDictionaryName colorName, ");
+		sb.append("	a.qty-a.receiveQty qty,a.price ");
+		sb.append("from T_BuyDetail a ");
+		sb.append("left join T_Buy b on a.buyId = b.buyId ");
+		sb.append("left join T_Product c on a.productId = c.productId ");
+		sb.append("left join T_DataDictionary d on c.unitId  = d.dataDictionaryId ");
+		sb.append("left join T_DataDictionary e on c.sizeId = e.dataDictionaryId ");
+		sb.append("left join T_DataDictionary f on c.colorId = f.dataDictionaryId ");
+		sb.append("where a.buyId in (:idArray) ");
+		sb.append("and a.buyDetailId not in(:idArray2) and a.qty - a.receiveQty >  0  ");
+		
+		Query query = getCurrentSession().createSQLQuery(sb.toString());
+		query.setParameterList("idArray", idArray);
+		query.setParameterList("idArray2",idArray2);
+		return query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
 	}
 
 }

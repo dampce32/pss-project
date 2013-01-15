@@ -1,6 +1,7 @@
 package org.linys.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.linys.model.Receive;
 /**
@@ -40,5 +41,15 @@ public interface ReceiveDAO extends BaseDAO<Receive,String>{
 	 * @return
 	 */
 	String getMaxCode(String receiveCode);
+	/**
+	 * @Description: 将选择的采购单中的采购明细，添加到收货单明细中
+	 * @Create: 2013-1-15 下午10:05:14
+	 * @author lys
+	 * @update logs
+	 * @param idArray
+	 * @param idArray2
+	 * @return
+	 */
+	List<Map<String, Object>> querySelectBuyDetail(String[] idArray, String[] idArray2);
 
 }
