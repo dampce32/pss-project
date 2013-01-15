@@ -590,7 +590,7 @@
 		}
 		$.messager.confirm("提示","确定要"+msg+"选中的记录?审核后单据不能再修改和删除，系统将进行库存和财务计算!!",function(t){ 
 			if(t){
-				var url = 'inWarehouse/mulUpdateShztBuy.do';
+				var url = 'inWarehouse/mulUpdateStatusBuy.do';
 				var content ={ids:idArray.join(LYS.join),status:status};
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){

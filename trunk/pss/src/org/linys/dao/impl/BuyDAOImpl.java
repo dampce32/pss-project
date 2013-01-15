@@ -6,10 +6,12 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.linys.dao.BuyDAO;
 import org.linys.model.Buy;
 import org.linys.vo.GobelConstants;
@@ -66,15 +68,46 @@ public class BuyDAOImpl extends BaseDAOImpl<Buy, String> implements
 	 * (non-Javadoc)   
 	 * @see org.linys.dao.BuyDAO#queryReceive(java.util.Date, java.util.Date, java.lang.String, java.lang.String[], org.linys.model.Buy, java.lang.Integer, java.lang.Integer)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<Map<String, Object>> queryReceive(Date beginDateDate,
-			Date endDateDate, String supplierId, String[] idArray, Buy model,
+	public List<Map<String, Object>> queryReceive(Date beginDate,
+			Date endDate, String supplierId, String[] idArray, Buy model,
 			Integer page, Integer rows) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("");
+		sb.append("select b.buyId,b.buyCode,b.buyDate ");
+		sb.append("from(select distinct b.buyId ");
+		sb.append("		from(select * ");
+		sb.append("			from T_Buy a ");
+		sb.append("			where a.buyDate between :beginDate and :endDate and a.status = 1 and a.supplierId = :supplierId )a ");
+		sb.append("		left join T_BuyDetail b on a.buyId = b.buyId ");
+		sb.append("		where b.qty - b.receiveQty > 0 and b.buyDetailId not in(:idArray)) a ");
+		sb.append("left join T_Buy b on a.buyId = b.buyId ");
+		if(model!=null&&StringUtils.isNotEmpty(model.getBuyCode())){
+			sb.append("where b.buyCode like :buyCode ");
+		}
 		
+		sb.append("order by b.buyDate,b.buyCode");
 		
-		return null;
+		Query query = getCurrentSession().createSQLQuery(sb.toString());
+		query.setDate("beginDate", beginDate);
+		query.setDate("endDate", endDate);
+		query.setString("supplierId", supplierId);
+		query.setParameterList("idArray", idArray);
+		if(model!=null&&StringUtils.isNotEmpty(model.getBuyCode())){
+			query.setString("buyCode", model.getBuyCode());
+		}
+		if(page==null||page<1){
+			page = 1;
+		}
+		if(rows==null||rows<0){
+			rows = GobelConstants.DEFAULTPAGESIZE;
+		}
+		
+		Integer begin = (page-1)*rows;
+		
+		query.setFirstResult(begin);
+		query.setMaxResults(rows);
+		return query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
 	}
 	/*
 	 * (non-Javadoc)   
@@ -90,6 +123,38 @@ public class BuyDAOImpl extends BaseDAOImpl<Buy, String> implements
 		criteria.createAlias("invoiceType", "invoiceType",CriteriaSpecification.LEFT_JOIN);
 		
 		return (Buy) criteria.uniqueResult();
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.BuyDAO#getTotalReceive(java.util.Date, java.util.Date, java.lang.String, java.lang.String[], org.linys.model.Buy)
+	 */
+	@Override
+	public Long getTotalReceive(Date beginDate, Date endDate,
+			String supplierId, String[] idArray, Buy model) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select count(b.buyId) ");
+		sb.append("from(select distinct b.buyId ");
+		sb.append("		from(select * ");
+		sb.append("			from T_Buy a ");
+		sb.append("			where a.buyDate between :beginDate and :endDate and a.status = 1 and a.supplierId = :supplierId )a ");
+		sb.append("		left join T_BuyDetail b on a.buyId = b.buyId ");
+		sb.append("		where b.qty - b.receiveQty > 0 and b.buyDetailId not in(:idArray)) a ");
+		sb.append("left join T_Buy b on a.buyId = b.buyId ");
+		if(model!=null&&StringUtils.isNotEmpty(model.getBuyCode())){
+			sb.append("where b.buyCode like :buyCode ");
+		}
+		
+		sb.append("order by b.buyDate,b.buyCode");
+		
+		Query query = getCurrentSession().createSQLQuery(sb.toString());
+		query.setDate("beginDate", beginDate);
+		query.setDate("endDate", endDate);
+		query.setString("supplierId", supplierId);
+		query.setParameterList("idArray", idArray);
+		if(model!=null&&StringUtils.isNotEmpty(model.getBuyCode())){
+			query.setString("buyCode", model.getBuyCode());
+		}
+		return new Long(query.uniqueResult().toString());
 	}
 	
 	

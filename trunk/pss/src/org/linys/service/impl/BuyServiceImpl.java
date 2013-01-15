@@ -413,14 +413,17 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 			result.setMessage("请选择供应商");
 			return result;
 		}
-		String[] idArray = null;
+		String[] idArray = {""};
 		if(StringUtils.isNotEmpty(ids)){
 			idArray = StringUtil.split(ids);
 		}
 		List<Map<String,Object>> listMap = buyDAO.queryReceive(beginDateDate,endDateDate,supplierId,idArray,
 				model,page,rows);
 		
-		
+		Long total = buyDAO.getTotalReceive(beginDateDate,endDateDate,supplierId,idArray,
+				model);
+		String datagridData = JSONUtil.toJsonFromListMap(listMap, total);
+		result.addData("datagridData", datagridData); 
 		result.setIsSuccess(true);
 		return result;
 	}

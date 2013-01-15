@@ -59,5 +59,19 @@ public interface BuyDAO extends BaseDAO<Buy,String>{
 	 * @return
 	 */
 	Buy init(String buyId);
+	/**
+	 * @Description: 统计 从采购单添加商品“查询还没有完成采购单任务的采购单
+	 * @Create: 2013-1-15 下午9:03:33
+	 * @author lys
+	 * @update logs
+	 * @param beginDateDate
+	 * @param endDateDate
+	 * @param supplierId
+	 * @param idArray
+	 * @param model
+	 * @return
+	 */
+	Long getTotalReceive(Date beginDateDate, Date endDateDate,
+			String supplierId, String[] idArray, Buy model);
 
 }
