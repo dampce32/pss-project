@@ -45,11 +45,11 @@
 				{field:'warehouseName',title:'存入仓库',width:90,align:"center"},
 				{field:'employeeName',title:'经手人',width:90,align:"center"},
 				{field:'note',title:'备注',width:90,align:"center"},
-				{field:'shzt',title:'状态',width:80,align:"center",
+				{field:'status',title:'状态',width:80,align:"center",
 					formatter: function(value,row,index){
-						if(row.shzt==0){
+						if(row.status==0){
 							return '未审';
-						}else if(row.shzt==1){
+						}else if(row.status==1){
 							return '已审';
 						}
 					}}
@@ -59,9 +59,9 @@
 		  toolbar:[	
 				{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},'-',
 				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},'-',
-				{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}},'-',
-				{text:'已审',iconCls:'icon-edit',handler:function(){onUpdateShzt(1)}},'-',
-				{text:'反审',iconCls:'icon-edit',handler:function(){onUpdateShzt(0)}}
+				{text:'删除',iconCls:'icon-remove',handler:function(){onMulDelete()}},'-',
+				{text:'已审',iconCls:'icon-edit',handler:function(){onMulUpdateStatus(1)}},'-',
+				{text:'反审',iconCls:'icon-edit',handler:function(){onMulUpdateStatus(0)}}
 		  ],
 		  onDblClickRow:function(rowIndex, rowData){
 				onUpdate();
@@ -69,6 +69,8 @@
 		  onClickRow:function(rowIndex, rowData){
 				selectRow = rowData;
 				selectIndex = rowIndex;
+				$(viewList).datagrid('unselectAll');
+				$(viewList).datagrid('selectRow',selectIndex);
 		  }
 	 });
 	//分页条
@@ -170,12 +172,71 @@
 	    closable:false,
 	    onClose:function(){
 	    	lastIndex = null;
-	    }
+	    	$(receiveDetail).datagrid({url:LYS.ClearUrl});
+	    	$(editForm).form('clear');
+	    },
+	    toolbar:[	
+		 			{id:'save'+id,text:'保存',iconCls:'icon-save',handler:function(){onSave();}},'-',
+		 			{id:'add'+id,text:'新增',iconCls:'icon-add',handler:function(){onAdd();}},'-',
+		 			{id:'delete'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDelete();}},'-',
+		 			{id:'sh'+id,text:'审核',iconCls:'icon-edit',handler:function(){onUpdateStatus(1);}},'-',
+		 			{id:'fs'+id,text:'反审',iconCls:'icon-edit',handler:function(){onUpdateStatus(0);}},'-',
+		 			{id:'pre'+id,text:'上一笔',iconCls:'icon-edit',handler:function(){onOpenIndex(-1);}},'-',
+		 			{id:'next'+id,text:'下一笔',iconCls:'icon-edit',handler:function(){onOpenIndex(1);}},'-',
+		 			{text:'退出',iconCls:'icon-cancel',handler:function(){
+		 					$(editDialog).dialog('close');
+		 				}
+		 			}
+		 	  ]
 	}); 
+	//新增时，按钮的状态
+	var addBtnStatus = function(){
+		$('#save'+id).linkbutton('enable');
+		$('#add'+id).linkbutton('disable');
+		$('#delete'+id).linkbutton('disable');
+		$('#sh'+id).linkbutton('disable');
+		$('#fs'+id).linkbutton('disable');
+		$('#isPay'+id).linkbutton('disable');
+		$('#pre'+id).linkbutton('disable');
+		$('#next'+id).linkbutton('disable');
+		$('#addProduct'+id).linkbutton('enable');
+		$('#addBuyProduct'+id).linkbutton('enable');
+		$('#deleteProduct'+id).linkbutton('enable');
+	}
+	//审核通过按钮的状态
+	var shBtnStatus = function(){
+		$('#save'+id).linkbutton('disable');
+		$('#add'+id).linkbutton('enable');
+		$('#delete'+id).linkbutton('disable');
+		$('#sh'+id).linkbutton('disable');
+		$('#fs'+id).linkbutton('enable');
+		$('#addProduct'+id).linkbutton('disable');
+		$('#addBuyProduct'+id).linkbutton('disable');
+		$('#deleteProduct'+id).linkbutton('disable');
+	}
+	//反审后的按钮状态
+	var fsBtnStatus = function(){
+		$('#save'+id).linkbutton('enable');
+		$('#add'+id).linkbutton('enable');
+		$('#delete'+id).linkbutton('enable');
+		$('#sh'+id).linkbutton('enable');
+		$('#fs'+id).linkbutton('disable');
+		$('#addProduct'+id).linkbutton('enable');
+		$('#addBuyProduct'+id).linkbutton('enable');
+		$('#deleteProduct'+id).linkbutton('enable');
+	}
 	//添加
 	var onAdd = function(){
-		$(editForm).form('clear');
+		var rows  = $(receiveDetail).datagrid('getRows');
+		if(rows.length!=0){
+			$(receiveDetail).datagrid({url:LYS.ClearUrl});
+		}
+		$(viewList).datagrid('unselectAll');
+		selectIndex==null
+		selectIndex==null
+    	$(editForm).form('clear');
 		initChoose();
+		addBtnStatus();
 		$(editDialog).dialog('open');
 	}
 	
@@ -243,6 +304,7 @@
 			}
 		}
 		var receiveDetailIdArray = new Array();
+		var buyDetailIdArray = new Array();
 		var productIdArray = new Array();
 		var colorIdArray = new Array();
 		var qtyArray = new Array();
@@ -251,6 +313,7 @@
 		var note2Array = new Array();
 		var note3Array = new Array();
 		for ( var i = 0; i < rows.length; i++) {
+			buyDetailIdArray.push(rows[i].buyDetailId);
 			receiveDetailIdArray.push(rows[i].receiveDetailId);
 			productIdArray.push(rows[i].productId);
 			colorIdArray.push(rows[i].colorId);
@@ -277,6 +340,7 @@
 		}
 		$('#receiveDetailIds',editForm).val(receiveDetailIdArray.join(LYS.join));
 		$('#delReceiveDetailIds',editForm).val(delReceiveDetailIdArray.join(LYS.join));
+		$('#buyDetailIds',editForm).val(buyDetailIdArray.join(LYS.join));
 		$('#productIds',editForm).val(productIdArray.join(LYS.join));
 		$('#colorIds',editForm).val(colorIdArray.join(LYS.join));
 		$('#qtys',editForm).val(qtyArray.join(LYS.join));
@@ -285,7 +349,6 @@
 		$('#note2s',editForm).val(note2Array.join(LYS.join));
 		$('#note3s',editForm).val(note3Array.join(LYS.join));
 		$('#kind',editForm).val('other');
-		
 		return true;
 	}
 	//保存
@@ -323,6 +386,29 @@
 	 }
 	//删除
 	var onDelete = function(){
+		var receiveId = $('#receiveId',editDialog).val();
+		$.messager.confirm("提示","确定删除记录?",function(t){ 
+			if(t){
+				var url = 'inWarehouse/deleteReceive.do';
+				var content ={receiveId:receiveId};
+				asyncCallService(url,content,function(result){
+					if(result.isSuccess){
+						var fn = function(){
+							selectRow = null;
+							selectIndex = null;
+							$(editDialog).dialog('close');
+							search(true);
+						}
+						$.messager.alert('提示','删除成功','info',fn);
+					}else{
+						$.messager.alert('提示',result.message,'error');
+					}
+				});
+			}
+		});
+	 }
+	//批量删除
+	var onMulDelete = function(){
 		var rows =  $(viewList).datagrid('getSelections');
 		if(rows.length==0){
 			$.messager.alert("提示","请选择要删除的数据行","warning");
@@ -350,10 +436,47 @@
 		});
 	}
 	//修改审核状态
-	var onUpdateShzt = function(shzt){
+	var onUpdateStatus = function(status){
+		var receiveId = $('#receiveId',editDialog).val();
+		var msg = '';
+		if(status==1){
+			msg ='审核';
+		}else{
+			msg = '反审';
+		}
+		if(receiveId==''){
+			$.messager.alert("提示","请选择需要"+msg+"数据行","warning");
+			return;
+		}
+		
+		$.messager.confirm("提示","确定要"+msg+"选中的记录?"+msg+"后系统将进行库存计算和财务计算!!",function(t){ 
+			if(t){
+				var url = 'inWarehouse/updateStatusReceive.do';
+				var content ={receiveId:receiveId,status:status,kind:'other'};
+				asyncCallService(url,content,function(result){
+					if(result.isSuccess){
+						var fn = function(){
+							if(status==1){
+								shBtnStatus();
+								onOpen(receiveId);
+							}else{
+								fsBtnStatus();
+								$('#status',editDialog).val('未审核'); 
+							}
+						}
+						$.messager.alert('提示',msg+'成功','info',fn);
+					}else{
+						$.messager.alert('提示',result.message,'error');
+					}
+				});
+			}
+		});
+	 }
+	//修改审核状态
+	var onMulUpdateStatus = function(status){
 		var rows =  $(viewList).datagrid('getSelections');
 		var msg = '';
-		if(shzt==1){
+		if(status==1){
 			msg = '已审';
 		}else{
 			msg = '反审';
@@ -366,10 +489,10 @@
 		for ( var int = 0; int < rows.length; int++) {
 			idArray.push(rows[int].receiveId);
 		}
-		$.messager.confirm("提示","确定要"+msg+"选中的记录?审核后单据不能再修改和删除，系统将进行库存和财务计算!!",function(t){ 
+		$.messager.confirm("提示","确定要"+msg+"选中的记录?"+msg+"后系统将进行库存和财务计算!!",function(t){ 
 			if(t){
-				var url = 'inWarehouse/mulUpdateShztReceive.do';
-				var content ={ids:idArray.join(LYS.join),shzt:shzt,kind:'other'};
+				var url = 'inWarehouse/mulUpdateStatusReceive.do';
+				var content ={ids:idArray.join(LYS.join),status:status,kind:'other'};
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
 						var fn = function(){
@@ -389,16 +512,38 @@
 		var content ={receiveId:receiveId};
 		asyncCallService(url,content,function(result){
 			if(result.isSuccess){
+				var preDisable = false;
+				var nextDisable = false;
+				if(selectIndex==0||selectIndex==null){
+					preDisable = true;
+				}
+				var rows = $(viewList).datagrid('getRows');
+				if(selectIndex==rows.length-1||selectIndex==null){
+					nextDisable = true;
+				}
+				if(preDisable){
+					$('#pre'+id).linkbutton('disable');
+				}else{
+					$('#pre'+id).linkbutton('enable');
+				}
+				if(nextDisable){
+					$('#next'+id).linkbutton('disable');
+				}else{
+					$('#next'+id).linkbutton('enable');
+				}
+				
 				var data = result.data;
 				var receiveData = eval("("+data.receiveData+")");
 				$('#receiveId',editDialog).val(receiveData.receiveId);
 				$('#receiveCode',editDialog).val(receiveData.receiveCode);
 				$('#receiveDate',editDialog).val(receiveData.receiveDate);
 				$('#deliverCode',editDialog).val(receiveData.deliverCode);
-				if(receiveData.shzt==1){
+				if(receiveData.status==1){
 					$('#shzt',editDialog).val('已审核');
+					shBtnStatus();
 				}else{
 					$('#shzt',editDialog).val('未审核');
+					fsBtnStatus();
 				}
 				$('#warehouse',editDialog).combobox('setValue',receiveData.warehouseId);
 				
@@ -411,6 +556,16 @@
 				$.messager.alert('提示',result.message,'error');
 			}
 		});
+	}
+	//上下一笔
+	var onOpenIndex = function(index){
+		var rows = $(viewList).datagrid('getRows');
+		selectIndex = selectIndex + index;
+		selectRow = rows[selectIndex];
+		onOpen(selectRow.receiveId);
+		//界面选中
+		$(viewList).datagrid('unselectAll');
+		$(viewList).datagrid('selectRow',selectIndex);
 	}
 	//-----收货明细----------
 	var receiveDetail = $('#receiveDetail',editDialog);
@@ -447,16 +602,7 @@
 	  pagination:false,
 	  toolbar:[	
 			{text:'添加商品',iconCls:'icon-add',handler:function(){onSelectProduct()}},'-',
-			{text:'删除商品',iconCls:'icon-remove',handler:function(){onDeleteProduct()}},'-',
-			{text:'保存',iconCls:'icon-save',handler:function(){
-					onSave();
-				}
-			},'-',{text:'退出',iconCls:'icon-cancel',handler:function(){
-					$(editDialog).dialog('close');
-					$(editForm).form('clear');
-					$(receiveDetail).datagrid({url:LYS.ClearUrl});
-				}
-			}
+			{text:'删除商品',iconCls:'icon-remove',handler:function(){onDeleteProduct()}}
 	  ],
 	  onBeforeLoad:function(){
 			$(this).datagrid('rejectChanges');
@@ -563,7 +709,7 @@
 				 sizeName:row.sizeName,
 				 colorId:row.colorId,
 				 qty:0,
-				 price:0,
+				 price:row.buyingPrice,
 				 amount:0,
 				 note1:'',
 				 note2:'',

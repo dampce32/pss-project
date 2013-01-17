@@ -403,8 +403,10 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 					buyDetailDAO.update(buyDetail);
 				}
 			}
-			if(oldReceive.getAmount()-oldReceive.getPayAmount()-oldReceive.getDiscountAmount()<=0){
-				oldReceive.setIsPay(1);
+			if(!"other".equals(kind)){
+				if(oldReceive.getAmount()-oldReceive.getPayAmount()-oldReceive.getDiscountAmount()<=0){
+					oldReceive.setIsPay(1);
+				}
 			}
 		}else if(model.getStatus()==0){//如果是由已审改为未审
 			//将该收货单下的商品入库
@@ -504,8 +506,10 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 							buyDetailDAO.update(buyDetail);
 						}
 					}
-					if(oldReceive.getAmount()-oldReceive.getPayAmount()-oldReceive.getDiscountAmount()<=0){
-						oldReceive.setIsPay(1);
+					if(!"other".equals(kind)){
+						if(oldReceive.getAmount()-oldReceive.getPayAmount()-oldReceive.getDiscountAmount()<=0){
+							oldReceive.setIsPay(1);
+						}
 					}
 				}else if(model.getStatus()==0){//如果是由已审改为未审
 					//将该收货单下的商品入库
