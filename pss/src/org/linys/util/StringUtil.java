@@ -14,8 +14,12 @@ public class StringUtil {
 	 * @return
 	 */
 	public static String[] split(String source,String separator){
+		String[] distArray ={};
+		if(source==null){
+			return distArray;
+		}
 		int i = 0;
-		String[] distArray = new String[StringUtils.countMatches(source, separator)+1];
+		distArray = new String[StringUtils.countMatches(source, separator)+1];
 		while(source.length()>0){
 			distArray[i++] = StringUtils.substringBefore(source,separator);
 			source = StringUtils.substringAfter(source,separator);
