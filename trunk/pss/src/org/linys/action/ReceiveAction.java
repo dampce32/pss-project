@@ -117,20 +117,60 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	}
+	
+	/**
+	 * @Description: 删除
+	 * @Create: 2013-1-8 下午10:28:15
+	 * @author lys
+	 * @update logs
+	 */
+	public void delete(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = receiveService.delete(model);
+		} catch (Exception e) {
+			result.setMessage("删除");
+			result.setIsSuccess(false);
+			logger.error("删除失败", e);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	
 	/**
 	 * @Description: 批量删除
 	 * @Create: 2013-1-8 下午10:28:15
 	 * @author lys
 	 * @update logs
 	 */
-	public void mulDel(){
+	public void mulDelete(){
 		ServiceResult result = new ServiceResult(false);
 		try {
-			result = receiveService.mulDel(ids);
+			result = receiveService.mulDelete(ids);
 		} catch (Exception e) {
 			result.setMessage("批量删除");
 			result.setIsSuccess(false);
 			logger.error("批量删除失败", e);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	
+	/**
+	 * @Description: 修改审核状态
+	 * @Create: 2013-1-16 下午9:10:54
+	 * @author lys
+	 * @update logs
+	 */
+	public void updateStatus(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			String kind  = getParameter("kind");
+			result = receiveService.updateStatus(kind,model);
+		} catch (Exception e) {
+			result.setMessage("修改审核状态失败");
+			result.setIsSuccess(false);
+			logger.error("修改审核状态失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -141,7 +181,7 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 	 * @author lys
 	 * @update logs
 	 */
-	public void mulUpdateShzt(){
+	public void mulUpdateStatus(){
 		ServiceResult result = new ServiceResult(false);
 		try {
 			String kind  = getParameter("kind");
@@ -155,6 +195,24 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 		ajaxJson(jsonString);
 	}
 	/**
+	 * @Description: 清款
+	 * @Create: 2013-1-16 下午9:49:39
+	 * @author lys
+	 * @update logs
+	 */
+	public void updateIsPay(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = receiveService.updateIsPay(model);
+		} catch (Exception e) {
+			result.setMessage("清款失败");
+			logger.error("清款失败", e);
+			result.setIsSuccess(false);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	/**
 	 * @Description: 批量清款
 	 * @Create: 2013-1-12 下午3:33:29
 	 * @author lys
@@ -163,7 +221,7 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 	public void mulUpdateIsPay(){
 		ServiceResult result = new ServiceResult(false);
 		try {
-			result = receiveService.mulUpdateStatus(ids,model);
+			result = receiveService.mulUpdateIsPay(ids,model);
 		} catch (Exception e) {
 			result.setMessage("批量清款失败");
 			result.setIsSuccess(false);
@@ -192,6 +250,9 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	} 
+	
+	
+	
 	
 	
 }

@@ -64,8 +64,8 @@
 				{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},'-',
 				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},'-',
 				{text:'删除',iconCls:'icon-remove',handler:function(){onMulDelete()}},'-',
-				{text:'已审',iconCls:'icon-edit',handler:function(){onMulUpdateShzt(1)}},'-',
-				{text:'反审',iconCls:'icon-edit',handler:function(){onMulUpdateShzt(0)}}
+				{text:'已审',iconCls:'icon-edit',handler:function(){onMulUpdateStatus(1)}},'-',
+				{text:'反审',iconCls:'icon-edit',handler:function(){onMulUpdateStatus(0)}}
 		  ],
 		  onDblClickRow:function(rowIndex, rowData){
 				onUpdate();
@@ -180,7 +180,7 @@
 	    },
 	    toolbar:[	
 	 			{id:'save'+id,text:'保存',iconCls:'icon-save',handler:function(){onSave();}},'-',
-	 			{id:'add'+id,text:'新增',iconCls:'icon-remove',handler:function(){onAdd();}},'-',
+	 			{id:'add'+id,text:'新增',iconCls:'icon-add',handler:function(){onAdd();}},'-',
 	 			{id:'delete'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDelete();}},'-',
 	 			{id:'sh'+id,text:'审核',iconCls:'icon-edit',handler:function(){onUpdateStatus(1);}},'-',
 	 			{id:'fs'+id,text:'反审',iconCls:'icon-edit',handler:function(){onUpdateStatus(0);}},'-',
@@ -226,6 +226,14 @@
 	}
 	//添加
 	var onAdd = function(){
+		$(viewList).datagrid('unselectAll');
+		selectIndex==null
+		selectRow==null
+		$(editForm).form('clear');
+		var rows  = $(buyDetail).datagrid('getRows');
+		if(rows.length!=0){
+			$(buyDetail).datagrid({url:LYS.ClearUrl});
+		}
 		initChoose();
 		$('#otherAmount',editForm).numberbox('setValue', 0.0);
 		$('#amount',editForm).numberbox('setValue', 0.0);
@@ -479,14 +487,11 @@
 	}
 	//删除
 	var onDelete = function(){
-		if(selectRow==null){
-			$.messager.alert("提示","请选择数据行","warning");
-			return;
-		}
+		var buyId = $('#buyId',editDialog).val();
 		$.messager.confirm("提示","确定要删除选中的记录?",function(t){ 
 			if(t){
 				var url = 'inWarehouse/deleteBuy.do';
-				var content ={buyId:selectRow.buyId};
+				var content ={buyId:buyId};
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
 						var fn = function(){
@@ -533,6 +538,7 @@
 	}
 	//修改审核状态
 	var onUpdateStatus = function(status){
+		var buyId = $('#buyId',editDialog).val();
 		var msg = '';
 		if(status==1){
 			msg ='审核';
@@ -543,10 +549,10 @@
 			$.messager.alert("提示","请选择需要"+msg+"数据行","warning");
 			return;
 		}
-		$.messager.confirm("提示","确定要"+msg+"选中的记录?审核后单据不能再修改和删除，系统将进行财务计算!!",function(t){ 
+		$.messager.confirm("提示","确定要"+msg+"选中的记录?"+msg+"后系统将进行财务计算!!",function(t){ 
 			if(t){
 				var url = 'inWarehouse/updateStatusBuy.do';
-				var content ={buyId:selectRow.buyId,status:status};
+				var content ={buyId:buyId,status:status};
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
 						var fn = function(){
@@ -557,11 +563,6 @@
 								fsBtn();
 								$('#status',editDialog).val('未审核'); 
 							}
-							selectRow.status = status;
-							$(viewList).datagrid('updateRow',{
-								index: selectIndex,
-								row: selectRow
-							});
 						}
 						$.messager.alert('提示',msg+'成功','info',fn);
 					}else{
@@ -572,7 +573,7 @@
 		});
 	 }
 	//修改多个审核状态
-	var onMulUpdateShzt = function(status){
+	var onMulUpdateStatus = function(status){
 		var rows =  $(viewList).datagrid('getSelections');
 		var msg = '';
 		if(status==1){
@@ -588,7 +589,7 @@
 		for ( var int = 0; int < rows.length; int++) {
 			idArray.push(rows[int].buyId);
 		}
-		$.messager.confirm("提示","确定要"+msg+"选中的记录?审核后单据不能再修改和删除，系统将进行库存和财务计算!!",function(t){ 
+		$.messager.confirm("提示","确定要"+msg+"选中的记录"+msg+"后系统将进行库存和财务计算!!",function(t){ 
 			if(t){
 				var url = 'inWarehouse/mulUpdateStatusBuy.do';
 				var content ={ids:idArray.join(LYS.join),status:status};
@@ -832,6 +833,5 @@
 		 }
 	});
 	
-	 
   }
 })(jQuery);   

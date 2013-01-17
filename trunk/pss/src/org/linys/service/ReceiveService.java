@@ -72,7 +72,7 @@ public interface ReceiveService extends BaseService<Receive,String>{
 	 * @param ids
 	 * @return
 	 */
-	ServiceResult mulDel(String ids);
+	ServiceResult mulDelete(String ids);
 	/**
 	 * @Description: 批量修改状态
 	 * @Create: 2013-1-9 下午11:51:15
@@ -93,7 +93,7 @@ public interface ReceiveService extends BaseService<Receive,String>{
 	 * @param model
 	 * @return
 	 */
-	ServiceResult mulUpdateStatus(String ids, Receive model);
+	ServiceResult mulUpdateIsPay(String ids, Receive model);
 	/**
 	 * @Description: 将选择的采购单中的采购明细，添加到收货单明细中
 	 * @Create: 2013-1-15 下午10:02:09
@@ -104,5 +104,35 @@ public interface ReceiveService extends BaseService<Receive,String>{
 	 * @return
 	 */
 	ServiceResult querySelectBuyDetail(String ids, String ids2);
+	/**
+	 * @Description: 修改审核状态
+	 * @Create: 2013-1-16 下午9:11:52
+	 * @author lys
+	 * @param kind 
+	 * @update logs
+	 * @param model
+	 * @return
+	 */
+	ServiceResult updateStatus(String kind, Receive model);
+	/**
+	 * @Description: 删除
+	 * @Create: 2013-1-16 下午9:29:40
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @return
+	 */
+	ServiceResult delete(Receive model);
+	/**
+	 * @Description: 清款
+	 * @Create: 2013-1-16 下午9:50:24
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @return
+	 */
+	ServiceResult updateIsPay(Receive model);
+	
+	
 
 }

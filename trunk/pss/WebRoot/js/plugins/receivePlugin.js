@@ -34,9 +34,9 @@
 	  $(viewList).datagrid({
 		  fit:true,
 		  nowrap:true,
-			striped: true,
-			collapsible:true,
-			rownumbers:true,
+		  striped: true,
+		  collapsible:true,
+		  rownumbers:true,
 		  columns:[[
 		        {field:'ck',title:'选择',checkbox:true},
 				{field:'receiveCode',title:'入库单号',width:120,align:"center"},
@@ -54,11 +54,11 @@
 				},
 				{field:'employeeName',title:'经手人',width:90,align:"center"},
 				{field:'note',title:'备注',width:90,align:"center"},
-				{field:'shzt',title:'状态',width:80,align:"center",
+				{field:'status',title:'状态',width:80,align:"center",
 					formatter: function(value,row,index){
-						if(row.shzt==0){
+						if(row.status==0){
 							return '未审';
-						}else if(row.shzt==1){
+						}else if(row.status==1){
 							return '已审';
 						}
 					}},
@@ -77,10 +77,10 @@
 		  toolbar:[	
 				{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},'-',
 				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},'-',
-				{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}},'-',
-				{text:'已审',iconCls:'icon-edit',handler:function(){onUpdateShzt(1)}},'-',
-				{text:'反审',iconCls:'icon-edit',handler:function(){onUpdateShzt(0)}},'-',
-				{text:'清款',iconCls:'icon-edit',handler:function(){onIsPay()}}
+				{text:'删除',iconCls:'icon-remove',handler:function(){onMulDelete()}},'-',
+				{text:'已审',iconCls:'icon-edit',handler:function(){onMulUpdateStatus(1)}},'-',
+				{text:'反审',iconCls:'icon-edit',handler:function(){onMulUpdateStatus(0)}},'-',
+				{text:'清款',iconCls:'icon-edit',handler:function(){onMulUpateIsPay()}}
 		  ],
 		  onDblClickRow:function(rowIndex, rowData){
 				onUpdate();
@@ -88,6 +88,8 @@
 		  onClickRow:function(rowIndex, rowData){
 				selectRow = rowData;
 				selectIndex = rowIndex;
+				$(viewList).datagrid('unselectAll');
+				$(viewList).datagrid('selectRow',selectIndex);
 		  }
 	 });
 	//分页条
@@ -135,8 +137,8 @@
 		}
 	})
 	
-	$("#mulSearchClear").click(function(){
-		$("#mulSearchForm").form('clear');
+	$("#mulSearchClear",$this).click(function(){
+		$("#mulSearchForm",$this).form('clear');
 		return false;
 	});
 	//查询
@@ -189,16 +191,16 @@
 	    closable:false,
 	    onClose:function(){
 	    	lastIndex = null;
+	    	$(receiveDetail).datagrid({url:LYS.ClearUrl});
 	    	$(editForm).form('clear');
-			$(receiveDetail).datagrid('loadData',LYS.ClearData);
 	    },
 	    toolbar:[	
 		 			{id:'save'+id,text:'保存',iconCls:'icon-save',handler:function(){onSave();}},'-',
-		 			{id:'add'+id,text:'新增',iconCls:'icon-remove',handler:function(){onAdd();}},'-',
+		 			{id:'add'+id,text:'新增',iconCls:'icon-add',handler:function(){onAdd();}},'-',
 		 			{id:'delete'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDelete();}},'-',
 		 			{id:'sh'+id,text:'审核',iconCls:'icon-edit',handler:function(){onUpdateStatus(1);}},'-',
 		 			{id:'fs'+id,text:'反审',iconCls:'icon-edit',handler:function(){onUpdateStatus(0);}},'-',
-		 			{id:'isPay'+id,text:'清款',iconCls:'icon-edit',handler:function(){onUpdateIsPay(1);}},'-',
+		 			{id:'isPay'+id,text:'清款',iconCls:'icon-edit',handler:function(){onUpdateIsPay();}},'-',
 		 			{id:'pre'+id,text:'上一笔',iconCls:'icon-edit',handler:function(){onOpenIndex(-1);}},'-',
 		 			{id:'next'+id,text:'下一笔',iconCls:'icon-edit',handler:function(){onOpenIndex(1);}},'-',
 		 			{text:'退出',iconCls:'icon-cancel',handler:function(){
@@ -218,6 +220,7 @@
 		$('#pre'+id).linkbutton('disable');
 		$('#next'+id).linkbutton('disable');
 		$('#addProduct'+id).linkbutton('enable');
+		$('#addBuyProduct'+id).linkbutton('enable');
 		$('#deleteProduct'+id).linkbutton('enable');
 	}
 	//审核通过按钮的状态
@@ -228,6 +231,7 @@
 		$('#sh'+id).linkbutton('disable');
 		$('#fs'+id).linkbutton('enable');
 		$('#addProduct'+id).linkbutton('disable');
+		$('#addBuyProduct'+id).linkbutton('disable');
 		$('#deleteProduct'+id).linkbutton('disable');
 	}
 	//反审后的按钮状态
@@ -238,10 +242,31 @@
 		$('#sh'+id).linkbutton('enable');
 		$('#fs'+id).linkbutton('disable');
 		$('#addProduct'+id).linkbutton('enable');
+		$('#addBuyProduct'+id).linkbutton('enable');
 		$('#deleteProduct'+id).linkbutton('enable');
+	}
+	//清款后的状态
+	var qkBtnStatus = function(){
+		$('#save'+id).linkbutton('disable');
+		$('#add'+id).linkbutton('enable');
+		$('#delete'+id).linkbutton('disable');
+		$('#sh'+id).linkbutton('disable');
+		$('#fs'+id).linkbutton('enable');
+		$('#isPay'+id).linkbutton('disable');
+		$('#addProduct'+id).linkbutton('disable');
+		$('#addBuyProduct'+id).linkbutton('disable');
+		$('#deleteProduct'+id).linkbutton('disable');
 	}
 	//添加
 	var onAdd = function(){
+		var rows  = $(receiveDetail).datagrid('getRows');
+		if(rows.length!=0){
+			$(receiveDetail).datagrid({url:LYS.ClearUrl});
+		}
+		$(viewList).datagrid('unselectAll');
+		selectIndex==null
+		selectIndex==null
+    	$(editForm).form('clear');
 		initChoose();
 		$('#otherAmount',editForm).numberbox('setValue', 0.0);
 		$('#amount',editForm).numberbox('setValue', 0.0);
@@ -250,7 +275,7 @@
 		addBtnStatus();
 		$(editDialog).dialog('open');
 	}
-	
+	//初始化选择项
 	var initChoose = function(){
 		//供应商
 		$('#supplier',editForm).combogrid({  
@@ -353,7 +378,7 @@
 		$('#invoiceTypeId',editForm).val(invoiceTypeId);
 		//验证添加的商品行
 		$(receiveDetail).datagrid('endEdit', lastIndex);
-		 $(receiveDetail).datagrid('unselectAll');
+		$(receiveDetail).datagrid('unselectAll');
 		lastIndex = null;
 		var rows = $(receiveDetail).datagrid('getRows');
 		if(rows.length==0){
@@ -439,98 +464,48 @@
 			}
 		 });
 	}
-	//修改
-	var onUpdate = function(){
-		if(selectRow==null){
-			$.messager.alert("提示","请选择数据行","warning");
-			return;
-		}
-		initChoose();
-		onOpen(selectRow.receiveId);
-		$(editDialog).dialog('open');
-	 }
-	//删除
-	var onDelete = function(){
-		var rows =  $(viewList).datagrid('getSelections');
-		if(rows.length==0){
-			$.messager.alert("提示","请选择要删除的数据行","warning");
-			return;
-		}
-		var idArray = new Array();
-		for ( var int = 0; int < rows.length; int++) {
-			idArray.push(rows[int].receiveId);
-		}
-		$.messager.confirm("提示","确定要删除选中的记录?",function(t){ 
-			if(t){
-				var url = 'inWarehouse/mulDelReceive.do';
-				var content ={ids:idArray.join(LYS.join)};
-				asyncCallService(url,content,function(result){
-					if(result.isSuccess){
-						var fn = function(){
-							search(true);
-						}
-						$.messager.alert('提示','删除成功','info',fn);
-					}else{
-						$.messager.alert('提示',result.message,'error');
-					}
-				});
-			}
-		});
-	}
-	//修改审核状态
-	var onUpdateShzt = function(shzt){
-		var rows =  $(viewList).datagrid('getSelections');
-		var msg = '';
-		if(shzt==1){
-			msg = '已审';
-		}else{
-			msg = '反审';
-		}
-		if(rows.length==0){
-			$.messager.alert("提示","请选择要"+msg+"的数据行","warning");
-			return;
-		}
-		var idArray = new Array();
-		for ( var int = 0; int < rows.length; int++) {
-			idArray.push(rows[int].receiveId);
-		}
-		$.messager.confirm("提示","确定要"+msg+"选中的记录?审核后单据不能再修改和删除，系统将进行库存和财务计算!!",function(t){ 
-			if(t){
-				var url = 'inWarehouse/mulUpdateShztReceive.do';
-				var content ={ids:idArray.join(LYS.join),shzt:shzt};
-				asyncCallService(url,content,function(result){
-					if(result.isSuccess){
-						var fn = function(){
-							search(true);
-						}
-						$.messager.alert('提示',msg+'成功','info',fn);
-					}else{
-						$.messager.alert('提示',result.message,'error');
-					}
-				});
-			}
-		});
-	}
 	//打开
 	var onOpen = function(receiveId){
 		var url = 'inWarehouse/initReceive.do';
 		var content ={receiveId:receiveId};
 		asyncCallService(url,content,function(result){
 			if(result.isSuccess){
+				var preDisable = false;
+				var nextDisable = false;
+				if(selectIndex==0||selectIndex==null){
+					preDisable = true;
+				}
+				var rows = $(viewList).datagrid('getRows');
+				if(selectIndex==rows.length-1||selectIndex==null){
+					nextDisable = true;
+				}
+				if(preDisable){
+					$('#pre'+id).linkbutton('disable');
+				}else{
+					$('#pre'+id).linkbutton('enable');
+				}
+				if(nextDisable){
+					$('#next'+id).linkbutton('disable');
+				}else{
+					$('#next'+id).linkbutton('enable');
+				}
+				
 				var data = result.data;
 				var receiveData = eval("("+data.receiveData+")");
 				$('#receiveId',editDialog).val(receiveData.receiveId);
 				$('#receiveCode',editDialog).val(receiveData.receiveCode);
 				$('#receiveDate',editDialog).val(receiveData.receiveDate);
 				$('#deliverCode',editDialog).val(receiveData.deliverCode);
-				if(receiveData.shzt==1){
-					$('#shzt',editDialog).val('已审核');
-					//灰掉按钮
-					$('#addProduct_'+id).linkbutton('disable');
-					$('#deleteProduct_'+id).linkbutton('disable');
-					$('#saveProduct_'+id).linkbutton('disable');
+				$('#isPay'+id).linkbutton('disable');
+				if(receiveData.status==1){
+					$('#status',editDialog).val('已审核');
+					if(receiveData.isPay==0){
+						$('#isPay'+id).linkbutton('enable');
+					}
+					shBtnStatus();
 				}else{
-					$('#shzt',editDialog).val('未审核');
+					fsBtnStatus();
+					$('#status',editDialog).val('未审核'); 
 				}
 				
 				$('#supplier',editDialog).combogrid('setValue',receiveData.supplierId);
@@ -552,6 +527,199 @@
 				$.messager.alert('提示',result.message,'error');
 			}
 		});
+	}
+	//修改
+	var onUpdate = function(){
+		if(selectRow==null){
+			$.messager.alert("提示","请选择数据行","warning");
+			return;
+		}
+		initChoose();
+		onOpen(selectRow.receiveId);
+		$(editDialog).dialog('open');
+	 }
+	//删除
+	var onDelete = function(){
+		var receiveId = $('#receiveId',editDialog).val();
+		$.messager.confirm("提示","确定删除记录?",function(t){ 
+			if(t){
+				var url = 'inWarehouse/deleteReceive.do';
+				var content ={receiveId:receiveId};
+				asyncCallService(url,content,function(result){
+					if(result.isSuccess){
+						var fn = function(){
+							selectRow = null;
+							selectIndex = null;
+							$(editDialog).dialog('close');
+							search(true);
+						}
+						$.messager.alert('提示','删除成功','info',fn);
+					}else{
+						$.messager.alert('提示',result.message,'error');
+					}
+				});
+			}
+		});
+	 }
+	//批量删除
+	var onMulDelete = function(){
+		var rows =  $(viewList).datagrid('getSelections');
+		if(rows.length==0){
+			$.messager.alert("提示","请选择要删除的数据行","warning");
+			return;
+		}
+		var idArray = new Array();
+		for ( var int = 0; int < rows.length; int++) {
+			idArray.push(rows[int].receiveId);
+		}
+		$.messager.confirm("提示","确定要删除选中的记录?",function(t){ 
+			if(t){
+				var url = 'inWarehouse/mulDeleteReceive.do';
+				var content ={ids:idArray.join(LYS.join)};
+				asyncCallService(url,content,function(result){
+					if(result.isSuccess){
+						var fn = function(){
+							search(true);
+						}
+						$.messager.alert('提示','删除成功','info',fn);
+					}else{
+						$.messager.alert('提示',result.message,'error');
+					}
+				});
+			}
+		});
+	}
+	//修改审核状态
+	var onUpdateStatus = function(status){
+		var receiveId = $('#receiveId',editDialog).val();
+		var msg = '';
+		if(status==1){
+			msg ='审核';
+		}else{
+			msg = '反审';
+		}
+		if(receiveId==''){
+			$.messager.alert("提示","请选择需要"+msg+"数据行","warning");
+			return;
+		}
+		$.messager.confirm("提示","确定要"+msg+"选中的记录?"+msg+"后系统将进行库存计算和财务计算!!",function(t){ 
+			if(t){
+				var url = 'inWarehouse/updateStatusReceive.do';
+				var content ={receiveId:receiveId,status:status};
+				asyncCallService(url,content,function(result){
+					if(result.isSuccess){
+						var fn = function(){
+							if(status==1){
+								shBtnStatus();
+								onOpen(receiveId);
+							}else{
+								fsBtnStatus();
+								$('#status',editDialog).val('未审核'); 
+							}
+						}
+						$.messager.alert('提示',msg+'成功','info',fn);
+					}else{
+						$.messager.alert('提示',result.message,'error');
+					}
+				});
+			}
+		});
+	 }
+	//修改审核状态
+	var onMulUpdateStatus = function(status){
+		var rows =  $(viewList).datagrid('getSelections');
+		var msg = '';
+		if(status==1){
+			msg = '已审';
+		}else{
+			msg = '反审';
+		}
+		if(rows.length==0){
+			$.messager.alert("提示","请选择要"+msg+"的数据行","warning");
+			return;
+		}
+		var idArray = new Array();
+		for ( var int = 0; int < rows.length; int++) {
+			idArray.push(rows[int].receiveId);
+		}
+		$.messager.confirm("提示","确定要"+msg+"选中的记录?"+msg+"后系统将进行库存和财务计算!!",function(t){ 
+			if(t){
+				var url = 'inWarehouse/mulUpdateStatusReceive.do';
+				var content ={ids:idArray.join(LYS.join),status:status};
+				asyncCallService(url,content,function(result){
+					if(result.isSuccess){
+						var fn = function(){
+							search(true);
+						}
+						$.messager.alert('提示',msg+'成功','info',fn);
+					}else{
+						$.messager.alert('提示',result.message,'error');
+					}
+				});
+			}
+		});
+	}
+	//批量清款
+	var onMulUpdateIsPay = function(){
+		var rows =  $(viewList).datagrid('getSelections');
+		if(rows.length==0){
+			$.messager.alert("提示","请选择要清款的数据行","warning");
+			return;
+		}
+		var idArray = new Array();
+		for ( var int = 0; int < rows.length; int++) {
+			idArray.push(rows[int].receiveId);
+		}
+		$.messager.confirm("提示","确定要清款选中的记录?",function(t){ 
+			if(t){
+				var url = 'inWarehouse/mulUpdateIsPayReceive.do';
+				var content ={ids:idArray.join(LYS.join),isPay:1};
+				asyncCallService(url,content,function(result){
+					if(result.isSuccess){
+						var fn = function(){
+							search(true);
+						}
+						$.messager.alert('提示','清款成功','info',fn);
+					}else{
+						$.messager.alert('提示',result.message,'error');
+					}
+				});
+			}
+		});
+	}
+	//清款单笔
+	var onUpdateIsPay = function(){
+		var receiveId = $('#receiveId',editDialog).val();
+		if(''==receiveId){
+			$.messager.alert('提示','请选择要清款的记录','warning');
+			return;
+		}
+		$.messager.confirm("提示","确定要清款该记录?",function(t){ 
+			if(t){
+				var url = 'inWarehouse/updateIsPayReceive.do';
+				var content ={receiveId:receiveId};
+				asyncCallService(url,content,function(result){
+					if(result.isSuccess){
+						var fn = function(){
+							qkBtnStatus();
+						}
+						$.messager.alert('提示','清款成功','info',fn);
+					}else{
+						$.messager.alert('提示',result.message,'error');
+					}
+				});
+			}
+		});
+	}
+	//上下一笔
+	var onOpenIndex = function(index){
+		var rows = $(viewList).datagrid('getRows');
+		selectIndex = selectIndex + index;
+		selectRow = rows[selectIndex];
+		onOpen(selectRow.receiveId);
+		//界面选中
+		$(viewList).datagrid('unselectAll');
+		$(viewList).datagrid('selectRow',selectIndex);
 	}
 	//-----收货明细----------
 	var receiveDetail = $('#receiveDetail',editDialog);
@@ -763,46 +931,12 @@
 	//运费发生改变
 	 $('#otherAmount',editForm).numberbox({
 		 onChange:function(newValue,oldValue){
-			 var totalAmount = 0 ;
-			 var rows =  $(receiveDetail).datagrid('getRows');
-			 var row = $(receiveDetail).datagrid('getSelected');
-			 var rowIndex = $(receiveDetail).datagrid('getRowIndex',row); 
-			 for ( var int = 0; int < rows.length; int++) {
-				row = rows[int];
-				totalAmount += parseFloat(row.amount);
-			}
-			totalAmount+=parseFloat(newValue); 
+			var amount = $('#amount',editForm).numberbox('getValue');
+			var totalAmount=parseFloat(amount)+parseFloat(newValue-oldValue); 
 			 $('#amount',editForm).numberbox('setValue',totalAmount);
 		 }
 	});
-	//清款
-	var onIsPay = function(){
-		var rows =  $(viewList).datagrid('getSelections');
-		if(rows.length==0){
-			$.messager.alert("提示","请选择要清款的数据行","warning");
-			return;
-		}
-		var idArray = new Array();
-		for ( var int = 0; int < rows.length; int++) {
-			idArray.push(rows[int].receiveId);
-		}
-		$.messager.confirm("提示","确定要清款选中的记录?",function(t){ 
-			if(t){
-				var url = 'inWarehouse/mulUpdateIsPayReceive.do';
-				var content ={ids:idArray.join(LYS.join),isPay:1};
-				asyncCallService(url,content,function(result){
-					if(result.isSuccess){
-						var fn = function(){
-							search(true);
-						}
-						$.messager.alert('提示','清款成功','info',fn);
-					}else{
-						$.messager.alert('提示',result.message,'error');
-					}
-				});
-			}
-		});
-	}
+	
 	//-----------从采购单选择添加商品--------------
 	var selectBuyDialog = $('#selectBuyDialog',$this);
 	var buyList = $('#buyList',selectBuyDialog);
@@ -934,12 +1068,25 @@
 					 note3:''
 				});
 			}
+			//重新计算应付金额
+			onCalAmount();
 			$(selectBuyDialog).dialog('close');
 		}else{
 			$.messager.alert('提示',result.message,"error");
 		}
-		 
-		 
 	 }
+	 //重新计算应付金额
+	 var onCalAmount = function(){
+		 var totalAmount = 0 ;
+		 var rows =  $(receiveDetail).datagrid('getRows');
+		 for ( var int = 0; int < rows.length; int++) {
+			row = rows[int];
+			totalAmount += parseFloat(row.amount);
+		}
+		var discountAmount = $('#discountAmount',editForm).numberbox('getValue'); 
+		totalAmount+=parseFloat(discountAmount); 
+		 $('#amount',editForm).numberbox('setValue',totalAmount);  
+	 }
+	 
   }
 })(jQuery);   
