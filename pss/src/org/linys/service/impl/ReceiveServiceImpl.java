@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.linys.dao.BankDAO;
+import org.linys.dao.BuyDetailDAO;
 import org.linys.dao.CommonDAO;
 import org.linys.dao.ProductDAO;
 import org.linys.dao.ReceiveDAO;
@@ -42,6 +43,8 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	private BankDAO bankDAO;
 	@Resource
 	private CommonDAO commonDAO;
+	@Resource
+	private BuyDetailDAO buyDetailDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.ReceiveService#query(org.linys.model.Receive, java.lang.Integer, java.lang.Integer)
@@ -54,7 +57,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		
 		String[] properties = {"receiveId","receiveCode","receiveDate","deliverCode",
 				"warehouse.warehouseName","supplier.supplierName","amount","payAmount","discountAmount",
-				"employee.employeeName","note","shzt","invoiceType.invoiceTypeName","isPay"};
+				"employee.employeeName","note","status","invoiceType.invoiceTypeName","isPay"};
 		String data = JSONUtil.toJson(list,properties);
 		result.addData("datagridData", data);
 		
@@ -279,7 +282,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		Receive receive = receiveDAO.load(receiveId);
 		String[] propertiesReceive = {"receiveId","receiveCode","receiveDate","deliverCode",
 				"supplier.supplierId","warehouse.warehouseId","amount","discountAmount","payAmount","otherAmount",
-				"bank.bankId","invoiceType.invoiceTypeId","employee.employeeId","note","shzt"};
+				"bank.bankId","invoiceType.invoiceTypeId","employee.employeeId","note","status","isPay"};
 		String receiveData = JSONUtil.toJson(receive,propertiesReceive);
 		result.addData("receiveData",receiveData);
 		
@@ -294,10 +297,31 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	}
 	/*
 	 * (non-Javadoc)   
+	 * @see org.linys.service.ReceiveService#delete(org.linys.model.Receive)
+	 */
+	@Override
+	public ServiceResult delete(Receive model) {
+		ServiceResult result = new ServiceResult(false);
+		if(model==null||StringUtils.isEmpty(model.getReceiveId())){
+			result.setMessage("请选择要删除的收货单");
+			return result;
+		}
+		Receive oldReceive = receiveDAO.load(model.getReceiveId());
+		
+		if(oldReceive==null){
+			result.setMessage("要删除的收货单已不存在");
+			return result;
+		}
+		receiveDAO.delete(oldReceive);
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
 	 * @see org.linys.service.ReceiveService#mulDel(java.lang.String)
 	 */
 	@Override
-	public ServiceResult mulDel(String ids) {
+	public ServiceResult mulDelete(String ids) {
 		ServiceResult result = new ServiceResult(false);
 		if(StringUtils.isEmpty(ids)){
 			result.setMessage("请选择要删除的收货单");
@@ -320,6 +344,105 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			result.setMessage("没有可删除的收货单");
 			return result;
 		}
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.ReceiveService#updateStatus(org.linys.model.Receive)
+	 */
+	@Override
+	public ServiceResult updateStatus(String kind,Receive model) {
+		ServiceResult result = new ServiceResult(false);
+		if(model==null||StringUtils.isEmpty(model.getReceiveId())){
+			result.setMessage("请选择要修改审核状态的收货单");
+			return result;
+		}
+		Receive oldReceive = receiveDAO.load(model.getReceiveId());
+		
+		if(oldReceive==null){
+			result.setMessage("要修改审核状态的收货单已不存在");
+			return result;
+		}
+		if(oldReceive.getStatus().intValue()==model.getStatus().intValue()){
+			result.setMessage("要修改审核状态的收货单已是要修改的状态，请刷新界面");
+			return result;
+		}
+		
+		if(model.getStatus()==1){//如果是由未审改为已审
+			//将该收货单下的商品入库
+			List<ReceiveDetail> receiveDetailList = receiveDetailDAO.queryByReceiveId(model.getReceiveId());
+			//将对应商品入库
+			for (ReceiveDetail receiveDetail : receiveDetailList) {
+				/*
+				 * 查找商品在仓库中是否已有记录，如果有则修改库存数量和库存金额，	
+				 * 如果没有，则修改新增库存记录
+				*/
+				String[] propertyNames = {"warehouse.warehouseId","product.productId"};
+				Object[] values = {oldReceive.getWarehouse().getWarehouseId(),receiveDetail.getProduct().getProductId()};
+				Store store = storeDAO.load(propertyNames, values);
+				if(store==null){
+					store = new Store();
+					store.setWarehouse(oldReceive.getWarehouse());
+					store.setProduct(receiveDetail.getProduct());
+					store.setQty(0.0);
+					store.setAmount(0.0);
+					storeDAO.save(store);
+				}
+				store.setQty(store.getQty()+receiveDetail.getQty());
+				storeDAO.update(store);
+				//更新商品总的库存数量和金额
+				Product oldProduct = productDAO.load(receiveDetail.getProduct().getProductId());
+				oldProduct.setQtyStore(oldProduct.getQtyStore()+receiveDetail.getQty());
+				oldProduct.setAmountStore(oldProduct.getAmountStore()+receiveDetail.getAmount());
+				productDAO.update(oldProduct);
+				//如果该收货明细是从采购单来得，则需要更新对应采购明细的收货数
+				if(receiveDetail.getBuyDetail()!=null){
+					BuyDetail buyDetail = buyDetailDAO.load(receiveDetail.getBuyDetail().getBuyDetailId());
+					buyDetail.setReceiveQty(buyDetail.getReceiveQty()+receiveDetail.getQty());
+					buyDetailDAO.update(buyDetail);
+				}
+			}
+			if(oldReceive.getAmount()-oldReceive.getPayAmount()-oldReceive.getDiscountAmount()<=0){
+				oldReceive.setIsPay(1);
+			}
+		}else if(model.getStatus()==0){//如果是由已审改为未审
+			//将该收货单下的商品入库
+			List<ReceiveDetail> receiveDetailList = receiveDetailDAO.queryByReceiveId(model.getReceiveId());
+			//更新对应商品的库存数量
+			for (ReceiveDetail receiveDetail : receiveDetailList) {
+				String[] propertyNames = {"warehouse.warehouseId","product.productId"};
+				Object[] values = {oldReceive.getWarehouse().getWarehouseId(),receiveDetail.getProduct().getProductId()};
+				Store store = storeDAO.load(propertyNames, values);
+				store.setQty(store.getQty()-receiveDetail.getQty());
+				storeDAO.update(store);
+				//更新商品总的库存数量和金额
+				Product oldProduct = productDAO.load(receiveDetail.getProduct().getProductId());
+				oldProduct.setQtyStore(oldProduct.getQtyStore()-receiveDetail.getQty());
+				oldProduct.setAmountStore(oldProduct.getAmountStore()-receiveDetail.getAmount());
+				productDAO.update(oldProduct);
+				
+				//如果该收货明细是从采购单来得，则需要更新对应采购明细的收货数
+				if(receiveDetail.getBuyDetail()!=null){
+					BuyDetail buyDetail = buyDetailDAO.load(receiveDetail.getBuyDetail().getBuyDetailId());
+					buyDetail.setReceiveQty(buyDetail.getReceiveQty()-receiveDetail.getQty());
+					buyDetailDAO.update(buyDetail);
+				}
+			}
+			oldReceive.setIsPay(0);
+		}
+		if(!"other".equals(kind)){
+			Bank oldBank = bankDAO.load(oldReceive.getBank().getBankId());
+			//更新对应银行的账户金额
+			if(model.getStatus()==1){//如果是由未审改为已审
+				oldBank.setAmount(oldBank.getAmount()-oldReceive.getPayAmount());
+			}else if(model.getStatus()==0){//如果是由已审改为未审
+				oldBank.setAmount(oldBank.getAmount()+oldReceive.getPayAmount());
+			}
+			bankDAO.update(oldBank);
+		}
+		oldReceive.setStatus(model.getStatus());
+		receiveDAO.update(oldReceive);
 		result.setIsSuccess(true);
 		return result;
 	}
@@ -374,6 +497,12 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 						oldProduct.setQtyStore(oldProduct.getQtyStore()+receiveDetail.getQty());
 						oldProduct.setAmountStore(oldProduct.getAmountStore()+receiveDetail.getAmount());
 						productDAO.update(oldProduct);
+						//如果该收货明细是从采购单来得，则需要更新对应采购明细的收货数
+						if(receiveDetail.getBuyDetail()!=null){
+							BuyDetail buyDetail = buyDetailDAO.load(receiveDetail.getBuyDetail().getBuyDetailId());
+							buyDetail.setReceiveQty(buyDetail.getReceiveQty()+receiveDetail.getQty());
+							buyDetailDAO.update(buyDetail);
+						}
 					}
 					if(oldReceive.getAmount()-oldReceive.getPayAmount()-oldReceive.getDiscountAmount()<=0){
 						oldReceive.setIsPay(1);
@@ -393,6 +522,12 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 						oldProduct.setQtyStore(oldProduct.getQtyStore()-receiveDetail.getQty());
 						oldProduct.setAmountStore(oldProduct.getAmountStore()-receiveDetail.getAmount());
 						productDAO.update(oldProduct);
+						//如果该收货明细是从采购单来得，则需要更新对应采购明细的收货数
+						if(receiveDetail.getBuyDetail()!=null){
+							BuyDetail buyDetail = buyDetailDAO.load(receiveDetail.getBuyDetail().getBuyDetailId());
+							buyDetail.setReceiveQty(buyDetail.getReceiveQty()-receiveDetail.getQty());
+							buyDetailDAO.update(buyDetail);
+						}
 					}
 					oldReceive.setIsPay(0);
 				}
@@ -420,10 +555,33 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	}
 	/*
 	 * (non-Javadoc)   
+	 * @see org.linys.service.ReceiveService#updateIsPay(org.linys.model.Receive)
+	 */
+	@Override
+	public ServiceResult updateIsPay(Receive model) {
+		ServiceResult result = new ServiceResult(false);
+		if(model==null||StringUtils.isEmpty(model.getReceiveId())){
+			result.setMessage("请选择要清款的收货单");
+			return result;
+		}
+		Receive oldReceive = receiveDAO.load(model.getReceiveId());
+		
+		if(oldReceive==null){
+			result.setMessage("要清款的收货单已不存在");
+			return result;
+		}
+		
+		oldReceive.setIsPay(1);
+		receiveDAO.update(oldReceive);
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
 	 * @see org.linys.service.ReceiveService#mulUpdateStatus(java.lang.String, org.linys.model.Receive)
 	 */
 	@Override
-	public ServiceResult mulUpdateStatus(String ids, Receive model) {
+	public ServiceResult mulUpdateIsPay(String ids, Receive model) {
 		ServiceResult result = new ServiceResult(false);
 		if(StringUtils.isEmpty(ids)){
 			result.setMessage("请选择要清款的收货单");
@@ -441,7 +599,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		boolean haveUpdateStatus = false;
 		for (String id : idArray) {
 			Receive oldReceive = receiveDAO.load(id);
-			if(oldReceive!=null&&oldReceive.getIsPay()!=model.getIsPay()){
+			if(oldReceive!=null&&oldReceive.getIsPay().intValue()!=model.getIsPay().intValue()){
 				oldReceive.setIsPay(model.getIsPay());
 				receiveDAO.update(oldReceive);
 				haveUpdateStatus = true;
@@ -478,4 +636,6 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		result.setIsSuccess(true);
 		return result;
 	}
+	
+	
 }

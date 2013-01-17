@@ -18,7 +18,6 @@ import org.springframework.stereotype.Controller;
 public class CommonAction extends BaseAction {
 
 	private static final long serialVersionUID = -7485373143593963699L;
-	@Resource
 	/**
 	 * @Description: 清空datagrid
 	 * @Create: 2012-12-30 下午5:07:53
