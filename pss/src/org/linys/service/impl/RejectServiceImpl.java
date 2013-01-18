@@ -46,7 +46,7 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 		
 		String[] properties = {"rejectId","rejectCode","rejectDate","buyCode",
 				"warehouse.warehouseName","supplier.supplierName","amount","payAmount",
-				"employee.employeeName","note","shzt"};
+				"employee.employeeName","note","status"};
 		String data = JSONUtil.toJson(list,properties);
 		result.addData("datagridData", data);
 		
@@ -129,7 +129,7 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 			rejectCode = rejectDAO.getMaxCode(rejectCode);
 			
 			rejectCode = newRejectCode(prefix,rejectCode);
-			model.setShzt(0);
+			model.setStatus(0);
 			model.setRejectCode(rejectCode);
 			rejectDAO.save(model);
 			for (int i = 0; i < productIdArray.length; i++) {
@@ -241,7 +241,7 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 		Reject reject = rejectDAO.load(rejectId);
 		String[] propertiesReject = {"rejectId","rejectCode","rejectDate","buyCode",
 				"supplier.supplierId","warehouse.warehouseId","amount","payAmount",
-				"bank.bankId","employee.employeeId","note"};
+				"bank.bankId","employee.employeeId","note","status"};
 		String rejectData = JSONUtil.toJson(reject,propertiesReject);
 		result.addData("rejectData",rejectData);
 		
@@ -259,7 +259,7 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 	 * @see org.linys.service.RejectService#mulDel(java.lang.String)
 	 */
 	@Override
-	public ServiceResult mulDel(String ids) {
+	public ServiceResult mulDelete(String ids) {
 		ServiceResult result = new ServiceResult(false);
 		if(StringUtils.isEmpty(ids)){
 			result.setMessage("请选择要删除的退货单");
@@ -273,7 +273,7 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 		boolean haveDel = false;
 		for (String id : idArray) {
 			Reject oldReject = rejectDAO.load(id);
-			if(oldReject!=null&&oldReject.getShzt()==0){
+			if(oldReject!=null&&oldReject.getStatus()==0){
 				rejectDAO.delete(oldReject);
 				haveDel = true;
 			}
@@ -287,10 +287,10 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 	}
 	/*
 	 * (non-Javadoc)   
-	 * @see org.linys.service.RejectService#mulUpdateShzt(java.lang.String, org.linys.model.Reject)
+	 * @see org.linys.service.RejectService#mulUpdateStatus(java.lang.String, org.linys.model.Reject)
 	 */
 	@Override
-	public ServiceResult mulUpdateShzt(String ids, Reject model) {
+	public ServiceResult mulUpdateStatus(String ids, Reject model) {
 		ServiceResult result = new ServiceResult(false);
 		if(StringUtils.isEmpty(ids)){
 			result.setMessage("请选择要修改审核状态的退货单");
@@ -301,15 +301,15 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 			result.setMessage("请选择要修改审核状态的退货单");
 			return result;
 		}
-		if(model==null||model.getShzt()==null){
+		if(model==null||model.getStatus()==null){
 			result.setMessage("请选择要修改成的审核状态");
 			return result;
 		}
-		boolean haveUpdateShzt = false;
+		boolean haveUpdateStatus = false;
 		for (String id : idArray) {
 			Reject oldReject = rejectDAO.load(id);
-			if(oldReject!=null&&oldReject.getShzt()!=model.getShzt()){
-				if(model.getShzt()==1){//如果是由未审改为已审
+			if(oldReject!=null&&oldReject.getStatus().intValue()!=model.getStatus().intValue()){
+				if(model.getStatus()==1){//如果是由未审改为已审
 					//将该退货单下的商品入库
 					List<RejectDetail> rejectDetailList = rejectDetailDAO.queryByRejectId(id);
 					//更新对应商品的库存数量
@@ -321,7 +321,7 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 						store.setAmount(store.getAmount()-rejectDetail.getAmount());
 						storeDAO.update(store);
 					}
-				}else if(model.getShzt()==0){//如果是由已审改为未审
+				}else if(model.getStatus()==0){//如果是由已审改为未审
 					//将该退货单下的商品入库
 					List<RejectDetail> rejectDetailList = rejectDetailDAO.queryByRejectId(id);
 					//更新对应商品的库存数量
@@ -337,18 +337,18 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 				
 				Bank oldBank = bankDAO.load(oldReject.getBank().getBankId());
 				//更新对应银行的账户金额
-				if(model.getShzt()==1){//如果是由未审改为已审
+				if(model.getStatus()==1){//如果是由未审改为已审
 					oldBank.setAmount(oldBank.getAmount()+oldReject.getPayAmount());
-				}else if(model.getShzt()==0){//如果是由已审改为未审
+				}else if(model.getStatus()==0){//如果是由已审改为未审
 					oldBank.setAmount(oldBank.getAmount()-oldReject.getPayAmount());
 				}
 				bankDAO.update(oldBank);
-				oldReject.setShzt(model.getShzt());
+				oldReject.setStatus(model.getStatus());
 				rejectDAO.update(oldReject);
-				haveUpdateShzt = true;
+				haveUpdateStatus = true;
 			}
 		}
-		if(!haveUpdateShzt){
+		if(!haveUpdateStatus){
 			result.setMessage("没有可修改审核状态的退货单");
 			return result;
 		}
@@ -370,6 +370,91 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 			index = Integer.parseInt(rejectCode.substring(10, rejectCode.length()));	
 		}
 		return prefix+DateUtil.dateToString(new Date(),"yyyyMMdd")+String.format("%04d", index+1);
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.RejectService#delete(org.linys.model.Reject)
+	 */
+	@Override
+	public ServiceResult delete(Reject model) {
+		ServiceResult result = new ServiceResult(false);
+		if(model==null||StringUtils.isEmpty(model.getRejectId())){
+			result.setMessage("请选择要删除的退货单");
+			return result;
+		}
+		Reject oldReject = rejectDAO.load(model.getRejectId());
+		
+		if(oldReject==null){
+			result.setMessage("要删除的退货单已不存在");
+			return result;
+		}
+		rejectDAO.delete(oldReject);
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.RejectService#updateStatus(org.linys.model.Reject)
+	 */
+	@Override
+	public ServiceResult updateStatus(Reject model) {
+		
+		ServiceResult result = new ServiceResult(false);
+		if(model==null||StringUtils.isEmpty(model.getRejectId())){
+			result.setMessage("请选择要修改状态的退货单");
+			return result;
+		}
+		Reject oldReject = rejectDAO.load(model.getRejectId());
+		
+		if(oldReject==null){
+			result.setMessage("要修改状态的退货单已不存在");
+			return result;
+		}
+		if(oldReject.getStatus().intValue()==model.getStatus().intValue()){
+			result.setMessage("要修改状态的退货单已是要修改的状态，请刷新界面");
+			return result;
+		}
+		if(model.getStatus()==1){//如果是由未审改为已审
+			//将该退货单下的商品入库
+			List<RejectDetail> rejectDetailList = rejectDetailDAO.queryByRejectId(model.getRejectId());
+			//更新对应商品的库存数量
+			for (RejectDetail rejectDetail : rejectDetailList) {
+				String[] propertyNames = {"warehouse.warehouseId","product.productId"};
+				Object[] values = {oldReject.getWarehouse().getWarehouseId(),rejectDetail.getProduct().getProductId()};
+				Store store = storeDAO.load(propertyNames, values);
+				store.setQty(store.getQty()-rejectDetail.getQty());
+				store.setAmount(store.getAmount()-rejectDetail.getAmount());
+				storeDAO.update(store);
+			}
+		}else if(model.getStatus()==0){//如果是由已审改为未审
+			//将该退货单下的商品入库
+			List<RejectDetail> rejectDetailList = rejectDetailDAO.queryByRejectId(model.getRejectId());
+			//更新对应商品的库存数量
+			for (RejectDetail rejectDetail : rejectDetailList) {
+				String[] propertyNames = {"warehouse.warehouseId","product.productId"};
+				Object[] values = {oldReject.getWarehouse().getWarehouseId(),rejectDetail.getProduct().getProductId()};
+				Store store = storeDAO.load(propertyNames, values);
+				store.setQty(store.getQty()+rejectDetail.getQty());
+				store.setAmount(store.getAmount()+rejectDetail.getAmount());
+				storeDAO.update(store);
+			}
+		}
+		
+		Bank oldBank = bankDAO.load(oldReject.getBank().getBankId());
+		//更新对应银行的账户金额
+		if(model.getStatus()==1){//如果是由未审改为已审
+			oldBank.setAmount(oldBank.getAmount()+oldReject.getPayAmount());
+		}else if(model.getStatus()==0){//如果是由已审改为未审
+			oldBank.setAmount(oldBank.getAmount()-oldReject.getPayAmount());
+		}
+		bankDAO.update(oldBank);
+		oldReject.setStatus(model.getStatus());
+		rejectDAO.update(oldReject);
+		
+		oldReject.setStatus(model.getStatus());
+		rejectDAO.update(oldReject);
+		result.setIsSuccess(true);
+		return result;
 	}
 
 }

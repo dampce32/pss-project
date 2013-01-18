@@ -52,11 +52,11 @@
 				},
 				{field:'employeeName',title:'经手人',width:90,align:"center"},
 				{field:'note',title:'备注',width:90,align:"center"},
-				{field:'shzt',title:'状态',width:80,align:"center",
+				{field:'status',title:'状态',width:80,align:"center",
 					formatter: function(value,row,index){
-						if(row.shzt==0){
+						if(row.status==0){
 							return '未审';
-						}else if(row.shzt==1){
+						}else if(row.status==1){
 							return '已审';
 						}
 				}}
@@ -108,7 +108,7 @@
 	$("#mulSearch",$this).click(function(){
 		var rejectCode = $('#rejectCodeMulSearch',$this).val();
 		
-		var url = "outWarehouse/queryReject.do";
+		var url = "inWarehouse/queryReject.do";
 		var content = {rejectCode:rejectCode,page:pageNumber,rows:pageSize};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
@@ -135,7 +135,7 @@
 	var search = function(flag){
 		var rejectCode = $('#rejectCodeSearch',queryContent).val();
 		
-		var url = "outWarehouse/queryReject.do";
+		var url = "inWarehouse/queryReject.do";
 		var content = {rejectCode:rejectCode,page:pageNumber,rows:pageSize};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
@@ -151,7 +151,7 @@
 	} 
 	//统计总数
 	var getTotal = function(content){
-		var url = "outWarehouse/getTotalCountReject.do";
+		var url = "inWarehouse/getTotalCountReject.do";
 		asyncCallService(url,content,
 		function(result){
 			if(result.isSuccess){
@@ -177,10 +177,68 @@
 	    closable:false,
 	    onClose:function(){
 	    	lastIndex = null;
-	    }
+	    },
+	    toolbar:[	
+		 			{id:'save'+id,text:'保存',iconCls:'icon-save',handler:function(){onSave();}},'-',
+		 			{id:'add'+id,text:'新增',iconCls:'icon-add',handler:function(){onAdd();}},'-',
+		 			{id:'delete'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDelete();}},'-',
+		 			{id:'sh'+id,text:'审核',iconCls:'icon-edit',handler:function(){onUpdateStatus(1);}},'-',
+		 			{id:'fs'+id,text:'反审',iconCls:'icon-edit',handler:function(){onUpdateStatus(0);}},'-',
+		 			{id:'pre'+id,text:'上一笔',iconCls:'icon-edit',handler:function(){onOpenIndex(-1);}},'-',
+		 			{id:'next'+id,text:'下一笔',iconCls:'icon-edit',handler:function(){onOpenIndex(1);}},'-',
+		 			{text:'退出',iconCls:'icon-cancel',handler:function(){
+		 					$(editDialog).dialog('close');
+		 				}
+		 			}
+		 	  ]
 	}); 
+	//新增时，按钮的状态
+	var addBtnStatus = function(){
+		$('#save'+id).linkbutton('enable');
+		$('#add'+id).linkbutton('disable');
+		$('#delete'+id).linkbutton('disable');
+		$('#sh'+id).linkbutton('disable');
+		$('#fs'+id).linkbutton('disable');
+		$('#isPay'+id).linkbutton('disable');
+		$('#pre'+id).linkbutton('disable');
+		$('#next'+id).linkbutton('disable');
+		$('#addProduct'+id).linkbutton('enable');
+		$('#addBuyProduct'+id).linkbutton('enable');
+		$('#deleteProduct'+id).linkbutton('enable');
+	}
+	//审核通过按钮的状态
+	var shBtnStatus = function(){
+		$('#save'+id).linkbutton('disable');
+		$('#add'+id).linkbutton('enable');
+		$('#delete'+id).linkbutton('disable');
+		$('#sh'+id).linkbutton('disable');
+		$('#fs'+id).linkbutton('enable');
+		$('#addProduct'+id).linkbutton('disable');
+		$('#addBuyProduct'+id).linkbutton('disable');
+		$('#deleteProduct'+id).linkbutton('disable');
+	}
+	//反审后的按钮状态
+	var fsBtnStatus = function(){
+		$('#save'+id).linkbutton('enable');
+		$('#add'+id).linkbutton('enable');
+		$('#delete'+id).linkbutton('enable');
+		$('#sh'+id).linkbutton('enable');
+		$('#fs'+id).linkbutton('disable');
+		$('#addProduct'+id).linkbutton('enable');
+		$('#addBuyProduct'+id).linkbutton('enable');
+		$('#deleteProduct'+id).linkbutton('enable');
+	}
 	//添加
 	var onAdd = function(){
+		var rows  = $(rejectDetail).datagrid('getRows');
+		if(rows.length!=0){
+			$(rejectDetail).datagrid({url:LYS.ClearUrl});
+		}
+		$(viewList).datagrid('unselectAll');
+		selectIndex==null
+		selectIndex==null
+		addBtnStatus();
+		
 		$(editForm).form('clear');
 		initChoose();
 		$('#amount',editForm).val(0);
@@ -346,7 +404,7 @@
 	}
 	//保存
 	var onSave = function(){
-		var url = 'outWarehouse/saveReject.do'
+		var url = 'inWarehouse/saveReject.do'
 		$(editForm).form('submit',{
 			url: url,
 			onSubmit: function(){
@@ -379,6 +437,29 @@
 	 }
 	//删除
 	var onDelete = function(){
+		var rejectId = $('#rejectId',editDialog).val();
+		$.messager.confirm("提示","确定删除记录?",function(t){ 
+			if(t){
+				var url = 'inWarehouse/deleteReject.do';
+				var content ={rejectId:rejectId};
+				asyncCallService(url,content,function(result){
+					if(result.isSuccess){
+						var fn = function(){
+							selectRow = null;
+							selectIndex = null;
+							$(editDialog).dialog('close');
+							search(true);
+						}
+						$.messager.alert('提示','删除成功','info',fn);
+					}else{
+						$.messager.alert('提示',result.message,'error');
+					}
+				});
+			}
+		});
+	 }
+	//批量删除
+	var onMulDelete = function(){
 		var rows =  $(viewList).datagrid('getSelections');
 		if(rows.length==0){
 			$.messager.alert("提示","请选择要删除的数据行","warning");
@@ -390,7 +471,7 @@
 		}
 		$.messager.confirm("提示","确定要删除选中的记录?",function(t){ 
 			if(t){
-				var url = 'outWarehouse/mulDelReject.do';
+				var url = 'inWarehouse/mulDelReject.do';
 				var content ={ids:idArray.join(LYS.join)};
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
@@ -406,7 +487,43 @@
 		});
 	}
 	//修改审核状态
-	var onUpdateShzt = function(shzt){
+	var onUpdateStatus = function(status){
+		var rejectId = $('#rejectId',editDialog).val();
+		var msg = '';
+		if(status==1){
+			msg ='审核';
+		}else{
+			msg = '反审';
+		}
+		if(rejectId==''){
+			$.messager.alert("提示","请选择需要"+msg+"数据行","warning");
+			return;
+		}
+		$.messager.confirm("提示","确定要"+msg+"选中的记录?"+msg+"后系统将进行库存计算和财务计算!!",function(t){ 
+			if(t){
+				var url = 'inWarehouse/updateStatusReject.do';
+				var content ={rejectId:rejectId,status:status};
+				asyncCallService(url,content,function(result){
+					if(result.isSuccess){
+						var fn = function(){
+							if(status==1){
+								shBtnStatus();
+								onOpen(receiveId);
+							}else{
+								fsBtnStatus();
+								$('#status',editDialog).val('未审核'); 
+							}
+						}
+						$.messager.alert('提示',msg+'成功','info',fn);
+					}else{
+						$.messager.alert('提示',result.message,'error');
+					}
+				});
+			}
+		});
+	 }
+	//修改审核状态
+	var onMulUpdateShzt = function(status){
 		var rows =  $(viewList).datagrid('getSelections');
 		var msg = '';
 		if(shzt==1){
@@ -424,7 +541,7 @@
 		}
 		$.messager.confirm("提示","确定要"+msg+"选中的记录?审核后单据不能再修改和删除，系统将进行库存和财务计算!!",function(t){ 
 			if(t){
-				var url = 'outWarehouse/mulUpdateShztReject.do';
+				var url = 'inWarehouse/mulUpdateShztReject.do';
 				var content ={ids:idArray.join(LYS.join),shzt:shzt};
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
@@ -441,19 +558,41 @@
 	}
 	//打开
 	var onOpen = function(rejectId){
-		var url = 'outWarehouse/initReject.do';
+		var url = 'inWarehouse/initReject.do';
 		var content ={rejectId:rejectId};
 		asyncCallService(url,content,function(result){
 			if(result.isSuccess){
+				var preDisable = false;
+				var nextDisable = false;
+				if(selectIndex==0||selectIndex==null){
+					preDisable = true;
+				}
+				var rows = $(viewList).datagrid('getRows');
+				if(selectIndex==rows.length-1||selectIndex==null){
+					nextDisable = true;
+				}
+				if(preDisable){
+					$('#pre'+id).linkbutton('disable');
+				}else{
+					$('#pre'+id).linkbutton('enable');
+				}
+				if(nextDisable){
+					$('#next'+id).linkbutton('disable');
+				}else{
+					$('#next'+id).linkbutton('enable');
+				}
+				
 				var data = result.data;
 				var rejectData = eval("("+data.rejectData+")");
 				$('#rejectId',editDialog).val(rejectData.rejectId);
 				$('#rejectCode',editDialog).val(rejectData.rejectCode);
 				$('#rejectDate',editDialog).val(rejectData.rejectDate);
 				$('#buyCode',editDialog).val(rejectData.buyCode);
-				if(rejectData.shzt==1){
+				if(rejectData.status==1){
 					$('#shzt',editDialog).val('已审核');
+					shBtnStatus();
 				}else{
+					fsBtnStatus();
 					$('#shzt',editDialog).val('未审核');
 				}
 				
@@ -473,6 +612,16 @@
 				$.messager.alert('提示',result.message,'error');
 			}
 		});
+	}
+	//上下一笔
+	var onOpenIndex = function(index){
+		var rows = $(viewList).datagrid('getRows');
+		selectIndex = selectIndex + index;
+		selectRow = rows[selectIndex];
+		onOpen(selectRow.rejectId);
+		//界面选中
+		$(viewList).datagrid('unselectAll');
+		$(viewList).datagrid('selectRow',selectIndex);
 	}
 	//-----退货明细----------
 	var rejectDetail = $('#rejectDetail',editDialog);
@@ -523,16 +672,7 @@
 	  pagination:false,
 	  toolbar:[	
 			{text:'添加商品',iconCls:'icon-add',handler:function(){onSelectProduct()}},'-',
-			{text:'删除商品',iconCls:'icon-remove',handler:function(){onDeleteProduct()}},'-',
-			{text:'保存',iconCls:'icon-save',handler:function(){
-					onSave();
-				}
-			},'-',{text:'退出',iconCls:'icon-cancel',handler:function(){
-					$(editDialog).dialog('close');
-					$(editForm).form('clear');
-					$(rejectDetail).datagrid({url:LYS.ClearUrl});
-				}
-			}
+			{text:'删除商品',iconCls:'icon-remove',handler:function(){onDeleteProduct()}}
 	  ],
 	  onBeforeLoad:function(){
 			$(this).datagrid('rejectChanges');

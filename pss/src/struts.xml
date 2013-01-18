@@ -59,6 +59,7 @@
 	</package>
 	
 	<package name="inWarehouse" namespace="/inWarehouse" extends="basePackage">
+		<action name="*Reject" class="rejectAction" method="{1}"></action>
 		<action name="*Buy" class="buyAction" method="{1}"></action>
 		<action name="*Receive" class="receiveAction" method="{1}"></action>
 		<action name="*">
@@ -67,7 +68,7 @@
 	</package>
 	
 	<package name="outWarehouse" namespace="/outWarehouse" extends="basePackage">
-		<action name="*Reject" class="rejectAction" method="{1}"></action>
+		
 		<action name="*">
 			<result>/WEB-INF/outWarehouse/{1}.html</result>
 		</action>
