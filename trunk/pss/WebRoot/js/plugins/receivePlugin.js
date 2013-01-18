@@ -266,13 +266,14 @@
 		$(viewList).datagrid('unselectAll');
 		selectIndex==null
 		selectIndex==null
+		addBtnStatus();
     	$(editForm).form('clear');
 		initChoose();
 		$('#otherAmount',editForm).numberbox('setValue', 0.0);
 		$('#amount',editForm).numberbox('setValue', 0.0);
 		$('#discountAmount',editForm).numberbox('setValue', 0.0);
 		$('#payAmount',editForm).numberbox('setValue', 0.0);
-		addBtnStatus();
+		
 		$(editDialog).dialog('open');
 	}
 	//初始化选择项

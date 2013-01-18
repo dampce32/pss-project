@@ -68,7 +68,7 @@ public interface RejectService extends BaseService<Reject,String>{
 	 * @param ids
 	 * @return
 	 */
-	ServiceResult mulDel(String ids);
+	ServiceResult mulDelete(String ids);
 	/**
 	 * @Description: 批量修改审核状态
 	 * @Create: 2013-1-11 上午11:10:08
@@ -78,6 +78,24 @@ public interface RejectService extends BaseService<Reject,String>{
 	 * @param model
 	 * @return
 	 */
-	ServiceResult mulUpdateShzt(String ids, Reject model);
+	ServiceResult mulUpdateStatus(String ids, Reject model);
+	/**
+	 * @Description: 删除退货单失败
+	 * @Create: 2013-1-17 下午11:42:26
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @return
+	 */
+	ServiceResult delete(Reject model);
+	/**
+	 * @Description: 修改退货单状态
+	 * @Create: 2013-1-17 下午11:43:38
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @return
+	 */
+	ServiceResult updateStatus(Reject model);
 
 }

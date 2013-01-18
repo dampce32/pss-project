@@ -72,7 +72,7 @@ public class Reject extends BaseModel {
 	/**
 	 * 审核状态
 	 */
-	private Integer shzt;
+	private Integer status;
 	/**
 	 * 备注
 	 */
@@ -173,14 +173,6 @@ public class Reject extends BaseModel {
 		this.payAmount = payAmount;
 	}
 
-	@Column(name = "shzt")
-	public Integer getShzt() {
-		return this.shzt;
-	}
-
-	public void setShzt(Integer shzt) {
-		this.shzt = shzt;
-	}
 
 	@Column(name = "note", length = 50)
 	public String getNote() {
@@ -216,6 +208,14 @@ public class Reject extends BaseModel {
 
 	public void setBank(Bank bank) {
 		this.bank = bank;
+	}
+	@Column(name = "status")
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
 }

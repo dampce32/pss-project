@@ -115,19 +115,55 @@ public class RejectAction extends BaseAction implements ModelDriven<Reject> {
 		ajaxJson(jsonString);
 	}
 	/**
+	 * @Description: 删除退货单失败
+	 * @Create: 2013-1-8 下午10:28:15
+	 * @author lys
+	 * @update logs
+	 */
+	public void delete(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = rejectService.delete(model);
+		} catch (Exception e) {
+			result.setMessage("删除退货单失败");
+			logger.error("删除退货单失败", e);
+			result.setIsSuccess(false);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	/**
 	 * @Description: 批量删除
 	 * @Create: 2013-1-8 下午10:28:15
 	 * @author lys
 	 * @update logs
 	 */
-	public void mulDel(){
+	public void mulDelete(){
 		ServiceResult result = new ServiceResult(false);
 		try {
-			result = rejectService.mulDel(ids);
+			result = rejectService.mulDelete(ids);
 		} catch (Exception e) {
 			result.setMessage("批量删除");
 			result.setIsSuccess(false);
 			logger.error("批量删除失败", e);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	/**
+	 * @Description: 修改退货单状态
+	 * @Create: 2013-1-16 下午9:10:54
+	 * @author lys
+	 * @update logs
+	 */
+	public void updateStatus(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = rejectService.updateStatus(model);
+		} catch (Exception e) {
+			result.setMessage("修改退货单状态失败");
+			logger.error("修改退货单状态失败", e);
+			result.setIsSuccess(false);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -138,10 +174,10 @@ public class RejectAction extends BaseAction implements ModelDriven<Reject> {
 	 * @author lys
 	 * @update logs
 	 */
-	public void mulUpdateShzt(){
+	public void mulUpdateStatus(){
 		ServiceResult result = new ServiceResult(false);
 		try {
-			result = rejectService.mulUpdateShzt(ids,model);
+			result = rejectService.mulUpdateStatus(ids,model);
 		} catch (Exception e) {
 			result.setMessage("批量修改审核状态失败");
 			result.setIsSuccess(false);
