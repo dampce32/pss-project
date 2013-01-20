@@ -1,5 +1,6 @@
 package org.linys.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -51,5 +52,36 @@ public interface ReceiveDAO extends BaseDAO<Receive,String>{
 	 * @return
 	 */
 	List<Map<String, Object>> querySelectBuyDetail(String[] idArray, String[] idArray2);
+	/**
+	 * @Description: 查询欠款的入库单
+	 * @Create: 2013-1-20 上午9:48:29
+	 * @author lys
+	 * @update logs
+	 * @param beginDateDate
+	 * @param endDateDate
+	 * @param supplierId
+	 * @param idArray
+	 * @param model
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	List<Map<String, Object>> queryNeedPay(Date beginDateDate,
+			Date endDateDate, String supplierId, String[] idArray,
+			Receive model, Integer page, Integer rows);
+	/**
+	 * @Description: 统计欠款的入库单
+	 * @Create: 2013-1-20 上午9:48:56
+	 * @author lys
+	 * @update logs
+	 * @param beginDateDate
+	 * @param endDateDate
+	 * @param supplierId
+	 * @param idArray
+	 * @param model
+	 * @return
+	 */
+	Long getTotalReceive(Date beginDateDate, Date endDateDate,
+			String supplierId, String[] idArray, Receive model);
 
 }

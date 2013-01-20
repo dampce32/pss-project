@@ -1,5 +1,6 @@
 package org.linys.dao.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -111,5 +112,71 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 		query.setParameterList("idArray2",idArray2);
 		return query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
 	}
-
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Map<String, Object>> queryNeedPay(Date beginDateDate,
+			Date endDateDate, String supplierId, String[] idArray,
+			Receive model, Integer page, Integer rows) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select a.receiveId,a.receiveCode,a.receiveDate,a.amount,a.payAmount+a.discountAmount+IFNULL(b.payAmount,0)+IFNULL(b.discountAmount,0) payedAmount ");
+		sb.append("from t_receive a ");
+		sb.append("left join(select a.receiveId,sum(b.payAmount) payAmount,sum(b.discountAmount ) discountAmount ");
+		sb.append("	from(select * ");
+		sb.append("		from t_receive a ");
+		sb.append("     where a.supplierId=:supplierId and a.`status` = 1 and a.isPay = 0  ");
+		sb.append("		and a.receiveDate BETWEEN :beginDateDate and :endDateDate) a ");
+		sb.append("	left join t_paydetail b on a.receiveId = b.receiveId ");
+		sb.append("	left join t_pay c on b.payId = c.payId ");
+		sb.append("	GROUP BY a.receiveId)b on a.receiveId = b.receiveId ");
+		sb.append("where a.supplierId=:supplierId and a.`status` = 1 and a.isPay = 0   ");
+		sb.append("and a.receiveDate BETWEEN :beginDateDate and :endDateDate   and a.receiveId not in(:idArray) ");
+		
+		Query query = getCurrentSession().createSQLQuery(sb.toString());
+		query.setDate("beginDateDate", beginDateDate);
+		query.setDate("endDateDate", endDateDate);
+		query.setString("supplierId", supplierId);
+		query.setParameterList("idArray", idArray);
+		
+		if(page==null||page<1){
+			page = 1;
+		}
+		if(rows==null||rows<0){
+			rows = GobelConstants.DEFAULTPAGESIZE;
+		}
+		
+		Integer begin = (page-1)*rows;
+		
+		query.setFirstResult(begin);
+		query.setMaxResults(rows);
+		
+		return query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.ReceiveDAO#getTotalReceive(java.util.Date, java.util.Date, java.lang.String, java.lang.String[], org.linys.model.Receive)
+	 */
+	@Override
+	public Long getTotalReceive(Date beginDateDate, Date endDateDate,
+			String supplierId, String[] idArray, Receive model) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select count(a.receiveId) ");
+		sb.append("from t_receive a ");
+		sb.append("left join(select a.receiveId,sum(b.payAmount) payAmount,sum(b.discountAmount ) discountAmount ");
+		sb.append("	from(select * ");
+		sb.append("		from t_receive a ");
+		sb.append("     where a.supplierId=:supplierId and a.`status` = 1 and a.isPay = 0  ");
+		sb.append("		and a.receiveDate BETWEEN :beginDateDate and :endDateDate) a ");
+		sb.append("	left join t_paydetail b on a.receiveId = b.receiveId ");
+		sb.append("	left join t_pay c on b.payId = c.payId ");
+		sb.append("	GROUP BY a.receiveId)b on a.receiveId = b.receiveId ");
+		sb.append("where a.supplierId=:supplierId and a.`status` = 1 and a.isPay = 0   ");
+		sb.append("and a.receiveDate BETWEEN :beginDateDate and :endDateDate   and a.receiveId not in(:idArray) ");
+		
+		Query query = getCurrentSession().createSQLQuery(sb.toString());
+		query.setDate("beginDateDate", beginDateDate);
+		query.setDate("endDateDate", endDateDate);
+		query.setString("supplierId", supplierId);
+		query.setParameterList("idArray", idArray);
+		return new Long(query.uniqueResult().toString());
+	}
 }

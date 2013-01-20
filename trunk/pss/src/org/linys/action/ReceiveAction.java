@@ -250,9 +250,24 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	} 
-	
-	
-	
-	
+	/**
+	 * @Description: 查询欠款的入库单
+	 * @Create: 2013-1-20 上午9:42:22
+	 * @author lys
+	 * @update logs
+	 */
+	public void queryNeedPay(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			String supplierId  = getParameter("supplierId");
+			result = receiveService.queryNeedPay(beginDate,endDate,supplierId,ids,model,page,rows);
+		} catch (Exception e) {
+			result.setMessage("查询欠款的入库单失败");
+			logger.error("查询欠款的入库单失败", e);
+			result.setIsSuccess(false);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
 	
 }
