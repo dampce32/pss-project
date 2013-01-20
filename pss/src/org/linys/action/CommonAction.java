@@ -1,7 +1,5 @@
 package org.linys.action;
 
-import javax.annotation.Resource;
-
 import org.linys.util.JSONUtil;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;

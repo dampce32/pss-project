@@ -8,15 +8,25 @@
 			<generator class="uuid.string"></generator>
 		</primary-key>
 	</table>
-<table name="T_Buy" schema="dbo" catalog="pss" class="Buy">
-	<primary-key>
-		<generator class="uuid.string"></generator>
-	</primary-key>
-</table>
-<table name="T_BuyDetail" schema="dbo" catalog="pss"
+	<table name="T_Buy" schema="dbo" catalog="pss" class="Buy">
+		<primary-key>
+			<generator class="uuid.string"></generator>
+		</primary-key>
+	</table>
+	<table name="T_BuyDetail" schema="dbo" catalog="pss"
 		class="BuyDetail">
 		<primary-key>
 			<generator class="uuid.string"></generator>
 		</primary-key>
 	</table>
+	<table name="t_customer" catalog="pss" class="Customer"></table>
+	<table name="t_deliver" catalog="pss" class="Deliver"></table>
+	<table name="t_deliverdetail" catalog="pss" class="DeliverDetail"></table>
+	<table name="t_deliverreject" catalog="pss" class="DeliverReject"></table>
+	<table name="t_deliverrejectdetail" catalog="pss"
+		class="DeliverRejectDetail">
+	</table>
+	<table name="t_express" catalog="pss" class="Express"></table>
+	<table name="t_sale" catalog="pss" class="Sale"></table>
+	<table name="t_saledetail" catalog="pss" class="SaleDetail"></table>
 </hibernate-reverse-engineering>
