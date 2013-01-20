@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2013-01-15 01:13:15                          */
+/* Created on:     2013-01-19 23:54:31                          */
 /*==============================================================*/
 
 
@@ -10,9 +10,21 @@ drop table if exists T_Buy;
 
 drop table if exists T_BuyDetail;
 
+drop table if exists T_Customer;
+
 drop table if exists T_DataDictionary;
 
+drop table if exists T_Deliver;
+
+drop table if exists T_DeliverDetail;
+
+drop table if exists T_DeliverReject;
+
+drop table if exists T_DeliverRejectDetail;
+
 drop table if exists T_Employee;
+
+drop table if exists T_Express;
 
 drop table if exists T_InvoiceType;
 
@@ -35,6 +47,10 @@ drop table if exists T_Right;
 drop table if exists T_Role;
 
 drop table if exists T_RoleRight;
+
+drop table if exists T_Sale;
+
+drop table if exists T_SaleDetail;
 
 drop table if exists T_Store;
 
@@ -99,6 +115,17 @@ create table T_BuyDetail
 );
 
 /*==============================================================*/
+/* Table: T_Customer                                            */
+/*==============================================================*/
+create table T_Customer
+(
+   customerId           varchar(32) not null,
+   customerCode         varchar(50) not null,
+   customerName         varchar(100) not null,
+   primary key (customerId)
+);
+
+/*==============================================================*/
 /* Table: T_DataDictionary                                      */
 /*==============================================================*/
 create table T_DataDictionary
@@ -114,6 +141,87 @@ alter table T_DataDictionary comment '系统中用到的一些基础的数据：用kind 区分开
 2.商品规格 size';
 
 /*==============================================================*/
+/* Table: T_Deliver                                             */
+/*==============================================================*/
+create table T_Deliver
+(
+   deliverId            varchar(32) not null,
+   customerId           varchar(32),
+   expressId            varchar(32),
+   warehouseId          varchar(32),
+   employeeId           varchar(32),
+   bankId               varchar(32),
+   invoiceTypeId        varchar(32),
+   deliverCode          varchar(50),
+   sourceCode           varchar(50),
+   deliverDate          date,
+   amount               float,
+   discountAmount       float,
+   receiptedAmount      float,
+   status               int,
+   expressCode          varchar(50),
+   isReceipt            int,
+   note                 varchar(50),
+   primary key (deliverId)
+);
+
+/*==============================================================*/
+/* Table: T_DeliverDetail                                       */
+/*==============================================================*/
+create table T_DeliverDetail
+(
+   deliverDetailId      varchar(32) not null,
+   deliverId            varchar(32),
+   productId            varchar(32),
+   colorId              varchar(32),
+   saleDetailId         varchar(32),
+   qty                  float,
+   price                float,
+   discount             float,
+   note1                varchar(50),
+   note2                varchar(50),
+   note3                varchar(50),
+   primary key (deliverDetailId)
+);
+
+/*==============================================================*/
+/* Table: T_DeliverReject                                       */
+/*==============================================================*/
+create table T_DeliverReject
+(
+   deliverRejectId      varchar(32) not null,
+   bankId               varchar(32),
+   employeeId           varchar(32),
+   warehouseId          varchar(32),
+   invoiceTypeId        varchar(32),
+   customerId           varchar(32),
+   deliverRejectCode    varchar(50),
+   sourceCode           varchar(50),
+   deliverRejectDate    date,
+   amount               float,
+   payedAmount          float,
+   note                 varchar(100),
+   primary key (deliverRejectId)
+);
+
+/*==============================================================*/
+/* Table: T_DeliverRejectDetail                                 */
+/*==============================================================*/
+create table T_DeliverRejectDetail
+(
+   deliverRejectDetailId varchar(32) not null,
+   deliverRejectId      varchar(32),
+   productId            varchar(32),
+   colorId              varchar(32),
+   qty                  float,
+   price                float,
+   note1                varchar(50),
+   note2                varchar(50),
+   note3                varchar(50),
+   primary key (deliverRejectDetailId)
+);
+
+/*==============================================================*/
 /* Table: T_Employee                                            */
 /*==============================================================*/
 create table T_Employee
@@ -121,6 +229,16 @@ create table T_Employee
    employeeId           varchar(32) not null,
    employeeName         varchar(50),
    primary key (employeeId)
+);
+
+/*==============================================================*/
+/* Table: T_Express                                             */
+/*==============================================================*/
+create table T_Express
+(
+   expressId            varchar(32) not null,
+   expressName          varchar(100) not null,
+   primary key (expressId)
 );
 
 /*==============================================================*/
@@ -202,7 +320,7 @@ create table T_Receive
    amount               float,
    discountAmount       float,
    payAmount            float,
-   shzt                 int,
+   status               int,
    isPay                int,
    note                 varchar(50),
    primary key (receiveId)
@@ -299,6 +417,46 @@ create table T_RoleRight
 );
 
 /*==============================================================*/
+/* Table: T_Sale                                                */
+/*==============================================================*/
+create table T_Sale
+(
+   saleId               varchar(32) not null,
+   customerId           varchar(32),
+   bankId               varchar(32),
+   employeeId           varchar(32),
+   saleCode             varchar(50) not null,
+   sourceCode           varchar(50),
+   saleDate             date,
+   deliverDate          date,
+   otherAmount          float,
+   amount               float,
+   payedAmount          float,
+   note                 varchar(500),
+   status               int,
+   primary key (saleId)
+);
+
+/*==============================================================*/
+/* Table: T_SaleDetail                                          */
+/*==============================================================*/
+create table T_SaleDetail
+(
+   saleDetailId         varchar(32) not null,
+   productId            varchar(32),
+   colorId              varchar(32),
+   saleId               varchar(32),
+   qty                  float,
+   price                float,
+   discount             float,
+   note1                varchar(50),
+   note2                varchar(50),
+   note3                varchar(50),
+   hadSaleQty           float,
+   primary key (saleDetailId)
+);
+
+/*==============================================================*/
 /* Table: T_Store                                               */
 /*==============================================================*/
 create table T_Store
@@ -381,6 +539,60 @@ alter table T_BuyDetail add constraint FK_Reference_40 foreign key (colorId)
 alter table T_BuyDetail add constraint FK_T_BUYDET_REFERENCE_T_BUY foreign key (buyId)
       references T_Buy (buyId);
 
+alter table T_Deliver add constraint FK_Reference_67 foreign key (customerId)
+      references T_Customer (customerId) on delete restrict on update restrict;
+
+alter table T_Deliver add constraint FK_Reference_68 foreign key (expressId)
+      references T_Express (expressId) on delete restrict on update restrict;
+
+alter table T_Deliver add constraint FK_Reference_69 foreign key (warehouseId)
+      references T_Warehouse (warehouseId) on delete restrict on update restrict;
+
+alter table T_Deliver add constraint FK_Reference_70 foreign key (employeeId)
+      references T_Employee (employeeId) on delete restrict on update restrict;
+
+alter table T_Deliver add constraint FK_Reference_71 foreign key (bankId)
+      references T_Bank (bankId) on delete restrict on update restrict;
+
+alter table T_Deliver add constraint FK_Reference_72 foreign key (invoiceTypeId)
+      references T_InvoiceType (invoiceTypeId) on delete restrict on update restrict;
+
+alter table T_DeliverDetail add constraint FK_Reference_73 foreign key (deliverId)
+      references T_Deliver (deliverId) on delete restrict on update restrict;
+
+alter table T_DeliverDetail add constraint FK_Reference_74 foreign key (productId)
+      references T_Product (productId) on delete restrict on update restrict;
+
+alter table T_DeliverDetail add constraint FK_Reference_75 foreign key (colorId)
+      references T_DataDictionary (dataDictionaryId) on delete restrict on update restrict;
+
+alter table T_DeliverDetail add constraint FK_Reference_76 foreign key (saleDetailId)
+      references T_SaleDetail (saleDetailId) on delete restrict on update restrict;
+
+alter table T_DeliverReject add constraint FK_Reference_77 foreign key (bankId)
+      references T_Bank (bankId) on delete restrict on update restrict;
+
+alter table T_DeliverReject add constraint FK_Reference_78 foreign key (employeeId)
+      references T_Employee (employeeId) on delete restrict on update restrict;
+
+alter table T_DeliverReject add constraint FK_Reference_79 foreign key (warehouseId)
+      references T_Warehouse (warehouseId) on delete restrict on update restrict;
+
+alter table T_DeliverReject add constraint FK_Reference_80 foreign key (invoiceTypeId)
+      references T_InvoiceType (invoiceTypeId) on delete restrict on update restrict;
+
+alter table T_DeliverReject add constraint FK_Reference_81 foreign key (customerId)
+      references T_Customer (customerId) on delete restrict on update restrict;
+
+alter table T_DeliverRejectDetail add constraint FK_Reference_82 foreign key (deliverRejectId)
+      references T_DeliverReject (deliverRejectId) on delete restrict on update restrict;
+
+alter table T_DeliverRejectDetail add constraint FK_Reference_83 foreign key (productId)
+      references T_Product (productId) on delete restrict on update restrict;
+
+alter table T_DeliverRejectDetail add constraint FK_Reference_84 foreign key (colorId)
+      references T_DataDictionary (dataDictionaryId) on delete restrict on update restrict;
+
 alter table T_Pay add constraint FK_Reference_34 foreign key (supplierId)
       references T_Supplier (supplierId) on delete restrict on update restrict;
 
@@ -458,6 +670,24 @@ alter table T_RoleRight add constraint FK_T_ROLERI_REFERENCE_T_RIGHT foreign key
 
 alter table T_RoleRight add constraint FK_T_ROLERI_REFERENCE_T_ROLE foreign key (roleId)
       references T_Role (roleId);
+
+alter table T_Sale add constraint FK_Reference_61 foreign key (customerId)
+      references T_Customer (customerId) on delete restrict on update restrict;
+
+alter table T_Sale add constraint FK_Reference_62 foreign key (bankId)
+      references T_Bank (bankId) on delete restrict on update restrict;
+
+alter table T_Sale add constraint FK_Reference_63 foreign key (employeeId)
+      references T_Employee (employeeId) on delete restrict on update restrict;
+
+alter table T_SaleDetail add constraint FK_Reference_64 foreign key (productId)
+      references T_Product (productId) on delete restrict on update restrict;
+
+alter table T_SaleDetail add constraint FK_Reference_65 foreign key (colorId)
+      references T_DataDictionary (dataDictionaryId) on delete restrict on update restrict;
+
+alter table T_SaleDetail add constraint FK_Reference_66 foreign key (saleId)
+      references T_Sale (saleId) on delete restrict on update restrict;
 
 alter table T_Store add constraint FK_Reference_56 foreign key (warehouseId)
       references T_Warehouse (warehouseId) on delete restrict on update restrict;
