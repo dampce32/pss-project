@@ -132,6 +132,23 @@ public interface ReceiveService extends BaseService<Receive,String>{
 	 * @return
 	 */
 	ServiceResult updateIsPay(Receive model);
+	/**
+	 * @Description: 查询欠款的入库单
+	 * @Create: 2013-1-20 上午9:46:56
+	 * @author lys
+	 * @update logs
+	 * @param beginDate
+	 * @param endDate
+	 * @param supplierId
+	 * @param ids
+	 * @param model
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	ServiceResult queryNeedPay(String beginDate, String endDate,
+			String supplierId, String ids, Receive model, Integer page,
+			Integer rows);
 	
 	
 

@@ -1,5 +1,7 @@
 package org.linys.service.impl;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +24,7 @@ import org.linys.model.ReceiveDetail;
 import org.linys.model.Store;
 import org.linys.service.ReceiveService;
 import org.linys.util.CommonUtil;
+import org.linys.util.DateUtil;
 import org.linys.util.JSONUtil;
 import org.linys.util.StringUtil;
 import org.linys.vo.GobelConstants;
@@ -636,6 +639,51 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		List<Map<String,Object>> listMap = receiveDAO.querySelectBuyDetail(idArray,idArray2);
 		
 		String datagridData = JSONUtil.toJsonFromListMapWithOutRows(listMap);
+		result.addData("datagridData", datagridData); 
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.ReceiveService#queryNeedPay(java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.linys.model.Receive, java.lang.Integer, java.lang.Integer)
+	 */
+	@Override
+	public ServiceResult queryNeedPay(String beginDate, String endDate,
+			String supplierId, String ids, Receive model, Integer page,
+			Integer rows) {
+		ServiceResult result = new ServiceResult(false);
+		if(StringUtils.isEmpty(beginDate)){
+			result.setMessage("请选择开始日期");
+			return result;
+		}
+		Date beginDateDate = null;
+		try {
+			beginDateDate = DateUtil.toDate(beginDate);
+		} catch (ParseException e) {
+			result.setMessage("请输入正确的开始日期");
+			return result;
+		}
+		Date endDateDate = null;
+		try {
+			endDateDate = DateUtil.toDate(endDate);
+		} catch (ParseException e) {
+			result.setMessage("请输入正确的结束日期");
+			return result;
+		}
+		if(StringUtils.isEmpty(supplierId)){
+			result.setMessage("请选择供应商");
+			return result;
+		}
+		String[] idArray = {""};
+		if(StringUtils.isNotEmpty(ids)){
+			idArray = StringUtil.split(ids);
+		}
+		List<Map<String,Object>> listMap = receiveDAO.queryNeedPay(beginDateDate,endDateDate,supplierId,idArray,
+				model,page,rows);
+		
+		Long total = receiveDAO.getTotalReceive(beginDateDate,endDateDate,supplierId,idArray,
+				model);
+		String datagridData = JSONUtil.toJsonFromListMap(listMap, total);
 		result.addData("datagridData", datagridData); 
 		result.setIsSuccess(true);
 		return result;

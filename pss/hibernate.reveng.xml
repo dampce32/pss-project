@@ -29,4 +29,10 @@
 	<table name="t_express" catalog="pss" class="Express"></table>
 	<table name="t_sale" catalog="pss" class="Sale"></table>
 	<table name="t_saledetail" catalog="pss" class="SaleDetail"></table>
+	<table name="t_pay" catalog="pss" class="Pay">
+		<column name="supplierId" property="supplier"></column>
+		<column name="bankId" property="bank"></column>
+		<column name="employeeId" property="employee"></column>
+	</table>
+	<table name="t_paydetail" catalog="pss" class="PayDetail"></table>
 </hibernate-reverse-engineering>

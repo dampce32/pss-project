@@ -969,7 +969,7 @@
 			    {field:'note',title:'备注',width:90,align:"center"}
 		  ]],
 		  rownumbers:true,
-		  pagination:true,
+		  pagination:true
 		  
 	 });
 	//从采购单添加商品
