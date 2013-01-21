@@ -40,12 +40,9 @@
 		        {field:'ck',title:'选择',checkbox:true},
 				{field:'payCode',title:'付款单号',width:120,align:"center"},
 				{field:'payDate',title:'付款日期',width:80,align:"center"},
-				{field:'receiveDate',title:'收货日期',width:80,align:"center"},
-				{field:'sourceCode',title:'原始单号',width:120,align:"center"},
 				{field:'supplierName',title:'供应商',width:90,align:"center"},
-				{field:'otherAmount',title:'运费',width:80,align:"center"},
-				{field:'amount',title:'应付定金',width:80,align:"center"},
-				{field:'payAmount',title:'实付定金',width:80,align:"center"},
+				{field:'discountAmount',title:'优惠金额',width:80,align:"center"},
+				{field:'payAmount',title:'实付金额',width:80,align:"center"},
 				{field:'employeeName',title:'经手人',width:90,align:"center"},
 				{field:'note',title:'备注',width:90,align:"center"},
 				{field:'status',title:'状态',width:80,align:"center",
@@ -55,8 +52,7 @@
 						}else if(row.status==1){
 							return '已审';
 						}
-					}},
-				{field:'invoiceTypeName',title:'开票信息',width:90,align:"center"}
+					}}
 		  ]],
 		  rownumbers:true,
 		  pagination:false,
@@ -205,7 +201,7 @@
 		$('#deleteReceive'+id).linkbutton('enable');
 	}
 	//审核通过按钮的状态
-	var shBtn = function(){
+	var shBtnStatus = function(){
 		$('#save'+id).linkbutton('disable');
 		$('#add'+id).linkbutton('enable');
 		$('#delete'+id).linkbutton('disable');
@@ -215,7 +211,7 @@
 		$('#deleteReceive'+id).linkbutton('disable');
 	}
 	//反审后的按钮状态
-	var fsBtn = function(){
+	var fsBtnStatus = function(){
 		$('#save'+id).linkbutton('enable');
 		$('#add'+id).linkbutton('enable');
 		$('#delete'+id).linkbutton('enable');
@@ -226,6 +222,10 @@
 	}
 	//添加
 	var onAdd = function(){
+		var rows  = $(payDetail).datagrid('getRows');
+		if(rows.length!=0){
+			$(payDetail).datagrid('loadData',LYS.ClearData);
+		}
 		$(viewList).datagrid('unselectAll');
 		selectIndex==null
 		selectRow==null
@@ -434,7 +434,7 @@
 				}
 				
 				$('#supplier',editDialog).combogrid('setValue',payData.supplierId);
-				
+				$('#payway',editDialog).combobox('setValue',payData.payway);
 				$('#bank',editDialog).combobox('setValue',payData.bankId);
 				$('#employee',editDialog).combobox('setValue',payData.employeeId);
 				$('#note',editDialog).val(payData.note);
@@ -507,7 +507,7 @@
 		}else{
 			msg = '反审';
 		}
-		if(selectRow==null){
+		if(payId==''){
 			$.messager.alert("提示","请选择需要"+msg+"数据行","warning");
 			return;
 		}
@@ -519,10 +519,10 @@
 					if(result.isSuccess){
 						var fn = function(){
 							if(status==1){
-								shBtn();
+								shBtnStatus();
 								$('#status',editDialog).val('已审核');
 							}else{
-								fsBtn();
+								fsBtnStatus();
 								$('#status',editDialog).val('未审核'); 
 							}
 						}
@@ -578,7 +578,7 @@
 		$(viewList).datagrid('unselectAll');
 		$(viewList).datagrid('selectRow',selectIndex);
 	}
-	//-----收货明细----------
+	//-----付款明细----------
 	var payDetail = $('#payDetail',editDialog);
 	var selectDialog = $('#selectDialog',$this);
 	var receiveList = $('#receiveList');
@@ -589,7 +589,7 @@
 	  singleSelect:true,	
 	  fit:true,
 	  columns:[[
-		    {field:'receiveCode',title:'入库单号',width:90,align:"center"},
+		    {field:'receiveCode',title:'入库单号',width:120,align:"center"},
 			{field:'payKind',title:'单据类型',width:90,align:"center"},
 		    {field:'receiveDate',title:'单据日期',width:90,align:"center"},
 		    {field:'amount',title:'应付金额',width:90,align:"center"},
@@ -678,8 +678,8 @@
 		  cache: false, 
 		  columns:[[
 			    {field:'ck',checkbox:true},
-			    {field:'receiveCode',title:'入库单号',width:90,align:"center"},
-			    {field:'receiveDate',title:'入库日期',width:120,align:"center"},
+			    {field:'receiveCode',title:'入库单号',width:150,align:"center"},
+			    {field:'receiveDate',title:'入库日期',width:90,align:"center"},
 			    {field:'amount',title:'应付金额',width:90,align:"center"},
 			    {field:'discountedAmount',title:'已优惠金额',width:90,align:"center"},
 			    {field:'payedAmount',title:'已付金额',width:90,align:"center"},

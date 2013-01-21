@@ -5,9 +5,12 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.linys.dao.BankDAO;
 import org.linys.dao.CommonDAO;
 import org.linys.dao.PayDAO;
 import org.linys.dao.PayDetailDAO;
+import org.linys.dao.ReceiveDAO;
+import org.linys.model.Bank;
 import org.linys.model.Pay;
 import org.linys.model.PayDetail;
 import org.linys.model.Receive;
@@ -27,6 +30,10 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 	private CommonDAO commonDAO;
 	@Resource
 	private PayDetailDAO payDetailDAO;
+	@Resource
+	private BankDAO bankDAO;
+	@Resource
+	private ReceiveDAO receiveDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.PayService#query(org.linys.model.Pay, java.lang.Integer, java.lang.Integer)
@@ -37,7 +44,8 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 		
 		List<Pay> list = payDAO.query(model,page,rows);
 		
-		String[] properties = {"payId","payCode","payDate","status"};
+		String[] properties = {"payId","payCode","payDate","status","supplier.supplierName","payAmount","discountAmount",
+				"employee.employeeName","note"};
 		String data = JSONUtil.toJson(list,properties);
 		result.addData("datagridData", data);
 		
@@ -56,7 +64,10 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 		result.setIsSuccess(true);
 		return result;
 	}
-
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.PayService#save(org.linys.model.Pay, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public ServiceResult save(Pay model, String payDetailIds,
 			String delPayDetailIds, String receiveIds, String payKinds,
@@ -119,22 +130,22 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 			model.setPayCode(commonDAO.getCode("Pay", "payCode", CommonUtil.getCodePrefix("pay")));
 			payDAO.save(model);
 			for (int i = 0; i < payKindArray.length; i++) {
-				String payKind = payKindArray[i];
 				String receiveId = receiveIdArray[i];
+				String payKind = payKindArray[i];
 				String amount = amountArray[i];
 				String payedAmount = payedAmountArray[i];
 				String discountedAmount = discountedAmountArray[i];
 				Double discountAmount = new Double(discountAmountArray[i]);
 				Double payAmount = new Double(payAmountArray[i]);
-				Receive receive = null;
+				PayDetail payDetail = new PayDetail();
 				if("采购入库".equals(payKind)){
-					receive = new Receive();
+					Receive receive = new Receive();
 					receive.setReceiveId(receiveId);
+					payDetail.setReceive(receive);
 				}
 				
-				PayDetail payDetail = new PayDetail();
 				payDetail.setPay(model);
-				payDetail.setReceive(receive);
+				payDetail.setPayKind(payKind);
 				payDetail.setAmount(new Double(amount));
 				payDetail.setPayedAmount(new Double(payedAmount));
 				payDetail.setDiscountedAmount(new Double(discountedAmount));
@@ -168,7 +179,6 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 			
 			oldPay.setEmployee(model.getEmployee());
 			oldPay.setNote(model.getNote());
-			payDAO.update(oldPay);
 			
 			//删除已删的付款单明细
 			if(!"".equals(delPayDetailIds)){
@@ -181,25 +191,25 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 			}
 			//根据付款单明细Id更新或新增
 			for (int i = 0 ;i<payDetailIdArray.length;i++) {
+				String receiveId = receiveIdArray[i];
 				String payKind = payKindArray[i];
 				String payDetailId = payDetailIdArray[i];
-				String receiveId =receiveIdArray[i];
 				String amount = amountArray[i];
 				String payedAmount = payedAmountArray[i];
 				String discountedAmount = discountedAmountArray[i];
 				Double discountAmount = new Double(discountAmountArray[i]);
 				Double payAmount = new Double(payAmountArray[i]);
-				Receive receive = null;
-				if("采购入库".equals(payKind)){
-					receive = new Receive();
-					receive.setReceiveId(receiveId);
-				}
 				
 				if(StringUtils.isEmpty(payDetailId)){//新增
 					
 					PayDetail payDetail = new PayDetail();
+					if("采购入库".equals(payKind)){
+						Receive receive = new Receive();
+						receive.setReceiveId(receiveId);
+						payDetail.setReceive(receive);
+					}
+					payDetail.setPayKind(payKind);
 					payDetail.setPay(model);
-					payDetail.setReceive(receive);
 					payDetail.setAmount(new Double(amount));
 					payDetail.setPayedAmount(new Double(payedAmount));
 					payDetail.setDiscountedAmount(new Double(discountedAmount));
@@ -211,14 +221,11 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 					totalDiscountAmount+=discountAmount;
 					totalPayAmount+=payAmount;
 				}else{
-					PayDetail oldModel = payDetailDAO.load(payDetailId);
+					PayDetail oldPayDetail = payDetailDAO.load(payDetailId);
+					oldPayDetail.setDiscountAmount(discountAmount);
+					oldPayDetail.setPayAmount(payAmount);
 					
-					oldModel.setPay(model);
-					oldModel.setReceive(receive);
-					oldModel.setDiscountAmount(discountAmount);
-					oldModel.setPayAmount(payAmount);
-					
-					payDetailDAO.update(oldModel);
+					payDetailDAO.update(oldPayDetail);
 					
 					totalDiscountAmount+=discountAmount;
 					totalPayAmount+=payAmount;
@@ -240,18 +247,219 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 	@Override
 	public ServiceResult init(String payId) {
 		ServiceResult result = new ServiceResult(false);
-		Pay pay = payDAO.load(payId);
+		Pay pay = payDAO.init(payId);
 		String[] propertiesPay = {"payId","payCode","payDate",
-				"supplier.supplierId","discountAmount","payAmount",
+				"supplier.supplierId","discountAmount","payAmount","payway",
 				"bank.bankId","employee.employeeId","note","status"};
 		String payData = JSONUtil.toJson(pay,propertiesPay);
 		result.addData("payData",payData);
 		
 		List<PayDetail> payDetailList = payDetailDAO.queryByPayId(payId);
-		String[] propertiesDetail = {"payDetailId","receive.receiveId","receive.receiveCode","receive.receiveDate",
-				"amount","payedAmount","discountedAmount","discountAmount","payAmount"};
+		String[] propertiesDetail = {"payDetailId","receive.receiveId","receive.receiveCode","receive.receiveDate","payKind",
+				"amount","payedAmount","discountedAmount","needPayAmount","discountAmount","payAmount"};
 		String detailData = JSONUtil.toJson(payDetailList,propertiesDetail);
 		result.addData("detailData", detailData);
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.PayService#delete(org.linys.model.Pay)
+	 */
+	@Override
+	public ServiceResult delete(Pay model) {
+		ServiceResult result = new ServiceResult(false);
+		if(model==null||StringUtils.isEmpty(model.getPayId())){
+			result.setMessage("请选择要删除的付款单");
+			return result;
+		}
+		Pay oldPay = payDAO.load(model.getPayId());
+		
+		if(oldPay==null){
+			result.setMessage("要删除的付款单已不存在");
+			return result;
+		}
+		if(oldPay.getStatus()==1){
+			result.setMessage("要删除的付款单已审核，不能修改了");
+			return result;
+		}
+		payDAO.delete(oldPay);
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.PayService#mulDelete(java.lang.String)
+	 */
+	@Override
+	public ServiceResult mulDelete(String ids) {
+		ServiceResult result = new ServiceResult(false);
+		if(StringUtils.isEmpty(ids)){
+			result.setMessage("请选择要删除的付款单");
+			return result;
+		}
+		String[] idArray =StringUtil.split(ids,GobelConstants.SPLIT_SEPARATOR);
+		if(idArray.length==0){
+			result.setMessage("请选择要删除的付款单");
+			return result;
+		}
+		boolean haveDel = false;
+		for (String id : idArray) {
+			Pay oldPay = payDAO.load(id);
+			if(oldPay!=null&&oldPay.getStatus()==0){
+				payDAO.delete(oldPay);
+				haveDel = true;
+			}
+		}
+		if(!haveDel){
+			result.setMessage("没有可删除的付款单");
+			return result;
+		}
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.PayService#updateStatus(org.linys.model.Pay)
+	 */
+	@Override
+	public ServiceResult updateStatus(Pay model) {
+		ServiceResult result = new ServiceResult(false);
+		if(model==null||StringUtils.isEmpty(model.getPayId())){
+			result.setMessage("请选择要修改状态的付款单");
+			return result;
+		}
+		Pay oldPay = payDAO.load(model.getPayId());
+		
+		if(oldPay==null){
+			result.setMessage("要修改审核状态的付款单已不存在");
+			return result;
+		}
+		if(oldPay.getStatus().intValue()==model.getStatus().intValue()){
+			result.setMessage("要修改审核状态的付款单已是要修改的状态，请刷新界面");
+			return result;
+		}
+		/*
+		 * 状态变化主要涉及到：
+		 * 1.银行金额
+		 * 2.如果是付款单下的付款明细是采购入库单来的，需要判断需要修改IsPay
+		 */
+		if(model.getStatus()==1){//如果是由未审改为已审
+			//更新对应银行的账户金额
+			Bank oldBank = bankDAO.load(oldPay.getBank().getBankId());
+			oldBank.setAmount(oldBank.getAmount()-oldPay.getPayAmount());
+			bankDAO.update(oldBank);
+			//更新采购入库单的isPay字段
+			List<PayDetail> payDetailList = payDetailDAO.queryByPayId(model.getPayId());
+			for (PayDetail payDetail : payDetailList) {
+				if(payDetail.getReceive()!=null){
+					//取得本入库单已付金额
+					Double needPayAmount = receiveDAO.getNeedPayAmount(payDetail.getReceive().getReceiveId());
+					if(needPayAmount<=payDetail.getPayAmount()+payDetail.getDiscountAmount()){
+						Receive oldReceive = receiveDAO.load(payDetail.getReceive().getReceiveId());
+						oldReceive.setIsPay(1);
+						receiveDAO.update(oldReceive);
+					}
+				}
+			}
+		}else if(model.getStatus()==0){//如果是由已审改为未审
+			//更新对应银行的账户金额
+			Bank oldBank = bankDAO.load(oldPay.getBank().getBankId());
+			oldBank.setAmount(oldBank.getAmount()+oldPay.getPayAmount());
+			bankDAO.update(oldBank);
+			//更新采购入库单的isPay字段
+			List<PayDetail> payDetailList = payDetailDAO.queryByPayId(model.getPayId());
+			for (PayDetail payDetail : payDetailList) {
+				if(payDetail.getReceive()!=null){
+					//取得本入库单已付金额
+					Double needPayAmount = receiveDAO.getNeedPayAmount(payDetail.getReceive().getReceiveId());
+					if(needPayAmount<=payDetail.getPayAmount()+payDetail.getDiscountAmount()){
+						Receive oldReceive = receiveDAO.load(payDetail.getReceive().getReceiveId());
+						oldReceive.setIsPay(0);
+						receiveDAO.update(oldReceive);
+					}
+				}
+			}
+		}
+		oldPay.setStatus(model.getStatus());
+		payDAO.update(oldPay);
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.PayService#mulUpdateStatus(java.lang.String, org.linys.model.Pay)
+	 */
+	@Override
+	public ServiceResult mulUpdateStatus(String ids, Pay model) {
+		ServiceResult result = new ServiceResult(false);
+		if(StringUtils.isEmpty(ids)){
+			result.setMessage("请选择要修改状态的付款单");
+			return result;
+		}
+		String[] idArray =StringUtil.split(ids,GobelConstants.SPLIT_SEPARATOR);
+		if(idArray.length==0){
+			result.setMessage("请选择要修改状态的付款单");
+			return result;
+		}
+		if(model==null||model.getStatus()==null){
+			result.setMessage("请选择要修改成的审核状态");
+			return result;
+		}
+		boolean haveUpdateStatus = false;
+		for (String id : idArray) {
+			Pay oldPay = payDAO.load(id);
+			if(oldPay!=null&&oldPay.getStatus().intValue()!=model.getStatus().intValue()){
+				/*
+				 * 状态变化主要涉及到：
+				 * 1.银行金额
+				 * 2.如果是付款单下的付款明细是采购入库单来的，需要判断需要修改IsPay
+				 */
+				if(model.getStatus()==1){//如果是由未审改为已审
+					//更新对应银行的账户金额
+					Bank oldBank = bankDAO.load(oldPay.getBank().getBankId());
+					oldBank.setAmount(oldBank.getAmount()-oldPay.getPayAmount());
+					bankDAO.update(oldBank);
+					//更新采购入库单的isPay字段
+					List<PayDetail> payDetailList = payDetailDAO.queryByPayId(model.getPayId());
+					for (PayDetail payDetail : payDetailList) {
+						if(payDetail.getReceive()!=null){
+							//取得本入库单已付金额
+							Double needPayAmount = receiveDAO.getNeedPayAmount(payDetail.getReceive().getReceiveId());
+							if(needPayAmount<=payDetail.getPayAmount()+payDetail.getDiscountAmount()){
+								Receive oldReceive = receiveDAO.load(payDetail.getReceive().getReceiveId());
+								oldReceive.setIsPay(1);
+								receiveDAO.update(oldReceive);
+							}
+						}
+					}
+				}else if(model.getStatus()==0){//如果是由已审改为未审
+					//更新对应银行的账户金额
+					Bank oldBank = bankDAO.load(oldPay.getBank().getBankId());
+					oldBank.setAmount(oldBank.getAmount()+oldPay.getPayAmount());
+					bankDAO.update(oldBank);
+					//更新采购入库单的isPay字段
+					List<PayDetail> payDetailList = payDetailDAO.queryByPayId(model.getPayId());
+					for (PayDetail payDetail : payDetailList) {
+						if(payDetail.getReceive()!=null){
+							//取得本入库单已付金额
+							Double needPayAmount = receiveDAO.getNeedPayAmount(payDetail.getReceive().getReceiveId());
+							if(needPayAmount>payDetail.getPayAmount()+payDetail.getDiscountAmount()){
+								Receive oldReceive = receiveDAO.load(payDetail.getReceive().getReceiveId());
+								oldReceive.setIsPay(0);
+								receiveDAO.update(oldReceive);
+							}
+						}
+					}
+				}
+				oldPay.setStatus(model.getStatus());
+				payDAO.update(oldPay);
+			}
+		}
+		if(!haveUpdateStatus){
+			result.setMessage("没有可修改状态的付款单");
+			return result;
+		}
 		result.setIsSuccess(true);
 		return result;
 	}

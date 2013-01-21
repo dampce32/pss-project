@@ -125,16 +125,13 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 		sb.append("	from(select * ");
 		sb.append("		from t_receive a ");
 		sb.append("     where a.supplierId=:supplierId and a.`status` = 1 and a.isPay = 0  ");
-		if(beginDateDate!=null){
-			sb.append("		and a.receiveDate BETWEEN :beginDateDate and :endDateDate ");
-		}
+		sb.append("		and a.receiveDate BETWEEN :beginDateDate and :endDateDate ");
 		sb.append(") a	left join t_paydetail b on a.receiveId = b.receiveId ");
 		sb.append("	left join t_pay c on b.payId = c.payId ");
+		sb.append("	where c.status = 1  ");
 		sb.append("	GROUP BY a.receiveId)b on a.receiveId = b.receiveId ");
 		sb.append("where a.supplierId=:supplierId and a.`status` = 1 and a.isPay = 0   ");
-		if(beginDateDate!=null){
-			sb.append("and a.receiveDate BETWEEN :beginDateDate and :endDateDate ");
-		}
+		sb.append("and a.receiveDate BETWEEN :beginDateDate and :endDateDate ");
 		sb.append(" and a.receiveId not in(:idArray) ");
 		
 		Query query = getCurrentSession().createSQLQuery(sb.toString());
@@ -174,6 +171,7 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 		sb.append("		and a.receiveDate BETWEEN :beginDateDate and :endDateDate ");
 		sb.append(") a	left join t_paydetail b on a.receiveId = b.receiveId ");
 		sb.append("	left join t_pay c on b.payId = c.payId ");
+		sb.append("where c.status = 1 ");
 		sb.append("	GROUP BY a.receiveId)b on a.receiveId = b.receiveId ");
 		sb.append("where a.supplierId=:supplierId and a.`status` = 1 and a.isPay = 0   ");
 		sb.append("and a.receiveDate BETWEEN :beginDateDate and :endDateDate   and a.receiveId not in(:idArray) ");
@@ -184,5 +182,26 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 		query.setString("supplierId", supplierId);
 		query.setParameterList("idArray", idArray);
 		return new Long(query.uniqueResult().toString());
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.ReceiveDAO#getNeedPayAmount(java.lang.String)
+	 */
+	@Override
+	public Double getNeedPayAmount(String receiveId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select a.amount-a.payAmount-a.discountAmount-IFNULL(b.discountAmount,0) -IFNULL(b.payAmount,0) needPayAmount ");
+		sb.append("from(select a.receiveId,a.amount,a.payAmount,a.discountAmount ");
+		sb.append("	from t_receive a  ");
+		sb.append("	where a.receiveId = :receiveId)a ");
+		sb.append("left join(select a.receiveId,sum(a.discountAmount) discountAmount ,sum(a.payAmount) payAmount ");
+		sb.append("	from t_paydetail a ");
+		sb.append("	left join t_pay b on a.payId = b.payId ");
+		sb.append("	where b.`status` = 1 and  a.receiveId = :receiveId ");
+		sb.append("	group by a.receiveId)b on a.receiveId = b.receiveId ");
+		
+		Query query = getCurrentSession().createSQLQuery(sb.toString());
+		query.setString("receiveId", receiveId);
+		return new Double(query.uniqueResult().toString());
 	}
 }

@@ -59,5 +59,42 @@ public interface PayService extends BaseService<Pay,String>{
 	 * @return
 	 */
 	ServiceResult init(String payId);
+	/**
+	 * @Description: 删除付款单
+	 * @Create: 2013-1-21 下午3:56:18
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @return
+	 */
+	ServiceResult delete(Pay model);
+	/**
+	 * @Description: 批量删除付款单
+	 * @Create: 2013-1-21 下午3:56:30
+	 * @author lys
+	 * @update logs
+	 * @param ids
+	 * @return
+	 */
+	ServiceResult mulDelete(String ids);
+	/**
+	 * @Description: 修改付款单状态
+	 * @Create: 2013-1-21 下午3:56:42
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @return
+	 */
+	ServiceResult updateStatus(Pay model);
+	/**
+	 * @Description: 批量修改付款单状态
+	 * @Create: 2013-1-21 下午3:57:01
+	 * @author lys
+	 * @update logs
+	 * @param ids
+	 * @param model
+	 * @return
+	 */
+	ServiceResult mulUpdateStatus(String ids, Pay model);
 
 }
