@@ -65,7 +65,7 @@ public class PayDAOImpl extends BaseDAOImpl<Pay, String> implements PayDAO {
 		}
 		
 		criteria.setProjection(Projections.rowCount());
-		return (Long) criteria.uniqueResult();
+		return new Long(criteria.uniqueResult().toString());
 	}
 
 }

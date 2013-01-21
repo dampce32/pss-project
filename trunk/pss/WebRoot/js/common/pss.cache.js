@@ -9,3 +9,21 @@ PSS.getColorList = function(){
 	}
 	return PSS.ColorList;
 }
+//银行
+PSS.BankList = null;
+PSS.getBankList = function(){
+	if(PSS.BankList==null){
+		var url = 'dict/queryComboboxBank.do';
+		PSS.BankList = syncCallService(url);
+	}
+	return PSS.BankList;
+}
+//经办人
+PSS.EmployeeList = null;
+PSS.getEmployeeList = function(){
+	if(PSS.EmployeeList==null){
+		var url = 'dict/queryComboboxEmployee.do';
+		PSS.EmployeeList = syncCallService(url);
+	}
+	return PSS.EmployeeList;
+}

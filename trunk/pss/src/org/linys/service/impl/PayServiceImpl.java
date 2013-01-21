@@ -86,7 +86,7 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 			return result;
 		}
 		
-		if(StringUtils.isEmpty(payDetailIds)){
+		if(StringUtils.isEmpty(payKinds)){
 			result.setMessage("请选择付款内容");
 			return result;
 		}
@@ -99,7 +99,7 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 		String[] discountedAmountArray = StringUtil.split(discountedAmounts, GobelConstants.SPLIT_SEPARATOR);
 		String[] discountAmountArray = StringUtil.split(discountAmounts, GobelConstants.SPLIT_SEPARATOR);
 		String[] payAmountArray = StringUtil.split(payAmounts, GobelConstants.SPLIT_SEPARATOR);
-		if(payKindArray==null||payDetailIdArray.length==0){
+		if(payKindArray==null||payKindArray.length==0){
 			result.setMessage("请选择付款内容");
 			return result;
 		}
