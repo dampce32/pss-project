@@ -31,6 +31,7 @@ public class PayDAOImpl extends BaseDAOImpl<Pay, String> implements PayDAO {
 		Criteria criteria  = getCurrentSession().createCriteria(Pay.class);
 		
 		criteria.createAlias("supplier", "supplier",CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("employee", "employee",CriteriaSpecification.LEFT_JOIN);
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getPayCode())){
 			criteria.add(Restrictions.like("payCode", model.getPayCode(),MatchMode.ANYWHERE));
@@ -58,14 +59,26 @@ public class PayDAOImpl extends BaseDAOImpl<Pay, String> implements PayDAO {
 	public Long getTotalCount(Pay model) {
 		Criteria criteria  = getCurrentSession().createCriteria(Pay.class);
 		
-		criteria.createAlias("supplier", "supplier",CriteriaSpecification.LEFT_JOIN);
-		
 		if(model!=null&&StringUtils.isNotEmpty(model.getPayCode())){
 			criteria.add(Restrictions.like("payCode", model.getPayCode(),MatchMode.ANYWHERE));
 		}
 		
 		criteria.setProjection(Projections.rowCount());
 		return new Long(criteria.uniqueResult().toString());
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.PayDAO#init(java.lang.String)
+	 */
+	@Override
+	public Pay init(String payId) {
+		Criteria criteria  = getCurrentSession().createCriteria(Pay.class);
+		
+		criteria.createAlias("supplier", "supplier",CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("employee", "employee",CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("bank", "bank",CriteriaSpecification.LEFT_JOIN);
+		criteria.add(Restrictions.eq("payId", payId));
+		return criteria.uniqueResult()==null?null:(Pay)criteria.uniqueResult();
 	}
 
 }

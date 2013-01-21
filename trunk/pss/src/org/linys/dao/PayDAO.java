@@ -32,5 +32,14 @@ public interface PayDAO extends BaseDAO<Pay,String>{
 	 * @return
 	 */
 	Long getTotalCount(Pay model);
+	/**
+	 * @Description: 打开初始化付款单
+	 * @Create: 2013-1-21 下午3:30:09
+	 * @author lys
+	 * @update logs
+	 * @param payId
+	 * @return
+	 */
+	Pay init(String payId);
 
 }

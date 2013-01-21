@@ -795,10 +795,8 @@
 	 });
 	function setEditing(rowIndex){  
 	    var editors = $(receiveDetail).datagrid('getEditors', rowIndex);  
-	    var Editor = editors[1];  
-	    var qtyEditor = editors[2];  
-	    var qtyEditor = editors[3];  
-	    var priceEditor = editors[4];  
+	    var qtyEditor = editors[1];  
+	    var priceEditor = editors[2];  
 	    var amountEditor = editors[3];  
 	    qtyEditor.target.bind('change', function(){  
 	        calculate(rowIndex);  

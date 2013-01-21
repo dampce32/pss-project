@@ -116,5 +116,78 @@ public class PayAction extends BaseAction implements ModelDriven<Pay> {
 		ajaxJson(jsonString);
 	}
 	
-
+	/**
+	 * @Description: 删除付款单
+	 * @Create: 2013-1-8 下午10:28:15
+	 * @author lys
+	 * @update logs
+	 */
+	public void delete(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = payService.delete(model);
+		} catch (Exception e) {
+			result.setMessage("删除付款单失败");
+			logger.error("删除付款单失败", e);
+			result.setIsSuccess(false);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	
+	/**
+	 * @Description: 批量删除付款单
+	 * @Create: 2013-1-8 下午10:28:15
+	 * @author lys
+	 * @update logs
+	 */
+	public void mulDelete(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = payService.mulDelete(ids);
+		} catch (Exception e) {
+			result.setMessage("批量删除付款单失败");
+			logger.error("批量删除付款单失败", e);
+			result.setIsSuccess(false);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	
+	/**
+	 * @Description: 修改付款单状态
+	 * @Create: 2013-1-16 下午9:10:54
+	 * @author lys
+	 * @update logs
+	 */
+	public void updateStatus(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = payService.updateStatus(model);
+		} catch (Exception e) {
+			result.setMessage("修改付款单状态失败");
+			logger.error("修改付款单状态失败", e);
+			result.setIsSuccess(false);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	/**
+	 * @Description: 批量修改付款单状态
+	 * @Create: 2013-1-9 下午11:50:34
+	 * @author lys
+	 * @update logs
+	 */
+	public void mulUpdateStatus(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = payService.mulUpdateStatus(ids,model);
+		} catch (Exception e) {
+			result.setMessage("批量修改付款单状态失败");
+			logger.error("批量修改付款单状态失败", e);
+			result.setIsSuccess(false);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
 }

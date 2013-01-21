@@ -83,5 +83,14 @@ public interface ReceiveDAO extends BaseDAO<Receive,String>{
 	 */
 	Long getTotalReceive(Date beginDateDate, Date endDateDate,
 			String supplierId, String[] idArray, Receive model);
+	/**
+	 * @Description: 取得本入库单已付金额
+	 * @Create: 2013-1-21 下午4:30:15
+	 * @author lys
+	 * @update logs
+	 * @param receiveId
+	 * @return
+	 */
+	Double getNeedPayAmount(String receiveId);
 
 }
