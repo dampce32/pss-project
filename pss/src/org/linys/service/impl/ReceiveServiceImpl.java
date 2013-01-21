@@ -656,23 +656,28 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			result.setMessage("请选择开始日期");
 			return result;
 		}
+		
 		Date beginDateDate = null;
-		try {
-			beginDateDate = DateUtil.toDate(beginDate);
-		} catch (ParseException e) {
-			result.setMessage("请输入正确的开始日期");
-			return result;
+		if(StringUtils.isNotEmpty(beginDate)){
+			try {
+				beginDateDate = DateUtil.toDate(beginDate);
+			} catch (ParseException e) {
+				result.setMessage("请输入正确的开始日期");
+				return result;
+			}
 		}
 		Date endDateDate = null;
-		try {
-			endDateDate = DateUtil.toDate(endDate);
-		} catch (ParseException e) {
-			result.setMessage("请输入正确的结束日期");
-			return result;
-		}
-		if(StringUtils.isEmpty(supplierId)){
-			result.setMessage("请选择供应商");
-			return result;
+		if(StringUtils.isNotEmpty(endDate)){
+			try {
+				endDateDate = DateUtil.toDate(endDate);
+			} catch (ParseException e) {
+				result.setMessage("请输入正确的结束日期");
+				return result;
+			}
+			if(StringUtils.isEmpty(supplierId)){
+				result.setMessage("请选择供应商");
+				return result;
+			}
 		}
 		String[] idArray = {""};
 		if(StringUtils.isNotEmpty(ids)){

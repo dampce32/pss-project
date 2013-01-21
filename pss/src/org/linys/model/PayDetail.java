@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -53,6 +54,10 @@ public class PayDetail extends BaseModel {
 	 * 已优惠金额
 	 */
 	private Double discountedAmount;
+	/**
+	 * 还需付金额
+	 */
+	private Double needPayAmount;
 	/**
 	 * 优惠金额
 	 */
@@ -157,6 +162,15 @@ public class PayDetail extends BaseModel {
 
 	public void setDiscountedAmount(Double discountedAmount) {
 		this.discountedAmount = discountedAmount;
+	}
+	@Transient
+	public Double getNeedPayAmount() {
+		this.needPayAmount =  this.amount-this.payedAmount-this.discountedAmount;
+		return needPayAmount;
+	}
+
+	public void setNeedPayAmount(Double needPayAmount) {
+		this.needPayAmount = needPayAmount;
 	}
 
 }

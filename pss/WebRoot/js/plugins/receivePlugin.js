@@ -795,8 +795,10 @@
 	 });
 	function setEditing(rowIndex){  
 	    var editors = $(receiveDetail).datagrid('getEditors', rowIndex);  
-	    var qtyEditor = editors[1];  
-	    var priceEditor = editors[2];  
+	    var Editor = editors[1];  
+	    var qtyEditor = editors[2];  
+	    var qtyEditor = editors[3];  
+	    var priceEditor = editors[4];  
 	    var amountEditor = editors[3];  
 	    qtyEditor.target.bind('change', function(){  
 	        calculate(rowIndex);  
@@ -1009,6 +1011,7 @@
 		var buyCode = $('#buyCodeSelectBuyDialog',selectBuyDialog).val();
 		
 		var url = "inWarehouse/queryReceiveBuy.do";
+		alert(url);
 		var content = {beginDate:beginDate,endDate:endDate,ids:idArray.join(LYS.join),supplierId:supplierId,buyCode:buyCode};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){

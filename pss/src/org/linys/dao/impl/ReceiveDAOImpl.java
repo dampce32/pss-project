@@ -118,18 +118,24 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 			Date endDateDate, String supplierId, String[] idArray,
 			Receive model, Integer page, Integer rows) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("select a.receiveId,a.receiveCode,a.receiveDate,a.amount,a.payAmount+a.discountAmount+IFNULL(b.payAmount,0)+IFNULL(b.discountAmount,0) payedAmount ");
+		sb.append("select a.receiveId,a.receiveCode,a.receiveDate,a.amount,a.payAmount+IFNULL(b.payAmount,0) payedAmount, ");
+		sb.append("a.discountAmount+IFNULL(b.discountAmount,0) discountedAmount,a.amount-a.payAmount-IFNULL(b.payAmount,0)-a.discountAmount-IFNULL(b.discountAmount,0) needPayAmount ");
 		sb.append("from t_receive a ");
 		sb.append("left join(select a.receiveId,sum(b.payAmount) payAmount,sum(b.discountAmount ) discountAmount ");
 		sb.append("	from(select * ");
 		sb.append("		from t_receive a ");
 		sb.append("     where a.supplierId=:supplierId and a.`status` = 1 and a.isPay = 0  ");
-		sb.append("		and a.receiveDate BETWEEN :beginDateDate and :endDateDate) a ");
-		sb.append("	left join t_paydetail b on a.receiveId = b.receiveId ");
+		if(beginDateDate!=null){
+			sb.append("		and a.receiveDate BETWEEN :beginDateDate and :endDateDate ");
+		}
+		sb.append(") a	left join t_paydetail b on a.receiveId = b.receiveId ");
 		sb.append("	left join t_pay c on b.payId = c.payId ");
 		sb.append("	GROUP BY a.receiveId)b on a.receiveId = b.receiveId ");
 		sb.append("where a.supplierId=:supplierId and a.`status` = 1 and a.isPay = 0   ");
-		sb.append("and a.receiveDate BETWEEN :beginDateDate and :endDateDate   and a.receiveId not in(:idArray) ");
+		if(beginDateDate!=null){
+			sb.append("and a.receiveDate BETWEEN :beginDateDate and :endDateDate ");
+		}
+		sb.append(" and a.receiveId not in(:idArray) ");
 		
 		Query query = getCurrentSession().createSQLQuery(sb.toString());
 		query.setDate("beginDateDate", beginDateDate);
@@ -165,8 +171,8 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 		sb.append("	from(select * ");
 		sb.append("		from t_receive a ");
 		sb.append("     where a.supplierId=:supplierId and a.`status` = 1 and a.isPay = 0  ");
-		sb.append("		and a.receiveDate BETWEEN :beginDateDate and :endDateDate) a ");
-		sb.append("	left join t_paydetail b on a.receiveId = b.receiveId ");
+		sb.append("		and a.receiveDate BETWEEN :beginDateDate and :endDateDate ");
+		sb.append(") a	left join t_paydetail b on a.receiveId = b.receiveId ");
 		sb.append("	left join t_pay c on b.payId = c.payId ");
 		sb.append("	GROUP BY a.receiveId)b on a.receiveId = b.receiveId ");
 		sb.append("where a.supplierId=:supplierId and a.`status` = 1 and a.isPay = 0   ");
