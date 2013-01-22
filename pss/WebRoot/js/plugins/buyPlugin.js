@@ -205,7 +205,7 @@
 		$('#deleteProduct'+id).linkbutton('enable');
 	}
 	//审核通过按钮的状态
-	var shBtn = function(){
+	var shBtnStatus = function(){
 		$('#save'+id).linkbutton('disable');
 		$('#add'+id).linkbutton('enable');
 		$('#delete'+id).linkbutton('disable');
@@ -215,7 +215,7 @@
 		$('#deleteProduct'+id).linkbutton('disable');
 	}
 	//反审后的按钮状态
-	var fsBtn = function(){
+	var fsBtnStatus = function(){
 		$('#save'+id).linkbutton('enable');
 		$('#add'+id).linkbutton('enable');
 		$('#delete'+id).linkbutton('enable');
@@ -461,9 +461,9 @@
 				$('#sourceCode',editDialog).val(buyData.sourceCode);
 				if(buyData.status==1){
 					$('#status',editDialog).val('已审核');
-					shBtn();
+					shBtnStatus();
 				}else{
-					fsBtn();
+					fsBtnStatus();
 					$('#status',editDialog).val('未审核'); 
 				}
 				
@@ -545,7 +545,7 @@
 		}else{
 			msg = '反审';
 		}
-		if(selectRow==null){
+		if(buyId==''){
 			$.messager.alert("提示","请选择需要"+msg+"数据行","warning");
 			return;
 		}
@@ -557,10 +557,10 @@
 					if(result.isSuccess){
 						var fn = function(){
 							if(status==1){
-								shBtn();
+								shBtnStatus();
 								$('#status',editDialog).val('已审核');
 							}else{
-								fsBtn();
+								fsBtnStatus();
 								$('#status',editDialog).val('未审核'); 
 							}
 						}
