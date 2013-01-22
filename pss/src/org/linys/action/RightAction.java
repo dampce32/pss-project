@@ -120,4 +120,21 @@ public class RightAction extends BaseAction implements ModelDriven<Right> {
 		}
 		ajaxJson(result.toJSON());
 	}
+	/**
+	 * @Description: 保存权限
+	 * @Create: 2013-1-22 上午10:33:19
+	 * @author lys
+	 * @update logs
+	 */
+	public void save(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = rightService.save(model);
+		} catch (Exception e) {
+			result.setMessage("保存权限失败");
+			logger.error("保存权限失败", e);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
 }

@@ -78,13 +78,13 @@ public class UserDAOImpl  extends BaseDAOImpl<User,String> implements UserDAO{
 	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getRooRight(String userId) {
 		StringBuilder sql = new StringBuilder();
-		sql.append( "select b.rightId,MAX(b.State) state,c.isLeaf,c.rightName,c.rightUrl ");
+		sql.append( "select c.array,b.rightId,MAX(b.State) state,c.isLeaf,c.rightName,c.rightUrl ");
 		sql.append( "from(select RoleId from T_UserRole ");
 		sql.append( "where userId = :userId) a ");
 		sql.append( "left join T_RoleRight b on a.RoleId = b.RoleID ");
 		sql.append( "left join T_Right c on b.RightId = c.RightId ");
 		sql.append( "where c.ParentRightId is null ");
-		sql.append( "group by  b.RightID,c.IsLeaf,c.RightName,c.RightURL");
+		sql.append( "group by  c.array,b.RightID,c.IsLeaf,c.RightName,c.RightURL");
 		return getCurrentSession().createSQLQuery(sql.toString()).setString("userId", userId).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
 	}
 	/*
@@ -94,13 +94,13 @@ public class UserDAOImpl  extends BaseDAOImpl<User,String> implements UserDAO{
 	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getChildrenRight(String userId,String rightId) {
 		StringBuilder sql = new StringBuilder();
-		sql.append( "select b.rightId,MAX(b.State) state,c.isLeaf,c.rightName,c.rightUrl ");
+		sql.append( "select c.array,b.rightId,MAX(b.State) state,c.isLeaf,c.rightName,c.rightUrl ");
 		sql.append( "from(select RoleId from T_UserRole ");
 		sql.append( "where userId = :userId) a ");
 		sql.append( "left join T_RoleRight b on a.RoleId = b.RoleID ");
 		sql.append( "left join T_Right c on b.RightId = c.RightId ");
 		sql.append( "where c.ParentRightId = :rightId ");
-		sql.append( "group by  b.RightID,c.IsLeaf,c.RightName,c.RightURL ");
+		sql.append( "group by  c.array,b.RightID,c.IsLeaf,c.RightName,c.RightURL ");
 		sql.append( "having max(b.State) = 1 ");
 		return getCurrentSession().createSQLQuery(sql.toString()).setString("userId", userId).setString("rightId", rightId).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
 	}

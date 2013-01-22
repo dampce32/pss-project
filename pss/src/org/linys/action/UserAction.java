@@ -199,5 +199,62 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		ServiceResult result = new ServiceResult(true);
 		ajaxJson(result.toJSON());
 	}
-	
+	/**
+	 * @Description: 取得用户个人信息
+	 * @Create: 2013-1-22 下午1:54:16
+	 * @author lys
+	 * @update logs
+	 */
+	public void getSelfInfor(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			String userId = getSession(User.LOGIN_USERID).toString();
+			result = userService.getSelfInfor(userId);
+		} catch (Throwable e) {
+			result.setMessage("取得用户个人信息失败");
+			logger.error("取得用户个人信息失败", e);
+		}
+		String ajaxString = result.toJSON();
+		ajaxJson(ajaxString);
+	}
+	/**
+	 * @Description: 更新用户个人信息
+	 * @Create: 2013-1-22 下午2:06:57
+	 * @author lys
+	 * @update logs
+	 */
+	public void updateSelfInfo(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			String userId = getSession(User.LOGIN_USERID).toString();
+			result = userService.updateSelfInfo(userId,model);
+		} catch (Throwable e) {
+			result.setMessage("更新用户个人信息失败");
+			logger.error("更新用户个人信息失败", e);
+		}
+		String ajaxString = result.toJSON();
+		ajaxJson(ajaxString);
+	}
+	/**
+	 * @Description: 修改密码
+	 * @Created: 2012-10-29 上午9:29:35
+	 * @Author lys
+	 */
+	public void modifyPwd(){
+		ServiceResult result = new ServiceResult(false);
+		String userId = null;
+		if(getSession(User.LOGIN_USERID)!=null){
+			userId = getSession(User.LOGIN_USERID).toString();
+		}
+		model.setUserId(userId);
+		String newUserPwd = getParameter("newUserPwd");
+		try {
+			result = userService.modifyPwd(model,newUserPwd);
+		} catch (Exception e) {
+			result.setMessage("修改密码失败");
+			logger.error("修改密码失败", e);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
 }

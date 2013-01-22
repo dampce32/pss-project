@@ -38,6 +38,71 @@ $(function(){
      		}
      	})
      })
+     //---修改密码---
+    $('#modifyPwdDialog').dialog({
+    	title: '修改密码',  
+	    width:500,
+	    height:300,
+	    closed: true,  
+	    cache: false,  
+	    modal: true,
+	    closable:false,
+	    toolbar:[{
+			text:'保存',
+			iconCls:'icon-save',
+			handler:function(){
+				onSaveModifyPwd();
+			}
+		},'-',{
+			text:'退出',
+			iconCls:'icon-cancel',
+			handler:function(){
+				$('#modifyPwdDialog').dialog('close');
+			}
+		}]
+    })
+     $('#modifyPwdBtn').click(function(){
+    	$('#modifyPwdForm').form('clear');
+     	$('#modifyPwdDialog').dialog('open');
+     })
+     
+     //保存前检验表单值
+	  var setValue = function(){
+		  var userPwd = $('#userPwd').val();
+		  if('' == userPwd){
+			  $.messager.alert('提示','请输入原密码','warning');
+			  return false;
+		  }
+		  var newUserPwd = $('#newUserPwd').val();
+		  if('' == newUserPwd){
+			  $.messager.alert('提示','请输入新密码','warning');
+			  return false;
+		  }
+		  var newUserPwd2 = $('#newUserPwd2').val();
+		  if(newUserPwd!=newUserPwd2){
+			  $.messager.alert('提示','两次输入的新密码不一样','warning');
+			  return false;
+		  }
+		  return true;
+	  }
+	  
+	  var onSaveModifyPwd = function(){
+		  $('#modifyPwdForm').form('submit',{
+			url: 'system/modifyPwdUser.do',
+			onSubmit: function(){
+				return setValue();
+			},
+			success: function(data){
+				var result = eval('('+data+')');
+				if(result.isSuccess){
+					$.messager.alert('提示','密码修改成功','info');
+				}else{
+					$.messager.alert('提示',result.message,"warning");
+				}
+			}
+		  });
+	  }
+     
 })
 
 function addTab(title,href){

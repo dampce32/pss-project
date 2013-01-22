@@ -30,20 +30,42 @@ public class Right extends BaseModel{
 
 	// Fields
 	private static final long serialVersionUID = 1L;
+	/**
+	 * 权限Id
+	 */
 	private String rightId;
+	/**
+	 * 权限名称
+	 */
 	private String rightName;
 	/**
 	 * 是否为叶子节点
 	 */
 	private Boolean isLeaf;
+	/**
+	 * 权限Url
+	 */
 	private String rightUrl;
 	/**
 	 * 是否有权限
 	 */
 	private Boolean state;
-	
+	/**
+	 * 父权限
+	 */
 	private Right parentRight;
+	/**
+	 * 排序
+	 */
+	private Integer array;
+	/**
+	 * 子权限
+	 */
 	private Set<Right> childrenRights = new HashSet<Right>(0);
+	/**
+	 * 角色权限
+	 */
+	private Set<RoleRight> roleRights = new HashSet<RoleRight>(0);
 
 	// Constructors
 
@@ -120,6 +142,22 @@ public class Right extends BaseModel{
 
 	public void setState(Boolean state) {
 		this.state = state;
+	}
+	@Column(name = "array", length = 100)
+	public Integer getArray() {
+		return array;
+	}
+
+	public void setArray(Integer array) {
+		this.array = array;
+	}
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "right")
+	public Set<RoleRight> getRoleRights() {
+		return roleRights;
+	}
+
+	public void setRoleRights(Set<RoleRight> roleRights) {
+		this.roleRights = roleRights;
 	}
 
 

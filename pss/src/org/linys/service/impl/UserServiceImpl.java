@@ -228,5 +228,91 @@ public class UserServiceImpl extends BaseServiceImpl<User,String> implements Use
 		}
 		return result;
 	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.UserService#getSelfInfor(org.linys.model.User)
+	 */
+	@Override
+	public ServiceResult getSelfInfor(String userId) {
+		ServiceResult result = new ServiceResult(false);
+		if(StringUtils.isEmpty(userId)){
+			result.setMessage("对不起，您还没登录");
+			return result;
+		}
+		User oldModel = userDAO.load(userId);
+		result.addData("userId", oldModel.getUserId());
+		result.addData("userCode", oldModel.getUserCode());
+		result.addData("userName", oldModel.getUserName());
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.UserService#updateSelfInfo(java.lang.String, org.linys.model.User)
+	 */
+	@Override
+	public ServiceResult updateSelfInfo(String userId, User model) {
+		ServiceResult result = new ServiceResult(false);
+		if(model==null){
+			result.setMessage("请填写个人信息");
+			return result;
+		}
+		if(StringUtils.isEmpty(model.getUserCode())){
+			result.setMessage("请填写登录名");
+			return result;
+		}
+		if(StringUtils.isEmpty(model.getUserName())){
+			result.setMessage("请填写用户名");
+			return result;
+		}
+		User oldModel = userDAO.load("userCode", model.getUserCode());
+		if(oldModel!=null&&!oldModel.getUserId().equals(userId)){
+			result.setMessage("该登录名已存在，请换个登录名");
+			return result;
+		}
+		if(oldModel!=null&&oldModel.getUserId().equals(userId)){
+			oldModel.setUserName(model.getUserName());
+			userDAO.update(oldModel);
+		}else{
+			oldModel = userDAO.load(userId);
+			oldModel.setUserCode(model.getUserCode());
+			oldModel.setUserName(model.getUserName());
+			userDAO.update(oldModel);
+		}
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.UserService#modifyPwd(org.linys.model.User, java.lang.String)
+	 */
+	@Override
+	public ServiceResult modifyPwd(User model, String newUserPwd) {
+		ServiceResult result = new ServiceResult(false);
+		if(model==null||StringUtils.isEmpty(model.getUserId())){
+			result.setMessage("对不起你还没登陆系统");
+			return result;
+		}
+		if(StringUtils.isEmpty(model.getUserPwd())){
+			result.setMessage("请输入原密码");
+			return result;
+		}
+		if(StringUtils.isEmpty(newUserPwd)){
+			result.setMessage("请输入新密码");
+			return result;
+		}
+		
+		User oldModel = userDAO.load(model.getUserId());
+		String userPwdMD5  = MD5Util.getMD5(model.getUserPwd());
+		String oldUserPwd = oldModel.getUserPwd();
+		if(!oldUserPwd.equals(userPwdMD5)){
+			result.setMessage("你输入的原密码不正确");
+			return result;
+		}
+		String newUserPwdMD5 = MD5Util.getMD5(newUserPwd);
+		oldModel.setUserPwd(newUserPwdMD5);
+		result.setIsSuccess(true);
+		return result;
+	}
 	
 }

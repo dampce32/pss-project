@@ -11,7 +11,6 @@ import java.util.List;
  * @vesion 1.0
  */
 
-@SuppressWarnings("unchecked")
 public class Pager {
 	
 	public static final Integer MAX_PAGE_SIZE = 500;// 每页最大记录数限制
@@ -24,6 +23,7 @@ public class Pager {
 	
 	private Integer pageCount = 0;// 总页数
 	
+	@SuppressWarnings("rawtypes")
 	private List list;// 数据List
 
 	public Pager(){
@@ -94,10 +94,12 @@ public class Pager {
 		return begin;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public List getList() {
 		return list;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void setList(List list) {
 		this.list = list;
 	}
