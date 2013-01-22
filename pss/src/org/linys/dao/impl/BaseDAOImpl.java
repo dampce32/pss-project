@@ -30,7 +30,7 @@ public abstract class BaseDAOImpl<T,PK extends Serializable> implements BaseDAO<
 	
 	private Class<T> entityClass;
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"unchecked" })
 	public BaseDAOImpl() {
 		this.entityClass = null;
 		Class c = getClass();
@@ -101,7 +101,7 @@ public abstract class BaseDAOImpl<T,PK extends Serializable> implements BaseDAO<
 		return hibernateTemplate.load(entityClass, id);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked" })
 	public T load(String propertyName, Object value) {
 		String hql = "from " + entityClass.getName() + " as model where model." + propertyName + " = ?";
 		List list = hibernateTemplate.find(hql, value);
@@ -110,7 +110,7 @@ public abstract class BaseDAOImpl<T,PK extends Serializable> implements BaseDAO<
 		}
 		return null;
 	}
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	public T load(String[] paramNames, Object[] values) {
 		String hql = "from " + entityClass.getName() + " as model where 1 = 1";
 		for (String paramName : paramNames) {
