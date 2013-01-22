@@ -94,7 +94,7 @@ public class BuyDAOImpl extends BaseDAOImpl<Buy, String> implements
 		query.setString("supplierId", supplierId);
 		query.setParameterList("idArray", idArray);
 		if(model!=null&&StringUtils.isNotEmpty(model.getBuyCode())){
-			query.setString("buyCode", model.getBuyCode());
+			query.setString("buyCode","%'"+model.getBuyCode()+"'%");
 		}
 		if(page==null||page<1){
 			page = 1;
@@ -150,7 +150,7 @@ public class BuyDAOImpl extends BaseDAOImpl<Buy, String> implements
 		query.setString("supplierId", supplierId);
 		query.setParameterList("idArray", idArray);
 		if(model!=null&&StringUtils.isNotEmpty(model.getBuyCode())){
-			query.setString("buyCode", model.getBuyCode());
+			query.setString("buyCode","%'"+model.getBuyCode()+"'%");
 		}
 		return new Long(query.uniqueResult().toString());
 	}
