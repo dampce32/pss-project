@@ -1,8 +1,25 @@
 [{
 	"id":1,
+	"text":"个人信息管理",
+	"state":"closed",
+	"children":[{
+		"id":"1-1",
+		"text":"个人信息",
+		"attributes":{"rightUrl":"self/self.do"}
+	},{
+		"id":"1-2",
+		"text":"修改密码",
+		"attributes":{"rightUrl":"self/modifyPwd.do"}
+	}]
+},{
+	"id":1,
 	"text":"系统管理",
 	"state":"closed",
 	"children":[{
+		"id":"1-1",
+		"text":"编号前缀管理",
+		"attributes":{"rightUrl":"system/prefix.do"}
+	},{
 		"id":"1-1",
 		"text":"权限管理",
 		"attributes":{"rightUrl":"system/right.do"}
@@ -73,20 +90,46 @@
 	"text":"入库管理",
 	"state":"closed",
 	"children":[{
-		"id":"3-1",
-		"text":"采购退货",
-		"attributes":{"rightUrl":"inWarehouse/reject.do"}
+		"id":"3-2",
+		"text":"采购单",
+		"attributes":{"rightUrl":"inWarehouse/buy.do"}
 	},{
 		"id":"3-2",
 		"text":"采购入库",
 		"attributes":{"rightUrl":"inWarehouse/receive.do"}
 	},{
-		"id":"3-3",
-		"text":"当前库存",
-		"attributes":{"rightUrl":"store/store.do"}
-	},{
 		"id":"3-4",
 		"text":"其他入库",
 		"attributes":{"rightUrl":"inWarehouse/receiveOther.do"}
+	},{
+		"id":"3-1",
+		"text":"采购退货",
+		"attributes":{"rightUrl":"inWarehouse/reject.do"}
+	},{
+		"id":"1-1",
+		"text":"采购付款",
+		"attributes":{"rightUrl":"finance/pay.do"}
+	},{
+		"id":"3-3",
+		"text":"当前库存",
+		"attributes":{"rightUrl":"store/store.do"}
+	}]
+},{
+	"id":1,
+	"text":"库存管理",
+	"state":"closed",
+	"children":[{
+		"id":"1-1",
+		"text":"当前库存",
+		"attributes":{"rightUrl":"store/store.do"}
+	}]
+},{
+	"id":1,
+	"text":"财务管理",
+	"state":"closed",
+	"children":[{
+		"id":"1-1",
+		"text":"采购付款",
+		"attributes":{"rightUrl":"finance/pay.do"}
 	}]
 }]
