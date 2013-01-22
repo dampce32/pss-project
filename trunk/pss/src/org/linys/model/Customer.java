@@ -9,8 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -25,63 +28,72 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "t_customer")
 public class Customer extends BaseModel {
 
-	// Fields
 	private static final long serialVersionUID = 3776663314613637676L;
 	/**
 	 * 客户Id
 	 */
-	private String customerId;
-	/**
-	 * 客户编号
-	 */
-	private String customerCode;
-	/**
-	 * 客户名称
-	 */
-	private String customerName;
-	/**
-	 * 客户订单
-	 */
-	private Set<Sale> sales = new HashSet<Sale>(0);
-	/**
-	 * 客户出库单
-	 */
-	private Set<Deliver> delivers = new HashSet<Deliver>(0);
-	/***
-	 * 客户退货单
-	 */
-	private Set<DeliverReject> deliverRejects = new HashSet<DeliverReject>(0);
-
-	// Constructors
-
-	/** default constructor */
-	public Customer() {
-	}
-
-	/** minimal constructor */
-	public Customer(String customerId, String customerCode, String customerName) {
-		this.customerId = customerId;
-		this.customerCode = customerCode;
-		this.customerName = customerName;
-	}
-
-	/** full constructor */
-	public Customer(String customerId, String customerCode,
-			String customerName, Set<Sale> sales, Set<Deliver> delivers,
-			Set<DeliverReject> deliverRejects) {
-		this.customerId = customerId;
-		this.customerCode = customerCode;
-		this.customerName = customerName;
-		this.sales = sales;
-		this.delivers = delivers;
-		this.deliverRejects = deliverRejects;
-	}
-
-	// Property accessors
 	@Id
 	@Column(name = "customerId", unique = true, nullable = false, length = 32)
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid")
+	private String customerId;
+	
+	/**
+	 * 客户编号
+	 */
+	@Column(name = "customerCode", nullable = false, length = 50)
+	private String customerCode;
+	
+	/**
+	 * 客户名称
+	 */
+	@Column(name = "customerName", nullable = false, length = 100)
+	private String customerName;
+	
+	/**
+	 * 联系人
+	 */
+	private String contacter;
+	
+	/**
+	 * 联系电话
+	 */
+	private String phone;
+	
+	/**
+	 * 客户状态  0:无效   1:有效
+	 */
+	@Column(updatable=false)
+	private Integer status;
+	
+	/**
+	 * 备注
+	 */
+	@Column(length=1000)
+	private String note;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="customerTypeID")
+	private CustomerType customerType;
+	
+	/**
+	 * 客户订单
+	 */
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "customer")
+	private Set<Sale> sales = new HashSet<Sale>(0);
+	
+	/**
+	 * 客户出库单
+	 */
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "customer")
+	private Set<Deliver> delivers = new HashSet<Deliver>(0);
+	
+	/***
+	 * 客户退货单
+	 */
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "customer")
+	private Set<DeliverReject> deliverRejects = new HashSet<DeliverReject>(0);
+
 	public String getCustomerId() {
 		return this.customerId;
 	}
@@ -90,7 +102,6 @@ public class Customer extends BaseModel {
 		this.customerId = customerId;
 	}
 
-	@Column(name = "customerCode", nullable = false, length = 50)
 	public String getCustomerCode() {
 		return this.customerCode;
 	}
@@ -99,7 +110,6 @@ public class Customer extends BaseModel {
 		this.customerCode = customerCode;
 	}
 
-	@Column(name = "customerName", nullable = false, length = 100)
 	public String getCustomerName() {
 		return this.customerName;
 	}
@@ -108,7 +118,46 @@ public class Customer extends BaseModel {
 		this.customerName = customerName;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "customer")
+	public String getContacter() {
+		return contacter;
+	}
+
+	public void setContacter(String contacter) {
+		this.contacter = contacter;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+	
+	public CustomerType getCustomerType() {
+		return customerType;
+	}
+
+	public void setCustomerType(CustomerType customerType) {
+		this.customerType = customerType;
+	}
+	
 	public Set<Sale> getSales() {
 		return this.sales;
 	}
@@ -117,7 +166,6 @@ public class Customer extends BaseModel {
 		this.sales = sales;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "customer")
 	public Set<Deliver> getDelivers() {
 		return this.delivers;
 	}
@@ -126,7 +174,6 @@ public class Customer extends BaseModel {
 		this.delivers = delivers;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "customer")
 	public Set<DeliverReject> getDeliverRejects() {
 		return this.deliverRejects;
 	}
@@ -135,4 +182,11 @@ public class Customer extends BaseModel {
 		this.deliverRejects = deliverRejects;
 	}
 
+	@Transient
+	public void setCustomerTypeID(String customerTypeID){
+		if(customerType==null){
+			customerType = new CustomerType();
+		}
+		customerType.setCustomerTypeID(customerTypeID);
+	}
 }

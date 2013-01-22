@@ -41,6 +41,42 @@ public interface BaseDAO<T,PK extends Serializable> {
 	 * @param model
 	 */
 	public void update(T model);
+	
+	/**
+	 * 
+	 * @Description:  刷新session.
+	 * @Create: 2012-3-28 下午06:49:59
+	 * @author longweier
+	 * @update logs
+	 * @throws Exception
+	 */
+	public void flush();
+	
+	/**
+	 * 
+	 * @Description: 清除Session.
+	 * @Create: 2012-3-28 下午06:50:13
+	 * @author longweier
+	 * @update logs
+	 * @throws Exception
+	 */
+	public void clear();
+	
+	/**
+	 * 
+	 * @Description: 清除某一对象.
+	 * @Create: 2012-3-28 下午06:50:30
+	 * @author longweier
+	 * @update logs
+	 * @param object 清除对象.
+	 * @throws Exception
+	 */
+	public void evict(Object object);
+	/**
+	 * 更新相应实体
+	 * @param model
+	 */
+	public void merger(T model);
 	/**
 	 * @Description: 根据id取得model
 	 * @Create: 2012-9-17 下午11:27:16
