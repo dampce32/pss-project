@@ -62,6 +62,34 @@ public abstract class BaseDAOImpl<T,PK extends Serializable> implements BaseDAO<
 	public void update(T model) {
 		hibernateTemplate.update(model);
 	}
+	/**
+	 * 刷新session
+	 */
+	public void flush(){
+		hibernateTemplate.flush();
+	}
+	/**
+	 * 清空session
+	 */
+	public void clear(){
+		hibernateTemplate.clear();
+	}
+	/**
+	 * 移除相应实体
+	 * @param model
+	 */
+	public void evict(Object object) {
+		if(object!=null){
+			hibernateTemplate.evict(object);
+		}
+	}
+	/**
+	 * 更新相应实体
+	 * @param model
+	 */
+	public void merger(T model){
+		hibernateTemplate.merge(model);
+	}
 	public HibernateTemplate getHibernateTemplate() {
 		return hibernateTemplate;
 	}

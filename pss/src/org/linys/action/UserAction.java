@@ -1,7 +1,11 @@
 package org.linys.action;
 
+import java.io.File;
+import java.io.IOException;
+
 import javax.annotation.Resource;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.linys.model.User;
@@ -167,9 +171,19 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	 */
 	public void getRootRightMain(){
 		try {
-			String userId = getSession(User.LOGIN_USERID).toString();
+			String path = "tree.json";
+			String pathname = getRequest().getSession().getServletContext().getRealPath(path);
+			File file = new File(pathname);
+			String tree = "";
+			try {
+				tree = FileUtils.readFileToString(file, "utf-8");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			ajaxJson(tree);
+			/*String userId = getSession(User.LOGIN_USERID).toString();
 			String jsonArray = userService.getRootRightMain(userId);
-			ajaxJson(jsonArray);
+			ajaxJson(jsonArray);*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
