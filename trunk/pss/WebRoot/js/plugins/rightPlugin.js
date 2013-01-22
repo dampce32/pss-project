@@ -4,7 +4,6 @@
   $.fn.rightInit = function() {
 	  var $this = $(this);
 	  var id = $(this).attr('id');
-	  var isUpdate = false;
 	  
 	  var selectRow = null;
 	  var selectIndex = null;
@@ -29,7 +28,6 @@
 					queryParams:content
 				});
 			}
-			
 	  });
 	  //列表
 	  $(rightList).datagrid({
@@ -80,7 +78,6 @@
 	});    
 	//添加
 	var onAdd = function(){
-		isUpdate = false;
 		$(editForm).form('clear');
 		$(editDialog).dialog('open');
 	}
@@ -106,14 +103,8 @@
 	}
 	//保存
 	var onSave = function(){
-		var url = null;
-		if(isUpdate){
-			url = 'system/updateRight.do'
-		}else{
-			url = 'system/addRight.do'
-		}
 		 $(editForm).form('submit',{
-			url: url,
+			url: 'system/saveRight.do',
 			onSubmit: function(){
 				return setValue();
 			},
@@ -121,8 +112,9 @@
 				var result = eval('('+data+')');
 				if(result.isSuccess){
 					var fn = function(){
+						var rightId = $('#rightId',editForm).val();
 						//新增
-						if(!isUpdate){
+						if(rightId==''){
 							var node = $(rightTree).tree('getSelected');
 							if(node==null){
 								node = $(rightTree).tree('getRoot');
@@ -135,7 +127,7 @@
 									text:rightName
 								}]
 							});
-							$(rightList).datagrid('reload');
+							search();
 						}else{
 							var row = $(editForm).serializeObject();
 							$(rightList).datagrid('updateRow',{index:selectIndex,row:row});
@@ -157,7 +149,6 @@
 	}
 	//修改
 	var onUpdate = function(){
-		isUpdate = true;
 		if(selectRow==null){
 			$.messager.alert("提示","请选择数据行","warning");
 			return;
@@ -168,7 +159,6 @@
 	//删除
 	var onDelete = function(){
 		var rows = $(rightList).datagrid('getSelections');
-		alert(rows.length);
 		if(rows.length==0){
 			 $.messager.alert('提示',"请选中要删除的纪录","warming");
 			 return;	
@@ -180,11 +170,10 @@
 				 return;	
 			}
 			var idArray = new Array();
-			
 			for(var i=0;i<rows.length;i++){
 				idArray.push(rows[i].rightId);
 			}
-			var ids = idArray.join(LYS.Join);
+			var ids = idArray.join(LYS.join);
 			var url = "system/mulDeleteRight.do";
 			var content = {ids:ids};
 			$.post(url,content,
@@ -194,7 +183,8 @@
 						for(var i=0;i<rows.length>0;i++){
 							$(rightTree).tree('remove',$(rightTree).tree('find',rows[i].rightId).target);
 						}
-						$(rightList).datagrid('reload');
+						search();
+						$(rightList).datagrid('unselectAll');
 					}else{
 						$.messager.alert('提示',result.message,"error");
 					}

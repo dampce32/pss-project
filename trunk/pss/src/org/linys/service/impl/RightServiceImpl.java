@@ -15,6 +15,7 @@ import org.linys.model.RoleRight;
 import org.linys.model.RoleRightId;
 import org.linys.service.RightService;
 import org.linys.util.JSONUtil;
+import org.linys.util.StringUtil;
 import org.linys.util.TreeUtil;
 import org.linys.vo.GobelConstants;
 import org.linys.vo.ServiceResult;
@@ -137,7 +138,7 @@ public class RightServiceImpl extends BaseServiceImpl<Right, String> implements 
 			result.setMessage("请选择要删除的记录");
 			return result;
 		}
-		String[] idArray = ids.split(GobelConstants.SPLIT);
+		String[] idArray = StringUtil.split(ids, GobelConstants.SPLIT_SEPARATOR);
 		if(idArray.length==0){
 			result.setMessage("请选择要删除的记录");
 			return result;
@@ -187,6 +188,67 @@ public class RightServiceImpl extends BaseServiceImpl<Right, String> implements 
 				setParentTrue(parentRoleRight);
 			}
 		}
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.RightService#save(org.linys.model.Right)
+	 */
+	@Override
+	public ServiceResult save(Right model) {
+		ServiceResult result = new ServiceResult(false);
+		if(model==null){
+			result.setMessage("请填写权限信息");
+			return result;
+		}
+		if(StringUtils.isEmpty(model.getRightName())){
+			result.setMessage("请填写权限名");
+			return result;
+		}
+		if(StringUtils.isEmpty(model.getRightId())){//新增
+			if(StringUtils.isEmpty(model.getParentRight().getRightId())){
+				result.setMessage("请选择父权限");
+				return result;
+			}
+			//查找该父权限下的权限排序最大值
+			Integer maxArray = rightDAO.getMaxArray(model.getParentRight().getRightId());
+			model.setArray(maxArray+1);
+			model.setIsLeaf(true);
+			rightDAO.save(model);
+			if(model.getParentRight()!=null){
+				rightDAO.updateIsLeaf(model.getParentRight().getRightId(),false);
+				
+				List<Role> allRole = roleDAO.queryAll();
+				for (Role role : allRole) {
+					RoleRight roleRight = new RoleRight();
+					RoleRightId roleRightId = new RoleRightId();
+					roleRightId.setRoleId(role.getRoleId());
+					roleRightId.setRightId(model.getRightId());
+					roleRight.setId(roleRightId);
+					
+					roleRight.setRole(role);
+					roleRight.setRight(model);
+					
+					roleRight.setState(true);
+					roleRightDAO.save(roleRight);
+					//更新权限树
+					setParentTrue(roleRight);
+				}
+			}
+			result.getData().put("rightId", model.getRightId());
+		}else{
+			Right oldModel = rightDAO.load(model.getRightId());
+			if(oldModel==null){
+				if(StringUtils.isEmpty(model.getParentRight().getRightId())){
+					result.setMessage("要修改的权限已不存在");
+					return result;
+				}
+			}
+			oldModel.setRightName(model.getRightName());
+			oldModel.setRightUrl(model.getRightUrl());
+			rightDAO.update(oldModel);
+		}
+		result.setIsSuccess(true);
+		return result;
 	}
 	
 }

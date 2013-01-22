@@ -94,5 +94,34 @@ public interface UserService extends BaseService<User,String>{
 	 * @return
 	 */
 	String getRootRightMain(String userId);
+	/**
+	 * @Description: 取得用户个人信息
+	 * @Create: 2013-1-22 下午1:57:21
+	 * @author lys
+	 * @update logs
+	 * @param userId
+	 * @return
+	 */
+	ServiceResult getSelfInfor(String userId);
+	/**
+	 * @Description: 更新用户个人信息
+	 * @Create: 2013-1-22 下午2:07:53
+	 * @author lys
+	 * @update logs
+	 * @param userId
+	 * @param model
+	 * @return
+	 */
+	ServiceResult updateSelfInfo(String userId, User model);
+	/**
+	 * @Description: 修改密码
+	 * @Create: 2013-1-22 下午2:34:56
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @param newUserPwd
+	 * @return
+	 */
+	ServiceResult modifyPwd(User model, String newUserPwd);
 
 }

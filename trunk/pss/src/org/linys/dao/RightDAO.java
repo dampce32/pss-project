@@ -82,5 +82,14 @@ public interface RightDAO extends BaseDAO<Right, String> {
 	 * @throws Exception
 	 */
 	Right getParentRight(String rightId);
+	/**
+	 * @Description: 查找该父权限下的子权限排序最大值
+	 * @Create: 2013-1-22 上午10:40:17
+	 * @author lys
+	 * @update logs
+	 * @param rightId
+	 * @return
+	 */
+	Integer getMaxArray(String rightId);
 
 }

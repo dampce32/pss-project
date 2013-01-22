@@ -73,5 +73,14 @@ public interface RightService extends BaseService<Right, String> {
 	 * @throws Exception
 	 */
 	List<Right> selectTreeNode(Right model);
+	/**
+	 * @Description: 保存权限
+	 * @Create: 2013-1-22 上午10:34:09
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @return
+	 */
+	ServiceResult save(Right model);
 
 }

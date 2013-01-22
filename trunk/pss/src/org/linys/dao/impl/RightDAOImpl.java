@@ -6,6 +6,8 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.linys.dao.RightDAO;
 import org.linys.model.Right;
@@ -32,6 +34,7 @@ public class RightDAOImpl extends BaseDAOImpl<Right, String> implements RightDAO
 		Criteria criteria = getCurrentSession().createCriteria(Right.class);
 		criteria.add(Restrictions.isNull("parentRight"));
 		List<Right> list = criteria.list();
+		criteria.addOrder(Order.asc("array"));
 		return list;
 	}
 	/*
@@ -59,6 +62,7 @@ public class RightDAOImpl extends BaseDAOImpl<Right, String> implements RightDAO
 		Integer begin = (page-1)*rows;
 		criteria.setFirstResult(begin);
 		criteria.setMaxResults(rows);
+		criteria.addOrder(Order.asc("array"));
 		return criteria.list();
 	}
 	/*
@@ -108,6 +112,7 @@ public class RightDAOImpl extends BaseDAOImpl<Right, String> implements RightDAO
 	public List<Right> getChildren(Right model) {
 		Criteria criteria = getCurrentSession().createCriteria(Right.class);
 		criteria.createAlias("parentRight", "model").add(Restrictions.eq("model.rightId", model.getRightId()));
+		criteria.addOrder(Order.asc("array"));
 		return criteria.list();
 	}
 	/*
@@ -122,5 +127,16 @@ public class RightDAOImpl extends BaseDAOImpl<Right, String> implements RightDAO
 			return (Right) list.get(0);
 		}
 		return null;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.RightDAO#getMaxArray(java.lang.String)
+	 */
+	@Override
+	public Integer getMaxArray(String rightId) {
+		Criteria criteria = getCurrentSession().createCriteria(Right.class);
+		criteria.createAlias("parentRight", "model").add(Restrictions.eq("model.rightId", rightId));
+		criteria.setProjection(Projections.max("array"));
+		return criteria.uniqueResult()==null?0:(Integer)criteria.uniqueResult();
 	}
 }
