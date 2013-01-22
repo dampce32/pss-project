@@ -97,7 +97,7 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 		StringBuilder sb = new StringBuilder();
 		sb.append("select a.buyId,b.buyCode,a.buyDetailId,a.productId,c.productCode,c.productName, ");
 		sb.append("d.dataDictionaryName unitName,e.dataDictionaryName sizeName,a.colorId,f.dataDictionaryName colorName, ");
-		sb.append("	a.qty-a.receiveQty qty,a.price ");
+		sb.append("	a.qty-a.receiveQty qty,a.price ,a.note1,a.note2,a.note3 ");
 		sb.append("from T_BuyDetail a ");
 		sb.append("left join T_Buy b on a.buyId = b.buyId ");
 		sb.append("left join T_Product c on a.productId = c.productId ");

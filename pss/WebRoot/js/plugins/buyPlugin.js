@@ -549,7 +549,7 @@
 			$.messager.alert("提示","请选择需要"+msg+"数据行","warning");
 			return;
 		}
-		$.messager.confirm("提示","确定要"+msg+"选中的记录?"+msg+"后系统将进行财务计算!!",function(t){ 
+		$.messager.confirm("提示","确定要"+msg+"该记录?"+msg+"后系统将进行财务计算!!",function(t){ 
 			if(t){
 				var url = 'inWarehouse/updateStatusBuy.do';
 				var content ={buyId:buyId,status:status};

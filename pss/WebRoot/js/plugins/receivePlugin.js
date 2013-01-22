@@ -1009,7 +1009,6 @@
 		var buyCode = $('#buyCodeSelectBuyDialog',selectBuyDialog).val();
 		
 		var url = "inWarehouse/queryReceiveBuy.do";
-		alert(url);
 		var content = {beginDate:beginDate,endDate:endDate,ids:idArray.join(LYS.join),supplierId:supplierId,buyCode:buyCode};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
@@ -1065,9 +1064,9 @@
 					 amount:row.qty*row.price,
 					 buyCode:row.buyCode,
 					 buyDetailId:row.buyDetailId,
-					 note1:'',
-					 note2:'',
-					 note3:''
+					 note1:row.note1,
+					 note2:row.note2,
+					 note3:row.note3
 				});
 			}
 			//重新计算应付金额

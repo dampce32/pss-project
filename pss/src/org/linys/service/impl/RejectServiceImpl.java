@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.linys.dao.BankDAO;
 import org.linys.dao.CommonDAO;
 import org.linys.dao.PrefixDAO;
+import org.linys.dao.ProductDAO;
 import org.linys.dao.RejectDAO;
 import org.linys.dao.RejectDetailDAO;
 import org.linys.dao.StoreDAO;
@@ -38,6 +39,8 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 	private PrefixDAO prefixDAO;
 	@Resource
 	private CommonDAO commonDAO;
+	@Resource
+	private ProductDAO productDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.RejectService#query(org.linys.model.Reject, java.lang.Integer, java.lang.Integer)
@@ -319,6 +322,11 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 						store.setQty(store.getQty()-rejectDetail.getQty());
 						store.setAmount(store.getAmount()-rejectDetail.getAmount());
 						storeDAO.update(store);
+						//更新商品中库存数量和金额
+						Product oldProduct =  productDAO.load(rejectDetail.getProduct().getProductId());
+						oldProduct.setQtyStore(oldProduct.getQtyStore()-rejectDetail.getQty());
+						oldProduct.setAmountStore(oldProduct.getAmountStore()-rejectDetail.getAmount());
+						productDAO.update(oldProduct);
 					}
 				}else if(model.getStatus()==0){//如果是由已审改为未审
 					//将该退货单下的商品入库
@@ -331,6 +339,11 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 						store.setQty(store.getQty()+rejectDetail.getQty());
 						store.setAmount(store.getAmount()+rejectDetail.getAmount());
 						storeDAO.update(store);
+						//更新商品中库存数量和金额
+						Product oldProduct =  productDAO.load(rejectDetail.getProduct().getProductId());
+						oldProduct.setQtyStore(oldProduct.getQtyStore()+rejectDetail.getQty());
+						oldProduct.setAmountStore(oldProduct.getAmountStore()+rejectDetail.getAmount());
+						productDAO.update(oldProduct);
 					}
 				}
 				
@@ -409,6 +422,11 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 				store.setQty(store.getQty()-rejectDetail.getQty());
 				store.setAmount(store.getAmount()-rejectDetail.getAmount());
 				storeDAO.update(store);
+				//更新商品中库存数量和金额
+				Product oldProduct =  productDAO.load(rejectDetail.getProduct().getProductId());
+				oldProduct.setQtyStore(oldProduct.getQtyStore()-rejectDetail.getQty());
+				oldProduct.setAmountStore(oldProduct.getAmountStore()-rejectDetail.getAmount());
+				productDAO.update(oldProduct);
 			}
 		}else if(model.getStatus()==0){//如果是由已审改为未审
 			//将该退货单下的商品入库
@@ -421,6 +439,11 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 				store.setQty(store.getQty()+rejectDetail.getQty());
 				store.setAmount(store.getAmount()+rejectDetail.getAmount());
 				storeDAO.update(store);
+				//更新商品中库存数量和金额
+				Product oldProduct =  productDAO.load(rejectDetail.getProduct().getProductId());
+				oldProduct.setQtyStore(oldProduct.getQtyStore()+rejectDetail.getQty());
+				oldProduct.setAmountStore(oldProduct.getAmountStore()+rejectDetail.getAmount());
+				productDAO.update(oldProduct);
 			}
 		}
 		
