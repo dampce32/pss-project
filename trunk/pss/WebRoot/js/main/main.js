@@ -15,7 +15,7 @@ $(function(){
  	$('#rightTree').tree({
 		url: 'system/getRootRightMainUser.do',
 		onBeforeExpand:function(node,param){
-			$('#rightTree').tree('options').url = 'system/queryChildrenRightUser.do?rightId='+node.id;  
+			//$('#rightTree').tree('options').url = 'system/queryChildrenRightUser.do?rightId='+node.id;  
 		},
 		onSelect:function (node) {
 			$(this).tree('toggle',node.target);
