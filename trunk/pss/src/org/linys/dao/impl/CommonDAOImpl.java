@@ -1,8 +1,11 @@
 package org.linys.dao.impl;
 
+import java.util.Date;
+
 import org.hibernate.Query;
 import org.linys.dao.CommonDAO;
 import org.linys.model.BaseModel;
+import org.linys.util.DateUtil;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -13,6 +16,8 @@ public class CommonDAOImpl extends BaseDAOImpl<BaseModel,String> implements Comm
 	 */
 	@Override
 	public String getCode(String table, String field,String filedPrefix) {
+		
+		filedPrefix = filedPrefix+DateUtil.dateToString(new Date(),"yyyyMMdd");
 		StringBuilder hql = new StringBuilder();
 		hql.append("select max("+field+") " );
 		hql.append("from " +table+" ");
@@ -22,7 +27,7 @@ public class CommonDAOImpl extends BaseDAOImpl<BaseModel,String> implements Comm
 		String maxCode = query.uniqueResult()==null?null:query.uniqueResult().toString();
 		int index = 0;
 		if(maxCode!=null){
-			index = Integer.parseInt(maxCode.substring(10, maxCode.length()));	
+			index = Integer.parseInt(maxCode.substring(filedPrefix.length(), maxCode.length()));	
 		}
 		maxCode = filedPrefix+String.format("%04d", index+1);
 		return maxCode;

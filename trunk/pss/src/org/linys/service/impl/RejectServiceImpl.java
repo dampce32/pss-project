@@ -1,12 +1,13 @@
 package org.linys.service.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.linys.dao.BankDAO;
+import org.linys.dao.CommonDAO;
+import org.linys.dao.PrefixDAO;
 import org.linys.dao.RejectDAO;
 import org.linys.dao.RejectDetailDAO;
 import org.linys.dao.StoreDAO;
@@ -17,7 +18,6 @@ import org.linys.model.Reject;
 import org.linys.model.RejectDetail;
 import org.linys.model.Store;
 import org.linys.service.RejectService;
-import org.linys.util.DateUtil;
 import org.linys.util.JSONUtil;
 import org.linys.util.StringUtil;
 import org.linys.vo.GobelConstants;
@@ -34,6 +34,10 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 	private StoreDAO storeDAO;
 	@Resource
 	private BankDAO bankDAO;
+	@Resource
+	private PrefixDAO prefixDAO;
+	@Resource
+	private CommonDAO commonDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.RejectService#query(org.linys.model.Reject, java.lang.Integer, java.lang.Integer)
@@ -123,14 +127,9 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 		}
 		if(StringUtils.isEmpty(model.getRejectId())){//新增
 			//取得入库单号
-			String rejectCode = null;
-			String prefix = "CT";
-			rejectCode = prefix + DateUtil.dateToString(new Date(),"yyyyMMdd");
-			rejectCode = rejectDAO.getMaxCode(rejectCode);
 			
-			rejectCode = newRejectCode(prefix,rejectCode);
 			model.setStatus(0);
-			model.setRejectCode(rejectCode);
+			model.setRejectCode(commonDAO.getCode("Reject", "rejectCode",prefixDAO.getPrefix("reject")));
 			rejectDAO.save(model);
 			for (int i = 0; i < productIdArray.length; i++) {
 				String productId = productIdArray[i];
@@ -356,21 +355,6 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 		return result;
 	}
 	
-	/**
-	 * @Description: 生成新的退货单编号
-	 * @Create: 2013-1-7 下午10:24:00
-	 * @author lys
-	 * @update logs
-	 * @param rejectCode
-	 * @return
-	 */
-	private String newRejectCode(String prefix,String rejectCode) {
-		int index = 0;
-		if(rejectCode!=null){
-			index = Integer.parseInt(rejectCode.substring(10, rejectCode.length()));	
-		}
-		return prefix+DateUtil.dateToString(new Date(),"yyyyMMdd")+String.format("%04d", index+1);
-	}
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.RejectService#delete(org.linys.model.Reject)

@@ -9,13 +9,13 @@ import org.linys.dao.BankDAO;
 import org.linys.dao.CommonDAO;
 import org.linys.dao.PayDAO;
 import org.linys.dao.PayDetailDAO;
+import org.linys.dao.PrefixDAO;
 import org.linys.dao.ReceiveDAO;
 import org.linys.model.Bank;
 import org.linys.model.Pay;
 import org.linys.model.PayDetail;
 import org.linys.model.Receive;
 import org.linys.service.PayService;
-import org.linys.util.CommonUtil;
 import org.linys.util.JSONUtil;
 import org.linys.util.StringUtil;
 import org.linys.vo.GobelConstants;
@@ -34,6 +34,8 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 	private BankDAO bankDAO;
 	@Resource
 	private ReceiveDAO receiveDAO;
+	@Resource
+	private PrefixDAO prefixDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.PayService#query(org.linys.model.Pay, java.lang.Integer, java.lang.Integer)
@@ -127,7 +129,7 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 		if(StringUtils.isEmpty(model.getPayId())){//新增
 			//取得入库单号
 			model.setStatus(0);
-			model.setPayCode(commonDAO.getCode("Pay", "payCode", CommonUtil.getCodePrefix("pay")));
+			model.setPayCode(commonDAO.getCode("Pay", "payCode",prefixDAO.getPrefix("pay")));
 			payDAO.save(model);
 			for (int i = 0; i < payKindArray.length; i++) {
 				String receiveId = receiveIdArray[i];

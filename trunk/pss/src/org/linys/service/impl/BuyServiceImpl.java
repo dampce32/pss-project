@@ -12,13 +12,13 @@ import org.linys.dao.BankDAO;
 import org.linys.dao.BuyDAO;
 import org.linys.dao.BuyDetailDAO;
 import org.linys.dao.CommonDAO;
+import org.linys.dao.PrefixDAO;
 import org.linys.model.Bank;
 import org.linys.model.Buy;
 import org.linys.model.BuyDetail;
 import org.linys.model.DataDictionary;
 import org.linys.model.Product;
 import org.linys.service.BuyService;
-import org.linys.util.CommonUtil;
 import org.linys.util.DateUtil;
 import org.linys.util.JSONUtil;
 import org.linys.util.StringUtil;
@@ -37,6 +37,8 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 	private BankDAO bankDAO;
 	@Resource
 	private CommonDAO commonDAO;
+	@Resource
+	private PrefixDAO prefixDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.BuyService#query(org.linys.model.Buy, java.lang.Integer, java.lang.Integer)
@@ -134,7 +136,8 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 		}
 		if(StringUtils.isEmpty(model.getBuyId())){//新增
 			//取得入库单号
-			model.setBuyCode(commonDAO.getCode("Buy", "buyCode", CommonUtil.getCodePrefix("buy")));
+			model.setBuyCode(commonDAO.getCode("Buy", "buyCode", prefixDAO.getPrefix("buy")));
+			
 			model.setStatus(0);
 			buyDAO.save(model);
 			for (int i = 0; i < productIdArray.length; i++) {

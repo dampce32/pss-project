@@ -1,6 +1,6 @@
 <div class="easyui-layout plugins" data-options="fit:true" ui="payInit" id="${id}">
 	<div data-options="region:'north',border:false" style="height: 35px;overflow: hidden;padding:5px" id="queryContent"> 
-		采购单号:&nbsp;&nbsp;<input id="buyCodeSearch" type="text" size="12"/>&nbsp;&nbsp;&nbsp;
+		付款单号:&nbsp;&nbsp;<input id="payCodeSearch" type="text" size="12"/>&nbsp;&nbsp;&nbsp;
 		<a href="#" class="easyui-linkbutton" id="searchBtn" data-options="iconCls:'icon-search'" style="cursor: pointer;">查询</a>
 		<a href="#" class="easyui-linkbutton" id="mulSearchBtn" data-options="iconCls:'icon-search'" style="cursor: pointer;">高级查询</a>
 		<div class = "easyui-panel" id="mulSearchPanel"  closed="true" style="padding: 3px;margin-top: 6px">
@@ -14,9 +14,9 @@
               <form id="mulSearchForm" method="post">
             	<table width="100%" >
 	                <tr>
-						<td class="table-title" style="width:80px"> 采购单号:</td>
+						<td class="table-title" style="width:80px"> 付款单号:</td>
 						<td class="table-value"> 
-							<input type="text" name="buyCode" id="buyCodeMulSearch" style="width:200px">
+							<input type="text" name="payCode" id="payCodeMulSearch" style="width:200px">
 						</td>
 					</tr>
                </table>

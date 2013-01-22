@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.linys.dao.BankDAO;
 import org.linys.dao.BuyDetailDAO;
 import org.linys.dao.CommonDAO;
+import org.linys.dao.PrefixDAO;
 import org.linys.dao.ProductDAO;
 import org.linys.dao.ReceiveDAO;
 import org.linys.dao.ReceiveDetailDAO;
@@ -23,7 +24,6 @@ import org.linys.model.Receive;
 import org.linys.model.ReceiveDetail;
 import org.linys.model.Store;
 import org.linys.service.ReceiveService;
-import org.linys.util.CommonUtil;
 import org.linys.util.DateUtil;
 import org.linys.util.JSONUtil;
 import org.linys.util.StringUtil;
@@ -48,6 +48,8 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	private CommonDAO commonDAO;
 	@Resource
 	private BuyDetailDAO buyDetailDAO;
+	@Resource
+	private PrefixDAO prefixDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.ReceiveService#query(org.linys.model.Receive, java.lang.Integer, java.lang.Integer)
@@ -152,9 +154,9 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			model.setStatus(0);
 			model.setIsPay(0);
 			if(!"other".equals(kind)){
-				model.setReceiveCode(commonDAO.getCode("Receive", "receiveCode", CommonUtil.getCodePrefix("receive")));
+				model.setReceiveCode(commonDAO.getCode("Receive", "receiveCode",prefixDAO.getPrefix("receive")));
 			}else{
-				model.setReceiveCode(commonDAO.getCode("Receive", "receiveCode", CommonUtil.getCodePrefix("receiveOther")));
+				model.setReceiveCode(commonDAO.getCode("Receive", "receiveCode",prefixDAO.getPrefix("receiveOther")));
 			}
 			receiveDAO.save(model);
 			for (int i = 0; i < productIdArray.length; i++) {

@@ -35,4 +35,5 @@
 		<column name="employeeId" property="employee"></column>
 	</table>
 	<table name="t_paydetail" catalog="pss" class="PayDetail"></table>
+	<table name="t_prefix" catalog="pss" class="Prefix"></table>
 </hibernate-reverse-engineering>
