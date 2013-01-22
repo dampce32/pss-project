@@ -66,9 +66,9 @@
 		  toolbar:[	
 				{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},'-',
 				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},'-',
-				{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}},'-',
-				{text:'已审',iconCls:'icon-edit',handler:function(){onUpdateShzt(1)}},'-',
-				{text:'反审',iconCls:'icon-edit',handler:function(){onUpdateShzt(0)}}
+				{text:'删除',iconCls:'icon-remove',handler:function(){onMulDelete()}},'-',
+				{text:'已审',iconCls:'icon-edit',handler:function(){onMulUpdateStatus(1)}},'-',
+				{text:'反审',iconCls:'icon-edit',handler:function(){onMulUpdateStatus(0)}}
 		  ],
 		  onDblClickRow:function(rowIndex, rowData){
 				onUpdate();
@@ -523,7 +523,7 @@
 		});
 	 }
 	//修改审核状态
-	var onMulUpdateShzt = function(status){
+	var onMulUpdateStatus = function(status){
 		var rows =  $(viewList).datagrid('getSelections');
 		var msg = '';
 		if(shzt==1){
@@ -541,8 +541,8 @@
 		}
 		$.messager.confirm("提示","确定要"+msg+"选中的记录?审核后单据不能再修改和删除，系统将进行库存和财务计算!!",function(t){ 
 			if(t){
-				var url = 'inWarehouse/mulUpdateShztReject.do';
-				var content ={ids:idArray.join(LYS.join),shzt:shzt};
+				var url = 'inWarehouse/mulUpdateStatusReject.do';
+				var content ={ids:idArray.join(LYS.join),status:status};
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
 						var fn = function(){

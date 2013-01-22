@@ -456,6 +456,7 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 				}
 				oldPay.setStatus(model.getStatus());
 				payDAO.update(oldPay);
+				haveUpdateStatus = true;
 			}
 		}
 		if(!haveUpdateStatus){
