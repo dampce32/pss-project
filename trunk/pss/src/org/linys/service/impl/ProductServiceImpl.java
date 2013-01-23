@@ -139,7 +139,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 				"unit.dataDictionaryId:unitId","unit.dataDictionaryName:unitName",
 				"color.dataDictionaryId:colorId","color.dataDictionaryName:colorName",
 				"size.dataDictionaryId:sizeId","size.dataDictionaryName:sizeName",
-				"qtyStore","buyingPrice"};
+				"qtyStore","buyingPrice","salePrice","priceStore"};
 		String data = JSONUtil.toJson(list,properties,total);
 		result.addData("datagridData", data);
 		
