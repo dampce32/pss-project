@@ -48,7 +48,7 @@ public class SaleDaoImpl extends BaseDAOImpl<Sale, String> implements SaleDao {
 		if(sale.getStatus()!=null && sale.getStatus()>=0){
 			criteria.add(Restrictions.eq("status", sale.getStatus()));
 		}
-		Long total = new Long(criteria.setProjection(Projections.rowCount()).toString());
+		Long total = new Long(criteria.setProjection(Projections.rowCount()).uniqueResult().toString());
 		criteria.setProjection(null);
 		criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 		criteria.setFirstResult(pager.getBeginCount()).setMaxResults(pager.getPageSize());
