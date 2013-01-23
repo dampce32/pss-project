@@ -21,11 +21,12 @@ public class StringUtil {
 		int i = 0;
 		distArray = new String[StringUtils.countMatches(source, separator)+1];
 		while(source.length()>0){
-			distArray[i++] = StringUtils.substringBefore(source,separator);
+			String value = StringUtils.substringBefore(source,separator);
+			distArray[i++] = StringUtils.isEmpty(value)?null:value;
 			source = StringUtils.substringAfter(source,separator);
 		}
 		if(distArray[distArray.length-1]==null){//排除最后一个分隔符后放空
-			distArray[distArray.length-1] = "";
+			distArray[distArray.length-1] = null;
 		}
 		return distArray;
 	}
