@@ -149,15 +149,18 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 				String note2 = note2Array[i];
 				String note3 = note3Array[i];
 				
+				BuyDetail buyDetail = new BuyDetail();
+				
 				Product product = new Product();
 				product.setProductId(productId);
-				DataDictionary color = new DataDictionary();
-				color.setDataDictionaryId(colorId);
+				if(StringUtils.isNotEmpty(colorId)){
+					DataDictionary color = new DataDictionary();
+					color.setDataDictionaryId(colorId);
+					buyDetail.setColor(color);
+				}
 				
-				BuyDetail buyDetail = new BuyDetail();
 				buyDetail.setBuy(model);
 				buyDetail.setProduct(product);
-				buyDetail.setColor(color);
 				buyDetail.setQty(new Double(qty));
 				buyDetail.setPrice(new Double(price));
 				buyDetail.setNote1(note1);
