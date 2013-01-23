@@ -9,5 +9,6 @@ package org.linys.service;
  * @vesion 1.0
  */
 public interface CommonService {
+	
 
 }

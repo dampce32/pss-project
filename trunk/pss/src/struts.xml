@@ -38,6 +38,7 @@
 	</package>
 	<!-- 系统管理 -->
 	<package name="system" namespace="/system" extends="basePackage">
+		<action name="*ReportConfig" class="reportConfigAction" method="{1}"></action>
 		<action name="*Prefix" class="prefixAction" method="{1}"></action>
 		<action name="*UserRole" class="userRoleAction" method="{1}"></action>
 		<action name="*RoleRight" class="roleRightAction" method="{1}"></action>
