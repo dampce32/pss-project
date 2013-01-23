@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50140
 File Encoding         : 65001
 
-Date: 2013-01-22 00:17:39
+Date: 2013-01-23 17:06:06
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,8 +30,8 @@ CREATE TABLE `t_bank` (
 -- ----------------------------
 -- Records of t_bank
 -- ----------------------------
-INSERT INTO `t_bank` VALUES ('402881e53c3e26cc013c3e2cfe980013', '中国农业银行', 'ABC', '-782');
-INSERT INTO `t_bank` VALUES ('402881e53c3e26cc013c3e2d24510014', '中国建设银行', 'CCB', '429');
+INSERT INTO `t_bank` VALUES ('402881e53c3e26cc013c3e2cfe980013', '中国农业银行', 'ABC', '78');
+INSERT INTO `t_bank` VALUES ('402881e53c3e26cc013c3e2d24510014', '中国建设银行', 'CCB', '500');
 
 -- ----------------------------
 -- Table structure for `t_buy`
@@ -67,13 +67,9 @@ CREATE TABLE `t_buy` (
 -- ----------------------------
 -- Records of t_buy
 -- ----------------------------
-INSERT INTO `t_buy` VALUES ('402881e53c43b8ad013c4402b224000e', '402881e53be5d01c013be5d1b6b70002', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2cfe980013', 'CD201301160001', 'aa', '2013-01-16', '2013-01-17', '2', '362', '362', null, null, '1');
-INSERT INTO `t_buy` VALUES ('402881e53c43b8ad013c4404b46a0011', '402881e53be5d01c013be5d1b6b70002', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2cfe980013', 'CD201301160002', null, '2013-01-16', '2013-01-18', '2', '101', '101', null, null, '1');
-INSERT INTO `t_buy` VALUES ('402881e53c43b8ad013c44078d040013', '402881e53be5d01c013be5d1b6b70002', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2d24510014', 'CD201301160003', null, '2013-01-16', '2013-01-17', '3', '15', '15', null, null, '1');
-INSERT INTO `t_buy` VALUES ('402881e53c5d8e25013c5d95f0dc0003', '402881e53be5d01c013be5d1b6b70002', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2cfe980013', 'BUY201301210001', null, '2013-01-21', '2013-01-23', '0', '132', '132', null, null, '0');
-INSERT INTO `t_buy` VALUES ('402881e53c5d8e25013c5d9697c70005', '402881e53be5d01c013be5d1ec720003', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2d6b730016', '402881e53c3e26cc013c3e2cfe980013', 'BUY201301210002', 'a', '2013-01-22', '2013-01-24', '2', '101', '101', null, 'afa', '0');
-INSERT INTO `t_buy` VALUES ('402881e53c5d8e25013c5da0f93f000b', '402881e53be5d01c013be5d21c630004', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2d80090017', '402881e53c3e26cc013c3e2cfe980013', 'Buy201301210003', 'aa', '2013-01-22', '2013-01-23', '0', '9', '9', null, null, '0');
-INSERT INTO `t_buy` VALUES ('402881e53c5d8e25013c5da21429000d', '402881e53be5d01c013be5d1ec720003', '402881e53c3e26cc013c3e2c71020010', '402881e53c3e26cc013c3e2d6b730016', '402881e53c3e26cc013c3e2d24510014', 'Buy201301210004', null, '2013-01-30', '2013-01-22', '4', '16', '16', null, null, '0');
+INSERT INTO `t_buy` VALUES ('402880bb3c5ff0a4013c5ff7046d0001', '402881e53be5d01c013be5d1b6b70002', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2cfe980013', 'Buy201301220001', 'aa', '2013-01-22', '2013-01-23', '0', '198', '198', null, 'aa', '1');
+INSERT INTO `t_buy` VALUES ('402880bb3c668065013c66935e770001', '402881e53be5d01c013be5d1b6b70002', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2d24510014', 'Buy201301230001', 'aa', '2013-01-23', '2013-01-25', '2', '80', '80', null, null, '0');
+INSERT INTO `t_buy` VALUES ('402880bb3c668065013c66948baa0004', '402881e53be5d01c013be5d1b6b70002', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2cfe980013', 'Buy201301230002', 'a', '2013-01-25', '2013-01-24', '2', '101', '101', null, '3', '1');
 
 -- ----------------------------
 -- Table structure for `t_buydetail`
@@ -102,14 +98,11 @@ CREATE TABLE `t_buydetail` (
 -- ----------------------------
 -- Records of t_buydetail
 -- ----------------------------
-INSERT INTO `t_buydetail` VALUES ('402881e53c43b8ad013c4402b225000f', '402881e53c43b8ad013c4402b224000e', '402881e53c3e26cc013c3e2bc53b000d', '402881e53c3e26cc013c3e2a19760002', '10', '33', '', '', '', '10');
-INSERT INTO `t_buydetail` VALUES ('402881e53c43b8ad013c4402b2250010', '402881e53c43b8ad013c4402b224000e', '402881e53c3e26cc013c3e2c180e000e', '402881e53c3e26cc013c3e2a373f0004', '10', '3', '', '', '', '10');
-INSERT INTO `t_buydetail` VALUES ('402881e53c43b8ad013c4404b46a0012', '402881e53c43b8ad013c4404b46a0011', '402881e53c3e26cc013c3e2bc53b000d', '402881e53c3e26cc013c3e2a19760002', '3', '33', '', '', '', '0');
-INSERT INTO `t_buydetail` VALUES ('402881e53c43b8ad013c44078d040014', '402881e53c43b8ad013c44078d040013', '402881e53c3e26cc013c3e2c180e000e', '402881e53c3e26cc013c3e2a373f0004', '4', '3', '', '', '', '0');
-INSERT INTO `t_buydetail` VALUES ('402881e53c5d8e25013c5d95f0dd0004', '402881e53c5d8e25013c5d95f0dc0003', '402881e53c3e26cc013c3e2bc53b000d', '402881e53c3e26cc013c3e2a19760002', '4', '33', '', '', '', '0');
-INSERT INTO `t_buydetail` VALUES ('402881e53c5d8e25013c5d9697c80006', '402881e53c5d8e25013c5d9697c70005', '402881e53c3e26cc013c3e2bc53b000d', '402881e53c3e26cc013c3e2a19760002', '3', '33', '', '', '', '0');
-INSERT INTO `t_buydetail` VALUES ('402881e53c5d8e25013c5da0f93f000c', '402881e53c5d8e25013c5da0f93f000b', '402881e53c3e26cc013c3e2c180e000e', '402881e53c3e26cc013c3e2a373f0004', '3', '3', '', '', '', '0');
-INSERT INTO `t_buydetail` VALUES ('402881e53c5d8e25013c5da2142a000e', '402881e53c5d8e25013c5da21429000d', '402881e53c3e26cc013c3e2c180e000e', '402881e53c3e26cc013c3e2a373f0004', '4', '3', '3', '3', '3', '0');
+INSERT INTO `t_buydetail` VALUES ('402880bb3c5ff0a4013c5ff704730002', '402880bb3c5ff0a4013c5ff7046d0001', '402881e53c3e26cc013c3e2bc53b000d', '402881e53c3e26cc013c3e2a19760002', '3', '33', '1', '2', '3', '1');
+INSERT INTO `t_buydetail` VALUES ('402880bb3c5ff0a4013c5ff704740003', '402880bb3c5ff0a4013c5ff7046d0001', '402881e53c3e26cc013c3e2c180e000e', '402881e53c3e26cc013c3e2a373f0004', '33', '3', '1', '2', '3', '30');
+INSERT INTO `t_buydetail` VALUES ('402880bb3c668065013c66935ed20002', '402880bb3c668065013c66935e770001', '402881e53c3e26cc013c3e2bc53b000d', '402881e53c3e26cc013c3e2a19760002', '2', '33', '3', '3', '3', '0');
+INSERT INTO `t_buydetail` VALUES ('402880bb3c668065013c66935ed20003', '402880bb3c668065013c66935e770001', '402881e53c3e26cc013c3e2c180e000e', '402881e53c3e26cc013c3e2a373f0004', '4', '3', '4', '4', '4', '0');
+INSERT INTO `t_buydetail` VALUES ('402880bb3c668065013c66948bb10005', '402880bb3c668065013c66948baa0004', '402881e53c3e26cc013c3e2bc53b000d', '402881e53c3e26cc013c3e2a19760002', '3', '33', null, null, null, '0');
 
 -- ----------------------------
 -- Table structure for `t_customer`
@@ -119,11 +112,35 @@ CREATE TABLE `t_customer` (
   `customerId` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `customerCode` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `customerName` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`customerId`)
+  `contacter` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `note` longtext COLLATE utf8_unicode_ci,
+  `phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  `customerTypeID` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`customerId`),
+  KEY `FKDACDF3493F0C935D` (`customerTypeID`),
+  CONSTRAINT `FKDACDF3493F0C935D` FOREIGN KEY (`customerTypeID`) REFERENCES `t_customertype` (`dataDictionaryId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of t_customer
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `t_customertype`
+-- ----------------------------
+DROP TABLE IF EXISTS `t_customertype`;
+CREATE TABLE `t_customertype` (
+  `dataDictionaryId` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `customerTypeCode` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `customerTypeName` longtext COLLATE utf8_unicode_ci,
+  `note` longtext COLLATE utf8_unicode_ci,
+  PRIMARY KEY (`dataDictionaryId`),
+  UNIQUE KEY `dataDictionaryId` (`dataDictionaryId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of t_customertype
 -- ----------------------------
 
 -- ----------------------------
@@ -359,9 +376,7 @@ CREATE TABLE `t_pay` (
 -- ----------------------------
 -- Records of t_pay
 -- ----------------------------
-INSERT INTO `t_pay` VALUES ('402880bb3c5c43ae013c5c5656640007', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2cfe980013', '402881e53c3e26cc013c3e2d4b580015', 'PAY201301210001', '现金', '2013-01-21', '3', '1', '3', '90');
-INSERT INTO `t_pay` VALUES ('402880bb3c5c43ae013c5c6f8f19000b', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2cfe980013', '402881e53c3e26cc013c3e2d4b580015', 'PAY2013012110002', '现金', '2013-01-21', null, '1', '6', '91');
-INSERT INTO `t_pay` VALUES ('402880bb3c5c43ae013c5c713a81000e', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2cfe980013', '402881e53c3e26cc013c3e2d4b580015', 'PAY20130121110003', '现金', '2013-01-21', null, '0', '0', '10');
+INSERT INTO `t_pay` VALUES ('402880bb3c5ff0a4013c600898cd000f', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2cfe980013', '402881e53c3e26cc013c3e2d4b580015', 'Pay201301220001', '现金', '2013-01-22', null, '1', '0', '60');
 
 -- ----------------------------
 -- Table structure for `t_paydetail`
@@ -387,10 +402,7 @@ CREATE TABLE `t_paydetail` (
 -- ----------------------------
 -- Records of t_paydetail
 -- ----------------------------
-INSERT INTO `t_paydetail` VALUES ('402880bb3c5c43ae013c5c5656640008', '402880bb3c5c43ae013c5c5656640007', '402881e53c488717013c489247350003', '采购入库', '374', '271', '3', '90', '3');
-INSERT INTO `t_paydetail` VALUES ('402880bb3c5c43ae013c5c6f8f19000c', '402880bb3c5c43ae013c5c6f8f19000b', '402880bb3c5c43ae013c5c6dac670009', '采购入库', '300', '198', '2', '88', '2');
-INSERT INTO `t_paydetail` VALUES ('402880bb3c5c43ae013c5c6f8f19000d', '402880bb3c5c43ae013c5c6f8f19000b', '402881e53c488717013c489247350003', '采购入库', '374', '361', '4', '3', '6');
-INSERT INTO `t_paydetail` VALUES ('402880bb3c5c43ae013c5c713a82000f', '402880bb3c5c43ae013c5c713a81000e', '402880bb3c5c43ae013c5c6dac670009', '采购入库', '300', '286', '0', '10', '4');
+INSERT INTO `t_paydetail` VALUES ('402880bb3c5ff0a4013c600898cd0010', '402880bb3c5ff0a4013c600898cd000f', '402880bb3c5ff0a4013c5ff878b20004', '采购入库', '123', '63', '0', '60', '0');
 
 -- ----------------------------
 -- Table structure for `t_prefix`
@@ -408,9 +420,9 @@ CREATE TABLE `t_prefix` (
 -- Records of t_prefix
 -- ----------------------------
 INSERT INTO `t_prefix` VALUES ('402881e53c5d5344013c5d53b8250001', 'buy', 'Buy', '采购单');
-INSERT INTO `t_prefix` VALUES ('402881e53c5d5344013c5d5464870002', 'receive', 'REC', '入库单');
-INSERT INTO `t_prefix` VALUES ('402881e53c5d5344013c5d54f7bf0003', 'receiveOther', 'OREC', '其他入库单');
-INSERT INTO `t_prefix` VALUES ('402881e53c5d5344013c5d557d800004', 'pay', 'PAY', '付款单');
+INSERT INTO `t_prefix` VALUES ('402881e53c5d5344013c5d5464870002', 'receive', 'Rec', '入库单');
+INSERT INTO `t_prefix` VALUES ('402881e53c5d5344013c5d54f7bf0003', 'receiveOther', 'ORec', '其他入库单');
+INSERT INTO `t_prefix` VALUES ('402881e53c5d5344013c5d557d800004', 'pay', 'Pay', '付款单');
 INSERT INTO `t_prefix` VALUES ('402881e53c5d8e25013c5dcc2eeb000f', 'reject', 'Rej', '采购退货单');
 
 -- ----------------------------
@@ -444,8 +456,8 @@ CREATE TABLE `t_product` (
 -- ----------------------------
 -- Records of t_product
 -- ----------------------------
-INSERT INTO `t_product` VALUES ('402881e53c3e26cc013c3e2bc53b000d', '402881e53c3e26cc013c3e2b5bce000c', '402881e53c3e26cc013c3e2aa69c0008', '402881e53c3e26cc013c3e2a19760002', '402881e53c3e26cc013c3e2a5cf60005', '商品00001', '商品00001', '10', '330', '33', '33', null);
-INSERT INTO `t_product` VALUES ('402881e53c3e26cc013c3e2c180e000e', '402881e53c3e26cc013c3e2b2c91000b', '402881e53c3e26cc013c3e2aa69c0008', '402881e53c3e26cc013c3e2a373f0004', '402881e53c3e26cc013c3e2a79660006', '商品00002', '商品00002', '125', '367', '3', '3', null);
+INSERT INTO `t_product` VALUES ('402881e53c3e26cc013c3e2bc53b000d', '402881e53c3e26cc013c3e2b5bce000c', '402881e53c3e26cc013c3e2aa69c0008', '402881e53c3e26cc013c3e2a19760002', '402881e53c3e26cc013c3e2a5cf60005', '商品00001', '商品00001', '4', '132', '33', '33', null);
+INSERT INTO `t_product` VALUES ('402881e53c3e26cc013c3e2c180e000e', '402881e53c3e26cc013c3e2b2c91000b', '402881e53c3e26cc013c3e2aa69c0008', '402881e53c3e26cc013c3e2a373f0004', '402881e53c3e26cc013c3e2a79660006', '商品00002', '商品00002', '33', '99', '3', '3', null);
 
 -- ----------------------------
 -- Table structure for `t_producttype`
@@ -508,11 +520,8 @@ CREATE TABLE `t_receive` (
 -- ----------------------------
 -- Records of t_receive
 -- ----------------------------
-INSERT INTO `t_receive` VALUES ('402880bb3c5c43ae013c5c6dac670009', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2caa8f0011', '402881e53be5d01c013be5d1b6b70002', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2cfe980013', 'REC201301210001', '3', '2013-01-21', '300', '2', '198', null, '0', 'a', '0', '1');
-INSERT INTO `t_receive` VALUES ('402881e53c488717013c488803f20001', null, '402881e53c3e26cc013c3e2caa8f0011', null, '402881e53c3e26cc013c3e2d4b580015', null, 'QR201301170001', 'adfad', '2013-01-17', null, null, null, null, '0', 'aa', null, '1');
-INSERT INTO `t_receive` VALUES ('402881e53c488717013c489247350003', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2caa8f0011', '402881e53be5d01c013be5d1b6b70002', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2cfe980013', 'CJ201301170001', 'adfad', '2013-01-24', '374', '3', '271', null, '1', '22', '2', '1');
-INSERT INTO `t_receive` VALUES ('402881e53c488717013c48954b860007', '402881e53c3e26cc013c3e2c71020010', '402881e53c3e26cc013c3e2cc53d0012', '402881e53be5d01c013be5d21c630004', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2cfe980013', 'CJ201301170002', 'adfad', '2013-01-17', '12', '0', '2', null, '0', null, '3', '1');
-INSERT INTO `t_receive` VALUES ('402881e53c488717013c4913a03d000a', null, '402881e53c3e26cc013c3e2cc53d0012', null, '402881e53c3e26cc013c3e2d4b580015', null, 'QR201301170002', 'adfad', '2013-01-17', null, null, null, null, '0', 'aa', null, '1');
+INSERT INTO `t_receive` VALUES ('402880bb3c5ff0a4013c5ff878b20004', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2caa8f0011', '402881e53be5d01c013be5d1b6b70002', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2cfe980013', 'Rec201301220001', 'adfad', '2013-01-22', '123', '0', '63', null, '1', null, '0', '1');
+INSERT INTO `t_receive` VALUES ('402880bb3c5ff0a4013c5ff93d470009', null, '402881e53c3e26cc013c3e2caa8f0011', null, '402881e53c3e26cc013c3e2d4b580015', null, 'ORec201301220001', 'adfad', '2013-01-22', null, null, null, null, '0', 'a', null, '1');
 
 -- ----------------------------
 -- Table structure for `t_receivedetail`
@@ -543,13 +552,10 @@ CREATE TABLE `t_receivedetail` (
 -- ----------------------------
 -- Records of t_receivedetail
 -- ----------------------------
-INSERT INTO `t_receivedetail` VALUES ('402880bb3c5c43ae013c5c6dac67000a', '402880bb3c5c43ae013c5c6dac670009', '402881e53c3e26cc013c3e2c180e000e', null, '402881e53c3e26cc013c3e2a373f0004', '100', '3', '33', '3', '3');
-INSERT INTO `t_receivedetail` VALUES ('402881e53c488717013c488803f50002', '402881e53c488717013c488803f20001', '402881e53c3e26cc013c3e2c180e000e', null, '402881e53c3e26cc013c3e2a373f0004', '4', '3', '', '', '');
-INSERT INTO `t_receivedetail` VALUES ('402881e53c488717013c489247360004', '402881e53c488717013c489247350003', '402881e53c3e26cc013c3e2bc53b000d', '402881e53c43b8ad013c4402b225000f', '402881e53c3e26cc013c3e2a19760002', '10', '33', '', '', '');
-INSERT INTO `t_receivedetail` VALUES ('402881e53c488717013c489247360005', '402881e53c488717013c489247350003', '402881e53c3e26cc013c3e2c180e000e', '402881e53c43b8ad013c4402b2250010', '402881e53c3e26cc013c3e2a373f0004', '10', '3', '', '', '');
-INSERT INTO `t_receivedetail` VALUES ('402881e53c488717013c489247360006', '402881e53c488717013c489247350003', '402881e53c3e26cc013c3e2c180e000e', null, '402881e53c3e26cc013c3e2a19760002', '4', '3', '', '', '');
-INSERT INTO `t_receivedetail` VALUES ('402881e53c488717013c48954b860008', '402881e53c488717013c48954b860007', '402881e53c3e26cc013c3e2c180e000e', null, '402881e53c3e26cc013c3e2a373f0004', '3', '3', '3', '33', '3');
-INSERT INTO `t_receivedetail` VALUES ('402881e53c488717013c4913a03d000b', '402881e53c488717013c4913a03d000a', '402881e53c3e26cc013c3e2c180e000e', null, '402881e53c3e26cc013c3e2a373f0004', '4', '1', '3', '33', '3');
+INSERT INTO `t_receivedetail` VALUES ('402880bb3c5ff0a4013c5ff878b30005', '402880bb3c5ff0a4013c5ff878b20004', '402881e53c3e26cc013c3e2bc53b000d', '402880bb3c5ff0a4013c5ff704730002', '402881e53c3e26cc013c3e2a19760002', '1', '33', '1', '2', '3');
+INSERT INTO `t_receivedetail` VALUES ('402880bb3c5ff0a4013c5ff878b30006', '402880bb3c5ff0a4013c5ff878b20004', '402881e53c3e26cc013c3e2c180e000e', '402880bb3c5ff0a4013c5ff704740003', '402881e53c3e26cc013c3e2a373f0004', '30', '3', '1', '2', '3');
+INSERT INTO `t_receivedetail` VALUES ('402880bb3c5ff0a4013c5ff93d47000a', '402880bb3c5ff0a4013c5ff93d470009', '402881e53c3e26cc013c3e2bc53b000d', null, '402881e53c3e26cc013c3e2a19760002', '3', '33', '', '', '');
+INSERT INTO `t_receivedetail` VALUES ('402880bb3c5ff0a4013c5ff93d48000b', '402880bb3c5ff0a4013c5ff93d470009', '402881e53c3e26cc013c3e2c180e000e', null, '402881e53c3e26cc013c3e2a373f0004', '3', '3', '', '', '');
 
 -- ----------------------------
 -- Table structure for `t_reject`
@@ -586,7 +592,7 @@ CREATE TABLE `t_reject` (
 -- ----------------------------
 -- Records of t_reject
 -- ----------------------------
-INSERT INTO `t_reject` VALUES ('402881e53c493522013c49401b720001', '402881e53c3e26cc013c3e2cc53d0012', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2c52cb000f', null, '402881e53c3e26cc013c3e2cfe980013', 'CT201301180001', 'a', '2013-01-09', '14', '14', null, null, '0');
+INSERT INTO `t_reject` VALUES ('402880bb3c5ff0a4013c5ffa4ec8000c', '402881e53c3e26cc013c3e2caa8f0011', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2c52cb000f', null, '402881e53c3e26cc013c3e2cfe980013', 'Rej201301220001', 'a', '2013-01-22', '231', '0', null, 'a', '0');
 
 -- ----------------------------
 -- Table structure for `t_rejectdetail`
@@ -615,7 +621,29 @@ CREATE TABLE `t_rejectdetail` (
 -- ----------------------------
 -- Records of t_rejectdetail
 -- ----------------------------
-INSERT INTO `t_rejectdetail` VALUES ('402881e53c493522013c49401b9d0002', '402881e53c493522013c49401b720001', '402881e53c3e26cc013c3e2c180e000e', '402881e53c3e26cc013c3e2a373f0004', '7', '2', '3', '3', '3', '14');
+INSERT INTO `t_rejectdetail` VALUES ('402880bb3c5ff0a4013c5ffa4ec8000d', '402880bb3c5ff0a4013c5ffa4ec8000c', '402881e53c3e26cc013c3e2bc53b000d', '402881e53c3e26cc013c3e2a19760002', '4', '33', '', '', '', '132');
+INSERT INTO `t_rejectdetail` VALUES ('402880bb3c5ff0a4013c5ffa4ec9000e', '402880bb3c5ff0a4013c5ffa4ec8000c', '402881e53c3e26cc013c3e2c180e000e', '402881e53c3e26cc013c3e2a373f0004', '33', '3', '', '', '', '99');
+
+-- ----------------------------
+-- Table structure for `t_reportconfig`
+-- ----------------------------
+DROP TABLE IF EXISTS `t_reportconfig`;
+CREATE TABLE `t_reportconfig` (
+  `reportConfigId` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `reportConfigCode` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `reportSql` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `reportParamsSql` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `reportCode` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `reportDetailSql` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `reportName` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`reportConfigId`),
+  KEY `AK_AK` (`reportConfigCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of t_reportconfig
+-- ----------------------------
+INSERT INTO `t_reportconfig` VALUES ('402880bb3c662f21013c6637a44e0001', null, null, 'call p_buyParams(@buyId)', 'buy', 'CALL p_buyDetail(@buyId)', '采购单');
 
 -- ----------------------------
 -- Table structure for `t_right`
@@ -627,6 +655,7 @@ CREATE TABLE `t_right` (
   `rightUrl` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `parentRightId` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
   `isLeaf` int(11) DEFAULT NULL,
+  `array` int(11) DEFAULT NULL,
   PRIMARY KEY (`rightId`),
   KEY `FK25CA651FD1B92B7` (`parentRightId`),
   CONSTRAINT `FK25CA651FD1B92B7` FOREIGN KEY (`parentRightId`) REFERENCES `t_right` (`rightId`)
@@ -635,31 +664,37 @@ CREATE TABLE `t_right` (
 -- ----------------------------
 -- Records of t_right
 -- ----------------------------
-INSERT INTO `t_right` VALUES ('402880bb3c27a904013c27e25e860001', '采购退货', 'inWarehouse/reject.do', '402881e53be5d01c013be6347b6c0007', '1');
-INSERT INTO `t_right` VALUES ('402880bb3c5c43ae013c5d48150f0010', '编号前缀管理', 'system/prefix.do', '402881e53b046217013b048ffca1000c', '1');
-INSERT INTO `t_right` VALUES ('402880c33b020bcc013b02476a450001', '个人信息管理', '', '402881e53aa31698013aa31fa1980003', '1');
-INSERT INTO `t_right` VALUES ('402881e53aa31698013aa31fa1980003', '系统权限', '', null, '0');
-INSERT INTO `t_right` VALUES ('402881e53b046217013b048ffca1000c', '系统管理', '', '402881e53aa31698013aa31fa1980003', '0');
-INSERT INTO `t_right` VALUES ('402881e53b04bb98013b04caff8b0001', '权限管理', 'system/right.do', '402881e53b046217013b048ffca1000c', '1');
-INSERT INTO `t_right` VALUES ('402881e53b04bb98013b04cb53a40002', '角色管理', 'system/role.do', '402881e53b046217013b048ffca1000c', '1');
-INSERT INTO `t_right` VALUES ('402881e53b04bb98013b04cbc01c0003', '用户管理', 'system/user.do', '402881e53b046217013b048ffca1000c', '1');
-INSERT INTO `t_right` VALUES ('402881e53baeee40013baef1c5e50001', '基础数据', '', '402881e53aa31698013aa31fa1980003', '0');
-INSERT INTO `t_right` VALUES ('402881e53baeee40013baef4096f0002', '商品颜色', 'dict/color.do', '402881e53baeee40013baef1c5e50001', '1');
-INSERT INTO `t_right` VALUES ('402881e53bc2fd9b013bc32896e40001', '商品规格', 'dict/size.do', '402881e53baeee40013baef1c5e50001', '1');
-INSERT INTO `t_right` VALUES ('402881e53bc2fd9b013bc329500c0002', '商品单位', 'dict/unit.do', '402881e53baeee40013baef1c5e50001', '1');
-INSERT INTO `t_right` VALUES ('402881e53bc6b3d4013bc6b4a5c40001', '商品类别', 'dict/productType.do', '402881e53baeee40013baef1c5e50001', '1');
-INSERT INTO `t_right` VALUES ('402881e53bc82c91013bc832ecca0001', '商品', 'dict/product.do', '402881e53baeee40013baef1c5e50001', '1');
-INSERT INTO `t_right` VALUES ('402881e53be485f3013be4c875990002', '供应商', 'dict/supplier.do', '402881e53baeee40013baef1c5e50001', '1');
-INSERT INTO `t_right` VALUES ('402881e53be55e13013be563b45f0001', '仓库', 'dict/warehouse.do', '402881e53baeee40013baef1c5e50001', '1');
-INSERT INTO `t_right` VALUES ('402881e53be58722013be58905b70001', '银行', 'dict/bank.do', '402881e53baeee40013baef1c5e50001', '1');
-INSERT INTO `t_right` VALUES ('402881e53be5af4f013be5b04d3a0001', '员工', 'dict/employee.do', '402881e53baeee40013baef1c5e50001', '1');
-INSERT INTO `t_right` VALUES ('402881e53be5d01c013be5d1602e0001', '发票类型', 'dict/invoiceType.do', '402881e53baeee40013baef1c5e50001', '1');
-INSERT INTO `t_right` VALUES ('402881e53be5d01c013be6347b6c0007', '入库管理', '', '402881e53aa31698013aa31fa1980003', '0');
-INSERT INTO `t_right` VALUES ('402881e53be5d01c013be637f3380008', '采购入库', 'inWarehouse/receive.do', '402881e53be5d01c013be6347b6c0007', '1');
-INSERT INTO `t_right` VALUES ('402881e53c200d7f013c20164cb60001', '当前库存', 'store/store.do', '402881e53be5d01c013be6347b6c0007', '1');
-INSERT INTO `t_right` VALUES ('402881e53c240327013c24ccc6730001', '其他入库', 'inWarehouse/receiveOther.do', '402881e53be5d01c013be6347b6c0007', '1');
-INSERT INTO `t_right` VALUES ('402881e53c3e26cc013c3e28710f0001', '采购单', 'inWarehouse/buy.do', '402881e53be5d01c013be6347b6c0007', '1');
-INSERT INTO `t_right` VALUES ('402881e53c580cf1013c58104b5d0001', '采购付款', 'finance/pay.do', '402881e53be5d01c013be6347b6c0007', '1');
+INSERT INTO `t_right` VALUES ('402880bb3c27a904013c27e25e860001', '采购退货', 'inWarehouse/reject.do', '402881e53be5d01c013be6347b6c0007', '1', '4');
+INSERT INTO `t_right` VALUES ('402880bb3c5c43ae013c5d48150f0010', '编号前缀管理', 'system/prefix.do', '402881e53b046217013b048ffca1000c', '1', '1');
+INSERT INTO `t_right` VALUES ('402880bb3c5fc306013c5fd08ef90001', '库存管理', null, '402881e53aa31698013aa31fa1980003', '0', '5');
+INSERT INTO `t_right` VALUES ('402880bb3c5fc306013c5fd0c5a00002', '财务管理', null, '402881e53aa31698013aa31fa1980003', '0', '6');
+INSERT INTO `t_right` VALUES ('402880bb3c5fc306013c5fd128260003', '当前库存', 'store/store.do', '402880bb3c5fc306013c5fd08ef90001', '1', null);
+INSERT INTO `t_right` VALUES ('402880bb3c5fc306013c5fd16c240004', '采购付款', 'finance/pay.do', '402880bb3c5fc306013c5fd0c5a00002', '1', null);
+INSERT INTO `t_right` VALUES ('402880bb3c6038f3013c60c98c2b0012', '个人信息', 'self/self.do', '402880c33b020bcc013b02476a450001', '1', '1');
+INSERT INTO `t_right` VALUES ('402880bb3c6038f3013c60c9e8fe0013', '修改密码', 'self/modifyPwd.do', '402880c33b020bcc013b02476a450001', '1', '2');
+INSERT INTO `t_right` VALUES ('402880c33b020bcc013b02476a450001', '个人信息管理', '', '402881e53aa31698013aa31fa1980003', '0', '1');
+INSERT INTO `t_right` VALUES ('402881e53aa31698013aa31fa1980003', '系统权限', '', null, '0', null);
+INSERT INTO `t_right` VALUES ('402881e53b046217013b048ffca1000c', '系统管理', '', '402881e53aa31698013aa31fa1980003', '0', '2');
+INSERT INTO `t_right` VALUES ('402881e53b04bb98013b04caff8b0001', '权限管理', 'system/right.do', '402881e53b046217013b048ffca1000c', '1', '2');
+INSERT INTO `t_right` VALUES ('402881e53b04bb98013b04cb53a40002', '角色管理', 'system/role.do', '402881e53b046217013b048ffca1000c', '1', '3');
+INSERT INTO `t_right` VALUES ('402881e53b04bb98013b04cbc01c0003', '用户管理', 'system/user.do', '402881e53b046217013b048ffca1000c', '1', '4');
+INSERT INTO `t_right` VALUES ('402881e53baeee40013baef1c5e50001', '基础数据', '', '402881e53aa31698013aa31fa1980003', '0', '3');
+INSERT INTO `t_right` VALUES ('402881e53baeee40013baef4096f0002', '商品颜色', 'dict/color.do', '402881e53baeee40013baef1c5e50001', '1', '1');
+INSERT INTO `t_right` VALUES ('402881e53bc2fd9b013bc32896e40001', '商品规格', 'dict/size.do', '402881e53baeee40013baef1c5e50001', '1', '2');
+INSERT INTO `t_right` VALUES ('402881e53bc2fd9b013bc329500c0002', '商品单位', 'dict/unit.do', '402881e53baeee40013baef1c5e50001', '1', '3');
+INSERT INTO `t_right` VALUES ('402881e53bc6b3d4013bc6b4a5c40001', '商品类别', 'dict/productType.do', '402881e53baeee40013baef1c5e50001', '1', '4');
+INSERT INTO `t_right` VALUES ('402881e53bc82c91013bc832ecca0001', '商品', 'dict/product.do', '402881e53baeee40013baef1c5e50001', '1', '5');
+INSERT INTO `t_right` VALUES ('402881e53be485f3013be4c875990002', '供应商', 'dict/supplier.do', '402881e53baeee40013baef1c5e50001', '1', '6');
+INSERT INTO `t_right` VALUES ('402881e53be55e13013be563b45f0001', '仓库', 'dict/warehouse.do', '402881e53baeee40013baef1c5e50001', '1', '7');
+INSERT INTO `t_right` VALUES ('402881e53be58722013be58905b70001', '银行', 'dict/bank.do', '402881e53baeee40013baef1c5e50001', '1', '8');
+INSERT INTO `t_right` VALUES ('402881e53be5af4f013be5b04d3a0001', '员工', 'dict/employee.do', '402881e53baeee40013baef1c5e50001', '1', '9');
+INSERT INTO `t_right` VALUES ('402881e53be5d01c013be5d1602e0001', '发票类型', 'dict/invoiceType.do', '402881e53baeee40013baef1c5e50001', '1', '10');
+INSERT INTO `t_right` VALUES ('402881e53be5d01c013be6347b6c0007', '入库管理', '', '402881e53aa31698013aa31fa1980003', '0', '4');
+INSERT INTO `t_right` VALUES ('402881e53be5d01c013be637f3380008', '采购入库', 'inWarehouse/receive.do', '402881e53be5d01c013be6347b6c0007', '1', '2');
+INSERT INTO `t_right` VALUES ('402881e53c200d7f013c20164cb60001', '当前库存', 'store/store.do', '402881e53be5d01c013be6347b6c0007', '1', '6');
+INSERT INTO `t_right` VALUES ('402881e53c240327013c24ccc6730001', '其他入库', 'inWarehouse/receiveOther.do', '402881e53be5d01c013be6347b6c0007', '1', '3');
+INSERT INTO `t_right` VALUES ('402881e53c3e26cc013c3e28710f0001', '采购单', 'inWarehouse/buy.do', '402881e53be5d01c013be6347b6c0007', '1', '1');
+INSERT INTO `t_right` VALUES ('402881e53c580cf1013c58104b5d0001', '采购付款', 'finance/pay.do', '402881e53be5d01c013be6347b6c0007', '1', '5');
 
 -- ----------------------------
 -- Table structure for `t_role`
@@ -695,7 +730,13 @@ CREATE TABLE `t_roleright` (
 -- ----------------------------
 INSERT INTO `t_roleright` VALUES ('402880bb3c27a904013c27e25e860001', '402881e53aa21d17013aa224b5ed0003', '1');
 INSERT INTO `t_roleright` VALUES ('402880bb3c5c43ae013c5d48150f0010', '402881e53aa21d17013aa224b5ed0003', '1');
-INSERT INTO `t_roleright` VALUES ('402880c33b020bcc013b02476a450001', '402881e53aa21d17013aa224b5ed0003', '0');
+INSERT INTO `t_roleright` VALUES ('402880bb3c5fc306013c5fd08ef90001', '402881e53aa21d17013aa224b5ed0003', '1');
+INSERT INTO `t_roleright` VALUES ('402880bb3c5fc306013c5fd0c5a00002', '402881e53aa21d17013aa224b5ed0003', '1');
+INSERT INTO `t_roleright` VALUES ('402880bb3c5fc306013c5fd128260003', '402881e53aa21d17013aa224b5ed0003', '1');
+INSERT INTO `t_roleright` VALUES ('402880bb3c5fc306013c5fd16c240004', '402881e53aa21d17013aa224b5ed0003', '1');
+INSERT INTO `t_roleright` VALUES ('402880bb3c6038f3013c60c98c2b0012', '402881e53aa21d17013aa224b5ed0003', '1');
+INSERT INTO `t_roleright` VALUES ('402880bb3c6038f3013c60c9e8fe0013', '402881e53aa21d17013aa224b5ed0003', '1');
+INSERT INTO `t_roleright` VALUES ('402880c33b020bcc013b02476a450001', '402881e53aa21d17013aa224b5ed0003', '1');
 INSERT INTO `t_roleright` VALUES ('402881e53aa31698013aa31fa1980003', '402881e53aa21d17013aa224b5ed0003', '1');
 INSERT INTO `t_roleright` VALUES ('402881e53b046217013b048ffca1000c', '402881e53aa21d17013aa224b5ed0003', '1');
 INSERT INTO `t_roleright` VALUES ('402881e53b04bb98013b04caff8b0001', '402881e53aa21d17013aa224b5ed0003', '1');
@@ -800,9 +841,8 @@ CREATE TABLE `t_store` (
 -- ----------------------------
 -- Records of t_store
 -- ----------------------------
-INSERT INTO `t_store` VALUES ('402881e53c43980e013c439affb50001', '402881e53c3e26cc013c3e2caa8f0011', '402881e53c3e26cc013c3e2c180e000e', '118', '0');
-INSERT INTO `t_store` VALUES ('402881e53c43b8ad013c43c57cd40004', '402881e53c3e26cc013c3e2caa8f0011', '402881e53c3e26cc013c3e2bc53b000d', '10', '0');
-INSERT INTO `t_store` VALUES ('402881e53c488717013c4895b8780009', '402881e53c3e26cc013c3e2cc53d0012', '402881e53c3e26cc013c3e2c180e000e', '7', '0');
+INSERT INTO `t_store` VALUES ('402880bb3c5ff0a4013c5ff88cb40007', '402881e53c3e26cc013c3e2caa8f0011', '402881e53c3e26cc013c3e2bc53b000d', '4', '0');
+INSERT INTO `t_store` VALUES ('402880bb3c5ff0a4013c5ff88cc00008', '402881e53c3e26cc013c3e2caa8f0011', '402881e53c3e26cc013c3e2c180e000e', '33', '0');
 
 -- ----------------------------
 -- Table structure for `t_supplier`
@@ -837,6 +877,7 @@ CREATE TABLE `t_user` (
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
+INSERT INTO `t_user` VALUES ('402880bb3c60ee5d013c60f0a98e0001', 'aa', 'aa', '4124bc0a9335c27f086f24ba207a4912');
 INSERT INTO `t_user` VALUES ('402881e53b046217013b0490d440000d', 'admin', '超级管理员', '21232f297a57a5a743894a0e4a801fc3');
 
 -- ----------------------------
@@ -855,6 +896,7 @@ CREATE TABLE `t_userrole` (
 -- ----------------------------
 -- Records of t_userrole
 -- ----------------------------
+INSERT INTO `t_userrole` VALUES ('402880bb3c60ee5d013c60f0a98e0001', '402881e53aa21d17013aa224b5ed0003');
 INSERT INTO `t_userrole` VALUES ('402881e53b046217013b0490d440000d', '402881e53aa21d17013aa224b5ed0003');
 
 -- ----------------------------
@@ -877,3 +919,53 @@ CREATE TABLE `t_warehouse` (
 -- ----------------------------
 INSERT INTO `t_warehouse` VALUES ('402881e53c3e26cc013c3e2caa8f0011', '仓库001', '仓库001', null, null, null, null);
 INSERT INTO `t_warehouse` VALUES ('402881e53c3e26cc013c3e2cc53d0012', '仓库002', '仓库002', null, null, null, null);
+
+-- ----------------------------
+-- Procedure structure for `p_buyDetail`
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `p_buyDetail`;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `p_buyDetail`(in buyId_in varchar(32))
+BEGIN
+	select 
+		b.productCode,
+		b.productName,
+		e.dataDictionaryName unitName,
+		c.dataDictionaryName colorName,
+		d.dataDictionaryName sizeName,
+    a.qty,
+		a.price,
+		a.qty*a.price amount,
+		a.note1 
+	from t_buydetail a
+  left join t_product b on a.productId = b.productId
+  left join t_datadictionary c on a.colorId = c.dataDictionaryId
+  left join t_datadictionary d on b.sizeId = d.dataDictionaryId
+  left join t_datadictionary e on b.unitId = e.dataDictionaryId
+  where buyId = buyId_in;
+END
+;;
+DELIMITER ;
+
+-- ----------------------------
+-- Procedure structure for `p_buyParams`
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `p_buyParams`;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `p_buyParams`(IN buyId_in varchar(32))
+BEGIN
+	select 
+			a.buyCode,
+			a.sourceCode,
+			a.buyDate,
+			a.receiveDate,
+			b.supplierName,
+			c.employeeName,
+			a.note
+	from t_buy a
+  left join t_supplier b on a.supplierId = b.supplierId
+  left join t_employee c on a.employeeId = c.employeeId
+	where a.buyId = buyId_in;
+END
+;;
+DELIMITER ;

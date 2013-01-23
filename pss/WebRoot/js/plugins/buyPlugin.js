@@ -98,7 +98,7 @@
 		}else{
 			$('#mulSearchPanel',$this).panel('open');
 			$('#'+id).layout('panel','north').panel('resize',{
-				height: 110
+				height: 140
 			});
 			$('#'+id).layout('resize');
 			changeSearch = true;
@@ -232,12 +232,12 @@
 	//添加
 	var onAdd = function(){
 		$(viewList).datagrid('unselectAll');
-		selectIndex==null
-		selectRow==null
+		selectIndex = null;
+		selectRow = null;
 		$(editForm).form('clear');
 		var rows  = $(buyDetail).datagrid('getRows');
 		if(rows.length!=0){
-			$(buyDetail).datagrid({url:LYS.ClearUrl});
+			$(buyDetail).datagrid('loadData',LYS.ClearData);
 		}
 		initChoose();
 		$('#otherAmount',editForm).numberbox('setValue', 0.0);
@@ -260,37 +260,25 @@
 		    ]]  
 		});
 		//银行
-		if(bankData==null){
-			var url = 'dict/queryComboboxBank.do';
-			bankData = syncCallService(url);
-		}
 		$('#bank',editDialog).combobox({
 			valueField:'bankId',
 			textField:'bankShortName',
 			width:250,
-			data:bankData
+			data:PSS.getBankList()
 		})		  
 		//经办人
-		if(employeeData==null){
-			var url = 'dict/queryComboboxEmployee.do';
-			employeeData = syncCallService(url);
-		}
 		$('#employee',editDialog).combobox({
 			valueField:'employeeId',
 			textField:'employeeName',
 			width:250,
-			data:employeeData
+			data:PSS.getEmployeeList()
 		})
 		//发票类型
-		if(invoiceTypeData==null){
-			var url = 'dict/queryComboboxInvoiceType.do';
-			invoiceTypeData = syncCallService(url);
-		}
 		$('#invoiceType',editDialog).combobox({
 			valueField:'invoiceTypeId',
 			textField:'invoiceTypeName',
 			width:250,
-			data:invoiceTypeData
+			data:PSS.getInvoiceTypeList()
 		})
 	}
 	//保存前的赋值操作
@@ -337,7 +325,7 @@
 		$('#invoiceTypeId',editForm).val(invoiceTypeId);
 		//验证添加的商品行
 		$(buyDetail).datagrid('endEdit', lastIndex);
-		 $(buyDetail).datagrid('unselectAll');
+		$(buyDetail).datagrid('unselectAll');
 		lastIndex = null;
 		var rows = $(buyDetail).datagrid('getRows');
 		if(rows.length==0){
@@ -439,11 +427,11 @@
 			if(result.isSuccess){
 				var preDisable = false;
 				var nextDisable = false;
-				if(selectIndex==0||selectIndex==null){
+				if(selectIndex==null||selectIndex==0){
 					preDisable = true;
 				}
 				var rows = $(viewList).datagrid('getRows');
-				if(selectIndex==rows.length-1||selectIndex==null){
+				if(selectIndex==null||selectIndex==rows.length-1){
 					nextDisable = true;
 				}
 				if(preDisable){
@@ -743,7 +731,7 @@
 		  rownumbers:true,
 		  pagination:true,
 		  toolbar:[	
-				{text:'选择',iconCls:'icon-save',handler:function(){onSelectOKProduct()}},
+				{text:'选择',iconCls:'icon-ok',handler:function(){onSelectOKProduct()}},
 				{text:'退出',iconCls:'icon-cancel',handler:function(){
 					onExitSelectProduct();
 				}}

@@ -1,5 +1,6 @@
 package org.linys.util;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.Properties;
 import java.util.zip.DeflaterOutputStream;
 
 import javax.servlet.ServletOutputStream;
@@ -14,11 +16,23 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class GenXmlData {
+	public static String driver = null;   
+	public static String url = null;  
+	public static String user = null;   
+	public static String password = null;
 	
-	public final static String driver = "com.mysql.jdbc.Driver";    //mssql2005 jdbc
-	public final static String url = "jdbc:mysql://localhost:3306/pss?useUnicode=true&characterEncoding=utf8"; //mssql2005 jdbc   
-	public final static String user = "root";   
-	public final static String password = "root";
+	static{
+		Properties pro = new Properties();
+		try {
+			pro.load(GenXmlData.class.getClassLoader().getResourceAsStream("application.properties"));
+			driver = pro.getProperty("jdbc.driverClassName");
+			url = pro.getProperty("jdbc.url");
+			user = pro.getProperty("jdbc.username");
+			password = pro.getProperty("jdbc.password");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	//方法简要说明
 	//1. GenNodeXmlData：产生报表需要的XML节点类型数据
