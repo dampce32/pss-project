@@ -220,6 +220,7 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 						buyDetail.setNote1(note1);
 						buyDetail.setNote2(note2);
 						buyDetail.setNote3(note3);
+						buyDetail.setReceiveQty(0d);
 						buyDetailDAO.save(buyDetail);
 				}else{
 					BuyDetail oldModel = buyDetailDAO.load(buyDetailId);

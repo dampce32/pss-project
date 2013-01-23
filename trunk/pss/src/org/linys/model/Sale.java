@@ -47,7 +47,7 @@ public class Sale extends BaseModel {
 	/**
 	 * 银行
 	 */
-	private Bank Bank;
+	private Bank bank;
 	/**
 	 * 订单编号
 	 */
@@ -69,7 +69,7 @@ public class Sale extends BaseModel {
 	 */
 	private Double otherAmount;
 	/**
-	 * 应付金额
+	 * 应收金额
 	 */
 	private Double amount;
 	/**
@@ -81,7 +81,7 @@ public class Sale extends BaseModel {
 	 */
 	private String note;
 	/**
-	 * 客户销售单状态
+	 * 客户销售单状态   0:未审核   1:审核
 	 */
 	private Integer status;
 	/**
@@ -137,11 +137,11 @@ public class Sale extends BaseModel {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "bankId")
 	public Bank getBank() {
-		return this.Bank;
+		return this.bank;
 	}
 
-	public void setBank(Bank Bank) {
-		this.Bank = Bank;
+	public void setBank(Bank bank) {
+		this.bank = bank;
 	}
 
 	@Column(name = "saleCode", nullable = false, length = 50)

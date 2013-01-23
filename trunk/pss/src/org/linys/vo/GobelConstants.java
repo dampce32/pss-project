@@ -8,7 +8,7 @@ package org.linys.vo;
  */
 public interface GobelConstants {
 	
-	public static int DEFAULTPAGESIZE = 10;
+	public static int DEFAULTPAGESIZE = 20;
 	
 	public static String SPLIT=",";
 	public static String SPLIT_SEPARATOR ="^";
