@@ -27,3 +27,13 @@ PSS.getEmployeeList = function(){
 	}
 	return PSS.EmployeeList;
 }
+
+//发票类型
+PSS.InvoiceTypeList = null;
+PSS.getInvoiceTypeList = function(){
+	if(PSS.InvoiceTypeList==null){
+		var url = 'dict/queryComboboxInvoiceType.do';
+		PSS.InvoiceTypeList = syncCallService(url);
+	}
+	return PSS.InvoiceTypeList;
+}

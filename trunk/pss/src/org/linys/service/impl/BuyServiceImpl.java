@@ -355,12 +355,15 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 			return result;
 		}
 		Buy oldModel = buyDAO.load(model.getBuyId());
-		if(oldModel==null){
+		if(oldModel==null||oldModel.getStatus().intValue()==1){
 			result.setMessage("要删除的采购单已不存在");
 			return result;
-		}else{
-			buyDAO.delete(oldModel);
 		}
+		if(oldModel.getStatus().intValue()==1){
+			result.setMessage("要删除的采购单已审核通过已不能删除");
+			return result;
+		}
+		buyDAO.delete(oldModel);
 		result.setIsSuccess(true);
 		return result;
 	}
