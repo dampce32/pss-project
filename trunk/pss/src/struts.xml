@@ -76,7 +76,7 @@
 	</package>
 	
 	<package name="outWarehouse" namespace="/outWarehouse" extends="basePackage">
-		
+		<action name="*Sale" class="saleAction" method="{1}"></action>
 		<action name="*">
 			<result>/WEB-INF/outWarehouse/{1}.html</result>
 		</action>
