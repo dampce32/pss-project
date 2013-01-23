@@ -50,10 +50,10 @@
 				{field:'note',title:'备注',width:90,align:"center"},
 				{field:'status',title:'状态',width:80,align:"center",
 					formatter: function(value,row,index){
-						if(row.status==0){
-							return '未审';
-						}else if(row.status==1){
-							return '已审';
+						if (value==0){
+							return '<img src="style/v1/icons/warn.png"/>';
+						} else {
+							return '<img src="style/v1/icons/info.png"/>';
 						}
 					}},
 				{field:'invoiceTypeName',title:'开票信息',width:90,align:"center"}
@@ -64,8 +64,8 @@
 				{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},'-',
 				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},'-',
 				{text:'删除',iconCls:'icon-remove',handler:function(){onMulDelete()}},'-',
-				{text:'已审',iconCls:'icon-edit',handler:function(){onMulUpdateStatus(1)}},'-',
-				{text:'反审',iconCls:'icon-edit',handler:function(){onMulUpdateStatus(0)}}
+				{text:'已审',iconCls:'icon-info',handler:function(){onMulUpdateStatus(1)}},'-',
+				{text:'反审',iconCls:'icon-warn',handler:function(){onMulUpdateStatus(0)}}
 		  ],
 		  onDblClickRow:function(rowIndex, rowData){
 				onUpdate();
@@ -182,10 +182,10 @@
 	 			{id:'save'+id,text:'保存',iconCls:'icon-save',handler:function(){onSave();}},'-',
 	 			{id:'add'+id,text:'新增',iconCls:'icon-add',handler:function(){onAdd();}},'-',
 	 			{id:'delete'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDelete();}},'-',
-	 			{id:'sh'+id,text:'审核',iconCls:'icon-edit',handler:function(){onUpdateStatus(1);}},'-',
-	 			{id:'fs'+id,text:'反审',iconCls:'icon-edit',handler:function(){onUpdateStatus(0);}},'-',
-	 			{id:'pre'+id,text:'上一笔',iconCls:'icon-edit',handler:function(){onOpenIndex(-1);}},'-',
-	 			{id:'next'+id,text:'下一笔',iconCls:'icon-edit',handler:function(){onOpenIndex(1);}},'-',
+	 			{id:'sh'+id,text:'审核',iconCls:'icon-info',handler:function(){onUpdateStatus(1);}},'-',
+	 			{id:'fs'+id,text:'反审',iconCls:'icon-warn',handler:function(){onUpdateStatus(0);}},'-',
+	 			{id:'pre'+id,text:'上一笔',iconCls:'icon-left',handler:function(){onOpenIndex(-1);}},'-',
+	 			{id:'next'+id,text:'下一笔',iconCls:'icon-right',handler:function(){onOpenIndex(1);}},'-',
 	 			{text:'退出',iconCls:'icon-cancel',handler:function(){
 	 					$(editDialog).dialog('close');
 	 				}
@@ -262,7 +262,7 @@
 		$('#bank',editDialog).combobox({
 			valueField:'bankId',
 			textField:'bankShortName',
-			width:150,
+			width:250,
 			data:bankData
 		})		  
 		//经办人
@@ -273,7 +273,7 @@
 		$('#employee',editDialog).combobox({
 			valueField:'employeeId',
 			textField:'employeeName',
-			width:150,
+			width:250,
 			data:employeeData
 		})
 		//发票类型
@@ -284,7 +284,7 @@
 		$('#invoiceType',editDialog).combobox({
 			valueField:'invoiceTypeId',
 			textField:'invoiceTypeName',
-			width:150,
+			width:250,
 			data:invoiceTypeData
 		})
 	}
