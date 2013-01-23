@@ -36,7 +36,7 @@ public class SaleDetail extends BaseModel {
 	/**
 	 * 商品
 	 */
-	private Product Product;
+	private Product product;
 	/**
 	 * 客户订单
 	 */
@@ -105,11 +105,11 @@ public class SaleDetail extends BaseModel {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "productId")
 	public Product getProduct() {
-		return this.Product;
+		return this.product;
 	}
 
 	public void setProduct(Product Product) {
-		this.Product = Product;
+		this.product = Product;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
