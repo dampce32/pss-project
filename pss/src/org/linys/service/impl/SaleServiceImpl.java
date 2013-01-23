@@ -106,17 +106,18 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 			if(StringUtils.isEmpty(discount)){
 				discount="1";
 			}
+			SaleDetail saleDetail = new SaleDetail();
 			
 			Product product = new Product();
 			product.setProductId(productId);
-			DataDictionary color = new DataDictionary();
-			color.setDataDictionaryId(colorId);
 			
-			SaleDetail saleDetail = new SaleDetail();
-			
+			if(StringUtils.isNotEmpty(colorId)){
+				DataDictionary color = new DataDictionary();
+				color.setDataDictionaryId(colorId);
+				saleDetail.setColor(color);
+			}
 			saleDetail.setProduct(product);
 			saleDetail.setSale(sale);
-			saleDetail.setColor(color);
 			saleDetail.setQty(Double.parseDouble(qty));
 			saleDetail.setPrice(Double.parseDouble(price));
 			saleDetail.setDiscount(Double.parseDouble(discount));
@@ -128,6 +129,7 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 			saleDetailDao.save(saleDetail);
 		}
 		result.setIsSuccess(true);
+		result.addData("saleId", sale.getSaleId());
 		return result;
 	}
 	
@@ -142,8 +144,8 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 			result.setMessage("该订单已被删除");
 			return result;
 		}
-		if(sale.getStatus()==1){
-			result.setMessage("该订单已确认,不能删除");
+		if(sale.getStatus().intValue()==1){
+			result.setMessage("该订单已审核,不能删除");
 			return result;
 		}
 		saleDao.delete(sale);
@@ -174,10 +176,10 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 			return result;
 		}
 		Sale model = saleDao.load(sale.getSaleId());
-		if(model.getStatus()!=sale.getStatus()){
+		if(model.getStatus().intValue()!=sale.getStatus().intValue()){
 			Bank bank = model.getBank();
 			if(bank!=null){
-				if(sale.getStatus()==1){//如果是由未审改为已审
+				if(sale.getStatus().intValue()==1){//如果是由未审改为已审
 					bank.setAmount(bank.getAmount()+model.getReceiptedAmount());
 				}else{//如果是由已审改为未审
 					bank.setAmount(bank.getAmount()-model.getReceiptedAmount());
@@ -197,7 +199,7 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 		String[] idArray = StringUtil.split(ids,GobelConstants.SPLIT_SEPARATOR);
 		for(String saleId : idArray){
 			Sale model = saleDao.load(saleId);
-			if(model.getStatus()!=status){
+			if(model.getStatus().intValue()!=status.intValue()){
 				Bank bank = model.getBank();
 				if(bank!=null){
 					if(status==1){//如果是由未审改为已审
@@ -214,14 +216,19 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 	}
 
 	public String querySale(Integer pageNumber,Integer pageSize,Sale sale,Date beginDate,Date endDate) {
-		Pager pager = new Pager(pageNumber, pageSize);
-		pager = saleDao.querySale(pager, sale, beginDate, endDate);
-		
-		String[] properties = {"saleId","saleCode","saleDate","sourceCode","deliverDate",
-				"customer.customerName","employee.employeeName","amount","otherAmount",
-				"receiptedAmount","note","status"}; 
-		String jsonArray = JSONUtil.toJson(pager.getList(), properties, pager.getTotalCount());
-		return jsonArray;
+		try {
+			Pager pager = new Pager(pageNumber, pageSize);
+			pager = saleDao.querySale(pager, sale, beginDate, endDate);
+			
+			String[] properties = {"saleId","saleCode","saleDate","sourceCode","deliverDate",
+					"customer.customerName","employee.employeeName","amount","otherAmount",
+					"receiptedAmount","note","status"}; 
+			String jsonArray = JSONUtil.toJson(pager.getList(), properties, pager.getTotalCount());
+			return jsonArray;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public ServiceResult updateSale(Sale sale, String saleDetailIds,String delSaleDetailIds, String productIds, 
@@ -265,7 +272,9 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 				return result;
 			}
 		}
-		
+		Sale model = saleDao.load(sale.getSaleId());
+		sale.setStatus(model.getStatus());
+		saleDao.evict(model);
 		saleDao.update(sale);
 		//删除
 		for(String id : delSaleDetailIdArray){
@@ -300,7 +309,9 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 				
 				saleDetail.setProduct(product);
 				saleDetail.setSale(sale);
-				saleDetail.setColor(color);
+				if(StringUtils.isNotEmpty(colorId)){
+					saleDetail.setColor(color);
+				}
 				saleDetail.setQty(Double.parseDouble(qty));
 				saleDetail.setPrice(Double.parseDouble(price));
 				saleDetail.setDiscount(Double.parseDouble(discount));
@@ -315,8 +326,11 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 				SaleDetail saleDetail = saleDetailDao.load(saleDetailId);
 				
 				if(saleDetail==null) continue;
-				
-				saleDetail.setColor(color);
+				if(StringUtils.isNotEmpty(colorId)){
+					saleDetail.setColor(color);
+				}else{
+					saleDetail.setColor(null);
+				}
 				saleDetail.setQty(Double.parseDouble(qty));
 				saleDetail.setPrice(Double.parseDouble(price));
 				saleDetail.setDiscount(Double.parseDouble(discount));
@@ -326,6 +340,7 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 			}
 		}
 		result.setIsSuccess(true);
+		result.addData("saleId", sale.getSaleId());
 		return result;
 	}
 
@@ -336,7 +351,7 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 		}
 		Sale sale = saleDao.getSale(saleId);
 		String[] propertiesSale = {"saleId","saleCode","saleDate","sourceCode","deliverDate",
-				"customer.customerId","amount","receiptedAmount","otherAmount",
+				"customer.customerId","customer.customerName","amount","receiptedAmount","otherAmount",
 				"bank.bankId","employee.employeeId","note","status"};
 		String buyData = JSONUtil.toJson(sale,propertiesSale);
 		result.addData("saleData",buyData);

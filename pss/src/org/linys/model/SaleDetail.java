@@ -1,5 +1,6 @@
 package org.linys.model;
 
+import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -57,9 +59,10 @@ public class SaleDetail extends BaseModel {
 	 * 折扣
 	 */
 	private Double discount;
-	/**
-	 * 备注1
-	 */
+	
+	 /**
+	  * 备注1
+	  */
 	private String note1;
 	/**
 	 * 备注2
@@ -203,5 +206,15 @@ public class SaleDetail extends BaseModel {
 	public void setColor(DataDictionary color) {
 		this.color = color;
 	}
+	@Transient
+	public Double getAmount() {
+		Double amount = qty*price;
+		if(discount!=null){
+			amount = amount*discount;
+		}
+		DecimalFormat df = new DecimalFormat("######0.00");
+		return Double.parseDouble(df.format(amount));
+	}
+
 
 }

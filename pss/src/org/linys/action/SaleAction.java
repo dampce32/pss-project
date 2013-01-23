@@ -29,17 +29,6 @@ public class SaleAction extends BaseAction implements ModelDriven<Sale> {
 	private Date beginDate;
 	private Date endDate;
 	
-	private String saleDetailIds;
-	private String delSaleDetailIds;
-	private String productIds;
-	private String colorIds;
-	private String qtys;
-	private String prices;
-	private String discounts;
-	private String note1s;
-	private String note2s;
-	private String note3s;
-	
 	public Sale getModel() {
 		return sale;
 	}
@@ -55,6 +44,14 @@ public class SaleAction extends BaseAction implements ModelDriven<Sale> {
 	public void add(){
 		ServiceResult result = new ServiceResult(false);
 		try {
+			String productIds = getParameter("productIds");
+			String colorIds = getParameter("colorIds");
+			String qtys = getParameter("qtys");
+			String prices = getParameter("prices");
+			String discounts = getParameter("discounts");
+			String note1s = getParameter("note1s");
+			String note2s = getParameter("note2s");
+			String note3s = getParameter("note3s");
 			result = saleService.addSale(sale, productIds, colorIds, qtys, prices, discounts, note1s, note2s, note3s);
 		} catch (Exception e) {
 			logger.error("新增订单出错", e);
@@ -74,6 +71,16 @@ public class SaleAction extends BaseAction implements ModelDriven<Sale> {
 	public void update(){
 		ServiceResult result = new ServiceResult(false);
 		try {
+			String saleDetailIds = getParameter("saleDetailIds");
+			String delSaleDetailIds = getParameter("delSaleDetailIds");
+			String productIds = getParameter("productIds");
+			String colorIds = getParameter("colorIds");
+			String qtys = getParameter("qtys");
+			String prices = getParameter("prices");
+			String discounts = getParameter("discounts");
+			String note1s = getParameter("note1s");
+			String note2s = getParameter("note2s");
+			String note3s = getParameter("note3s");
 			result = saleService.updateSale(sale, saleDetailIds, delSaleDetailIds, productIds, colorIds, qtys, prices, discounts, note1s, note2s, note3s);
 		} catch (Exception e) {
 			logger.error("修改订单出错", e);
@@ -190,46 +197,6 @@ public class SaleAction extends BaseAction implements ModelDriven<Sale> {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
-	}
-
-	public void setSaleDetailIds(String saleDetailIds) {
-		this.saleDetailIds = saleDetailIds;
-	}
-
-	public void setDelSaleDetailIds(String delSaleDetailIds) {
-		this.delSaleDetailIds = delSaleDetailIds;
-	}
-
-	public void setProductIds(String productIds) {
-		this.productIds = productIds;
-	}
-
-	public void setColorIds(String colorIds) {
-		this.colorIds = colorIds;
-	}
-
-	public void setQtys(String qtys) {
-		this.qtys = qtys;
-	}
-
-	public void setPrices(String prices) {
-		this.prices = prices;
-	}
-
-	public void setDiscounts(String discounts) {
-		this.discounts = discounts;
-	}
-
-	public void setNote1s(String note1s) {
-		this.note1s = note1s;
-	}
-
-	public void setNote2s(String note2s) {
-		this.note2s = note2s;
-	}
-
-	public void setNote3s(String note3s) {
-		this.note3s = note3s;
 	}
 
 }
