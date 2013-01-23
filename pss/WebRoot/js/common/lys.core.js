@@ -24,5 +24,7 @@ LYS.initContent = function (el) {
 		     } 
      });
 };
+LYS.empty_row = {rows:[]};
+LYS.empty_row_total = {rows:[],total:1};
 LYS.ClearUrl='common/clearDatagridCommon.do';
 LYS.ClearData ={rows:[],total:0};
