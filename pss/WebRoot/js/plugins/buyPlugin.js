@@ -61,6 +61,7 @@
 		  rownumbers:true,
 		  pagination:false,
 		  toolbar:[	
+				{text:'打印',iconCls:'icon-print',handler:function(){onPrint()}},'-',
 				{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},'-',
 				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},'-',
 				{text:'删除',iconCls:'icon-remove',handler:function(){onMulDelete()}},'-',
@@ -832,6 +833,13 @@
 			 $('#amount',editForm).numberbox('setValue',totalAmount);
 		 }
 	});
-	
+	//打印 
+	var onPrint = function(){
+		if(selectRow ==null){
+			$.messager.alert('提示','请选中要打印的记录行','warning');
+    		return;
+		}
+		window.open("printReport.jsp?report=buy&data=ReportServlet?buyId="+selectRow.buyId);
+	}
   }
 })(jQuery);   
