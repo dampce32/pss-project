@@ -52,7 +52,42 @@
 .icon-tip{
 	background:url('icons/tip.png') no-repeat;
 }
-
+.icon-left{
+	background:url('icons/left.png') no-repeat;
+}
+.icon-right{
+	background:url('icons/right.png') no-repeat;
+}
+.icon-up{
+	background:url('icons/up.png') no-repeat;
+}
+.icon-down{
+	background:url('icons/down.png') no-repeat;
+}
+.icon-upload{
+	background:url('icons/upload.png') no-repeat;
+}
+.icon-download{
+	background:url('icons/download.png') no-repeat;
+}
+.icon-copy{
+	background:url('icons/copy.png') no-repeat;
+}
+.icon-attachment{
+	background:url('icons/fj.png') no-repeat;
+}
+.icon-warn{
+	background:url('icons/warn.png') no-repeat;
+}
+.icon-info{
+	background:url('icons/info.png') no-repeat;
+}
+.icon-view{
+	background:url('icons/view.png') no-repeat;
+}
+.icon-info{
+	background:url('icons/info.png') no-repeat;
+}
 .icon-mini-add{
 	background:url('icons/mini_add.png') no-repeat 2px 2px;
 }

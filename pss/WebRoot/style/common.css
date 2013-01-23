@@ -1,22 +1,66 @@
-body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td{margin:0;padding:0;}
-table{border-collapse:collapse;border-spacing:0;}
-fieldset,img{border:0;}
-address,caption,cite,code,dfn,em,strong,th,var,optgroup{font-style:inherit;font-weight:inherit;}
-del,ins{text-decoration:none;}
-li{list-style:none;}
-caption,th{text-align:left;}
-h1,h2,h3,h4,h5,h6{font-size:100%}
-q:before,q:after{content:'';}
-abbr,acronym{border:0;font-variant:normal;}
-sup{vertical-align:baseline;}
-sub{vertical-align:baseline;}
-legend{color:#000;}
-input,button,textarea,select,optgroup,option{font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;}
-input,button,textarea,select{*font-size:100%;}
-body{font: 12px/1 Helvetica, Tahoma, Arial, \5b8b\4f53, sans-serif;}
+html { overflow-x: hidden; overflow-y: auto; border:0;} 
 
-.f-l{
-float:left
+TD{
+ font-size: 12px;
 }
-.f-r{
-float:right}
+
+a:link,a:visited{
+ text-decoration:none;
+ color:#006;
+}
+a:hover{
+ text-decoration:underline;
+ color:#cc0000;
+}
+legend{
+	color: #014E82;
+	font-weight:bold;
+	padding:5px;
+}
+fieldset{
+	border-top: 1px solid #C8D9E4;
+	border-right: 1px solid #C8D9E4;
+	border-bottom: 1px solid #C8D9E4;
+	border-left: 1px solid #C8D9E4;
+	margin-top: 10px;
+	margin-left:10px;
+	margin-right:10px;
+}
+fieldset div{
+ padding:0px;
+}
+fieldset td {
+font-size:12px;
+}
+select{font-size:12px;}
+input.text{
+ border:1px solid #7F9DB9;font-size:12px;font-family: Verdana, Arial, Helvetica, sans-serif;height:20px
+}
+button{background:#fff;border:1px solid #C28F27;padding:2px 2px 0px 2px;margin:4px;border-width:1px 3px 1px 3px;font-size: 12px;color: #A74300;}
+input.button{
+ background:#fff;border:1px solid #C28F27;padding:2px 2px 0px 2px;margin:4px;border-width:1px 3px 1px 3px;font-size: 12px;color: #A74300;
+}
+
+textarea{ border:1px solid #7F9DB9;font-size:12px;font-family: Verdana, Arial, Helvetica, sans-serif;}
+A.p:link,A.p:active,A.p:visited{
+	TEXT-DECORATION:none;
+	Color:#666;
+	FONT-SIZE: 11px;
+	}
+A.p:hover{
+	TEXT-DECORATION: none;
+	Color:#6795B4;
+	FONT-SIZE: 11px;
+	position: relative; left: 1px; top: 1px;
+	}
+
+div{
+	  font-size:12px;
+	  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+.queryContent{
+		height: 35px;
+		overflow: hidden;
+		padding:5px;
+	}

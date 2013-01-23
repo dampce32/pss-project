@@ -115,6 +115,35 @@
 		"attributes":{"rightUrl":"store/store.do"}
 	}]
 },{
+	"id":4,
+	"text":"出库管理",
+	"state":"closed",
+	"children":[{
+		"id":"4-1",
+		"text":"客户订单",
+		"attributes":{"rightUrl":"outWarehouse/sale.do"}
+	},{
+		"id":"3-2",
+		"text":"采购入库",
+		"attributes":{"rightUrl":"inWarehouse/receive.do"}
+	},{
+		"id":"3-4",
+		"text":"其他入库",
+		"attributes":{"rightUrl":"inWarehouse/receiveOther.do"}
+	},{
+		"id":"3-1",
+		"text":"采购退货",
+		"attributes":{"rightUrl":"inWarehouse/reject.do"}
+	},{
+		"id":"1-1",
+		"text":"采购付款",
+		"attributes":{"rightUrl":"finance/pay.do"}
+	},{
+		"id":"3-3",
+		"text":"当前库存",
+		"attributes":{"rightUrl":"store/store.do"}
+	}]
+},{
 	"id":1,
 	"text":"库存管理",
 	"state":"closed",
