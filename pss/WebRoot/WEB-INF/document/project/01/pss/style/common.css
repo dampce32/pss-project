@@ -1,0 +1,71 @@
+html { overflow-x: hidden; overflow-y: auto; border:0;} 
+
+TD{
+ font-size: 12px;
+}
+
+a:link,a:visited{
+ text-decoration:none;
+ color:#006;
+}
+a:hover{
+ text-decoration:underline;
+ color:#cc0000;
+}
+legend{
+	color: #014E82;
+	font-weight:bold;
+	padding:5px;
+}
+fieldset{
+	border-top: 1px solid #C8D9E4;
+	border-right: 1px solid #C8D9E4;
+	border-bottom: 1px solid #C8D9E4;
+	border-left: 1px solid #C8D9E4;
+	margin-top: 10px;
+	margin-left:10px;
+	margin-right:10px;
+}
+fieldset div{
+ padding:0px;
+}
+fieldset td {
+font-size:12px;
+}
+select{font-size:12px;}
+input.text{
+ border:1px solid #7F9DB9;font-size:12px;font-family: Verdana, Arial, Helvetica, sans-serif;height:20px
+}
+button{background:#fff;border:1px solid #C28F27;padding:2px 2px 0px 2px;margin:4px;border-width:1px 3px 1px 3px;font-size: 12px;color: #A74300;}
+input.button{
+ background:#fff;border:1px solid #C28F27;padding:2px 2px 0px 2px;margin:4px;border-width:1px 3px 1px 3px;font-size: 12px;color: #A74300;
+}
+
+textarea{ border:1px solid #7F9DB9;font-size:12px;font-family: Verdana, Arial, Helvetica, sans-serif;}
+A.p:link,A.p:active,A.p:visited{
+	TEXT-DECORATION:none;
+	Color:#666;
+	FONT-SIZE: 11px;
+	}
+A.p:hover{
+	TEXT-DECORATION: none;
+	Color:#6795B4;
+	FONT-SIZE: 11px;
+	position: relative; left: 1px; top: 1px;
+	}
+
+div{
+	  font-size:12px;
+	  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+.f-l{
+	float:left
+}
+.f-r{
+	float:right
+}
+.queryContent{
+		height: 35px;
+		overflow: hidden;
+		padding:5px;
+	}

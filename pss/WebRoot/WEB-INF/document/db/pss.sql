@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50140
 File Encoding         : 65001
 
-Date: 2013-01-23 17:06:06
+Date: 2013-01-24 21:42:22
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,7 +30,7 @@ CREATE TABLE `t_bank` (
 -- ----------------------------
 -- Records of t_bank
 -- ----------------------------
-INSERT INTO `t_bank` VALUES ('402881e53c3e26cc013c3e2cfe980013', '中国农业银行', 'ABC', '78');
+INSERT INTO `t_bank` VALUES ('402881e53c3e26cc013c3e2cfe980013', '中国农业银行', 'ABC', '121');
 INSERT INTO `t_bank` VALUES ('402881e53c3e26cc013c3e2d24510014', '中国建设银行', 'CCB', '500');
 
 -- ----------------------------
@@ -53,6 +53,7 @@ CREATE TABLE `t_buy` (
   `statue` int(11) DEFAULT NULL,
   `note` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
+  `checkAmount` double DEFAULT NULL,
   PRIMARY KEY (`buyId`),
   KEY `FK_Reference_35` (`supplierId`),
   KEY `FK_Reference_36` (`employeeId`),
@@ -67,9 +68,7 @@ CREATE TABLE `t_buy` (
 -- ----------------------------
 -- Records of t_buy
 -- ----------------------------
-INSERT INTO `t_buy` VALUES ('402880bb3c5ff0a4013c5ff7046d0001', '402881e53be5d01c013be5d1b6b70002', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2cfe980013', 'Buy201301220001', 'aa', '2013-01-22', '2013-01-23', '0', '198', '198', null, 'aa', '1');
-INSERT INTO `t_buy` VALUES ('402880bb3c668065013c66935e770001', '402881e53be5d01c013be5d1b6b70002', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2d24510014', 'Buy201301230001', 'aa', '2013-01-23', '2013-01-25', '2', '80', '80', null, null, '0');
-INSERT INTO `t_buy` VALUES ('402880bb3c668065013c66948baa0004', '402881e53be5d01c013be5d1b6b70002', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2cfe980013', 'Buy201301230002', 'a', '2013-01-25', '2013-01-24', '2', '101', '101', null, '3', '1');
+INSERT INTO `t_buy` VALUES ('402880bb3c6a55d5013c6a7992430004', '402881e53be5d01c013be5d1ec720003', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2cfe980013', 'Buy201301240001', 'aa', '2013-01-17', '2013-01-24', '3', '201', '201', null, null, '1', '0');
 
 -- ----------------------------
 -- Table structure for `t_buydetail`
@@ -98,11 +97,8 @@ CREATE TABLE `t_buydetail` (
 -- ----------------------------
 -- Records of t_buydetail
 -- ----------------------------
-INSERT INTO `t_buydetail` VALUES ('402880bb3c5ff0a4013c5ff704730002', '402880bb3c5ff0a4013c5ff7046d0001', '402881e53c3e26cc013c3e2bc53b000d', '402881e53c3e26cc013c3e2a19760002', '3', '33', '1', '2', '3', '1');
-INSERT INTO `t_buydetail` VALUES ('402880bb3c5ff0a4013c5ff704740003', '402880bb3c5ff0a4013c5ff7046d0001', '402881e53c3e26cc013c3e2c180e000e', '402881e53c3e26cc013c3e2a373f0004', '33', '3', '1', '2', '3', '30');
-INSERT INTO `t_buydetail` VALUES ('402880bb3c668065013c66935ed20002', '402880bb3c668065013c66935e770001', '402881e53c3e26cc013c3e2bc53b000d', '402881e53c3e26cc013c3e2a19760002', '2', '33', '3', '3', '3', '0');
-INSERT INTO `t_buydetail` VALUES ('402880bb3c668065013c66935ed20003', '402880bb3c668065013c66935e770001', '402881e53c3e26cc013c3e2c180e000e', '402881e53c3e26cc013c3e2a373f0004', '4', '3', '4', '4', '4', '0');
-INSERT INTO `t_buydetail` VALUES ('402880bb3c668065013c66948bb10005', '402880bb3c668065013c66948baa0004', '402881e53c3e26cc013c3e2bc53b000d', '402881e53c3e26cc013c3e2a19760002', '3', '33', null, null, null, '0');
+INSERT INTO `t_buydetail` VALUES ('402880bb3c6a55d5013c6a7992440005', '402880bb3c6a55d5013c6a7992430004', '402881e53c3e26cc013c3e2bc53b000d', '402881e53c3e26cc013c3e2a19760002', '3', '33', null, null, null, '1');
+INSERT INTO `t_buydetail` VALUES ('402880bb3c6a55d5013c6a7992440006', '402880bb3c6a55d5013c6a7992430004', '402881e53c3e26cc013c3e2c180e000e', '402881e53c3e26cc013c3e2a373f0004', '33', '3', null, null, null, '2');
 
 -- ----------------------------
 -- Table structure for `t_customer`
@@ -376,7 +372,6 @@ CREATE TABLE `t_pay` (
 -- ----------------------------
 -- Records of t_pay
 -- ----------------------------
-INSERT INTO `t_pay` VALUES ('402880bb3c5ff0a4013c600898cd000f', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2cfe980013', '402881e53c3e26cc013c3e2d4b580015', 'Pay201301220001', '现金', '2013-01-22', null, '1', '0', '60');
 
 -- ----------------------------
 -- Table structure for `t_paydetail`
@@ -392,9 +387,20 @@ CREATE TABLE `t_paydetail` (
   `discountAmount` float DEFAULT NULL,
   `payAmount` float DEFAULT NULL,
   `discountedAmount` double DEFAULT NULL,
+  `sourceCode` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `sourceDate` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `buyId` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `prepayId` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `rejectId` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`payDetailId`),
   KEY `FK_Reference_85` (`payId`),
   KEY `FK_Reference_86` (`receiveId`),
+  KEY `FKAEA158CEB3D29075` (`buyId`),
+  KEY `FKAEA158CE2A2ABB97` (`prepayId`),
+  KEY `FKAEA158CE54DEBE0B` (`rejectId`),
+  CONSTRAINT `FKAEA158CE54DEBE0B` FOREIGN KEY (`rejectId`) REFERENCES `t_reject` (`rejectId`),
+  CONSTRAINT `FKAEA158CE2A2ABB97` FOREIGN KEY (`prepayId`) REFERENCES `t_prepay` (`prepayId`),
+  CONSTRAINT `FKAEA158CEB3D29075` FOREIGN KEY (`buyId`) REFERENCES `t_buy` (`buyId`),
   CONSTRAINT `FK_Reference_85` FOREIGN KEY (`payId`) REFERENCES `t_pay` (`payId`),
   CONSTRAINT `FK_Reference_86` FOREIGN KEY (`receiveId`) REFERENCES `t_receive` (`receiveId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -402,7 +408,6 @@ CREATE TABLE `t_paydetail` (
 -- ----------------------------
 -- Records of t_paydetail
 -- ----------------------------
-INSERT INTO `t_paydetail` VALUES ('402880bb3c5ff0a4013c600898cd0010', '402880bb3c5ff0a4013c600898cd000f', '402880bb3c5ff0a4013c5ff878b20004', '采购入库', '123', '63', '0', '60', '0');
 
 -- ----------------------------
 -- Table structure for `t_prefix`
@@ -419,11 +424,42 @@ CREATE TABLE `t_prefix` (
 -- ----------------------------
 -- Records of t_prefix
 -- ----------------------------
+INSERT INTO `t_prefix` VALUES ('402880bb3c6a096d013c6a12abf60001', 'prepay', 'Prepay', '预付单');
 INSERT INTO `t_prefix` VALUES ('402881e53c5d5344013c5d53b8250001', 'buy', 'Buy', '采购单');
 INSERT INTO `t_prefix` VALUES ('402881e53c5d5344013c5d5464870002', 'receive', 'Rec', '入库单');
 INSERT INTO `t_prefix` VALUES ('402881e53c5d5344013c5d54f7bf0003', 'receiveOther', 'ORec', '其他入库单');
 INSERT INTO `t_prefix` VALUES ('402881e53c5d5344013c5d557d800004', 'pay', 'Pay', '付款单');
 INSERT INTO `t_prefix` VALUES ('402881e53c5d8e25013c5dcc2eeb000f', 'reject', 'Rej', '采购退货单');
+
+-- ----------------------------
+-- Table structure for `t_prepay`
+-- ----------------------------
+DROP TABLE IF EXISTS `t_prepay`;
+CREATE TABLE `t_prepay` (
+  `prepayId` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `bankId` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `supplierId` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `employeeId` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `prepayCode` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `prepayDate` date DEFAULT NULL,
+  `amount` float DEFAULT NULL,
+  `note` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  `balance` double DEFAULT NULL,
+  `checkAmount` double DEFAULT NULL,
+  PRIMARY KEY (`prepayId`),
+  KEY `FK_Reference_87` (`bankId`),
+  KEY `FK_Reference_88` (`supplierId`),
+  KEY `FK_Reference_89` (`employeeId`),
+  CONSTRAINT `FK_Reference_87` FOREIGN KEY (`bankId`) REFERENCES `t_bank` (`bankId`),
+  CONSTRAINT `FK_Reference_88` FOREIGN KEY (`supplierId`) REFERENCES `t_supplier` (`supplierId`),
+  CONSTRAINT `FK_Reference_89` FOREIGN KEY (`employeeId`) REFERENCES `t_employee` (`employeeId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of t_prepay
+-- ----------------------------
+INSERT INTO `t_prepay` VALUES ('402880bb3c6a55d5013c6b3544ea0018', '402881e53c3e26cc013c3e2cfe980013', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2d6b730016', 'Prepay201301240001', '2013-01-24', '100', 'aa', '1', null, '0');
 
 -- ----------------------------
 -- Table structure for `t_product`
@@ -456,8 +492,10 @@ CREATE TABLE `t_product` (
 -- ----------------------------
 -- Records of t_product
 -- ----------------------------
-INSERT INTO `t_product` VALUES ('402881e53c3e26cc013c3e2bc53b000d', '402881e53c3e26cc013c3e2b5bce000c', '402881e53c3e26cc013c3e2aa69c0008', '402881e53c3e26cc013c3e2a19760002', '402881e53c3e26cc013c3e2a5cf60005', '商品00001', '商品00001', '4', '132', '33', '33', null);
-INSERT INTO `t_product` VALUES ('402881e53c3e26cc013c3e2c180e000e', '402881e53c3e26cc013c3e2b2c91000b', '402881e53c3e26cc013c3e2aa69c0008', '402881e53c3e26cc013c3e2a373f0004', '402881e53c3e26cc013c3e2a79660006', '商品00002', '商品00002', '33', '99', '3', '3', null);
+INSERT INTO `t_product` VALUES ('402880bb3c6a55d5013c6a6ac5650003', '402881e53c3e26cc013c3e2b5bce000c', '402881e53c3e26cc013c3e2aa69c0008', '402881e53c3e26cc013c3e2a19760002', '402881e53c3e26cc013c3e2a5cf60005', 'a', 'a', '0', '0', '3', '3', null);
+INSERT INTO `t_product` VALUES ('402880bb3c6a55d5013c6a8d6d2d000e', '402881e53c3e26cc013c3e2b0968000a', null, null, null, 'aaaa', 'aaaa', '0', '0', '33', '33', null);
+INSERT INTO `t_product` VALUES ('402881e53c3e26cc013c3e2bc53b000d', '402881e53c3e26cc013c3e2b5bce000c', '402881e53c3e26cc013c3e2aa69c0008', '402881e53c3e26cc013c3e2a19760002', '402881e53c3e26cc013c3e2a5cf60005', '商品00001', '商品00001', '2', '211', '33', '33', null);
+INSERT INTO `t_product` VALUES ('402881e53c3e26cc013c3e2c180e000e', '402881e53c3e26cc013c3e2b2c91000b', '402881e53c3e26cc013c3e2aa69c0008', '402881e53c3e26cc013c3e2a373f0004', '402881e53c3e26cc013c3e2a79660006', '商品00002', '商品00002', '6', '18', '3', '3', null);
 
 -- ----------------------------
 -- Table structure for `t_producttype`
@@ -504,6 +542,7 @@ CREATE TABLE `t_receive` (
   `note` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `otherAmount` double DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
+  `checkAmount` double DEFAULT NULL,
   PRIMARY KEY (`receiveId`),
   KEY `FK_Reference_43` (`supplierId`),
   KEY `FK_Reference_44` (`warehouseId`),
@@ -520,8 +559,8 @@ CREATE TABLE `t_receive` (
 -- ----------------------------
 -- Records of t_receive
 -- ----------------------------
-INSERT INTO `t_receive` VALUES ('402880bb3c5ff0a4013c5ff878b20004', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2caa8f0011', '402881e53be5d01c013be5d1b6b70002', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2cfe980013', 'Rec201301220001', 'adfad', '2013-01-22', '123', '0', '63', null, '1', null, '0', '1');
-INSERT INTO `t_receive` VALUES ('402880bb3c5ff0a4013c5ff93d470009', null, '402881e53c3e26cc013c3e2caa8f0011', null, '402881e53c3e26cc013c3e2d4b580015', null, 'ORec201301220001', 'adfad', '2013-01-22', null, null, null, null, '0', 'a', null, '1');
+INSERT INTO `t_receive` VALUES ('402880bb3c6a55d5013c6a7cc8ec0007', '402881e53c3e26cc013c3e2c52cb000f', '402881e53c3e26cc013c3e2caa8f0011', '402881e53be5d01c013be5d1b6b70002', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2cfe980013', 'Rec201301240001', 'adfad', '2013-01-24', '179', '1', '78', null, '0', null, '2', '1', '0');
+INSERT INTO `t_receive` VALUES ('402880bb3c6a55d5013c6a8dfd69000f', null, '402881e53c3e26cc013c3e2cc53d0012', null, '402881e53c3e26cc013c3e2d4b580015', null, 'ORec201301240001', 'adfad', '2013-01-24', null, null, null, null, '0', 'aa', null, '1', '0');
 
 -- ----------------------------
 -- Table structure for `t_receivedetail`
@@ -552,10 +591,12 @@ CREATE TABLE `t_receivedetail` (
 -- ----------------------------
 -- Records of t_receivedetail
 -- ----------------------------
-INSERT INTO `t_receivedetail` VALUES ('402880bb3c5ff0a4013c5ff878b30005', '402880bb3c5ff0a4013c5ff878b20004', '402881e53c3e26cc013c3e2bc53b000d', '402880bb3c5ff0a4013c5ff704730002', '402881e53c3e26cc013c3e2a19760002', '1', '33', '1', '2', '3');
-INSERT INTO `t_receivedetail` VALUES ('402880bb3c5ff0a4013c5ff878b30006', '402880bb3c5ff0a4013c5ff878b20004', '402881e53c3e26cc013c3e2c180e000e', '402880bb3c5ff0a4013c5ff704740003', '402881e53c3e26cc013c3e2a373f0004', '30', '3', '1', '2', '3');
-INSERT INTO `t_receivedetail` VALUES ('402880bb3c5ff0a4013c5ff93d47000a', '402880bb3c5ff0a4013c5ff93d470009', '402881e53c3e26cc013c3e2bc53b000d', null, '402881e53c3e26cc013c3e2a19760002', '3', '33', '', '', '');
-INSERT INTO `t_receivedetail` VALUES ('402880bb3c5ff0a4013c5ff93d48000b', '402880bb3c5ff0a4013c5ff93d470009', '402881e53c3e26cc013c3e2c180e000e', null, '402881e53c3e26cc013c3e2a373f0004', '3', '3', '', '', '');
+INSERT INTO `t_receivedetail` VALUES ('402880bb3c6a55d5013c6a7cc8ed0008', '402880bb3c6a55d5013c6a7cc8ec0007', '402881e53c3e26cc013c3e2bc53b000d', '402880bb3c6a55d5013c6a7992440005', '402881e53c3e26cc013c3e2a19760002', '1', '33', null, null, null);
+INSERT INTO `t_receivedetail` VALUES ('402880bb3c6a55d5013c6a7cc8ed0009', '402880bb3c6a55d5013c6a7cc8ec0007', '402881e53c3e26cc013c3e2c180e000e', '402880bb3c6a55d5013c6a7992440006', '402881e53c3e26cc013c3e2a373f0004', '2', '3', null, null, null);
+INSERT INTO `t_receivedetail` VALUES ('402880bb3c6a55d5013c6a7cc8ed000a', '402880bb3c6a55d5013c6a7cc8ec0007', '402881e53c3e26cc013c3e2bc53b000d', null, '402881e53c3e26cc013c3e2a19760002', '4', '33', null, null, null);
+INSERT INTO `t_receivedetail` VALUES ('402880bb3c6a55d5013c6a7cc8ee000b', '402880bb3c6a55d5013c6a7cc8ec0007', '402881e53c3e26cc013c3e2c180e000e', null, '402881e53c3e26cc013c3e2a373f0004', '2', '3', null, null, null);
+INSERT INTO `t_receivedetail` VALUES ('402880bb3c6a55d5013c6a8dfd6a0010', '402880bb3c6a55d5013c6a8dfd69000f', '402881e53c3e26cc013c3e2bc53b000d', null, '402881e53c3e26cc013c3e2a19760002', '2', '33', null, null, null);
+INSERT INTO `t_receivedetail` VALUES ('402880bb3c6a55d5013c6a8dfd6b0011', '402880bb3c6a55d5013c6a8dfd69000f', '402881e53c3e26cc013c3e2c180e000e', null, '402881e53c3e26cc013c3e2a373f0004', '2', '3', null, null, null);
 
 -- ----------------------------
 -- Table structure for `t_reject`
@@ -576,6 +617,7 @@ CREATE TABLE `t_reject` (
   `shzt` int(11) DEFAULT NULL,
   `note` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
+  `checkAmount` double DEFAULT NULL,
   PRIMARY KEY (`rejectId`),
   KEY `FK_Reference_50` (`warehouseId`),
   KEY `FK_Reference_51` (`employeeId`),
@@ -592,7 +634,7 @@ CREATE TABLE `t_reject` (
 -- ----------------------------
 -- Records of t_reject
 -- ----------------------------
-INSERT INTO `t_reject` VALUES ('402880bb3c5ff0a4013c5ffa4ec8000c', '402881e53c3e26cc013c3e2caa8f0011', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2c52cb000f', null, '402881e53c3e26cc013c3e2cfe980013', 'Rej201301220001', 'a', '2013-01-22', '231', '0', null, 'a', '0');
+INSERT INTO `t_reject` VALUES ('402880bb3c6a55d5013c6abb13050016', '402881e53c3e26cc013c3e2caa8f0011', '402881e53c3e26cc013c3e2d4b580015', '402881e53c3e26cc013c3e2c52cb000f', null, '402881e53c3e26cc013c3e2cfe980013', 'Rej201301240001', null, '2013-01-24', '20', '0', null, null, '1', '0');
 
 -- ----------------------------
 -- Table structure for `t_rejectdetail`
@@ -621,8 +663,7 @@ CREATE TABLE `t_rejectdetail` (
 -- ----------------------------
 -- Records of t_rejectdetail
 -- ----------------------------
-INSERT INTO `t_rejectdetail` VALUES ('402880bb3c5ff0a4013c5ffa4ec8000d', '402880bb3c5ff0a4013c5ffa4ec8000c', '402881e53c3e26cc013c3e2bc53b000d', '402881e53c3e26cc013c3e2a19760002', '4', '33', '', '', '', '132');
-INSERT INTO `t_rejectdetail` VALUES ('402880bb3c5ff0a4013c5ffa4ec9000e', '402880bb3c5ff0a4013c5ffa4ec8000c', '402881e53c3e26cc013c3e2c180e000e', '402881e53c3e26cc013c3e2a373f0004', '33', '3', '', '', '', '99');
+INSERT INTO `t_rejectdetail` VALUES ('402880bb3c6a55d5013c6abb13060017', '402880bb3c6a55d5013c6abb13050016', '402881e53c3e26cc013c3e2bc53b000d', '402881e53c3e26cc013c3e2a19760002', '5', '4', '3', '3', '3', '20');
 
 -- ----------------------------
 -- Table structure for `t_reportconfig`
@@ -841,8 +882,10 @@ CREATE TABLE `t_store` (
 -- ----------------------------
 -- Records of t_store
 -- ----------------------------
-INSERT INTO `t_store` VALUES ('402880bb3c5ff0a4013c5ff88cb40007', '402881e53c3e26cc013c3e2caa8f0011', '402881e53c3e26cc013c3e2bc53b000d', '4', '0');
-INSERT INTO `t_store` VALUES ('402880bb3c5ff0a4013c5ff88cc00008', '402881e53c3e26cc013c3e2caa8f0011', '402881e53c3e26cc013c3e2c180e000e', '33', '0');
+INSERT INTO `t_store` VALUES ('402880bb3c6a55d5013c6a7e0090000c', '402881e53c3e26cc013c3e2caa8f0011', '402881e53c3e26cc013c3e2bc53b000d', '0', '-20');
+INSERT INTO `t_store` VALUES ('402880bb3c6a55d5013c6a7e009b000d', '402881e53c3e26cc013c3e2caa8f0011', '402881e53c3e26cc013c3e2c180e000e', '4', '0');
+INSERT INTO `t_store` VALUES ('402880bb3c6a55d5013c6a8ec23a0012', '402881e53c3e26cc013c3e2cc53d0012', '402881e53c3e26cc013c3e2bc53b000d', '2', '0');
+INSERT INTO `t_store` VALUES ('402880bb3c6a55d5013c6a8ec23f0013', '402881e53c3e26cc013c3e2cc53d0012', '402881e53c3e26cc013c3e2c180e000e', '2', '0');
 
 -- ----------------------------
 -- Table structure for `t_supplier`
@@ -877,7 +920,6 @@ CREATE TABLE `t_user` (
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
-INSERT INTO `t_user` VALUES ('402880bb3c60ee5d013c60f0a98e0001', 'aa', 'aa', '4124bc0a9335c27f086f24ba207a4912');
 INSERT INTO `t_user` VALUES ('402881e53b046217013b0490d440000d', 'admin', '超级管理员', '21232f297a57a5a743894a0e4a801fc3');
 
 -- ----------------------------
@@ -896,7 +938,6 @@ CREATE TABLE `t_userrole` (
 -- ----------------------------
 -- Records of t_userrole
 -- ----------------------------
-INSERT INTO `t_userrole` VALUES ('402880bb3c60ee5d013c60f0a98e0001', '402881e53aa21d17013aa224b5ed0003');
 INSERT INTO `t_userrole` VALUES ('402881e53b046217013b0490d440000d', '402881e53aa21d17013aa224b5ed0003');
 
 -- ----------------------------
