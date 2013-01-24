@@ -1,0 +1,37 @@
+<div class="easyui-layout plugins" data-options="fit:true" ui="userInit" id="${id}">
+	<div region="north" style="height: 40px;padding:6px" border="false" class="queryContent">
+  		登录名:&nbsp;<input type="text" id="userCodeSearch"/>&nbsp;&nbsp;
+		    姓名:&nbsp;<input type="text" id="userNameSearch"/>&nbsp;&nbsp;&nbsp;&nbsp;
+		    <a href="#" class="easyui-linkbutton" id="search"  data-options="iconCls:'icon-search'">查询</a>
+  	</div>
+  	<div data-options="region:'center',border:false">
+		<div id="viewList"></div>
+	</div>
+	
+	<div id="editDialog">
+		<form method="post" name="editForm" id="editForm">
+			<input type="hidden" name="userId"/>
+			<table border="0" cellpadding="2" cellspacing="1" style="width: 100%">
+				<tr>
+					<td class="tdTitle">用户名称:</td>
+					<td>
+						<input type="text" required="required" name="userName" id="userName" style="width: 150px" size="40" /> 
+					</td>
+					
+				</tr>
+				<tr>
+					<td class="tdTitle">用户登录名:</td>
+					<td>
+						<input type="text" required="required" name="userCode" id="userCode" style="width: 150px" size="40" />
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<div id="userRoleDialog">
+		<div id="userRoleList"></div>
+	</div>
+	<div id="userRightDialog">
+		<div id="userRightTree"></div>
+	</div>
+</div>

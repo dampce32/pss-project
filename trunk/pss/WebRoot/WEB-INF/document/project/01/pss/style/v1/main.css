@@ -1,0 +1,22 @@
+#index-north{
+	height:28px;
+	overflow:hidden;
+}
+#index-north-bd-right{
+padding:3px;
+background:#fafafa;}
+#index-left{
+width:180px;
+padding1:1px;
+overflow:hidden;
+}
+#index-left a{
+text-decoration:none}
+#index-south span{
+width:100%;
+display:block;
+text-align:center}
+.tdTitle{
+	text-align: right;	
+	padding: 5px;
+}

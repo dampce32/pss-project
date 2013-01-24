@@ -1,0 +1,35 @@
+<div class="easyui-layout plugins" data-options="fit:true" ui="rightInit" id="${id}">
+	<div data-options="region:'west'" style="width:180px;">
+            <ul id="rightTree"></ul>
+	</div>
+	<div class="easyui-layout"  data-options="region:'center'">
+		<div data-options="region:'north',border:false" style="height: 35px;overflow: hidden;padding:5px" class="queryContent">
+			权限名称:&nbsp;&nbsp;<input name="rightName" id="rightNameSearch" type="text" size="12"/>&nbsp;&nbsp;&nbsp;
+			<a href="#" class="easyui-linkbutton" id="search" data-options="iconCls:'icon-search'" style="cursor: pointer;">查 询</a>
+		</div>
+		<div data-options="region:'center',border:false" style="width: 100%;height:100%">
+			<div id="rightList"></div>
+		</div>
+	</div>
+	
+	<div id="editDialog">
+		<form method="post" id="editForm" >
+			<table border="0" cellpadding="2" cellspacing="1" style="width: 100%">
+				<tr>
+					<td class="tdTitle">权限名称:</td>
+					<td>
+						<input type="text" name="rightName" id="rightName" class="text" style="width: 280px" size="40" />
+						<input type="hidden" name="parentRight.rightId" id="parentID" />
+						<input type="hidden" name="rightId" id="rightId" />
+					</td>
+				</tr>
+				<tr>
+					<td class="tdTitle">权限Url:</td>
+					<td>
+						<input type="text" name="rightUrl" id="rightUrl" class="text" style="width: 280px" size="40" />
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
