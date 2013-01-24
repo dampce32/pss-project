@@ -23,11 +23,6 @@
 	  var pageNumber = 1;
 	  var pageSize = 10;
 	  
-	  var warehouseData = null;
-	  var bankData = null;
-	  var employeeData = null;
-	  var invoiceTypeData = null;
-	  
 	  var changeSearch = false;
 	  
 	  //列表
@@ -56,10 +51,10 @@
 				{field:'note',title:'备注',width:90,align:"center"},
 				{field:'status',title:'状态',width:80,align:"center",
 					formatter: function(value,row,index){
-						if(row.status==0){
-							return '未审';
-						}else if(row.status==1){
-							return '已审';
+						if (value==0){
+							return '<img src="style/v1/icons/warn.png"/>';
+						} else {
+							return '<img src="style/v1/icons/info.png"/>';
 						}
 					}},
 				{field:'isPay',title:'付款',width:80,align:"center",
@@ -78,9 +73,9 @@
 				{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},'-',
 				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},'-',
 				{text:'删除',iconCls:'icon-remove',handler:function(){onMulDelete()}},'-',
-				{text:'已审',iconCls:'icon-edit',handler:function(){onMulUpdateStatus(1)}},'-',
-				{text:'反审',iconCls:'icon-edit',handler:function(){onMulUpdateStatus(0)}},'-',
-				{text:'清款',iconCls:'icon-edit',handler:function(){onMulUpateIsPay()}}
+				{text:'已审',iconCls:'icon-info',handler:function(){onMulUpdateStatus(1)}},'-',
+				{text:'反审',iconCls:'icon-warn',handler:function(){onMulUpdateStatus(0)}},'-',
+				{text:'清款',iconCls:'icon-clear',handler:function(){onMulUpateIsPay()}}
 		  ],
 		  onDblClickRow:function(rowIndex, rowData){
 				onUpdate();
@@ -112,7 +107,7 @@
 		}else{
 			$('#mulSearchPanel',$this).panel('open');
 			$('#'+id).layout('panel','north').panel('resize',{
-				height: 110
+				height: 140
 			});
 			$('#'+id).layout('resize');
 			changeSearch = true;
@@ -198,11 +193,11 @@
 		 			{id:'save'+id,text:'保存',iconCls:'icon-save',handler:function(){onSave();}},'-',
 		 			{id:'add'+id,text:'新增',iconCls:'icon-add',handler:function(){onAdd();}},'-',
 		 			{id:'delete'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDelete();}},'-',
-		 			{id:'sh'+id,text:'审核',iconCls:'icon-edit',handler:function(){onUpdateStatus(1);}},'-',
-		 			{id:'fs'+id,text:'反审',iconCls:'icon-edit',handler:function(){onUpdateStatus(0);}},'-',
-		 			{id:'isPay'+id,text:'清款',iconCls:'icon-edit',handler:function(){onUpdateIsPay();}},'-',
-		 			{id:'pre'+id,text:'上一笔',iconCls:'icon-edit',handler:function(){onOpenIndex(-1);}},'-',
-		 			{id:'next'+id,text:'下一笔',iconCls:'icon-edit',handler:function(){onOpenIndex(1);}},'-',
+		 			{id:'sh'+id,text:'审核',iconCls:'icon-info',handler:function(){onUpdateStatus(1);}},'-',
+		 			{id:'fs'+id,text:'反审',iconCls:'icon-warn',handler:function(){onUpdateStatus(0);}},'-',
+		 			{id:'isPay'+id,text:'清款',iconCls:'icon-clear',handler:function(){onUpdateIsPay();}},'-',
+		 			{id:'pre'+id,text:'上一笔',iconCls:'icon-left',handler:function(){onOpenIndex(-1);}},'-',
+		 			{id:'next'+id,text:'下一笔',iconCls:'icon-right',handler:function(){onOpenIndex(1);}},'-',
 		 			{text:'退出',iconCls:'icon-cancel',handler:function(){
 		 					$(editDialog).dialog('close');
 		 				}
@@ -259,15 +254,15 @@
 	}
 	//添加
 	var onAdd = function(){
-		var rows  = $(receiveDetail).datagrid('getRows');
+		$(viewList).datagrid('unselectAll');
+		selectIndex=null;
+		selectIndex==null;
+		addBtnStatus();
+    	$(editForm).form('clear');
+    	var rows  = $(receiveDetail).datagrid('getRows');
 		if(rows.length!=0){
 			$(receiveDetail).datagrid({url:LYS.ClearUrl});
 		}
-		$(viewList).datagrid('unselectAll');
-		selectIndex==null
-		selectIndex==null
-		addBtnStatus();
-    	$(editForm).form('clear');
 		initChoose();
 		$('#otherAmount',editForm).numberbox('setValue', 0.0);
 		$('#amount',editForm).numberbox('setValue', 0.0);
@@ -290,48 +285,32 @@
 		    ]]  
 		});
 		//仓库
-		if(warehouseData==null){
-			var url = 'dict/queryComboboxWarehouse.do';
-			warehouseData = syncCallService(url);
-		}
 		$('#warehouse',editDialog).combobox({
 			valueField:'warehouseId',
 			textField:'warehouseName',
 			width:150,
-			data:warehouseData
+			data:PSS.getWarehouseList()
 		})
 		//银行
-		if(bankData==null){
-			var url = 'dict/queryComboboxBank.do';
-			bankData = syncCallService(url);
-		}
 		$('#bank',editDialog).combobox({
 			valueField:'bankId',
 			textField:'bankShortName',
 			width:150,
-			data:bankData
+			data:PSS.getBankList()
 		})		  
 		//经办人
-		if(employeeData==null){
-			var url = 'dict/queryComboboxEmployee.do';
-			employeeData = syncCallService(url);
-		}
 		$('#employee',editDialog).combobox({
 			valueField:'employeeId',
 			textField:'employeeName',
 			width:150,
-			data:employeeData
+			data:PSS.getEmployeeList()
 		})
 		//发票类型
-		if(invoiceTypeData==null){
-			var url = 'dict/queryComboboxInvoiceType.do';
-			invoiceTypeData = syncCallService(url);
-		}
 		$('#invoiceType',editDialog).combobox({
 			valueField:'invoiceTypeId',
 			textField:'invoiceTypeName',
 			width:150,
-			data:invoiceTypeData
+			data:PSS.getInvoiceTypeList()
 		})
 	}
 	//保存前的赋值操作
@@ -580,6 +559,8 @@
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
 						var fn = function(){
+							selectRow = null;
+							selectIndex = null;
 							search(true);
 						}
 						$.messager.alert('提示','删除成功','info',fn);
@@ -836,7 +817,7 @@
 		  rownumbers:true,
 		  pagination:true,
 		  toolbar:[	
-				{text:'选择',iconCls:'icon-save',handler:function(){onSelectOKProduct()}},
+				{text:'选择',iconCls:'icon-ok',handler:function(){onSelectOKProduct()}},
 				{text:'退出',iconCls:'icon-cancel',handler:function(){
 					onExitSelectProduct();
 				}}
@@ -951,7 +932,7 @@
 	    modal: true,
 	    closable:false,
 	    toolbar:[	
-					{text:'选择',iconCls:'icon-save',handler:function(){onSelectOKBuy()}},
+					{text:'选择',iconCls:'icon-ok',handler:function(){onSelectOKBuy()}},
 					{text:'退出',iconCls:'icon-cancel',handler:function(){$(selectBuyDialog).dialog('close');}}
 			  ],
 	    onClose:function(){
@@ -1088,6 +1069,5 @@
 		totalAmount+=parseFloat(discountAmount); 
 		 $('#amount',editForm).numberbox('setValue',totalAmount);  
 	 }
-	 
   }
 })(jQuery);   

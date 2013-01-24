@@ -23,10 +23,6 @@
 	  var pageNumber = 1;
 	  var pageSize = 10;
 	  
-	  var bankData = null;
-	  var employeeData = null;
-	  var invoiceTypeData = null;
-	  
 	  var changeSearch = false;
 	  
 	  //列表

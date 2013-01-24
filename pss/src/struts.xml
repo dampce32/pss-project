@@ -91,6 +91,7 @@
 	</package>
 	
 	<package name="finance" namespace="/finance" extends="basePackage">
+		<action name="*Prepay" class="prepayAction" method="{1}"></action>
 		<action name="*Pay" class="payAction" method="{1}"></action>
 		<action name="*">
 			<result>/WEB-INF/finance/{1}.html</result>
