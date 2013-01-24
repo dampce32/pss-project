@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 /**
  * @Description:员工
@@ -22,6 +24,7 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Entity
 @Table(name = "T_Employee")
+@Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class Employee extends BaseModel {
 
 	// Fields
