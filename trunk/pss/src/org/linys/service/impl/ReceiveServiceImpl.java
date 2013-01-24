@@ -61,7 +61,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		List<Receive> list = receiveDAO.query(kind,model,page,rows);
 		
 		String[] properties = {"receiveId","receiveCode","receiveDate","deliverCode",
-				"warehouse.warehouseName","supplier.supplierName","amount","payAmount","discountAmount",
+				"warehouse.warehouseName","supplier.supplierName","amount","payAmount","discountAmount","checkAmount",
 				"employee.employeeName","note","status","invoiceType.invoiceTypeName","isPay"};
 		String data = JSONUtil.toJson(list,properties);
 		result.addData("datagridData", data);
@@ -151,6 +151,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		}
 		if(StringUtils.isEmpty(model.getReceiveId())){//新增
 			//取得入库单号
+			model.setCheckAmount(0.0);
 			model.setStatus(0);
 			model.setIsPay(0);
 			if(!"other".equals(kind)){

@@ -52,7 +52,7 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 		List<Reject> list = rejectDAO.query(model,page,rows);
 		
 		String[] properties = {"rejectId","rejectCode","rejectDate","buyCode",
-				"warehouse.warehouseName","supplier.supplierName","amount","payAmount",
+				"warehouse.warehouseName","supplier.supplierName","amount","payAmount","checkAmount",
 				"employee.employeeName","note","status"};
 		String data = JSONUtil.toJson(list,properties);
 		result.addData("datagridData", data);
@@ -130,7 +130,7 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 		}
 		if(StringUtils.isEmpty(model.getRejectId())){//新增
 			//取得入库单号
-			
+			model.setCheckAmount(0.0);
 			model.setStatus(0);
 			model.setRejectCode(commonDAO.getCode("Reject", "rejectCode",prefixDAO.getPrefix("reject")));
 			rejectDAO.save(model);

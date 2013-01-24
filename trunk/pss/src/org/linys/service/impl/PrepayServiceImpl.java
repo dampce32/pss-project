@@ -102,7 +102,7 @@ public class PrepayServiceImpl extends BaseServiceImpl<Prepay, String>
 		if(StringUtils.isEmpty(model.getPrepayId())){//新增
 			//取得入库单号
 			model.setPrepayCode(commonDAO.getCode("Prepay", "prepayCode", prefixDAO.getPrefix("prepay")));
-			model.setBalance(model.getAmount());
+			model.setCheckAmount(0.0);
 			model.setStatus(0);
 			prepayDAO.save(model);
 		}else{
@@ -115,7 +115,6 @@ public class PrepayServiceImpl extends BaseServiceImpl<Prepay, String>
 				oldPrepay.setSupplier(model.getSupplier());
 				oldPrepay.setPrepayDate(model.getPrepayDate());
 				oldPrepay.setAmount(model.getAmount());
-				oldPrepay.setBalance(model.getAmount());
 				oldPrepay.setBank(model.getBank());
 				oldPrepay.setEmployee(model.getEmployee());
 				oldPrepay.setNote(model.getNote());

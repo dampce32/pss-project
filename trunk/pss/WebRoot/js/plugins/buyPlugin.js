@@ -37,14 +37,15 @@
 				{field:'buyCode',title:'采购单号',width:150,align:"center"},
 				{field:'buyDate',title:'采购日期',width:80,align:"center"},
 				{field:'receiveDate',title:'收货日期',width:80,align:"center"},
-				{field:'sourceCode',title:'原始单号',width:120,align:"center"},
+				{field:'sourceCode',title:'原始单号',width:80,align:"center"},
 				{field:'supplierName',title:'供应商',width:90,align:"center"},
-				{field:'otherAmount',title:'运费',width:80,align:"center"},
+				{field:'otherAmount',title:'运费',width:60,align:"center"},
 				{field:'amount',title:'应付定金',width:80,align:"center"},
 				{field:'payAmount',title:'实付定金',width:80,align:"center"},
+				{field:'checkAmount',title:'已对账金额',width:80,align:"center"},
 				{field:'employeeName',title:'经手人',width:90,align:"center"},
 				{field:'note',title:'备注',width:90,align:"center"},
-				{field:'status',title:'状态',width:80,align:"center",
+				{field:'status',title:'状态',width:60,align:"center",
 					formatter: function(value,row,index){
 						if (value==0){
 							return '<img src="style/v1/icons/warn.png"/>';
@@ -839,7 +840,7 @@
 		var buyId = $('#buyId',editDialog).val();
 		print(buyId);
 	}
-	
+	//-----------添加商品-------
 	 var addDialog = $('#addDialog',$this);
 	 var addForm = $('#addForm',addDialog);
 	 
@@ -890,8 +891,8 @@
 			textField: 'productTypeName',  
 			pagination:true,
 			columns: [[  
-			    {field:'productTypeName',title:'商品类型',width:80,sortable:true},  
-			    {field:'productTypeCode',title:'商品类型编号',width:80,sortable:true}
+			    {field:'productTypeName',title:'商品类型',width:120,sortable:true},  
+			    {field:'productTypeCode',title:'商品类型编号',width:120,sortable:true}
 			]],
 			onSelect:function(rowIndex, rowData){
 				$('#productTypeId',addDialog).val(rowData.productTypeId);

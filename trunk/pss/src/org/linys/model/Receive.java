@@ -81,6 +81,10 @@ public class Receive extends BaseModel {
 	 */
 	private Double payAmount;
 	/**
+	 * 对账金额
+	 */
+	private Double checkAmount;
+	/**
 	 * 发票类型
 	 */
 	private InvoiceType invoiceType;
@@ -269,6 +273,14 @@ public class Receive extends BaseModel {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+	@Column(name = "checkAmount", precision = 53, scale = 0)
+	public Double getCheckAmount() {
+		return checkAmount;
+	}
+
+	public void setCheckAmount(Double checkAmount) {
+		this.checkAmount = checkAmount;
 	}
 
 }

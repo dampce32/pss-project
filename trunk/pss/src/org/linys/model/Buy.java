@@ -82,6 +82,10 @@ public class Buy extends BaseModel {
 	 */
 	private Double payAmount;
 	/**
+	 * 对账金额
+	 */
+	private Double checkAmount;
+	/**
 	 * 备注
 	 */
 	private String note;
@@ -248,6 +252,14 @@ public class Buy extends BaseModel {
 
 	public void setReceiveDate(Date receiveDate) {
 		this.receiveDate = receiveDate;
+	}
+	@Column(name = "checkAmount", precision = 53, scale = 0)
+	public Double getCheckAmount() {
+		return checkAmount;
+	}
+
+	public void setCheckAmount(Double checkAmount) {
+		this.checkAmount = checkAmount;
 	}
 
 }
