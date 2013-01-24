@@ -104,7 +104,7 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 				price ="0";
 			}
 			if(StringUtils.isEmpty(discount)){
-				discount="1";
+				discount=null;
 			}
 			SaleDetail saleDetail = new SaleDetail();
 			
@@ -120,7 +120,7 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 			saleDetail.setSale(sale);
 			saleDetail.setQty(Double.parseDouble(qty));
 			saleDetail.setPrice(Double.parseDouble(price));
-			saleDetail.setDiscount(Double.parseDouble(discount));
+			saleDetail.setDiscount(discount==null?null:Double.parseDouble(discount));
 			saleDetail.setNote1(note1);
 			saleDetail.setNote2(note2);
 			saleDetail.setNote3(note3);
@@ -148,6 +148,11 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 			result.setMessage("该订单已审核,不能删除");
 			return result;
 		}
+		SaleDetail saleDetail = saleDetailDao.getDeliveredSaleDetail(sale);
+		if(saleDetail!=null){
+			result.setMessage("该订单已出库,不能删除");
+			return result;
+		}
 		saleDao.delete(sale);
 		result.setIsSuccess(true);
 		return result;
@@ -163,6 +168,8 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 		for(String saleId : idArray){
 			Sale sale = saleDao.load(saleId);
 			if(sale==null || sale.getStatus()==1) continue;
+			SaleDetail saleDetail = saleDetailDao.getDeliveredSaleDetail(sale);
+			if(saleDetail!=null) continue;
 			saleDao.delete(sale);
 		}
 		result.setIsSuccess(true);
@@ -183,6 +190,14 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 					bank.setAmount(bank.getAmount()+model.getReceiptedAmount());
 				}else{//如果是由已审改为未审
 					bank.setAmount(bank.getAmount()-model.getReceiptedAmount());
+				}
+			}
+			//如果由已审修改为未审需要判断是否出库
+			if(model.getStatus().intValue()==1 && sale.getStatus().intValue()==0){
+				SaleDetail saleDetail = saleDetailDao.getDeliveredSaleDetail(model);
+				if(saleDetail!=null){
+					result.setMessage("该订单已出库,不能反审");
+					return result;
 				}
 			}
 			model.setStatus(sale.getStatus());
@@ -207,6 +222,11 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 					}else{//如果是由已审改为未审
 						bank.setAmount(bank.getAmount()-model.getReceiptedAmount());
 					}
+				}
+				//如果由已审修改为未审需要判断是否出库
+				if(model.getStatus().intValue()==1 && status==0){
+					SaleDetail saleDetail = saleDetailDao.getDeliveredSaleDetail(model);
+					if(saleDetail!=null) continue;
 				}
 				model.setStatus(status);
 			}
