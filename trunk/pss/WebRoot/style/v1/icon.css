@@ -97,3 +97,6 @@
 .icon-mini-refresh{
 	background:url('icons/mini_refresh.png') no-repeat 3px 2px;
 }
+.icon-clear{
+	background:url('icons/clear.png') no-repeat;
+}
