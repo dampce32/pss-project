@@ -211,13 +211,15 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 				if(StringUtils.isEmpty(buyDetailId)){//新增
 						Product product = new Product();
 						product.setProductId(productId);
-						DataDictionary color = new DataDictionary();
-						color.setDataDictionaryId(colorId);
 						
 						BuyDetail buyDetail = new BuyDetail();
 						buyDetail.setBuy(model);
 						buyDetail.setProduct(product);
-						buyDetail.setColor(color);
+						if(StringUtils.isNotEmpty(colorId)){
+							DataDictionary color = new DataDictionary();
+							color.setDataDictionaryId(colorId);
+							buyDetail.setColor(color);
+						}
 						buyDetail.setQty(new Double(qty));
 						buyDetail.setPrice(new Double(price));
 						buyDetail.setNote1(note1);

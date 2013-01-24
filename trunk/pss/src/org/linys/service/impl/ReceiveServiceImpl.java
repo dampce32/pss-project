@@ -171,13 +171,15 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 				
 				Product product = new Product();
 				product.setProductId(productId);
-				DataDictionary color = new DataDictionary();
-				color.setDataDictionaryId(colorId);
 				
 				ReceiveDetail receiveDetail = new ReceiveDetail();
 				receiveDetail.setReceive(model);
 				receiveDetail.setProduct(product);
-				receiveDetail.setColor(color);
+				if(StringUtils.isNotEmpty(colorId)){
+					DataDictionary color = new DataDictionary();
+					color.setDataDictionaryId(colorId);
+					receiveDetail.setColor(color); 
+				}
 				receiveDetail.setQty(new Double(qty));
 				receiveDetail.setPrice(new Double(price));
 				receiveDetail.setNote1(note1);
@@ -238,13 +240,16 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 				if(StringUtils.isEmpty(receiveDetailId)){//新增
 						Product product = new Product();
 						product.setProductId(productId);
-						DataDictionary color = new DataDictionary();
-						color.setDataDictionaryId(colorId);
+						
 						
 						ReceiveDetail receiveDetail = new ReceiveDetail();
 						receiveDetail.setReceive(model);
 						receiveDetail.setProduct(product);
-						receiveDetail.setColor(color);
+						if(StringUtils.isNotEmpty(colorId)){
+							DataDictionary color = new DataDictionary();
+							color.setDataDictionaryId(colorId);
+							receiveDetail.setColor(color);
+						}
 						receiveDetail.setQty(new Double(qty));
 						receiveDetail.setPrice(new Double(price));
 						receiveDetail.setNote1(note1);

@@ -23,11 +23,6 @@
 	  var pageNumber = 1;
 	  var pageSize = 10;
 	  
-	  var warehouseData = null;
-	  var bankData = null;
-	  var employeeData = null;
-	  var invoiceTypeData = null;
-	  
 	  var changeSearch = false;
 	  
 	  //列表
@@ -47,10 +42,10 @@
 				{field:'note',title:'备注',width:90,align:"center"},
 				{field:'status',title:'状态',width:80,align:"center",
 					formatter: function(value,row,index){
-						if(row.status==0){
-							return '未审';
-						}else if(row.status==1){
-							return '已审';
+						if (value==0){
+							return '<img src="style/v1/icons/warn.png"/>';
+						} else {
+							return '<img src="style/v1/icons/info.png"/>';
 						}
 					}}
 		  ]],
@@ -60,8 +55,8 @@
 				{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},'-',
 				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},'-',
 				{text:'删除',iconCls:'icon-remove',handler:function(){onMulDelete()}},'-',
-				{text:'已审',iconCls:'icon-edit',handler:function(){onMulUpdateStatus(1)}},'-',
-				{text:'反审',iconCls:'icon-edit',handler:function(){onMulUpdateStatus(0)}}
+				{text:'已审',iconCls:'icon-info',handler:function(){onMulUpdateStatus(1)}},'-',
+				{text:'反审',iconCls:'icon-warn',handler:function(){onMulUpdateStatus(0)}}
 		  ],
 		  onDblClickRow:function(rowIndex, rowData){
 				onUpdate();
@@ -93,7 +88,7 @@
 		}else{
 			$('#mulSearchPanel',$this).panel('open');
 			$('#'+id).layout('panel','north').panel('resize',{
-				height: 110
+				height: 140
 			});
 			$('#'+id).layout('resize');
 			changeSearch = true;
@@ -179,10 +174,10 @@
 		 			{id:'save'+id,text:'保存',iconCls:'icon-save',handler:function(){onSave();}},'-',
 		 			{id:'add'+id,text:'新增',iconCls:'icon-add',handler:function(){onAdd();}},'-',
 		 			{id:'delete'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDelete();}},'-',
-		 			{id:'sh'+id,text:'审核',iconCls:'icon-edit',handler:function(){onUpdateStatus(1);}},'-',
-		 			{id:'fs'+id,text:'反审',iconCls:'icon-edit',handler:function(){onUpdateStatus(0);}},'-',
-		 			{id:'pre'+id,text:'上一笔',iconCls:'icon-edit',handler:function(){onOpenIndex(-1);}},'-',
-		 			{id:'next'+id,text:'下一笔',iconCls:'icon-edit',handler:function(){onOpenIndex(1);}},'-',
+		 			{id:'sh'+id,text:'审核',iconCls:'icon-info',handler:function(){onUpdateStatus(1);}},'-',
+		 			{id:'fs'+id,text:'反审',iconCls:'icon-warn',handler:function(){onUpdateStatus(0);}},'-',
+		 			{id:'pre'+id,text:'上一笔',iconCls:'icon-left',handler:function(){onOpenIndex(-1);}},'-',
+		 			{id:'next'+id,text:'下一笔',iconCls:'icon-right',handler:function(){onOpenIndex(1);}},'-',
 		 			{text:'退出',iconCls:'icon-cancel',handler:function(){
 		 					$(editDialog).dialog('close');
 		 				}
@@ -232,8 +227,8 @@
 			$(receiveDetail).datagrid({url:LYS.ClearUrl});
 		}
 		$(viewList).datagrid('unselectAll');
-		selectIndex==null
-		selectIndex==null
+		selectIndex=null;
+		selectIndex=null;
     	$(editForm).form('clear');
 		initChoose();
 		addBtnStatus();
@@ -242,26 +237,18 @@
 	
 	var initChoose = function(){
 		//仓库
-		if(warehouseData==null){
-			var url = 'dict/queryComboboxWarehouse.do';
-			warehouseData = syncCallService(url);
-		}
 		$('#warehouse',editDialog).combobox({
 			valueField:'warehouseId',
 			textField:'warehouseName',
 			width:150,
-			data:warehouseData
+			data:PSS.getWarehouseList()
 		})
 		//经办人
-		if(employeeData==null){
-			var url = 'dict/queryComboboxEmployee.do';
-			employeeData = syncCallService(url);
-		}
 		$('#employee',editDialog).combobox({
 			valueField:'employeeId',
 			textField:'employeeName',
 			width:150,
-			data:employeeData
+			data:PSS.getEmployeeList()
 		})
 	}
 	//保存前的赋值操作
@@ -425,6 +412,8 @@
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
 						var fn = function(){
+							selectRow = null;
+							selectIndex = null;
 							search(true);
 						}
 						$.messager.alert('提示','删除成功','info',fn);
@@ -664,7 +653,7 @@
 		  rownumbers:true,
 		  pagination:true,
 		  toolbar:[	
-				{text:'选择',iconCls:'icon-save',handler:function(){onSelectOKProduct()}},
+				{text:'选择',iconCls:'icon-ok',handler:function(){onSelectOKProduct()}},
 				{text:'退出',iconCls:'icon-cancel',handler:function(){
 					onExitSelectProduct();
 				}}

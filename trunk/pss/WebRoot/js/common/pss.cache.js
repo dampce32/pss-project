@@ -37,3 +37,12 @@ PSS.getInvoiceTypeList = function(){
 	}
 	return PSS.InvoiceTypeList;
 }
+//仓库
+PSS.WarehouseList = null;
+PSS.getWarehouseList = function(){
+	if(PSS.WarehouseList==null){
+		var url = 'dict/queryComboboxWarehouse.do';
+		PSS.WarehouseList = syncCallService(url);
+	}
+	return PSS.WarehouseList;
+}

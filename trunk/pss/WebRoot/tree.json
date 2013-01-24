@@ -162,6 +162,10 @@
 	"state":"closed",
 	"children":[{
 		"id":"1-1",
+		"text":"预付单",
+		"attributes":{"rightUrl":"finance/prepay.do"}
+	},{
+		"id":"1-1",
 		"text":"采购付款",
 		"attributes":{"rightUrl":"finance/pay.do"}
 	}]
