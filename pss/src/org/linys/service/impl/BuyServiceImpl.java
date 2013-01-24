@@ -50,7 +50,7 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 		List<Buy> list = buyDAO.query(model,page,rows);
 		
 		String[] properties = {"buyId","buyCode","buyDate","sourceCode","receiveDate",
-				"supplier.supplierName","amount","payAmount","otherAmount",
+				"supplier.supplierName","amount","payAmount","otherAmount","checkAmount",
 				"employee.employeeName","note","status","invoiceType.invoiceTypeName"};
 		String data = JSONUtil.toJson(list,properties);
 		result.addData("datagridData", data);
@@ -137,7 +137,7 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 		if(StringUtils.isEmpty(model.getBuyId())){//新增
 			//取得入库单号
 			model.setBuyCode(commonDAO.getCode("Buy", "buyCode", prefixDAO.getPrefix("buy")));
-			
+			model.setCheckAmount(0.0);
 			model.setStatus(0);
 			buyDAO.save(model);
 			for (int i = 0; i < productIdArray.length; i++) {

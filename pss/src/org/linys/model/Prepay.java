@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -58,9 +59,13 @@ public class Prepay extends BaseModel {
 	 */
 	private Double amount;
 	/**
+	 * 对账金额
+	 */
+	private Double checkAmount;
+	/**
 	 * 余额
 	 */
-	private Double balance;
+	private Double balanceAmount;
 	/**
 	 * 备注
 	 */
@@ -170,13 +175,23 @@ public class Prepay extends BaseModel {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	@Column(name = "balance", precision = 12, scale = 0)
-	public Double getBalance() {
-		return balance;
+	
+	@Column(name = "checkAmount", precision = 12, scale = 0)
+	public Double getCheckAmount() {
+		return checkAmount;
 	}
 
-	public void setBalance(Double balance) {
-		this.balance = balance;
+	public void setCheckAmount(Double checkAmount) {
+		this.checkAmount = checkAmount;
+	}
+	@Transient
+	public Double getBalanceAmount() {
+		this.balanceAmount =  this.amount-this.checkAmount;
+		return balanceAmount;
+	}
+
+	public void setBalanceAmount(Double balanceAmount) {
+		this.balanceAmount = balanceAmount;
 	}
 
 }

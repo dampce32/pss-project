@@ -45,9 +45,10 @@
 				{field:'supplierName',title:'供应商',width:90,align:"center"},
 				{field:'amount',title:'应退金额',width:80,align:"center"},
 				{field:'payAmount',title:'实退金额',width:80,align:"center"},
+				{field:'checkAmount',title:'对账金额',width:80,align:"center"},
 				{field:'noPayAmount',title:'欠款',width:80,align:"center",
 					formatter: function(value,row,index){
-						return row.amount-row.payAmount;
+						return row.amount-row.payAmount-row.checkAmount;
 					}
 				},
 				{field:'employeeName',title:'经手人',width:90,align:"center"},
@@ -647,8 +648,7 @@
 					 }
 				}
 				totalAmount+=parseFloat(newValue); 
-		    	$('#amount',editForm).val(totalAmount);
-		    	$('#amount',editForm).change();
+		    	$('#amount',editForm).numberbox('setValue',totalAmount);
 		    }}}},
 		    {field:'note1',title:'备注1',width:120,align:"center",editor:{type:'text'}},
 		    {field:'note2',title:'备注2',width:120,align:"center",editor:{type:'text'}},
@@ -689,7 +689,7 @@
 	    priceEditor.target.bind('change', function(){  
 	        calculate(rowIndex);  
 	    });  
-	    function calculate(rowIndex){  
+	    function calculate(rowIndex){ 
 	        var cost = qtyEditor.target.val() * priceEditor.target.val();  
 	        $(amountEditor.target).numberbox('setValue',cost);
 	    }  
@@ -806,5 +806,11 @@
 		$('#amount',editForm).val(totalAmount);
 		$('#amount',editForm).change();
 	 }
+	 //应付金额发生改变
+	 $('#amount',editForm).numberbox({
+		 onChange:function(newValue,oldValue){
+			 $('#payAmount',editForm).numberbox('setValue',newValue);
+		 }
+	});
   }
 })(jQuery);   

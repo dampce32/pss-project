@@ -34,7 +34,7 @@
 		  rownumbers:true,
 		  columns:[[
 		        {field:'ck',title:'选择',checkbox:true},
-				{field:'receiveCode',title:'入库单号',width:120,align:"center"},
+				{field:'receiveCode',title:'入库单号',width:130,align:"center"},
 				{field:'receiveDate',title:'入库日期',width:80,align:"center"},
 				{field:'deliverCode',title:'送货单号',width:120,align:"center"},
 				{field:'warehouseName',title:'存入仓库',width:90,align:"center"},
@@ -42,9 +42,10 @@
 				{field:'amount',title:'应付款',width:80,align:"center"},
 				{field:'payAmount',title:'已付款',width:80,align:"center"},
 				{field:'discountAmount',title:'优惠',width:80,align:"center"},
+				{field:'checkAmount',title:'已对账金额',width:80,align:"center"},
 				{field:'noPayAmount',title:'欠款',width:80,align:"center",
 					formatter: function(value,row,index){
-						return row.amount-row.payAmount-row.discountAmount;
+						return row.amount-row.payAmount-row.discountAmount-row.checkAmount;
 					}
 				},
 				{field:'employeeName',title:'经手人',width:90,align:"center"},
@@ -817,7 +818,8 @@
 		  rownumbers:true,
 		  pagination:true,
 		  toolbar:[	
-				{text:'选择',iconCls:'icon-ok',handler:function(){onSelectOKProduct()}},
+		        {text:'新增',iconCls:'icon-add',handler:function(){onAddProduct()}},'-',
+				{text:'选择',iconCls:'icon-ok',handler:function(){onSelectOKProduct()}},'-',
 				{text:'退出',iconCls:'icon-cancel',handler:function(){
 					onExitSelectProduct();
 				}}
@@ -893,8 +895,7 @@
 			var row = rows[int];
 			totalAmount += parseFloat(row.amount);
 		}
-		$('#amount',editForm).val(totalAmount);
-		$('#amount',editForm).change();
+		$('#amount',editForm).numberbox('setValue',totalAmount);
 	 }
 	 //应付金额发生改变
 	 $('#amount',editForm).numberbox({
@@ -1069,5 +1070,148 @@
 		totalAmount+=parseFloat(discountAmount); 
 		 $('#amount',editForm).numberbox('setValue',totalAmount);  
 	 }
+	 
+	//-----------添加商品-------
+	 var addDialog = $('#addDialog',$this);
+	 var addForm = $('#addForm',addDialog);
+	 
+	 var addData = null;
+	 //添加
+	 var onAddProduct = function(){
+		if(addData==null){
+			var url = 'dict/queryByDictionaryKindsDataDict.do';
+			var content ={ids:'size,color,unit'};
+			addData = syncCallService(url,content);
+		}
+		//规格
+	   $('#size',addDialog).combobox({
+			valueField:'dataDictionaryId',
+			textField:'dataDictionaryName',
+			width:150,
+			data:addData.size,
+			onSelect:function(record){
+				$('#sizeId',addDialog).val(record.dataDictionaryId);
+			}
+	  })
+	  //颜色
+	   $('#color',addDialog).combobox({
+			valueField:'dataDictionaryId',
+			textField:'dataDictionaryName',
+			width:150,
+			data:addData.color,
+			onSelect:function(record){
+				$('#colorId',addDialog).val(record.dataDictionaryId);
+			}
+	  })
+	  //单位
+	   $('#unit',addDialog).combobox({
+			valueField:'dataDictionaryId',
+			textField:'dataDictionaryName',
+			width:150,
+			data:addData.unit,
+			onSelect:function(record){
+				$('#unitId',addDialog).val(record.dataDictionaryId);
+			}
+	  })
+	  //商品类型
+	  $('#productType',addDialog).combogrid({
+		    panelWidth:480, 
+			mode: 'remote',  
+			url: 'dict/queryCombogridProductType.do',
+			idField: 'productTypeId',  
+			textField: 'productTypeName',  
+			pagination:true,
+			columns: [[  
+			    {field:'productTypeName',title:'商品类型',width:120,sortable:true},  
+			    {field:'productTypeCode',title:'商品类型编号',width:120,sortable:true}
+			]],
+			onSelect:function(rowIndex, rowData){
+				$('#productTypeId',addDialog).val(rowData.productTypeId);
+			}
+		});
+	   	$('#buyingPrice',addDialog).numberbox('setValue',0.0);
+	   	$('#salePrice',addDialog).numberbox('setValue',0.0);
+		$(addDialog).dialog('open');
+	}
+	//保存前的赋值操作
+	var setAddValue = function(){
+		var productCode = $.trim($('#productCode',addForm).val());
+		if(productCode==''){
+			$.messager.alert('提示','请填写商品编号','warning');
+			return false;
+		}
+		var productName = $.trim($('#productName',addForm).val());
+		if(productName==''){
+			$.messager.alert('提示','请填写商品名称','warning');
+			return false;
+		}
+		//商品类别
+		var productTypeId = $('#productType',addForm).combogrid('getValue');
+		var productTypeName = $('#productType',addForm).combogrid('getText');
+		if(productTypeId==''){
+			$.messager.alert('提示','请选择商品类别','warning');
+			return false;
+		}
+		$('#productTypeId',addForm).val(productTypeId);
+		$('#productTypeName',addForm).val(productTypeName);
+		//商品单位
+		var unitId = $('#unit',addForm).combobox('getValue');
+		var unitName = $('#unit',addForm).combobox('getText');
+		$('#unitId',addForm).val(unitId);
+		$('#unitName',addForm).val(unitName);
+		//商品颜色
+		var colorId = $('#color',addForm).combobox('getValue');
+		var colorName = $('#color',addForm).combobox('getText');
+		$('#colorId',addForm).val(colorId);
+		$('#colorName',addForm).val(colorName);
+		//商品尺码
+		var sizeId = $('#size',addForm).combobox('getValue');
+		var sizeName = $('#size',addForm).combobox('getText');
+		$('#sizeId',addForm).val(sizeId);
+		$('#sizeName',addForm).val(sizeName);
+		return true;
+	}
+	 //保存商品
+	 var onAddSave = function(){
+		var url = 'dict/saveProduct.do'
+		$(addForm).form('submit',{
+			url: url,
+			onSubmit: function(){
+				return setAddValue();
+			},
+			success: function(data){
+				var result = eval('('+data+')');
+				if(result.isSuccess){
+					var fn = function(){
+						onAddExit();
+						searchBtnSelect();
+					}
+					$.messager.alert('提示','保存成功','info',fn);
+					
+				}else{
+					$.messager.alert('提示',result.message,'error');
+				}
+			}
+		 });
+	 }
+	 //退出
+	 var onAddExit = function(){
+		 $(addForm).form('clear');
+		 $(addDialog).dialog('close');
+	 }
+	 //编辑框
+	 $(addDialog).dialog({  
+	    title: '添加商品',  
+	    width:500,
+	    height:300,
+	    closed: true,  
+	    cache: false,  
+	    modal: true,
+	    closable:false,
+	    toolbar:[
+	    	{text:'保存',iconCls:'icon-save',handler:function(){onAddSave();}},'-',
+	    	{text:'退出',iconCls:'icon-cancel',handler:function(){onAddExit();}
+		}]
+	});
   }
 })(jQuery);   

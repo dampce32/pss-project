@@ -70,6 +70,10 @@ public class Reject extends BaseModel {
 	 */
 	private Double payAmount;
 	/**
+	 * 对账金额
+	 */
+	private Double checkAmount;
+	/**
 	 * 审核状态
 	 */
 	private Integer status;
@@ -216,6 +220,14 @@ public class Reject extends BaseModel {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+	@Column(name = "checkAmount", precision = 53, scale = 0)
+	public Double getCheckAmount() {
+		return checkAmount;
+	}
+
+	public void setCheckAmount(Double checkAmount) {
+		this.checkAmount = checkAmount;
 	}
 
 }
