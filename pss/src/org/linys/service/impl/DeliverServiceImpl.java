@@ -133,6 +133,7 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 			
 			if(StringUtils.isNotEmpty(saleDetailId)){
 				SaleDetail saleDetail = new SaleDetail();
+				saleDetail.setSaleDetailId(saleDetailId);
 				deliverDetail.setSaleDetail(saleDetail);
 			}
 			
@@ -249,7 +250,7 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 				Store store = storeDao.load(propertyNames, values);
 				Product product = deliverDetail.getProduct();
 				if(store==null || store.getQty()-deliverDetail.getQty()<0){
-					throw new RuntimeException("商品:"+product.getProductName()+"超额出库");
+					throw new RuntimeException("商品:"+product.getProductName()+",超额出库");
 				}
 				store.setQty(store.getQty()-deliverDetail.getQty());
 				
@@ -267,7 +268,7 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 					model.setIsReceipt(1);
 				}
 			}
-		}else if(model.getStatus()==0){//如果是由已审改为未审
+		}else if(deliver.getStatus()==0){//如果是由已审改为未审
 			//将该出库单下的商品出库
 			List<DeliverDetail> deliverDetailList = deliverDetailDao.queryDeliverDetail(model);
 			//更新对应商品的库存数量
