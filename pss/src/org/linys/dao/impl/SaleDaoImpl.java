@@ -29,7 +29,6 @@ public class SaleDaoImpl extends BaseDAOImpl<Sale, String> implements SaleDao {
 	public Pager querySale(Pager pager,Sale sale,Date beginDate,Date endDate) {
 		Criteria criteria = getCurrentSession().createCriteria(Sale.class);
 		
-		criteria.createAlias("employee", "employee", CriteriaSpecification.LEFT_JOIN);
 		criteria.createAlias("customer", "customer", CriteriaSpecification.LEFT_JOIN);
 		
 		if(StringUtils.isNotEmpty(sale.getSaleCode())){

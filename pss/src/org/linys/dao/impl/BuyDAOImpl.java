@@ -29,8 +29,6 @@ public class BuyDAOImpl extends BaseDAOImpl<Buy, String> implements
 		Criteria criteria  = getCurrentSession().createCriteria(Buy.class);
 		
 		criteria.createAlias("supplier", "supplier",CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("employee", "employee",CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("invoiceType", "invoiceType",CriteriaSpecification.LEFT_JOIN);
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getBuyCode())){
 			criteria.add(Restrictions.like("buyCode", model.getBuyCode(),MatchMode.ANYWHERE));

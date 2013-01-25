@@ -27,4 +27,16 @@ public interface SaleDetailDao extends BaseDAO<SaleDetail, String> {
 	 * @throws Exception
 	 */
 	public List<SaleDetail> querySaleDetail(Sale sale);
+	
+	/**
+	 * 
+	 * @Description: 查询某个订单是否已出库
+	 * @Create: 2013-1-24 上午10:46:55
+	 * @author longweier
+	 * @update logs
+	 * @param sale
+	 * @return
+	 * @throws Exception
+	 */
+	public SaleDetail getDeliveredSaleDetail(Sale sale);
 }

@@ -389,8 +389,8 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 				 * 查找商品在仓库中是否已有记录，如果有则修改库存数量和库存金额，	
 				 * 如果没有，则修改新增库存记录
 				*/
-				String[] propertyNames = {"warehouse.warehouseId","product.productId"};
-				Object[] values = {oldReceive.getWarehouse().getWarehouseId(),receiveDetail.getProduct().getProductId()};
+				String[] propertyNames = {"warehouse","product"};
+				Object[] values = {oldReceive.getWarehouse(),receiveDetail.getProduct()};
 				Store store = storeDAO.load(propertyNames, values);
 				if(store==null){
 					store = new Store();
@@ -424,8 +424,8 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			List<ReceiveDetail> receiveDetailList = receiveDetailDAO.queryByReceiveId(model.getReceiveId());
 			//更新对应商品的库存数量
 			for (ReceiveDetail receiveDetail : receiveDetailList) {
-				String[] propertyNames = {"warehouse.warehouseId","product.productId"};
-				Object[] values = {oldReceive.getWarehouse().getWarehouseId(),receiveDetail.getProduct().getProductId()};
+				String[] propertyNames = {"warehouse","product"};
+				Object[] values = {oldReceive.getWarehouse(),receiveDetail.getProduct()};
 				Store store = storeDAO.load(propertyNames, values);
 				store.setQty(store.getQty()-receiveDetail.getQty());
 				storeDAO.update(store);
@@ -492,8 +492,8 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 						 * 查找商品在仓库中是否已有记录，如果有则修改库存数量和库存金额，	
 						 * 如果没有，则修改新增库存记录
 						*/
-						String[] propertyNames = {"warehouse.warehouseId","product.productId"};
-						Object[] values = {oldReceive.getWarehouse().getWarehouseId(),receiveDetail.getProduct().getProductId()};
+						String[] propertyNames = {"warehouse","product"};
+						Object[] values = {oldReceive.getWarehouse(),receiveDetail.getProduct()};
 						Store store = storeDAO.load(propertyNames, values);
 						if(store==null){
 							store = new Store();
@@ -527,8 +527,8 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 					List<ReceiveDetail> receiveDetailList = receiveDetailDAO.queryByReceiveId(id);
 					//更新对应商品的库存数量
 					for (ReceiveDetail receiveDetail : receiveDetailList) {
-						String[] propertyNames = {"warehouse.warehouseId","product.productId"};
-						Object[] values = {oldReceive.getWarehouse().getWarehouseId(),receiveDetail.getProduct().getProductId()};
+						String[] propertyNames = {"warehouse","product"};
+						Object[] values = {oldReceive.getWarehouse(),receiveDetail.getProduct()};
 						Store store = storeDAO.load(propertyNames, values);
 						store.setQty(store.getQty()-receiveDetail.getQty());
 						storeDAO.update(store);

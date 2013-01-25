@@ -47,7 +47,7 @@ public class Deliver extends BaseModel {
 	/**
 	 * 经办人
 	 */
-	private Employee Employee;
+	private Employee employee;
 	/**
 	 * 客户
 	 */
@@ -84,6 +84,12 @@ public class Deliver extends BaseModel {
 	 * 已收金额
 	 */
 	private Double receiptedAmount;
+	
+	/**
+	 * 对账金额
+	 */
+	private Double checkAmount;
+	
 	/**
 	 * 出库单状态
 	 */
@@ -152,11 +158,11 @@ public class Deliver extends BaseModel {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "employeeId")
 	public Employee getEmployee() {
-		return this.Employee;
+		return this.employee;
 	}
 
-	public void setEmployee(Employee Employee) {
-		this.Employee = Employee;
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -244,6 +250,14 @@ public class Deliver extends BaseModel {
 		this.receiptedAmount = receiptedAmount;
 	}
 
+	public Double getCheckAmount() {
+		return checkAmount;
+	}
+
+	public void setCheckAmount(Double checkAmount) {
+		this.checkAmount = checkAmount;
+	}
+	
 	@Column(name = "status")
 	public Integer getStatus() {
 		return this.status;
