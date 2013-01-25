@@ -241,10 +241,10 @@
 		});
 	  }
 	  //打开
-	  var onOpen = function(saleId){
+	  var onOpen = function(deliverId){
 		delDeliverDetailIds = new Array();
 		var url = 'outWarehouse/initDeliver.do';
-		var content ={saleId:saleId};
+		var content ={deliverId:deliverId};
 		asyncCallService(url,content,function(result){
 			if(result.isSuccess){
 				$('#customer',editForm).combogrid('disable');
@@ -286,6 +286,7 @@
 				$('#employeeId',editDialog).combobox('setValue',deliverData.employeeId);
 				$('#invoiceTypeId',editDialog).combobox('setValue',deliverData.invoiceTypeId);
 				$('#expressId',editDialog).combobox('setValue',deliverData.expressId);
+				$('#expressCode',editForm).val(deliverData.expressCode);
 				$('#note',editForm).val(deliverData.note);
 				
 				if(deliverData.status==1){
@@ -488,7 +489,7 @@
 		}else{
 			msg = '反审';
 		}
-		if(saleId==''){
+		if(deliverId==''){
 			$.messager.alert("提示","请选择需要"+msg+"数据行","warning");
 			return;
 		}
