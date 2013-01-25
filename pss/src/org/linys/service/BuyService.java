@@ -107,14 +107,12 @@ public interface BuyService extends BaseService<Buy,String>{
 	 * @update logs
 	 * @param beginDate
 	 * @param endDate
-	 * @param supplierId
 	 * @param ids
 	 * @param model
 	 * @param page
 	 * @param rows
 	 * @return
 	 */
-	ServiceResult queryReceive(String beginDate, String endDate,
-			String supplierId, String ids, Buy model, Integer page, Integer rows);
+	String queryReceive(String beginDate, String endDate,String ids, Buy model, Integer page, Integer rows);
 
 }

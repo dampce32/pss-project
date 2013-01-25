@@ -3,11 +3,11 @@ package org.linys.service.impl;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.linys.bean.Pager;
 import org.linys.dao.BankDAO;
 import org.linys.dao.BuyDAO;
 import org.linys.dao.BuyDetailDAO;
@@ -27,8 +27,7 @@ import org.linys.vo.ServiceResult;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
-		implements BuyService {
+public class BuyServiceImpl extends BaseServiceImpl<Buy, String> implements BuyService {
 	@Resource
 	private BuyDAO buyDAO;
 	@Resource
@@ -399,44 +398,32 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String>
 	 * (non-Javadoc)   
 	 * @see org.linys.service.BuyService#queryReceive(java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.linys.model.Buy, java.lang.Integer, java.lang.Integer)
 	 */
-	@Override
-	public ServiceResult queryReceive(String beginDate, String endDate,
-			String supplierId, String ids, Buy model, Integer page, Integer rows) {
-		ServiceResult result = new ServiceResult(false);
-		if(StringUtils.isEmpty(beginDate)){
-			result.setMessage("请选择开始日期");
-			return result;
+	@SuppressWarnings("unchecked")
+	public String queryReceive(String beginDate, String endDate,String ids, Buy model, Integer page, Integer rows) {
+		if(model==null || model.getSupplier()==null){
+			return JSONUtil.EMPTYJSON;
 		}
+
 		Date beginDateDate = null;
-		try {
-			beginDateDate = DateUtil.toDate(beginDate);
-		} catch (ParseException e) {
-			result.setMessage("请输入正确的开始日期");
-			return result;
+		if(StringUtils.isNotEmpty(beginDate)){
+			try {
+				beginDateDate = DateUtil.toDate(beginDate);
+			} catch (ParseException e) {}
 		}
 		Date endDateDate = null;
-		try {
-			endDateDate = DateUtil.toDate(endDate);
-		} catch (ParseException e) {
-			result.setMessage("请输入正确的结束日期");
-			return result;
-		}
-		if(StringUtils.isEmpty(supplierId)){
-			result.setMessage("请选择供应商");
-			return result;
+		if(StringUtils.isNotEmpty(endDate)){
+			try {
+				endDateDate = DateUtil.toDate(endDate);
+			} catch (ParseException e) {}
 		}
 		String[] idArray = {""};
 		if(StringUtils.isNotEmpty(ids)){
 			idArray = StringUtil.split(ids);
 		}
-		List<Map<String,Object>> listMap = buyDAO.queryReceive(beginDateDate,endDateDate,supplierId,idArray,
-				model,page,rows);
-		
-		Long total = buyDAO.getTotalReceive(beginDateDate,endDateDate,supplierId,idArray,
-				model);
-		String datagridData = JSONUtil.toJsonFromListMap(listMap, total);
-		result.addData("datagridData", datagridData); 
-		result.setIsSuccess(true);
-		return result;
+		Pager pager = new Pager(page, rows);
+		pager = buyDAO.queryReceive(pager, beginDateDate, endDateDate, idArray, model);
+		String jsonArray = JSONUtil.toJsonFromListMap(pager.getList(), pager.getTotalCount());
+		return jsonArray;
+	
 	}
 }

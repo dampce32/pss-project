@@ -2,6 +2,7 @@ package org.linys.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -46,7 +47,7 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 	@Resource
 	private PrefixDAO prefixDao;
 	@Resource
-	private StoreDAO storeDAO;
+	private StoreDAO storeDao;
 	
 	public ServiceResult addDeliver(String type,Deliver deliver, String saleDetailIds,
 			String productIds, String colorIds, String qtys, String prices,
@@ -175,8 +176,7 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 		List<DeliverDetail> deliverDetailList = deliverDetailDao.queryDeliverDetail(deliver);
 		String[] propertiesDetail = {"deliverDetailId","saleDetail.saleDetailId","product.productId","product.productCode","product.productName",
 				"product.size.dataDictionaryName:sizeName","product.unit.dataDictionaryName:unitName","color.dataDictionaryName:colorName",
-				"color.dataDictionaryId:colorId","saleDetail.sale.saleCode:saleCode",
-				"qty","price","discount","amount","note1","note2","note3","hadSaleQty"};
+				"color.dataDictionaryId:colorId","saleDetail.sale.saleCode:saleCode","qty","price","discount","amount","note1","note2","note3"};
 		String detailData = JSONUtil.toJson(deliverDetailList,propertiesDetail);
 		result.addData("detailData", detailData);
 		result.setIsSuccess(true);
@@ -246,7 +246,7 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 				*/
 				String[] propertyNames = {"warehouse","product"};
 				Object[] values = {model.getWarehouse(),deliverDetail.getProduct()};
-				Store store = storeDAO.load(propertyNames, values);
+				Store store = storeDao.load(propertyNames, values);
 				Product product = deliverDetail.getProduct();
 				if(store==null || store.getQty()-deliverDetail.getQty()<0){
 					throw new RuntimeException("商品:"+product.getProductName()+"超额出库");
@@ -274,14 +274,14 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 			for (DeliverDetail deliverDetail : deliverDetailList) {
 				String[] propertyNames = {"warehouse","product"};
 				Object[] values = {model.getWarehouse(),deliverDetail.getProduct()};
-				Store store = storeDAO.load(propertyNames, values);
+				Store store = storeDao.load(propertyNames, values);
 				if(store==null){
 					store = new Store();
 					store.setWarehouse(model.getWarehouse());
 					store.setProduct(deliverDetail.getProduct());
 					store.setQty(0.0);
 					store.setAmount(0.0);
-					storeDAO.save(store);
+					storeDao.save(store);
 				}
 				store.setQty(store.getQty()+deliverDetail.getQty());
 				//更新商品总的库存数量和金额
@@ -340,7 +340,7 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 					*/
 					String[] propertyNames = {"warehouse","product"};
 					Object[] values = {model.getWarehouse(),deliverDetail.getProduct()};
-					Store store = storeDAO.load(propertyNames, values);
+					Store store = storeDao.load(propertyNames, values);
 					Product product = deliverDetail.getProduct();
 					if(store==null || store.getQty()-deliverDetail.getQty()<0){
 						throw new RuntimeException("出库单号:"+model.getDeliverCode()+",商品:"+product.getProductName()+"超额出库");
@@ -368,14 +368,14 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 				for (DeliverDetail deliverDetail : deliverDetailList) {
 					String[] propertyNames = {"warehouse","product"};
 					Object[] values = {model.getWarehouse(),deliverDetail.getProduct()};
-					Store store = storeDAO.load(propertyNames, values);
+					Store store = storeDao.load(propertyNames, values);
 					if(store==null){
 						store = new Store();
 						store.setWarehouse(model.getWarehouse());
 						store.setProduct(deliverDetail.getProduct());
 						store.setQty(0.0);
 						store.setAmount(0.0);
-						storeDAO.save(store);
+						storeDao.save(store);
 					}
 					store.setQty(store.getQty()+deliverDetail.getQty());
 					//更新商品总的库存数量和金额
@@ -413,7 +413,7 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 		pager = deliverDao.queryDeliver(pager, deliver, beginDate, endDate,type);
 		String[] properties = {"deliverId","deliverCode","deliverDate","sourceCode",
 				"warehouse.warehouseName","customer.customerName","amount","receiptedAmount","discountAmount","checkAmount",
-				"employee.employeeName","note","status","invoiceType.invoiceTypeName","isReceipt"};
+				"employee.employeeName","note","status","invoiceType.invoiceTypeName","isReceipt","express.expressName","expressCode"};
 		String jsonArray = JSONUtil.toJson(pager.getList(), properties, pager.getTotalCount());
 		return jsonArray;
 	}
@@ -562,6 +562,26 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 		}
 		result.setIsSuccess(true);
 		result.addData("deliverId", deliver.getDeliverId());
+		return result;
+	}
+
+	public ServiceResult querySelectSaleDetail(String ids, String ids2) {
+		ServiceResult result = new ServiceResult(false);
+		String[] idArray = {""};
+		if(StringUtils.isNotEmpty(ids)){
+			idArray = StringUtil.split(ids);
+		}
+		
+		String[] idArray2 = {""};
+		if(StringUtils.isNotEmpty(ids2)){
+			idArray2 = StringUtil.split(ids2);
+		}
+		
+		List<Map<String,Object>> listMap = deliverDetailDao.querySelectSaleDetail(idArray,idArray2);
+		
+		String datagridData = JSONUtil.toJsonFromListMapWithOutRows(listMap);
+		result.addData("datagridData", datagridData); 
+		result.setIsSuccess(true);
 		return result;
 	}
 

@@ -406,4 +406,20 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 		result.setIsSuccess(true);
 		return result.toJSON();
 	}
+
+	@SuppressWarnings("unchecked")
+	public String queryDeliver(Integer pageNumber, Integer pageSize, Sale sale,String ids, Date beginDate, Date endDate) {
+		if(sale==null || sale.getCustomer()==null){
+			return JSONUtil.EMPTYJSON;
+		}
+		Pager pager = new Pager(pageNumber, pageSize);
+		
+		String[] idArray = {""};
+		if(StringUtils.isNotEmpty(ids)){
+			idArray = StringUtil.split(ids);
+		}
+		pager = saleDao.queryDeliver(pager, sale, idArray, beginDate, endDate);
+		String jsonArray = JSONUtil.toJsonFromListMap(pager.getList(), pager.getTotalCount());
+		return jsonArray;
+	}
 }
