@@ -23,11 +23,8 @@
 	  var pageNumber = 1;
 	  var pageSize = 10;
 	  
-	  var bankData = null;
-	  var employeeData = null;
-	  var invoiceTypeData = null;
-	  
 	  var changeSearch = false;
+	  var delPayDetailIdArray = null;
 	  
 	  //列表
 	  $(viewList).datagrid({
@@ -47,10 +44,10 @@
 				{field:'note',title:'备注',width:90,align:"center"},
 				{field:'status',title:'状态',width:80,align:"center",
 					formatter: function(value,row,index){
-						if(row.status==0){
-							return '未审';
-						}else if(row.status==1){
-							return '已审';
+						if (value==0){
+							return '<img src="style/v1/icons/warn.png"/>';
+						} else {
+							return '<img src="style/v1/icons/info.png"/>';
 						}
 					}}
 		  ]],
@@ -60,8 +57,8 @@
 				{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},'-',
 				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},'-',
 				{text:'删除',iconCls:'icon-remove',handler:function(){onMulDelete()}},'-',
-				{text:'已审',iconCls:'icon-edit',handler:function(){onMulUpdateStatus(1)}},'-',
-				{text:'反审',iconCls:'icon-edit',handler:function(){onMulUpdateStatus(0)}}
+				{text:'已审',iconCls:'icon-info',handler:function(){onMulUpdateStatus(1)}},'-',
+				{text:'反审',iconCls:'icon-warn',handler:function(){onMulUpdateStatus(0)}}
 		  ],
 		  onDblClickRow:function(rowIndex, rowData){
 				onUpdate();
@@ -93,7 +90,7 @@
 		}else{
 			$('#mulSearchPanel',$this).panel('open');
 			$('#'+id).layout('panel','north').panel('resize',{
-				height: 110
+				height: 140
 			});
 			$('#'+id).layout('resize');
 			changeSearch = true;
@@ -178,10 +175,10 @@
 	 			{id:'save'+id,text:'保存',iconCls:'icon-save',handler:function(){onSave();}},'-',
 	 			{id:'add'+id,text:'新增',iconCls:'icon-add',handler:function(){onAdd();}},'-',
 	 			{id:'delete'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDelete();}},'-',
-	 			{id:'sh'+id,text:'审核',iconCls:'icon-edit',handler:function(){onUpdateStatus(1);}},'-',
-	 			{id:'fs'+id,text:'反审',iconCls:'icon-edit',handler:function(){onUpdateStatus(0);}},'-',
-	 			{id:'pre'+id,text:'上一笔',iconCls:'icon-edit',handler:function(){onOpenIndex(-1);}},'-',
-	 			{id:'next'+id,text:'下一笔',iconCls:'icon-edit',handler:function(){onOpenIndex(1);}},'-',
+	 			{id:'sh'+id,text:'审核',iconCls:'icon-info',handler:function(){onUpdateStatus(1);}},'-',
+	 			{id:'fs'+id,text:'反审',iconCls:'icon-warn',handler:function(){onUpdateStatus(0);}},'-',
+	 			{id:'pre'+id,text:'上一笔',iconCls:'icon-left',handler:function(){onOpenIndex(-1);}},'-',
+	 			{id:'next'+id,text:'下一笔',iconCls:'icon-right',handler:function(){onOpenIndex(1);}},'-',
 	 			{text:'退出',iconCls:'icon-cancel',handler:function(){
 	 					$(editDialog).dialog('close');
 	 				}
@@ -197,8 +194,8 @@
 		$('#fs'+id).linkbutton('disable');
 		$('#pre'+id).linkbutton('disable');
 		$('#next'+id).linkbutton('disable');
-		$('#addReceive'+id).linkbutton('enable');
-		$('#deleteReceive'+id).linkbutton('enable');
+		$('#addCheck'+id).linkbutton('enable');
+		$('#deleteCheck'+id).linkbutton('enable');
 	}
 	//审核通过按钮的状态
 	var shBtnStatus = function(){
@@ -207,8 +204,8 @@
 		$('#delete'+id).linkbutton('disable');
 		$('#sh'+id).linkbutton('disable');
 		$('#fs'+id).linkbutton('enable');
-		$('#addReceive'+id).linkbutton('disable');
-		$('#deleteReceive'+id).linkbutton('disable');
+		$('#addCheck'+id).linkbutton('disable');
+		$('#deleteCheck'+id).linkbutton('disable');
 	}
 	//反审后的按钮状态
 	var fsBtnStatus = function(){
@@ -217,11 +214,12 @@
 		$('#delete'+id).linkbutton('enable');
 		$('#sh'+id).linkbutton('enable');
 		$('#fs'+id).linkbutton('disable');
-		$('#addReceive'+id).linkbutton('enable');
-		$('#deleteReceive'+id).linkbutton('enable');
+		$('#addCheck'+id).linkbutton('enable');
+		$('#deleteCheck'+id).linkbutton('enable');
 	}
 	//添加
 	var onAdd = function(){
+		delPayDetailIdArray = new Array();
 		var rows  = $(payDetail).datagrid('getRows');
 		if(rows.length!=0){
 			$(payDetail).datagrid('loadData',LYS.ClearData);
@@ -232,6 +230,9 @@
 		$(editForm).form('clear');
 		initChoose();
 		addBtnStatus();
+		$('#amount',editForm).numberbox('setValue',0);
+		$('#discountAmount',editForm).numberbox('setValue',0);
+		$('#payAmount',editForm).numberbox('setValue',0);
 		$(editDialog).dialog('open');
 	}
 	
@@ -264,6 +265,11 @@
 	}
 	//保存前的赋值操作
 	var setValue = function(){
+		var payAmount = $('#payAmount',editForm).numberbox('getValue');
+		if(payAmount<0){
+			$.messager.alert('提示','请选择合适的单据，本次付款不能小于0','warning');
+			return false;
+		}
 		//付款日期
 		var payDate = $('#payDate',editForm).val();
 		if(payDate==''){
@@ -299,61 +305,56 @@
 		$('#employeeId',editForm).val(employeeId);
 		//验证添加的入库单行
 		$(payDetail).datagrid('endEdit', lastIndex);
-		 $(payDetail).datagrid('unselectAll');
+		$(payDetail).datagrid('unselectAll');
 		lastIndex = null;
 		var rows = $(payDetail).datagrid('getRows');
 		if(rows.length==0){
-			$.messager.alert('提示','请添加欠款入库单','warning');
+			$.messager.alert('提示','请添加欠款单','warning');
 			return false;
 		}
-		for ( var int = 0; int < rows.length; int++) {
-			var row = rows[int];
+		for ( var i = 0; i < rows.length; i++) {
+			var row = rows[i];
 			if(row.payAmount==0){
-				var msg = '第'+(int+1)+'行本次实付的金额为0,请输入';
+				var msg = '第'+(i+1)+'行本次实付的金额为0,请输入';
 				$.messager.alert('提示',msg,'warning');
 				return false;
 			}
+			if(Math.abs(row.needPayAmount)<Math.abs(row.discountAmount+row.payAmount)){
+				var msg = '第'+(i+1)+'行';
+				$.messager.alert('提示',msg,'warning');
+				return false;
+			}
+			
 		}
 		var payDetailIdArray = new Array();
-		var receiveIdArray = new Array();
+		var sourceIdArray = new Array();
+		var sourceCodeArray = new Array();
+		var sourceDateArray = new Array();
 		var payKindArray = new Array();
 		var amountArray = new Array();
-		var discountedAmountArray = new Array();
 		var payedAmountArray = new Array();
 		var discountAmountArray = new Array();
 		var payAmountArray = new Array();
 		
 		for ( var i = 0; i < rows.length; i++) {
 			payDetailIdArray.push(rows[i].payDetailId);
-			receiveIdArray.push(rows[i].receiveId);
+			sourceIdArray.push(rows[i].sourceId);
+			sourceCodeArray.push(rows[i].sourceCode);
+			sourceDateArray.push(rows[i].sourceDate);
 			payKindArray.push(rows[i].payKind);
 			amountArray.push(rows[i].amount);
-			discountedAmountArray.push(rows[i].discountedAmount);
 			payedAmountArray.push(rows[i].payedAmount);
 			discountAmountArray.push(rows[i].discountAmount);
 			payAmountArray.push(rows[i].payAmount);
 		}
 		
-		delPayDetailIdArray = new Array();
-		//统计原记录中被删除的记录
-		for ( var int = 0; int < oldPayDetailIdArray.length; int++) {
-			var haveDel = true;
-			for(var i=0;i<rows.length;i++){
-				if(oldPayDetailIdArray[int]==rows[i].payDetailId){
-					haveDel = false;
-					break;
-				}
-			}
-			if(haveDel){
-				delPayDetailIdArray.push(oldPayDetailIdArray[int]);
-			}
-		}
 		$('#payDetailIds',editForm).val(payDetailIdArray.join(LYS.join));
 		$('#delPayDetailIds',editForm).val(delPayDetailIdArray.join(LYS.join));
-		$('#receiveIds',editForm).val(receiveIdArray.join(LYS.join));
+		$('#sourceIds',editForm).val(sourceIdArray.join(LYS.join));
+		$('#sourceCodes',editForm).val(sourceCodeArray.join(LYS.join));
+		$('#sourceDates',editForm).val(sourceDateArray.join(LYS.join));
 		$('#payKinds',editForm).val(payKindArray.join(LYS.join));
 		$('#amounts',editForm).val(amountArray.join(LYS.join));
-		$('#discountedAmounts',editForm).val(discountedAmountArray.join(LYS.join));
 		$('#payedAmounts',editForm).val(payedAmountArray.join(LYS.join));
 		$('#discountAmounts',editForm).val(discountAmountArray.join(LYS.join));
 		$('#payAmounts',editForm).val(payAmountArray.join(LYS.join));
@@ -385,6 +386,7 @@
 	}
 	//修改
 	var onUpdate = function(){
+		delPayDetailIdArray = new Array();
 		if(selectRow==null){
 			$.messager.alert("提示","请选择数据行","warning");
 			return;
@@ -396,6 +398,7 @@
 	 }
 	//打开
 	var onOpen = function(payId){
+		delPayDetailIdArray = new Array();
 		var url = 'finance/initPay.do';
 		var content ={payId:payId};
 		asyncCallService(url,content,function(result){
@@ -551,7 +554,7 @@
 		for ( var int = 0; int < rows.length; int++) {
 			idArray.push(rows[int].payId);
 		}
-		$.messager.confirm("提示","确定要"+msg+"选中的记录"+msg+"后系统将进行库存和财务计算!!",function(t){ 
+		$.messager.confirm("提示","确定要"+msg+"选中的记录"+msg+"后系统将进行财务计算!!",function(t){ 
 			if(t){
 				var url = 'finance/mulUpdateStatusPay.do';
 				var content ={ids:idArray.join(LYS.join),status:status};
@@ -581,7 +584,7 @@
 	//-----付款明细----------
 	var payDetail = $('#payDetail',editDialog);
 	var selectDialog = $('#selectDialog',$this);
-	var receiveList = $('#receiveList');
+	var sourceList = $('#sourceList');
 	var lastIndex=null;
 	
 	var oldPayDetailIdArray = new Array();
@@ -589,11 +592,10 @@
 	  singleSelect:true,	
 	  fit:true,
 	  columns:[[
-		    {field:'receiveCode',title:'入库单号',width:120,align:"center"},
+		    {field:'sourceCode',title:'单据号',width:150,align:"center"},
 			{field:'payKind',title:'单据类型',width:90,align:"center"},
-		    {field:'receiveDate',title:'单据日期',width:90,align:"center"},
+		    {field:'sourceDate',title:'单据日期',width:90,align:"center"},
 		    {field:'amount',title:'应付金额',width:90,align:"center"},
-		    {field:'discountedAmount',title:'已优惠金额',width:90,align:"center"},
 		    {field:'payedAmount',title:'已付金额',width:90,align:"center"},
 		    {field:'needPayAmount',title:'还需付金额',width:90,align:"center",editor:{type:'numberbox',options:{disabled:true,precision:2}}},
 		    {field:'discountAmount',title:'优惠金额',width:90,align:"center",editor:{type:'numberbox',options:{precision:2}}},
@@ -602,8 +604,8 @@
 	  rownumbers:true,
 	  pagination:false,
 	  toolbar:[	
-			{id:'addReceive'+id,text:'添加入库单',iconCls:'icon-add',handler:function(){onSelectReceive()}},'-',
-			{id:'deleteReceive'+id,text:'删除入库单',iconCls:'icon-remove',handler:function(){onDeleteReceive()}}
+			{id:'addCheck'+id,text:'添加',iconCls:'icon-add',handler:function(){onSelectCheck()}},'-',
+			{id:'deleteCheck'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDeleteCheck()}}
 	  ],
 	  onBeforeLoad:function(){
 			$(this).datagrid('rejectChanges');
@@ -629,13 +631,19 @@
 	    var discountAmountEditor = editors[1];  
 	    var payAmountEditor = editors[2];  
 	    discountAmountEditor.target.bind('change', function(){  
+	    	//优惠只能是采购入库单，其他付款方式只能要来抵账
+	    	var row = $(payDetail).datagrid('getSelected');
+	    	if(row.payKind!='采购入库单'){
+	    		$.messager.alert('提示','只有采购入库单，才能输入优惠金额，而其他类型的单据，只能要来作为采购入库单的抵扣','warning');
+	    		 $(discountAmountEditor.target).numberbox('setValue',0.00);
+	    		return;
+	    	}
 	    	var needPayAmount = needPayAmountEditor.target.val();
 	    	var discountAmount = discountAmountEditor.target.val();
 	    	$(payAmountEditor.target).numberbox('setValue',needPayAmount-discountAmount);
 	    	//修改优惠金额
 	    	var totalAmount = 0 ;
 			var rows =  $(payDetail).datagrid('getRows');
-			var row = $(payDetail).datagrid('getSelected');
 			var rowIndex = $(payDetail).datagrid('getRowIndex',row); 
 			for ( var int = 0; int < rows.length; int++) {
 				 if(int!=rowIndex){
@@ -665,7 +673,7 @@
 	}  
 	//编辑框
 	$(selectDialog).dialog({  
-	    title: '选择欠款入库单',  
+	    title: '选择欠款单',  
 	    width:1000,
 	    height:height,
 	    closed: true,  
@@ -673,75 +681,63 @@
 	    modal: true,
 	    closable:false
 	});
-	$(receiveList).datagrid({
+	$(sourceList).datagrid({
 		  fit:true,
 		  cache: false, 
 		  columns:[[
 			    {field:'ck',checkbox:true},
-			    {field:'receiveCode',title:'入库单号',width:150,align:"center"},
-			    {field:'receiveDate',title:'入库日期',width:90,align:"center"},
+			    {field:'sourceCode',title:'单据号',width:150,align:"center"},
+			    {field:'payKind',title:'单据类型',width:90,align:"center"},
+			    {field:'sourceDate',title:'单据日期',width:90,align:"center"},
 			    {field:'amount',title:'应付金额',width:90,align:"center"},
-			    {field:'discountedAmount',title:'已优惠金额',width:90,align:"center"},
 			    {field:'payedAmount',title:'已付金额',width:90,align:"center"},
 			    {field:'needPayAmount',title:'还需付金额',width:90,align:"center"}
 		  ]],
 		  rownumbers:true,
 		  pagination:true,
 		  toolbar:[	
-				{text:'选择',iconCls:'icon-save',handler:function(){onSelectOKReceive()}},
+				{text:'选择',iconCls:'icon-ok',handler:function(){onSelectOKCheck()}},
 				{text:'退出',iconCls:'icon-cancel',handler:function(){
-					onExitSelectReceive();
+					onExitSelectCheck();
 				}}
 		  ]
 	 });
-	 var onSelectReceive = function(){
+	 var onSelectCheck = function(){
 		//供应商
 		var supplierId = $('#supplier',editForm).combogrid('getValue');
 		if(supplierId==''){
 			$.messager.alert('提示','请选择供应商','warning');
 			return;
 		}
-		 $(selectDialog).dialog('open');
+		searchBtnSelect();
 	 }
 	 //查询
-	 $('#searchBtnSelectDialog',selectDialog).click(function(){
-		 searchBtnSelect();
-	 })
 	 var searchBtnSelect = function(){
-		var beginDate = $('#beginDate',selectDialog).val();
-		if(beginDate==''){
-			$.messager.alert('提示','请选择入库单开始日期','warning');
-			return;
-		}
-		var endDate = $('#endDate',selectDialog).val();
-		if(endDate==''){
-			$.messager.alert('提示','请选择入库单结束日期','warning');
-			return;
-		}
 		var rows = $(payDetail).datagrid('getRows');
 		var idArray = new Array();
 		for ( var int = 0; int < rows.length; int++) {
 			var row = rows[int];
-			if(''!=row.receiveId){
-				idArray.push(row.receiveId);
+			if(''!=row.sourceId){
+				idArray.push(row.sourceId);
 			}
 		}
 		var supplierId = $('#supplier',editForm).combogrid('getValue');
-		var receiveCode = $('#receiveCodeSelectDialog',selectDialog).val();
 		
-		var url = "inWarehouse/queryNeedPayReceive.do";
-		var content = {beginDate:beginDate,endDate:endDate,ids:idArray.join(LYS.join),supplierId:supplierId,receiveCode:receiveCode};
+		var url = "finance/queryNeedCheckPay.do";
+		var content = {ids:idArray.join(LYS.join),supplierId:supplierId};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
+			$(selectDialog).dialog('open');
 			var data = result.data;
-			$(receiveList).datagrid('loadData',eval("("+data.datagridData+")"));
+			$(sourceList).datagrid('loadData',eval("("+data.datagridData+")"));
 		}else{
 			$.messager.alert('提示',result.message,"error");
 		}
 	 }
 	 //选择入库单
-	 var onSelectOKReceive = function(){
-		 var rows = $(receiveList).datagrid('getSelections');
+	 var onSelectOKCheck = function(){
+		
+		 var rows = $(sourceList).datagrid('getSelections');
 		 if(rows.length==0){
 			 $.messager.alert('提示','请选择入库单',"warning");
 			 return;
@@ -750,33 +746,34 @@
 			var row = rows[int];
 			 $(payDetail).datagrid('appendRow',{
 				 payDetailId:'',
-				 receiveId:row.receiveId,
-				 receiveCode:row.receiveCode,
-				 payKind:'采购入库',
-				 receiveDate:row.receiveDate,
+				 sourceId:row.sourceId,
+				 sourceCode:row.sourceCode,
+				 payKind:row.payKind,
+				 sourceDate:row.sourceDate,
 				 amount:row.amount,
-				 discountedAmount:row.discountedAmount,
 				 payedAmount:row.payedAmount,
 				 needPayAmount:row.needPayAmount,
-				 discountAmount:0,
+				 discountAmount:0.00,
 				 payAmount:row.needPayAmount
 			});
 		}
-		 $(payDetail).datagrid('endEdit', lastIndex);
-		 $(payDetail).datagrid('unselectAll');
-		 summary();
+		$(payDetail).datagrid('endEdit', lastIndex);
+		$(payDetail).datagrid('unselectAll');
+		summary();
 		lastIndex = null;
-		
-		onExitSelectReceive();
+		onExitSelectCheck();
 	 }
 	 //退出选择入库单界面
-	 var onExitSelectReceive = function(){
+	 var onExitSelectCheck = function(){
 		 $(selectDialog).dialog('close');
-		 $(receiveList).datagrid('loadData',LYS.ClearData);
+		 $(sourceList).datagrid('loadData',LYS.ClearData);
 	 }
 	 //删除入库单
-	 var onDeleteReceive = function(){
+	 var onDeleteCheck = function(){
 		 var row = $(payDetail).datagrid('getSelected');
+		 if(row.payDetailId!=''){
+			 delPayDetailIdArray.push(row.payDetailId);
+		 }
 		 var rowIndex = $(payDetail).datagrid('getRowIndex',row);
 		 $(payDetail).datagrid('deleteRow',rowIndex);
 		 lastIndex = null;
@@ -793,8 +790,8 @@
 	 //优惠金额发生改变
 	 $('#discountAmount',editForm).numberbox({
 		 onChange:function(newValue,oldValue){
-			 var needPayAmount = $('#needPayAmount',editForm).numberbox('getValue');
-			 $('#payAmount',editForm).numberbox('setValue', parseFloat(needPayAmount)-newValue);
+			 var amount = $('#amount',editForm).numberbox('getValue');
+			 $('#payAmount',editForm).numberbox('setValue', parseFloat(amount)-newValue);
 		 }
 	});
 	//统计付款单中的应付金额、优惠金额、本次支付金额
@@ -810,7 +807,7 @@
 			totalDiscountAmount += parseFloat(row.discountAmount);
 			totalPayAmount += parseFloat(row.payAmount);
 		}
-		$('#needPayAmount',editForm).numberbox('setValue',totalAmount);
+		$('#amount',editForm).numberbox('setValue',totalAmount);
 		$('#discountAmount',editForm).numberbox('setValue',totalDiscountAmount);
 		$('#payAmount',editForm).numberbox('setValue',totalPayAmount);
 	} 

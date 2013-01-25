@@ -35,13 +35,34 @@ public class PayDetail extends BaseModel {
 	 */
 	private Pay pay;
 	/**
-	 * 收款单
+	 * 采购单
+	 */
+	private Buy buy;
+	/**
+	 * 入库单
 	 */
 	private Receive receive;
+	/**
+	 * 退货单
+	 */
+	private Reject reject;
+	/**
+	 * 预付单
+	 */
+	private Prepay prepay;
+	
 	/**
 	 * 付款类型
 	 */
 	private String payKind;
+	/**
+	 * 对账单据编号
+	 */
+	private String sourceCode;
+	/**
+	 * 单据日期
+	 */
+	private String sourceDate;
 	/**
 	 * 应付金额
 	 */
@@ -51,15 +72,11 @@ public class PayDetail extends BaseModel {
 	 */
 	private Double payedAmount;
 	/**
-	 * 已优惠金额
-	 */
-	private Double discountedAmount;
-	/**
 	 * 还需付金额
 	 */
 	private Double needPayAmount;
 	/**
-	 * 优惠金额
+	 * 本次优惠金额
 	 */
 	private Double discountAmount;
 	/**
@@ -156,21 +173,57 @@ public class PayDetail extends BaseModel {
 		this.payAmount = payAmount;
 	}
 
-	public Double getDiscountedAmount() {
-		return discountedAmount;
-	}
-
-	public void setDiscountedAmount(Double discountedAmount) {
-		this.discountedAmount = discountedAmount;
-	}
 	@Transient
 	public Double getNeedPayAmount() {
-		this.needPayAmount =  this.amount-this.payedAmount-this.discountedAmount;
+		this.needPayAmount =  this.amount-this.payedAmount;
 		return needPayAmount;
 	}
 
 	public void setNeedPayAmount(Double needPayAmount) {
 		this.needPayAmount = needPayAmount;
+	}
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "buyId")
+	public Buy getBuy() {
+		return buy;
+	}
+
+	public void setBuy(Buy buy) {
+		this.buy = buy;
+	}
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "rejectId")
+	public Reject getReject() {
+		return reject;
+	}
+
+	public void setReject(Reject reject) {
+		this.reject = reject;
+	}
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "prepayId")
+	public Prepay getPrepay() {
+		return prepay;
+	}
+
+	public void setPrepay(Prepay prepay) {
+		this.prepay = prepay;
+	}
+	@Column(name = "sourceCode", length=50)
+	public String getSourceCode() {
+		return sourceCode;
+	}
+
+	public void setSourceCode(String sourceCode) {
+		this.sourceCode = sourceCode;
+	}
+	@Column(name = "sourceDate", length=20)
+	public String getSourceDate() {
+		return sourceDate;
+	}
+
+	public void setSourceDate(String sourceDate) {
+		this.sourceDate = sourceDate;
 	}
 
 }

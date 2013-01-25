@@ -26,6 +26,9 @@ public class PayDetailDAOImpl extends BaseDAOImpl<PayDetail,String> implements P
 	public List<PayDetail> queryByPayId(String payId) {
 		Criteria criteria  = getCurrentSession().createCriteria(PayDetail.class);
 		criteria.createAlias("receive", "receive", CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("buy", "buy", CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("prepay", "prepay", CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("reject", "reject", CriteriaSpecification.LEFT_JOIN);
 		
 		criteria.add(Restrictions.eq("pay.payId", payId));
 		return criteria.list();
