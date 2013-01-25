@@ -193,16 +193,7 @@ public class BuyAction extends BaseAction implements ModelDriven<Buy> {
 	 * @update logs
 	 */
 	public void queryReceive(){
-		ServiceResult result = new ServiceResult(false);
-		try {
-			String supplierId  = getParameter("supplierId");
-			result = buyService.queryReceive(beginDate,endDate,supplierId,ids,model,page,rows);
-		} catch (Throwable e) {
-			result.setMessage("”从采购单添加商品“查询还没有完成采购单任务的采购单失败");
-			result.setIsSuccess(false);
-			logger.error("“从采购单添加商品“查询还没有完成采购单任务的采购单失败", e);
-		}
-		String jsonString = result.toJSON();
+		String jsonString = buyService.queryReceive(beginDate, endDate, ids, model, page, rows);
 		ajaxJson(jsonString);
 	} 
 	

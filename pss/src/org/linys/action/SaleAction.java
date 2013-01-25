@@ -191,6 +191,19 @@ public class SaleAction extends BaseAction implements ModelDriven<Sale> {
 		ajaxJson(jsonString);
 	}
 	
+	/**
+	 * 
+	 * @Description: 查询出库订单
+	 * @Create: 2013-1-25 上午10:21:35
+	 * @author longweier
+	 * @update logs
+	 * @throws Exception
+	 */
+	public void queryDeliver(){
+		String jsonString = saleService.queryDeliver(page, rows, sale, ids, beginDate, endDate);
+		ajaxJson(jsonString);
+	}
+	
 	public void setBeginDate(Date beginDate) {
 		this.beginDate = beginDate;
 	}

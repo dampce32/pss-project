@@ -207,6 +207,26 @@ public class DeliverAction extends BaseAction implements ModelDriven<Deliver> {
 		ajaxJson(jsonString);
 	}
 
+	/**
+	 * 
+	 * @Description: 将选择的订单中的商品明细，添加到出库单明细中
+	 * @Create: 2013-1-25 下午03:17:21
+	 * @author longweier
+	 * @update logs
+	 * @throws Exception
+	 */
+	public void querySelectSaleDetail(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = deliverService.querySelectSaleDetail(ids,ids2);
+		} catch (Exception e) {
+			result.setMessage("将选择的订单中的订单明细，添加到出库单明细中失败");
+			result.setIsSuccess(false);
+			logger.error("将选择的订单中的订单明细，添加到出库单明细中失败", e);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
 	public void setBeginDate(Date beginDate) {
 		this.beginDate = beginDate;
 	}
