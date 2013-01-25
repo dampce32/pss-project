@@ -143,4 +143,17 @@ public interface DeliverService extends BaseService<Deliver, String> {
 	 * @throws Exception
 	 */
 	public String initDeliver(String deliverId);
+	
+	/**
+	 * 
+	 * @Description: 将选择的订单中的订单明细，添加到出库单明细
+	 * @Create: 2013-1-25 下午03:19:24
+	 * @author longweier
+	 * @update logs
+	 * @param ids
+	 * @param ids2
+	 * @return
+	 * @throws Exception
+	 */
+	public ServiceResult querySelectSaleDetail(String ids,String ids2);
 }

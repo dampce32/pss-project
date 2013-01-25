@@ -136,4 +136,21 @@ public interface SaleService extends BaseService<Sale, String> {
 	 * @throws Exception
 	 */
 	public String initSale(String saleId);
+	
+	/**
+	 * 
+	 * @Description:  查询某个客户还未出库的订单
+	 * @Create: 2013-1-25 上午11:01:30
+	 * @author longweier
+	 * @update logs
+	 * @param pageNumber
+	 * @param pageSize
+	 * @param sale
+	 * @param ids
+	 * @param beginDate
+	 * @param endDate
+	 * @return
+	 * @throws Exception
+	 */
+	public String queryDeliver(Integer pageNumber,Integer pageSize,Sale sale,String ids,Date beginDate,Date endDate);
 }
