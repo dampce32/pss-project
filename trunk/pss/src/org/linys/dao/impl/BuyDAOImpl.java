@@ -124,9 +124,6 @@ public class BuyDAOImpl extends BaseDAOImpl<Buy, String> implements BuyDAO {
 		Criteria criteria  = getCurrentSession().createCriteria(Buy.class);
 		criteria.add(Restrictions.eq("buyId", buyId));
 		criteria.createAlias("supplier", "supplier",CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("bank", "bank",CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("employee", "employee",CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("invoiceType", "invoiceType",CriteriaSpecification.LEFT_JOIN);
 		
 		return (Buy) criteria.uniqueResult();
 	}

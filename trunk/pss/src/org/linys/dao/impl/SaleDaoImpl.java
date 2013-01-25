@@ -64,11 +64,6 @@ public class SaleDaoImpl extends BaseDAOImpl<Sale, String> implements SaleDao {
 	public Sale getSale(String saleId) {
 		Assert.notNull(saleId, "saleId is required");
 		Criteria criteria = getCurrentSession().createCriteria(Sale.class);
-		
-		criteria.createAlias("employee", "employee", CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("customer", "customer", CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("bank", "bank", CriteriaSpecification.LEFT_JOIN);
-
 		criteria.add(Restrictions.eq("saleId", saleId));
 		
 		return (Sale) criteria.uniqueResult();
