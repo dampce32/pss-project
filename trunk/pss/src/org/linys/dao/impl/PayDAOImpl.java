@@ -34,7 +34,6 @@ public class PayDAOImpl extends BaseDAOImpl<Pay, String> implements PayDAO {
 		Criteria criteria  = getCurrentSession().createCriteria(Pay.class);
 		
 		criteria.createAlias("supplier", "supplier",CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("employee", "employee",CriteriaSpecification.LEFT_JOIN);
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getPayCode())){
 			criteria.add(Restrictions.like("payCode", model.getPayCode(),MatchMode.ANYWHERE));

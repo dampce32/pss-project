@@ -153,9 +153,6 @@ public class StoreDAOImpl extends BaseDAOImpl<Store, String> implements
 		
 		criteria.createAlias("product", "product",CriteriaSpecification.LEFT_JOIN);
 		criteria.createAlias("product.productType", "productType",CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("product.color", "color",CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("product.size", "size",CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("product.unit", "unit",CriteriaSpecification.LEFT_JOIN);
 		
 		if(model!=null&&model.getWarehouse()!=null&&StringUtils.isNotEmpty(model.getWarehouse().getWarehouseId())){
 			criteria.add(Restrictions.eq("warehouse.warehouseId", model.getWarehouse().getWarehouseId()));

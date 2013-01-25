@@ -25,9 +25,7 @@ public class RejectDAOImpl extends BaseDAOImpl<Reject, String> implements
 	public List<Reject> query(Reject model, Integer page, Integer rows) {
 		Criteria criteria  = getCurrentSession().createCriteria(Reject.class);
 		
-		criteria.createAlias("warehouse", "warehouse",CriteriaSpecification.LEFT_JOIN);
 		criteria.createAlias("supplier", "supplier",CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("employee", "employee",CriteriaSpecification.LEFT_JOIN);
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getRejectCode())){
 			criteria.add(Restrictions.like("rejectCode", model.getRejectCode(),MatchMode.ANYWHERE));
