@@ -20,10 +20,6 @@ public class BuyDetailDAOImpl extends BaseDAOImpl<BuyDetail, String>
 	public List<BuyDetail> queryByBuyId(String buyId) {
 		Criteria criteria  = getCurrentSession().createCriteria(BuyDetail.class);
 		criteria.createAlias("product", "product", CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("product.unit", "unit", CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("product.size", "size", CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("color", "color", CriteriaSpecification.LEFT_JOIN);
-		
 		criteria.add(Restrictions.eq("buy.buyId", buyId));
 		return criteria.list();
 	}
