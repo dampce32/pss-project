@@ -22,9 +22,6 @@ public class ProductDAOImpl extends BaseDAOImpl<Product, String> implements Prod
 	@SuppressWarnings("unchecked")
 	public List<Product> query(Product model, Integer page, Integer rows) {
 		Criteria criteria  = getCurrentSession().createCriteria(Product.class);
-		criteria.createAlias("color", "color", CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("size", "size", CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("unit", "unit", CriteriaSpecification.LEFT_JOIN);
 		criteria.createAlias("productType", "productType", CriteriaSpecification.LEFT_JOIN);
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getProductCode())){
@@ -74,9 +71,6 @@ public class ProductDAOImpl extends BaseDAOImpl<Product, String> implements Prod
 	@Override
 	public List<Product> queryReject(Product model, Integer page, Integer rows) {
 		Criteria criteria  = getCurrentSession().createCriteria(Product.class);
-		criteria.createAlias("color", "color", CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("size", "size", CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("unit", "unit", CriteriaSpecification.LEFT_JOIN);
 		criteria.createAlias("productType", "productType", CriteriaSpecification.LEFT_JOIN);
 		
 		criteria.add(Restrictions.not(Restrictions.eq("qtyStore", 0.0)));

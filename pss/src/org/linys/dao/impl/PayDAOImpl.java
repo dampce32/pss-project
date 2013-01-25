@@ -77,8 +77,6 @@ public class PayDAOImpl extends BaseDAOImpl<Pay, String> implements PayDAO {
 		Criteria criteria  = getCurrentSession().createCriteria(Pay.class);
 		
 		criteria.createAlias("supplier", "supplier",CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("employee", "employee",CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("bank", "bank",CriteriaSpecification.LEFT_JOIN);
 		criteria.add(Restrictions.eq("payId", payId));
 		return criteria.uniqueResult()==null?null:(Pay)criteria.uniqueResult();
 	}
