@@ -75,15 +75,15 @@
 						<tr>
 							<td class="tdTitle">应付金额:</td>
 							<td>
-								<input type="text" id="needPayAmount"  style="width: 150px" size="40" readonly="readonly" class="easyui-numberbox"  data-options="min:0,precision:2"/>
+								<input type="text" id="amount"  style="width: 150px" size="40" readonly="readonly" class="easyui-numberbox"  data-options="precision:2"/>
 							</td>
 							<td class="tdTitle">优惠金额:</td>
 							<td>
-								<input type="text" name="discountAmount" id="discountAmount"  style="width: 150px" size="40" readonly="readonly" class="easyui-numberbox"  data-options="min:0,precision:2"/>
+								<input type="text" name="discountAmount" id="discountAmount"  style="width: 150px" size="40" class="easyui-numberbox"  readonly="readonly" data-options="precision:2"/>
 							</td>
 							<td class="tdTitle">本次支付金额:</td>
 							<td>
-								<input type="text" name="payAmount" id="payAmount"  style="width: 150px" size="40" class="easyui-numberbox"  readonly="readonly" data-options="min:0,precision:2"/>
+								<input type="text" name="payAmount" id="payAmount"  style="width: 150px" size="40" class="easyui-numberbox"  readonly="readonly" data-options="precision:2"/>
 							</td>
 						</tr>
 						<tr>
@@ -100,11 +100,12 @@
 					</table>
 					<input type="hidden" name="payDetailIds"  id="payDetailIds" />
 					<input type="hidden" name="delPayDetailIds"  id="delPayDetailIds" />
-					<input type="hidden" name="receiveIds"  id="receiveIds" />
+					<input type="hidden" name="sourceIds"  id="sourceIds" />
+					<input type="hidden" name="sourceCodes"  id="sourceCodes" />
+					<input type="hidden" name="sourceDates"  id="sourceDates" />
 					<input type="hidden" name="payKinds"  id="payKinds" />
 					<input type="hidden" name="amounts"  id="amounts" />
 					<input type="hidden" name="payedAmounts"  id="payedAmounts" />
-					<input type="hidden" name="discountedAmounts"  id="discountedAmounts" />
 					<input type="hidden" name="discountAmounts"  id="discountAmounts" />
 					<input type="hidden" name="payAmounts"  id="payAmounts" />
 				</form>
@@ -117,14 +118,8 @@
 	
 	<div id="selectDialog">
 		<div class="easyui-layout" data-options="fit:true">
-			<div data-options="region:'north',border:false" style="height: 35px;overflow: hidden;padding:5px"> 
-				入库单日期:<input type="text"  id="beginDate"  style="width: 100px" size="40" class="Wdate" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'endDate\');}'});" />
-				至:<input type="text"  id="endDate"  style="width: 100px" size="40" class="Wdate" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'beginDate\');}'});" />
-				入库单号:&nbsp;&nbsp;<input id="receiveCodeSelectDialog" type="text" size="12"/>&nbsp;&nbsp;&nbsp;
-				<a href="#" class="easyui-linkbutton" id="searchBtnSelectDialog" data-options="iconCls:'icon-search'" style="cursor: pointer;">查 询</a>
-			</div>
 			<div data-options="region:'center',border:false" style="width: 100%;height:100%">
-				<div id="receiveList"></div>
+				<div id="sourceList"></div>
 			</div>
 		</div>
 	</div>

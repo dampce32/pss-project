@@ -46,7 +46,7 @@ public class PrepayServiceImpl extends BaseServiceImpl<Prepay, String>
 		List<Prepay> list = prepayDAO.query(model,page,rows);
 		
 		String[] properties = {"prepayId","prepayCode","prepayDate",
-				"supplier.supplierName","amount","balance","bank.bankName",
+				"supplier.supplierName","amount","checkAmount","balanceAmount","bank.bankName",
 				"employee.employeeName","note","status"};
 		String data = JSONUtil.toJson(list,properties);
 		result.addData("datagridData", data);

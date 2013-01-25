@@ -77,17 +77,18 @@ public class PayAction extends BaseAction implements ModelDriven<Pay> {
 		ServiceResult result = new ServiceResult(false);
 		try {
 			String payDetailIds = getParameter("payDetailIds");
+			String sourceIds = getParameter("sourceIds");
+			String sourceCodes = getParameter("sourceCodes");
+			String sourceDates = getParameter("sourceDates");
 			String delPayDetailIds = getParameter("delPayDetailIds");
-			String receiveIds = getParameter("receiveIds");
 			String payKinds = getParameter("payKinds");
 			String amounts = getParameter("amounts");
 			String payedAmounts = getParameter("payedAmounts");
-			String discountedAmounts = getParameter("discountedAmounts");
 			String discountAmounts = getParameter("discountAmounts");
 			String payAmounts = getParameter("payAmounts");
 			
 			result = payService.save(model,payDetailIds,delPayDetailIds,
-					receiveIds,payKinds,amounts,payedAmounts,discountedAmounts,discountAmounts,payAmounts);
+					sourceIds,sourceCodes,sourceDates,payKinds,amounts,payedAmounts,discountAmounts,payAmounts);
 			
 		} catch (Exception e) {
 			result.setMessage("保存付款单失败");
@@ -185,6 +186,25 @@ public class PayAction extends BaseAction implements ModelDriven<Pay> {
 		} catch (Exception e) {
 			result.setMessage("批量修改付款单状态失败");
 			logger.error("批量修改付款单状态失败", e);
+			result.setIsSuccess(false);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	/**
+	 * @Description: 分页查询需要对账的单子（采购单、入库单、退货单、预付单）
+	 * @Create: 2013-1-24 下午2:27:31
+	 * @author lys
+	 * @update logs
+	 */
+	public void queryNeedCheck(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			String supplierId = getParameter("supplierId");
+			result = payService.queryNeedCheck(supplierId,ids,page,rows);
+		} catch (Exception e) {
+			result.setMessage("查询需要对账的单子（采购单、入库单、退货单、预付单）失败");
+			logger.error("查询需要对账的单子（采购单、入库单、退货单、预付单）失败", e);
 			result.setIsSuccess(false);
 		}
 		String jsonString = result.toJSON();

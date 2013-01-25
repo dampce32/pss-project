@@ -1,6 +1,7 @@
 package org.linys.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.linys.model.Pay;
 
@@ -41,5 +42,28 @@ public interface PayDAO extends BaseDAO<Pay,String>{
 	 * @return
 	 */
 	Pay init(String payId);
+	/**
+	 * @Description: 分页查询需要对账的单子（采购单、入库单、退货单、预付单）
+	 * @Create: 2013-1-24 下午2:36:47
+	 * @author lys
+	 * @update logs
+	 * @param supplierId
+	 * @param idArray
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	List<Map<String, Object>> queryNeedCheck(String supplierId,
+			String[] idArray, Integer page, Integer rows);
+	/**
+	 * @Description: 统计查询需要对账的单子（采购单、入库单、退货单、预付单）
+	 * @Create: 2013-1-24 下午2:37:45
+	 * @author lys
+	 * @update logs
+	 * @param supplierId
+	 * @param idArray
+	 * @return
+	 */
+	Long getTotalCountNeedCheck(String supplierId, String[] idArray);
 
 }
