@@ -457,9 +457,6 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 		bankDAO.update(oldBank);
 		oldReject.setStatus(model.getStatus());
 		rejectDAO.update(oldReject);
-		
-		oldReject.setStatus(model.getStatus());
-		rejectDAO.update(oldReject);
 		result.setIsSuccess(true);
 		return result;
 	}

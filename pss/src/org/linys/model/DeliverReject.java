@@ -77,14 +77,17 @@ public class DeliverReject extends BaseModel {
 	 */
 	private Double payedAmount;
 	/**
+	 * 审核状态
+	 */
+	private Integer status;
+	/**
 	 * 备注
 	 */
 	private String note;
 	/**
 	 * 退货明细
 	 */
-	private Set<DeliverRejectDetail> deliverRejectDetails = new HashSet<DeliverRejectDetail>(
-			0);
+	private Set<DeliverRejectDetail> deliverRejectDetails = new HashSet<DeliverRejectDetail>(0);
 
 	// Constructors
 
@@ -205,7 +208,15 @@ public class DeliverReject extends BaseModel {
 	public void setPayedAmount(Double payedAmount) {
 		this.payedAmount = payedAmount;
 	}
+	
+	public Integer getStatus() {
+		return status;
+	}
 
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	
 	@Column(name = "note", length = 100)
 	public String getNote() {
 		return this.note;
