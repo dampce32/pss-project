@@ -288,7 +288,7 @@
 				{field:'sourceCode',title:'原始单号',width:120,align:"center"},
 				{field:'customerName',title:'客户',width:200,align:"center"},
 				{field:'otherAmount',title:'运费',width:80,align:"center"},
-				{field:'amount',title:'应收定金',width:80,align:"center"},
+				{field:'amount',title:'应收金额',width:80,align:"center"},
 				{field:'receiptedAmount',title:'实收定金',width:80,align:"center"},
 				{field:'employeeName',title:'经手人',width:90,align:"center"},
 				{field:'note',title:'备注',width:90,align:"center"},
@@ -330,6 +330,12 @@
 		var deliverDate = $('#deliverDate',editForm).val();
 		if(deliverDate==''){
 			$.messager.alert('提示','请选择订单交期','warning');
+			return false;
+		}
+		//经办人
+		var employeeId = $('#employeeId',editDialog).combobox('getValue');
+		if(employeeId==''){
+			$.messager.alert('提示','请选择经办人','warning');
 			return false;
 		}
 		if(lastIndex!=null){
@@ -722,8 +728,12 @@
 		 $(rows).each(function(index,item){
 			 totalAmount += parseFloat(item.amount);
 		 })
-		$('#amount',editForm).val(totalAmount);
-		$('#amount',editForm).change();
+		var otherAmount = $('#otherAmount',editForm).numberbox('getValue');
+		if(otherAmount==''){
+			otherAmount = 0;
+		}
+		totalAmount =parseFloat(totalAmount)+parseFloat(otherAmount);
+		$('#amount',editForm).numberbox('setValue',totalAmount);
 	 }
 	 //其他费用：运费发生改变
 	 $('#otherAmount',editForm).numberbox({
@@ -796,7 +806,7 @@
 				$('#productTypeId',addDialog).val(rowData.productTypeId);
 			}
 		});
-	   	$('#buyingPrice',addDialog).numberbox('setValue',0.0);
+	    $('#buyingPrice',addDialog).numberbox('setValue',0.0);
 	   	$('#salePrice',addDialog).numberbox('setValue',0.0);
 		$(addDialog).dialog('open');
 	}
