@@ -2,8 +2,8 @@ package org.linys.dao;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
+import org.linys.bean.Pager;
 import org.linys.model.Buy;
 /**
  * @Description:采购单DAO
@@ -34,22 +34,20 @@ public interface BuyDAO extends BaseDAO<Buy,String>{
 	 */
 	Long getTotalCount(Buy model);
 	/**
+	 * 
 	 * @Description: 从采购单添加商品“查询还没有完成采购单任务的采购单
-	 * @Create: 2013-1-15 上午12:09:59
-	 * @author lys
+	 * @Create: 2013-1-25 下午02:41:29
+	 * @author longweier
 	 * @update logs
-	 * @param beginDateDate
-	 * @param endDateDate
-	 * @param supplierId
+	 * @param pager
+	 * @param beginDate
+	 * @param endDate
 	 * @param idArray
 	 * @param model
-	 * @param page
-	 * @param rows
 	 * @return
+	 * @throws Exception
 	 */
-	List<Map<String, Object>> queryReceive(Date beginDateDate,
-			Date endDateDate, String supplierId, String[] idArray, Buy model,
-			Integer page, Integer rows);
+	Pager queryReceive(Pager pager,Date beginDate,Date endDate, String[] idArray, Buy model);
 	/**
 	 * @Description: 打开初始化采购单
 	 * @Create: 2013-1-15 下午8:40:20
@@ -59,19 +57,5 @@ public interface BuyDAO extends BaseDAO<Buy,String>{
 	 * @return
 	 */
 	Buy init(String buyId);
-	/**
-	 * @Description: 统计 从采购单添加商品“查询还没有完成采购单任务的采购单
-	 * @Create: 2013-1-15 下午9:03:33
-	 * @author lys
-	 * @update logs
-	 * @param beginDateDate
-	 * @param endDateDate
-	 * @param supplierId
-	 * @param idArray
-	 * @param model
-	 * @return
-	 */
-	Long getTotalReceive(Date beginDateDate, Date endDateDate,
-			String supplierId, String[] idArray, Buy model);
 
 }

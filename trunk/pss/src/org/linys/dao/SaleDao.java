@@ -41,4 +41,20 @@ public interface SaleDao extends BaseDAO<Sale, String> {
 	 * @throws Exception
 	 */
 	public Sale getSale(String saleId);
+	
+	/**
+	 * 
+	 * @Description: 查询某个客户还未出库的订单
+	 * @Create: 2013-1-25 上午11:03:11
+	 * @author longweier
+	 * @update logs
+	 * @param pager
+	 * @param sale
+	 * @param idArray
+	 * @param beginDate
+	 * @param endDate
+	 * @return
+	 * @throws Exception
+	 */
+	public Pager queryDeliver(Pager pager,Sale sale,String[] idArray,Date beginDate,Date endDate);
 }
