@@ -27,7 +27,7 @@ import org.hibernate.annotations.GenericGenerator;
  * @vesion 1.0
  */
 @Entity
-@Table(name = "t_sale")
+@Table(name = "T_Sale")
 public class Sale extends BaseModel {
 
 	private static final long serialVersionUID = -4975793041146451113L;

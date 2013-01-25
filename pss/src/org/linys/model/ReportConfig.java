@@ -16,7 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
  * @vesion 1.0
  */
 @Entity
-@Table(name = "t_ReportConfig")
+@Table(name = "T_ReportConfig")
 public class ReportConfig extends BaseModel {
 
 	// Fields
