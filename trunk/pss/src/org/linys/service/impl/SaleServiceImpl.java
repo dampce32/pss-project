@@ -86,7 +86,15 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 		}
 		//取得订单编号
 		sale.setSaleCode(commonDAO.getCode(Sale.class.getName(), "saleCode", prefixDAO.getPrefix("sale")));
-		
+		if(sale.getAmount()==null){
+			sale.setAmount(0.0);
+		}
+		if(sale.getOtherAmount()==null){
+			sale.setOtherAmount(0.0);
+		}
+		if(sale.getReceiptedAmount()==null){
+			sale.setReceiptedAmount(0.0);
+		}
 		sale.setStatus(0);
 		saleDao.save(sale);
 		
@@ -183,6 +191,10 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 			return result;
 		}
 		Sale model = saleDao.load(sale.getSaleId());
+		if(model==null){
+			result.setMessage("订单已被删除");
+			return result;
+		}
 		if(model.getStatus().intValue()!=sale.getStatus().intValue()){
 			Bank bank = model.getBank();
 			if(bank!=null){
@@ -214,22 +226,21 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 		String[] idArray = StringUtil.split(ids,GobelConstants.SPLIT_SEPARATOR);
 		for(String saleId : idArray){
 			Sale model = saleDao.load(saleId);
-			if(model.getStatus().intValue()!=status.intValue()){
-				Bank bank = model.getBank();
-				if(bank!=null){
-					if(status==1){//如果是由未审改为已审
-						bank.setAmount(bank.getAmount()+model.getReceiptedAmount());
-					}else{//如果是由已审改为未审
-						bank.setAmount(bank.getAmount()-model.getReceiptedAmount());
-					}
-				}
-				//如果由已审修改为未审需要判断是否出库
-				if(model.getStatus().intValue()==1 && status==0){
-					SaleDetail saleDetail = saleDetailDao.getDeliveredSaleDetail(model);
-					if(saleDetail!=null) continue;
-				}
-				model.setStatus(status);
+			if(model==null || model.getStatus().intValue()==status.intValue()) continue;
+			//如果由已审修改为未审需要判断是否出库
+			if(model.getStatus().intValue()==1 && status==0){
+				SaleDetail saleDetail = saleDetailDao.getDeliveredSaleDetail(model);
+				if(saleDetail!=null) continue;
 			}
+			Bank bank = model.getBank();
+			if(bank!=null){
+				if(status==1){//如果是由未审改为已审
+					bank.setAmount(bank.getAmount()+model.getReceiptedAmount());
+				}else{//如果是由已审改为未审
+					bank.setAmount(bank.getAmount()-model.getReceiptedAmount());
+				}
+			}
+			model.setStatus(status);
 		}
 		result.setIsSuccess(true);
 		return result;
@@ -294,6 +305,15 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 		}
 		Sale model = saleDao.load(sale.getSaleId());
 		sale.setStatus(model.getStatus());
+		if(sale.getAmount()==null){
+			sale.setAmount(0.0);
+		}
+		if(sale.getOtherAmount()==null){
+			sale.setOtherAmount(0.0);
+		}
+		if(sale.getReceiptedAmount()==null){
+			sale.setReceiptedAmount(0.0);
+		}
 		saleDao.evict(model);
 		saleDao.update(sale);
 		//删除
@@ -317,7 +337,7 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 				price ="0";
 			}
 			if(StringUtils.isEmpty(discount)){
-				discount="1";
+				discount=null;
 			}
 			Product product = new Product();
 			product.setProductId(productId);
@@ -334,7 +354,7 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 				}
 				saleDetail.setQty(Double.parseDouble(qty));
 				saleDetail.setPrice(Double.parseDouble(price));
-				saleDetail.setDiscount(Double.parseDouble(discount));
+				saleDetail.setDiscount(discount==null?null:Double.parseDouble(discount));
 				saleDetail.setNote1(note1);
 				saleDetail.setNote2(note2);
 				saleDetail.setNote3(note3);
@@ -353,7 +373,7 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 				}
 				saleDetail.setQty(Double.parseDouble(qty));
 				saleDetail.setPrice(Double.parseDouble(price));
-				saleDetail.setDiscount(Double.parseDouble(discount));
+				saleDetail.setDiscount(discount==null?null:Double.parseDouble(discount));
 				saleDetail.setNote1(note1);
 				saleDetail.setNote2(note2);
 				saleDetail.setNote3(note3);
@@ -367,14 +387,15 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 	public String initSale(String saleId) {
 		ServiceResult result = new ServiceResult(false);
 		if(StringUtils.isEmpty(saleId)){
+			result.setMessage("参数错误");
 			return result.toJSON();
 		}
 		Sale sale = saleDao.getSale(saleId);
 		String[] propertiesSale = {"saleId","saleCode","saleDate","sourceCode","deliverDate",
 				"customer.customerId","customer.customerName","amount","receiptedAmount","otherAmount",
 				"bank.bankId","employee.employeeId","note","status"};
-		String buyData = JSONUtil.toJson(sale,propertiesSale);
-		result.addData("saleData",buyData);
+		String saleData = JSONUtil.toJson(sale,propertiesSale);
+		result.addData("saleData",saleData);
 		
 		List<SaleDetail> saleDetailList = saleDetailDao.querySaleDetail(sale);
 		String[] propertiesDetail = {"saleDetailId","product.productId","product.productCode","product.productName",

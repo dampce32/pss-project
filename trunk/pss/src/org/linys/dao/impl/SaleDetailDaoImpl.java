@@ -28,11 +28,20 @@ public class SaleDetailDaoImpl extends BaseDAOImpl<SaleDetail, String> implement
 		Criteria criteria = getCurrentSession().createCriteria(SaleDetail.class);
 		
 		criteria.createAlias("product", "product", CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("color", "color", CriteriaSpecification.LEFT_JOIN);
 		
 		criteria.add(Restrictions.eq("sale", sale));
 		criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 		return criteria.list();
+	}
+
+	public SaleDetail getDeliveredSaleDetail(Sale sale) {
+		Assert.notNull(sale, "sale is required");
+		Criteria criteria = getCurrentSession().createCriteria(SaleDetail.class);
+		criteria.add(Restrictions.gt("hadSaleQty", 0d));
+		criteria.add(Restrictions.eq("sale", sale));
+		
+		criteria.setFirstResult(0).setMaxResults(1);
+		return (SaleDetail) criteria.uniqueResult();
 	}
 
 }
