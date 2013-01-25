@@ -136,15 +136,15 @@
 		"attributes":{"rightUrl":"outWarehouse/deliver.do"}
 	},{
 		"id":"3-4",
-		"text":"其他入库",
-		"attributes":{"rightUrl":"inWarehouse/receiveOther.do"}
+		"text":"其他出库",
+		"attributes":{"rightUrl":"outWarehouse/deliverOther.do"}
 	},{
 		"id":"3-1",
-		"text":"采购退货",
-		"attributes":{"rightUrl":"inWarehouse/reject.do"}
+		"text":"销售退货",
+		"attributes":{"rightUrl":"outWarehouse/deliverReject.do"}
 	},{
 		"id":"1-1",
-		"text":"采购付款",
+		"text":"销售收款",
 		"attributes":{"rightUrl":"finance/pay.do"}
 	},{
 		"id":"3-3",
