@@ -72,6 +72,7 @@
 		<action name="*Reject" class="rejectAction" method="{1}"></action>
 		<action name="*Buy" class="buyAction" method="{1}"></action>
 		<action name="*Receive" class="receiveAction" method="{1}"></action>
+		<action name="*DeliverReject" class="deliverRejectAction" method="{1}"></action>
 		<action name="*">
 			<result>/WEB-INF/inWarehouse/{1}.html</result>
 		</action>
