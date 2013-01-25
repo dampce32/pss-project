@@ -46,3 +46,12 @@ PSS.getWarehouseList = function(){
 	}
 	return PSS.WarehouseList;
 }
+//快递
+PSS.ExpressList = null;
+PSS.getExpressList = function(){
+	if(PSS.ExpressList==null){
+		var url = 'dict/queryComboboxExpress.do';
+		PSS.ExpressList = syncCallService(url);
+	}
+	return PSS.ExpressList;
+}
