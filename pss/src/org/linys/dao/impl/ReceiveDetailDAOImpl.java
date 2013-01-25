@@ -20,9 +20,6 @@ public class ReceiveDetailDAOImpl extends BaseDAOImpl<ReceiveDetail, String>
 	public List<ReceiveDetail> queryByReceiveId(String receiveId) {
 		Criteria criteria  = getCurrentSession().createCriteria(ReceiveDetail.class);
 		criteria.createAlias("product", "product", CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("product.unit", "unit", CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("product.size", "size", CriteriaSpecification.LEFT_JOIN);
-		criteria.createAlias("color", "color", CriteriaSpecification.LEFT_JOIN);
 		criteria.createAlias("buyDetail", "buyDetail", CriteriaSpecification.LEFT_JOIN);
 		criteria.createAlias("buyDetail.buy", "buy", CriteriaSpecification.LEFT_JOIN);
 		
