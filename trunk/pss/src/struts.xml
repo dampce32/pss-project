@@ -62,6 +62,7 @@
 		<action name="*DataDict" class="dataDictionaryAction" method="{1}"></action>
 		<action name="*CustomerType" class="customerTypeAction" method="{1}"></action>
 		<action name="*Customer" class="customerAction" method="{1}"></action>
+		<action name="*Express" class="expressAction" method="{1}"></action>
 		<action name="*">
 			<result>/WEB-INF/dict/{1}.html</result>
 		</action>
@@ -78,6 +79,7 @@
 	
 	<package name="outWarehouse" namespace="/outWarehouse" extends="basePackage">
 		<action name="*Sale" class="saleAction" method="{1}"></action>
+		<action name="*Deliver" class="deliverAction" method="{1}"></action>
 		<action name="*">
 			<result>/WEB-INF/outWarehouse/{1}.html</result>
 		</action>
