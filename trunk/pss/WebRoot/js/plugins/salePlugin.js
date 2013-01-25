@@ -9,8 +9,6 @@
 	  var selectRow = null;
 	  var selectIndex = null;
 	  
-	  var bankData = null;
-	  var employeeData = null;
 	  var delSaleDetailIdArray = null;
 	  
 	  var queryContent = $('#queryContent',$this);
@@ -71,26 +69,18 @@
 		    }
 	    });
 		//银行
-		if(bankData==null){
-			var url = 'dict/queryComboboxBank.do';
-			bankData = syncCallService(url);
-		}
 		$('#bankId',editDialog).combobox({
 			valueField:'bankId',
 			textField:'bankShortName',
 			width:250,
-			data:bankData
+			data:PSS.getBankList()
 		})		  
 		//经办人
-		if(employeeData==null){
-			var url = 'dict/queryComboboxEmployee.do';
-			employeeData = syncCallService(url);
-		}
 		$('#employeeId',editDialog).combobox({
 			valueField:'employeeId',
 			textField:'employeeName',
 			width:150,
-			data:employeeData
+			data:PSS.getEmployeeList()
 		})
 	  }
 	  //新增时，按钮的状态
@@ -543,6 +533,15 @@
 		    {field:'discount',title:'折扣',width:90,align:"center",editor:{type:'numberbox',options:{min:0,max:1,precision:2}}},
 		    {field:'amount',title:'金额',width:90,align:"center",editor:{type:'numberbox',options:{disabled:true,precision:2,
 		    	onChange:function(newValue,oldValue){
+		    	 if(newValue==''){
+		    		 newValue=0;
+		    	 }
+		    	 if(oldValue==''){
+		    		 oldValue=0;
+		    	 }
+		    	 if(parseFloat(newValue)==parseFloat(oldValue)){
+		    		 return;
+		    	 }
 		    	 var totalAmount = 0 ;
 				 var rows =  $(saleDetail).datagrid('getRows');
 				 var row = $(saleDetail).datagrid('getSelected');
@@ -555,6 +554,9 @@
 				 })
 				totalAmount+=parseFloat(newValue); 
 				var otherAmount = $('#otherAmount',editForm).numberbox('getValue');
+				if(otherAmount==''){
+					otherAmount=0;
+				}
 				totalAmount+=parseFloat(otherAmount); 
 		    	$('#amount',editForm).numberbox('setValue',totalAmount);
 		    }}}},
@@ -595,10 +597,18 @@
 	        calculate(rowIndex);  
 	    });
 	    function calculate(rowIndex){  
-	        var cost = qtyEditor.target.val() * priceEditor.target.val();  
+	    	var qty = qtyEditor.target.val();
+	    	var price = priceEditor.target.val();
+	    	if(qty==''){
+	    		qty=0;
+	    	}
+	    	if(price==''){
+	    		price=0;
+	    	}
+	        var cost = parseFloat(qty) *parseFloat(price);  
 	        var dis = discountEditor.target.val();
 	        if(dis!=''){
-	        	cost = cost*dis;
+	        	cost = cost*parseFloat(dis);
 	        }
 	        $(amountEditor.target).numberbox('setValue',cost);
 	        //更新未完成
@@ -719,6 +729,12 @@
 	 $('#otherAmount',editForm).numberbox({
 		 onChange:function(newValue,oldValue){
 			 var amount =$('#amount',editForm).numberbox('getValue');
+			 if(newValue==''){
+				 newValue=0;
+			 }
+			 if(oldValue==''){
+				 oldValue=0;
+			 }
 			 var totalAmount = parseFloat(amount)+parseFloat(newValue-oldValue);
 			 $('#amount',editForm).numberbox('setValue',totalAmount);
 		 }
