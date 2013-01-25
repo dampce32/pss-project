@@ -96,7 +96,11 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 			
 		}
 		//取得出库单编号
-		deliver.setDeliverCode(commonDao.getCode(Deliver.class.getName(), "deliverCode", prefixDao.getPrefix("deliver")));
+		if("other".equals(type)){
+			deliver.setDeliverCode(commonDao.getCode(Deliver.class.getName(), "deliverCode", prefixDao.getPrefix("deliverOther")));
+		}else{
+			deliver.setDeliverCode(commonDao.getCode(Deliver.class.getName(), "deliverCode", prefixDao.getPrefix("deliver")));
+		}
 		deliver.setCheckAmount(0.0);
 		deliver.setStatus(0);
 		deliver.setIsReceipt(0);
@@ -362,7 +366,7 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 						model.setIsReceipt(1);
 					}
 				}
-			}else if(model.getStatus()==0){//如果是由已审改为未审
+			}else if(status==0){//如果是由已审改为未审
 				//将该出库单下的商品出库
 				List<DeliverDetail> deliverDetailList = deliverDetailDao.queryDeliverDetail(model);
 				//更新对应商品的库存数量
