@@ -366,10 +366,10 @@
 			$.messager.alert('提示','请选择添加商品','warning');
 			return false;
 		}
-		for ( var int = 0; int < rows.length; int++) {
-			var row = rows[int];
+		for ( var i = 0; i < rows.length; i++) {
+			var row = rows[i];
 			if(row.qty==0){
-				var msg = '第'+(int+1)+'行商品的数量为0,请输入';
+				var msg = '第'+(i+1)+'行商品的数量为0,请输入';
 				$.messager.alert('提示',msg,'warning');
 				return false;
 			}
@@ -397,16 +397,16 @@
 		
 		delReceiveDetailIdArray = new Array();
 		//统计原记录中被删除的记录
-		for ( var int = 0; int < oldReceiveDetailIdArray.length; int++) {
+		for ( var i = 0; i < oldReceiveDetailIdArray.length; i++) {
 			var haveDel = true;
 			for(var i=0;i<rows.length;i++){
-				if(oldReceiveDetailIdArray[int]==rows[i].receiveDetailId){
+				if(oldReceiveDetailIdArray[i]==rows[i].receiveDetailId){
 					haveDel = false;
 					break;
 				}
 			}
 			if(haveDel){
-				delReceiveDetailIdArray.push(oldReceiveDetailIdArray[int]);
+				delReceiveDetailIdArray.push(oldReceiveDetailIdArray[i]);
 			}
 		}
 		$('#receiveDetailIds',editForm).val(receiveDetailIdArray.join(LYS.join));
@@ -550,8 +550,8 @@
 			return;
 		}
 		var idArray = new Array();
-		for ( var int = 0; int < rows.length; int++) {
-			idArray.push(rows[int].receiveId);
+		for ( var i = 0; i < rows.length; i++) {
+			idArray.push(rows[i].receiveId);
 		}
 		$.messager.confirm("提示","确定要删除选中的记录?",function(t){ 
 			if(t){
@@ -622,8 +622,8 @@
 			return;
 		}
 		var idArray = new Array();
-		for ( var int = 0; int < rows.length; int++) {
-			idArray.push(rows[int].receiveId);
+		for ( var i = 0; i < rows.length; i++) {
+			idArray.push(rows[i].receiveId);
 		}
 		$.messager.confirm("提示","确定要"+msg+"选中的记录?"+msg+"后系统将进行库存和财务计算!!",function(t){ 
 			if(t){
@@ -650,8 +650,8 @@
 			return;
 		}
 		var idArray = new Array();
-		for ( var int = 0; int < rows.length; int++) {
-			idArray.push(rows[int].receiveId);
+		for ( var i = 0; i < rows.length; i++) {
+			idArray.push(rows[i].receiveId);
 		}
 		$.messager.confirm("提示","确定要清款选中的记录?",function(t){ 
 			if(t){
@@ -735,9 +735,9 @@
 				 var rows =  $(receiveDetail).datagrid('getRows');
 				 var row = $(receiveDetail).datagrid('getSelected');
 				 var rowIndex = $(receiveDetail).datagrid('getRowIndex',row); 
-				 for ( var int = 0; int < rows.length; int++) {
-					 if(int!=rowIndex){
-						row = rows[int];
+				 for ( var i = 0; i < rows.length; i++) {
+					 if(i!=rowIndex){
+						row = rows[i];
 						totalAmount += parseFloat(row.amount);
 					 }
 				}
@@ -770,8 +770,8 @@
 	  },onLoadSuccess:function(data){
 			var rows = data.rows;
 			oldReceiveDetailIdArray = new Array();
-			for ( var int = 0; int < rows.length; int++) {
-				oldReceiveDetailIdArray.push(rows[int].receiveDetailId);
+			for ( var i = 0; i < rows.length; i++) {
+				oldReceiveDetailIdArray.push(rows[i].receiveDetailId);
 			}
 		}
 	 });
@@ -853,8 +853,8 @@
 			 $.messager.alert('提示','请选择商品',"warning");
 			 return;
 		 }
-		 for ( var int = 0; int < rows.length; int++) {
-			var row = rows[int];
+		 for ( var i = 0; i < rows.length; i++) {
+			var row = rows[i];
 			 $(receiveDetail).datagrid('appendRow',{
 				 receiveDetailId:'',
 				 productId:row.productId,
@@ -891,8 +891,8 @@
 		 //统计删除后的应付金额
 		 var totalAmount = 0 ;
 		 var rows =  $(receiveDetail).datagrid('getRows');
-		 for ( var int = 0; int < rows.length; int++) {
-			var row = rows[int];
+		 for ( var i = 0; i < rows.length; i++) {
+			var row = rows[i];
 			totalAmount += parseFloat(row.amount);
 		}
 		$('#amount',editForm).numberbox('setValue',totalAmount);
@@ -945,8 +945,9 @@
 		  fit:true,
 		  cache: false, 
 		  columns:[[
-			    {field:'ck',checkbox:true},
+			    {field:'buyId',checkbox:true},
 			    {field:'buyCode',title:'采购单编号',width:150,align:"center"},
+			    {field:'sourceCode',title:'原始单号',width:150,align:"center"},
 			    {field:'buyDate',title:'采购日期',width:90,align:"center"},
 			    {field:'note',title:'备注',width:90,align:"center"}
 		  ]],
@@ -970,19 +971,11 @@
 	 })
 	 var searchBtnSelectBuy = function(){
 		var beginDate = $('#beginDate',selectBuyDialog).val();
-		if(beginDate==''){
-			$.messager.alert('提示','请选择采购单开始日期','warning');
-			return;
-		}
 		var endDate = $('#endDate',selectBuyDialog).val();
-		if(endDate==''){
-			$.messager.alert('提示','请选择采购单结束日期','warning');
-			return;
-		}
 		var rows = $(receiveDetail).datagrid('getRows');
 		var idArray = new Array();
-		for ( var int = 0; int < rows.length; int++) {
-			var row = rows[int];
+		for ( var i = 0; i < rows.length; i++) {
+			var row = rows[i];
 			if(''!=row.buyDetailId){
 				idArray.push(row.buyDetailId);
 			}
@@ -991,14 +984,8 @@
 		var buyCode = $('#buyCodeSelectBuyDialog',selectBuyDialog).val();
 		
 		var url = "inWarehouse/queryReceiveBuy.do";
-		var content = {beginDate:beginDate,endDate:endDate,ids:idArray.join(LYS.join),supplierId:supplierId,buyCode:buyCode};
-		var result = syncCallService(url,content);
-		if(result.isSuccess){
-			var data = result.data;
-			$(buyList).datagrid('loadData',eval("("+data.datagridData+")"));
-		}else{
-			$.messager.alert('提示',result.message,"error");
-		}
+		var content = {beginDate:beginDate,endDate:endDate,ids:idArray.join(LYS.join),'supplier.supplierId':supplierId,buyCode:buyCode};
+		$(buyList).datagrid({url:url,queryParams:content,pageNumber:1})
 	 }
 	 //选择采购单
 	 var onSelectOKBuy = function(){
@@ -1011,14 +998,14 @@
 		 var ids2 = null;
 		 var idArray = new Array();
 		 var idArray2 = new Array();
-		 for ( var int = 0; int < rows.length; int++) {
-			var row = rows[int];
+		 for ( var i = 0; i < rows.length; i++) {
+			var row = rows[i];
 			idArray.push(row.buyId);
 		 }
 		 ids = idArray.join(LYS.join);
 		 rows = $(receiveDetail).datagrid('getRows');
-		for ( var int = 0; int < rows.length; int++) {
-			var row = rows[int];
+		for ( var i = 0; i < rows.length; i++) {
+			var row = rows[i];
 			if(''!=row.buyDetailId){
 				idArray2.push(row.buyDetailId);
 			}
@@ -1031,8 +1018,8 @@
 		if(result.isSuccess){
 			var data = result.data;
 			var datagridData = eval("("+data.datagridData+")");
-			for ( var int = 0; int < datagridData.length; int++) {
-				var row = datagridData[int];
+			for ( var i = 0; i < datagridData.length; i++) {
+				var row = datagridData[i];
 				 $(receiveDetail).datagrid('appendRow',{
 					 receiveDetailId:'',
 					 productId:row.productId,
@@ -1062,8 +1049,8 @@
 	 var onCalAmount = function(){
 		 var totalAmount = 0 ;
 		 var rows =  $(receiveDetail).datagrid('getRows');
-		 for ( var int = 0; int < rows.length; int++) {
-			row = rows[int];
+		 for ( var i = 0; i < rows.length; i++) {
+			row = rows[i];
 			totalAmount += parseFloat(row.amount);
 		}
 		var discountAmount = $('#discountAmount',editForm).numberbox('getValue'); 
