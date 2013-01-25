@@ -18,7 +18,7 @@ import org.hibernate.annotations.GenericGenerator;
  * @vesion 1.0
  */
 @Entity
-@Table(name = "t_express")
+@Table(name = "T_Express")
 @Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class Express extends BaseModel {
 

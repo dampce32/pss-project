@@ -19,7 +19,7 @@ import org.hibernate.annotations.GenericGenerator;
  * @vesion 1.0
  */
 @Entity
-@Table(name="t_CustomerType")
+@Table(name="T_CustomerType")
 @Cache(usage=CacheConcurrencyStrategy.READ_WRITE)
 public class CustomerType extends BaseModel{
 

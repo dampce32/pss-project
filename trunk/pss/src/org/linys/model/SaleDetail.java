@@ -26,7 +26,7 @@ import org.hibernate.annotations.GenericGenerator;
  * @vesion 1.0
  */
 @Entity
-@Table(name = "t_saledetail")
+@Table(name = "T_SaleDetail")
 public class SaleDetail extends BaseModel {
 
 	// Fields

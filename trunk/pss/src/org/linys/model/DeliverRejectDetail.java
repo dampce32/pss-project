@@ -19,7 +19,7 @@ import org.hibernate.annotations.GenericGenerator;
  * @vesion 1.0
  */
 @Entity
-@Table(name = "t_deliverrejectdetail")
+@Table(name = "T_DeliverRejectDetail")
 public class DeliverRejectDetail extends BaseModel {
 
 	// Fields
