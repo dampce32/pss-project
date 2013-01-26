@@ -307,9 +307,6 @@
 							 $('#prepayCode',editForm).val(data.prepayCode);
 							 $('#status',editForm).val('未审核');
 							 fsBtnStatus();
-						}else{
-							$('#status',editForm).val('审核');
-							shBtnStatus();
 						}
 					}
 					$.messager.alert('提示','保存成功','info',fn);
