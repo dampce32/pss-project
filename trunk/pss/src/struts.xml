@@ -72,7 +72,6 @@
 		<action name="*Reject" class="rejectAction" method="{1}"></action>
 		<action name="*Buy" class="buyAction" method="{1}"></action>
 		<action name="*Receive" class="receiveAction" method="{1}"></action>
-		<action name="*DeliverReject" class="deliverRejectAction" method="{1}"></action>
 		<action name="*">
 			<result>/WEB-INF/inWarehouse/{1}.html</result>
 		</action>
@@ -81,6 +80,7 @@
 	<package name="outWarehouse" namespace="/outWarehouse" extends="basePackage">
 		<action name="*Sale" class="saleAction" method="{1}"></action>
 		<action name="*Deliver" class="deliverAction" method="{1}"></action>
+		<action name="*DeliverReject" class="deliverRejectAction" method="{1}"></action>
 		<action name="*">
 			<result>/WEB-INF/outWarehouse/{1}.html</result>
 		</action>
