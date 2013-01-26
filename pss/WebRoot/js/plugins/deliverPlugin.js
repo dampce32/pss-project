@@ -33,13 +33,13 @@
 	  })
 	  //点击查询按钮
 	  $('#searchBtn',queryContent).click(function(){
-		  var saleCode = $('#saleCode',queryContent).val();
+		  var deliverCode = $('#deliverCode',queryContent).val();
 		  var customerName = $('#customer',queryContent).val();
 		  var beginDate = $('#beginDate',queryContent).val();
 		  var endDate = $('#endDate',queryContent).val();
 		  var status = $('#status',queryContent).combobox('getValue');
 		  var url = 'outWarehouse/queryDeliver.do';
-		  var queryParams ={saleCode:saleCode,'customer.customerName':customerName,beginDate:beginDate,endDate:endDate,status:status};
+		  var queryParams ={deliverCode:deliverCode,'customer.customerName':customerName,beginDate:beginDate,endDate:endDate,status:status};
 		  $(viewList).datagrid({
 			url:url,
 			queryParams:queryParams,
@@ -48,7 +48,7 @@
 	  })
 	  //重置按钮
 	  $('#resetBtn',queryContent).click(function(){
-		  $('#saleCode',queryContent).val('');
+		  $('#deliverCode',queryContent).val('');
 		  $('#customer',queryContent).val('');
 		  $('#beginDate',queryContent).val('');
 		  $('#endDate',queryContent).val('');
