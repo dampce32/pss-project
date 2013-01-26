@@ -186,6 +186,7 @@ public class DeliverRejectAction extends BaseAction implements ModelDriven<Deliv
 	 */
 	public void init(){
 		String jsonString = deliverRejectService.initDeliverReject(deliverReject.getDeliverRejectId());
+		System.out.println(jsonString);
 		ajaxJson(jsonString);
 	}
 	
