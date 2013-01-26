@@ -10,12 +10,12 @@ public class BaseServiceImpl<T,PK extends Serializable> implements BaseService<T
 
 	private BaseDAO<T,PK> baseDAO;
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public BaseDAO getBaseDAO() {
 		return baseDAO;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void setBaseDAO(BaseDAO baseDAO) {
 		this.baseDAO = baseDAO;
 	}
