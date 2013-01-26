@@ -172,5 +172,17 @@
 		"id":"1-1",
 		"text":"采购付款",
 		"attributes":{"rightUrl":"finance/pay.do"}
+	},{
+		"id":"1-1",
+		"text":"收入",
+		"attributes":{"rightUrl":"finance/income.do"}
+	},{
+		"id":"2-8",
+		"text":"银行",
+		"attributes":{"rightUrl":"dict/bank.do"}
+	},{
+		"id":"1-1",
+		"text":"费用支出",
+		"attributes":{"rightUrl":"finance/expense.do"}
 	}]
 }]

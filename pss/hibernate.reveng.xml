@@ -38,4 +38,9 @@
 	<table name="t_prefix" catalog="pss" class="Prefix"></table>
 	<table name="t_reportconfig" catalog="pss" class="ReportConfig"></table>
 	<table name="t_prepay" catalog="pss" class="Prepay"></table>
+	<table name="t_bankstatements" catalog="pss"
+		class="BankStatements">
+	</table>
+	<table name="t_expense" catalog="pss" class="Expense"></table>
+	<table name="t_income" catalog="pss" class="Income"></table>
 </hibernate-reverse-engineering>
