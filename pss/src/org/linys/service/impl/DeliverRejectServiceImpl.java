@@ -393,7 +393,7 @@ public class DeliverRejectServiceImpl extends BaseServiceImpl<DeliverReject, Str
 						storeDao.save(store);
 					}
 					store.setQty(store.getQty()+deliverRejectDetail.getQty());
-					store.setAmount(store.getAmount()-deliverRejectDetail.getAmount());
+					store.setAmount(store.getAmount()+deliverRejectDetail.getAmount());
 					//更新商品中库存数量和金额
 					product.setQtyStore(product.getQtyStore()+deliverRejectDetail.getQty());
 					product.setAmountStore(product.getAmountStore()+deliverRejectDetail.getAmount());
@@ -409,11 +409,11 @@ public class DeliverRejectServiceImpl extends BaseServiceImpl<DeliverReject, Str
 					if(store==null || store.getQty()-deliverRejectDetail.getQty()<0){
 						throw new RuntimeException("退货单号:"+deliverRejectDetail.getDeliverReject().getDeliverRejectCode()+",商品:"+product.getProductName()+",超额退货");
 					}
-					store.setQty(store.getQty()+deliverRejectDetail.getQty());
+					store.setQty(store.getQty()-deliverRejectDetail.getQty());
 					store.setAmount(store.getAmount()-deliverRejectDetail.getAmount());
 					//更新商品中库存数量和金额
-					product.setQtyStore(product.getQtyStore()+deliverRejectDetail.getQty());
-					product.setAmountStore(product.getAmountStore()+deliverRejectDetail.getAmount());
+					product.setQtyStore(product.getQtyStore()-deliverRejectDetail.getQty());
+					product.setAmountStore(product.getAmountStore()-deliverRejectDetail.getAmount());
 				}
 			}
 			
@@ -436,7 +436,7 @@ public class DeliverRejectServiceImpl extends BaseServiceImpl<DeliverReject, Str
 		ServiceResult result = new ServiceResult(false);
 		DeliverReject deliverReject = deliverRejectDao.load(deliverRejectId);
 		String[] propertiesDeliverReject = {"deliverRejectId","deliverRejectCode","deliverRejectDate","sourceCode",
-				"customer.customerId","warehouse.warehouseId","amount","payedAmount","invoiceType.invoiceTypeId",
+				"customer.customerId","customer.customerName","warehouse.warehouseId","amount","payedAmount","invoiceType.invoiceTypeId",
 				"bank.bankId","employee.employeeId","note","status"};
 		String deliverRejectData = JSONUtil.toJson(deliverReject,propertiesDeliverReject);
 		result.addData("deliverRejectData",deliverRejectData);

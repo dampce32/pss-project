@@ -256,8 +256,9 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 				if(store==null || store.getQty()-deliverDetail.getQty()<0){
 					throw new RuntimeException("商品:"+product.getProductName()+",超额出库");
 				}
+				//更新库存
 				store.setQty(store.getQty()-deliverDetail.getQty());
-				
+				store.setAmount(store.getAmount()-deliverDetail.getAmount());
 				//更新商品总的库存数量和金额
 				product.setQtyStore(product.getQtyStore()-deliverDetail.getQty());
 				product.setAmountStore(product.getAmountStore()-deliverDetail.getAmount());
@@ -288,8 +289,10 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 					store.setAmount(0.0);
 					storeDao.save(store);
 				}
-				store.setQty(store.getQty()+deliverDetail.getQty());
 				//更新商品总的库存数量和金额
+				store.setQty(store.getQty()+deliverDetail.getQty());
+				store.setAmount(store.getAmount()+deliverDetail.getAmount());
+				
 				Product product = deliverDetail.getProduct();
 				product.setQtyStore(product.getQtyStore()+deliverDetail.getQty());
 				product.setAmountStore(product.getAmountStore()+deliverDetail.getAmount());
@@ -350,9 +353,9 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 					if(store==null || store.getQty()-deliverDetail.getQty()<0){
 						throw new RuntimeException("出库单号:"+model.getDeliverCode()+",商品:"+product.getProductName()+"超额出库");
 					}
-					store.setQty(store.getQty()-deliverDetail.getQty());
-					
 					//更新商品总的库存数量和金额
+					store.setQty(store.getQty()-deliverDetail.getQty());
+					store.setAmount(store.getAmount()-deliverDetail.getAmount());
 					product.setQtyStore(product.getQtyStore()-deliverDetail.getQty());
 					product.setAmountStore(product.getAmountStore()-deliverDetail.getAmount());
 					//如果该收货明细是从出库单来得，则需要更新对应出库明细的出货数
@@ -382,8 +385,9 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 						store.setAmount(0.0);
 						storeDao.save(store);
 					}
-					store.setQty(store.getQty()+deliverDetail.getQty());
 					//更新商品总的库存数量和金额
+					store.setQty(store.getQty()+deliverDetail.getQty());
+					store.setAmount(store.getAmount()+deliverDetail.getAmount());
 					Product product = deliverDetail.getProduct();
 					product.setQtyStore(product.getQtyStore()+deliverDetail.getQty());
 					product.setAmountStore(product.getAmountStore()+deliverDetail.getAmount());

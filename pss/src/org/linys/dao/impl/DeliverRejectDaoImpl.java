@@ -12,7 +12,17 @@ import org.hibernate.criterion.Restrictions;
 import org.linys.bean.Pager;
 import org.linys.dao.DeliverRejectDao;
 import org.linys.model.DeliverReject;
+import org.springframework.stereotype.Repository;
 
+/**
+ * 
+ * @Description: 销售退货dao实现类
+ * @Copyright: 福州骏华科技信息有限公司 (c)2013
+ * @Created Date : 2013-1-26
+ * @author longweier
+ * @vesion 1.0
+ */
+@Repository
 public class DeliverRejectDaoImpl extends BaseDAOImpl<DeliverReject, String> implements DeliverRejectDao {
 
 	public Pager queryDeliverReject(Pager pager, DeliverReject deliverReject,Date beginDate, Date endDate) {
