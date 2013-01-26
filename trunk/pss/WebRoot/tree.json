@@ -184,5 +184,9 @@
 		"id":"1-1",
 		"text":"费用支出",
 		"attributes":{"rightUrl":"finance/expense.do"}
+	},{
+		"id":"1-1",
+		"text":"银行存取款",
+		"attributes":{"rightUrl":"finance/bankStatements.do"}
 	}]
 }]

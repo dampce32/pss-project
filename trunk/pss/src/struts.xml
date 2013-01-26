@@ -94,6 +94,7 @@
 	</package>
 	
 	<package name="finance" namespace="/finance" extends="basePackage">
+		<action name="*BankStatements" class="bankStatementsAction" method="{1}"></action> 
 		<action name="*Expense" class="expenseAction" method="{1}"></action> 
 		<action name="*Income" class="incomeAction" method="{1}"></action> 
 		<action name="*Prepay" class="prepayAction" method="{1}"></action> 

@@ -1,0 +1,55 @@
+<div class="easyui-layout plugins" data-options="fit:true" ui="bankStatementsInit" id="${id}">
+	<div data-options="region:'north',border:false" style="height: 35px;overflow: hidden;padding:5px" id="queryContent"> 
+		<a href="#" class="easyui-linkbutton" id="searchBtn" data-options="iconCls:'icon-search'" style="cursor: pointer;">查 询</a>
+	</div>
+	<div data-options="region:'center',border:false" style="width: 100%;height:100%">
+		<div id="viewList"></div>
+	</div>
+	<div data-options="region:'south',border:false" style="height: 32">
+		<div class="easyui-pagination" id="pager" style="background:#efefef;border:1px solid #ccc;"></div>
+	</div>
+	
+	<div id="editDialog">
+		<form method="post" id="editForm" >
+			<input type="hidden" name="bankStatementsId" id="bankStatementsId" />
+			<table border="0" cellpadding="0" cellspacing="0" style="width: 100%">
+				<tr>
+					<td class="tdTitle">存取款类型:</td>
+					<td>
+						<select id="bankStatementsKind" class="easyui-combobox" name="bankStatementsKind" style="width:250px;">  
+						    <option value="存款">存款</option>  
+						    <option value="取款">取款</option>  
+						</select>  
+					</td>
+				</tr>
+				<tr>
+					<td class="tdTitle">银行:</td>
+					<td>
+						<input type="text" id="bank"  style="width: 250px" size="40" />
+						<input type="hidden" name="bank.bankId" id="bankId" />
+					</td>
+				</tr>
+				<tr>
+					<td class="tdTitle">金额:</td>
+					<td >
+						<input type="text" name="amount" id="amount" class="text easyui-numberbox" style="width: 250px" data-options="min:0,precision:2"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="tdTitle">日期:</td>
+					<td>
+						<input type="text" name="bankStatementsDate" id="bankStatementsDate"  style="width: 250px" size="40" class="Wdate" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd'});" />
+					</td>
+							
+				</tr>
+				<tr>
+					<td class="tdTitle">经办人:</td>
+					<td>
+						<input type="text"  id="employee"  style="width: 250px" size="40" />
+						<input type="hidden" name="employee.employeeId" id="employeeId" />
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
