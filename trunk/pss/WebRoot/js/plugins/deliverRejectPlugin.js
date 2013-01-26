@@ -50,7 +50,7 @@
 		  $('#sourceCode',queryContent).val('');
 		  $('#beginDate',queryContent).val('');
 		  $('#endDate',queryContent).val('');
-		  $('#status',queryContent).combobox('setVaule',-1);
+		  $('#status',queryContent).combobox('setValue',-1);
 	  })
 	  //初始化
 	  var initChoose = function(){
