@@ -140,7 +140,7 @@
 		"attributes":{"rightUrl":"outWarehouse/deliverOther.do"}
 	},{
 		"id":"1-1",
-		"text":"客户收款",
+		"text":"销售收款",
 		"attributes":{"rightUrl":"finance/receipt.do"}
 	},{
 		"id":"1-1",
@@ -178,7 +178,7 @@
 		"attributes":{"rightUrl":"finance/preReceipt.do"}
 	},{
 		"id":"1-1",
-		"text":"客户收款",
+		"text":"销售收款",
 		"attributes":{"rightUrl":"finance/receipt.do"}
 	},{
 		"id":"1-1",
