@@ -139,9 +139,9 @@
 		"text":"其他出库",
 		"attributes":{"rightUrl":"outWarehouse/deliverOther.do"}
 	},{
-		"id":"3-1",
-		"text":"销售退货",
-		"attributes":{"rightUrl":"outWarehouse/deliverReject.do"}
+		"id":"1-1",
+		"text":"客户收款",
+		"attributes":{"rightUrl":"finance/receipt.do"}
 	},{
 		"id":"1-1",
 		"text":"销售收款",
@@ -172,6 +172,14 @@
 		"id":"1-1",
 		"text":"采购付款",
 		"attributes":{"rightUrl":"finance/pay.do"}
+	},{
+		"id":"1-1",
+		"text":"预收单",
+		"attributes":{"rightUrl":"finance/preReceipt.do"}
+	},{
+		"id":"1-1",
+		"text":"客户收款",
+		"attributes":{"rightUrl":"finance/receipt.do"}
 	},{
 		"id":"1-1",
 		"text":"收入",
