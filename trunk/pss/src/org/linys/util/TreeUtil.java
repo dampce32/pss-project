@@ -117,6 +117,14 @@ public class TreeUtil {
 			treeNode.setState(StateType.closed);
 		}
 		treeNode.getAttributes().put("rightUrl", right.getRightUrl());
+		if(!right.getIsLeaf()){
+			List<TreeNode> childrenNode = new ArrayList<TreeNode>();
+			List<Right> children = right.getChildrenRightList();
+			for (Right right2 : children) {
+				childrenNode.add(toTreeNode(right2));
+			}
+			treeNode.setChildren(childrenNode);
+		}
 		return treeNode;
 	}
 	/**

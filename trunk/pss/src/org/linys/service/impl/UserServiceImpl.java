@@ -222,8 +222,8 @@ public class UserServiceImpl extends BaseServiceImpl<User,String> implements Use
 		List<Map<String,Object>> rootList = userDAO.getRooRight(userId); 
 		if(rootList!=null&&rootList.size()!=0){
 			String rightId = rootList.get(0).get("rightId").toString();
-			List<Map<String,Object>> children = userDAO.getChildrenRight(userId,rightId);
-			List<Right> childrenRightList = toRightList(children);
+			//取得孩子节点
+			List<Right> childrenRightList = getChildrenRight(userId,rightId);
 			result = TreeUtil.toJSONRightList(childrenRightList);
 		}
 		return result;
@@ -313,6 +313,25 @@ public class UserServiceImpl extends BaseServiceImpl<User,String> implements Use
 		oldModel.setUserPwd(newUserPwdMD5);
 		result.setIsSuccess(true);
 		return result;
+	}
+	/**
+	 * @Description: 取得子权限
+	 * @Create: 2013-1-29 上午10:37:00
+	 * @author lys
+	 * @update logs
+	 * @param userId
+	 * @param rightId
+	 * @return
+	 */
+	private List<Right> getChildrenRight(String userId,String rightId){
+		List<Map<String,Object>> children = userDAO.getChildrenRight(userId,rightId);
+		List<Right> childrenRightList = toRightList(children);
+		for (Right right : childrenRightList) {
+			if(!right.getIsLeaf()){
+				right.setChildrenRightList(getChildrenRight(userId,right.getRightId()));
+			}
+		}
+		return childrenRightList;
 	}
 	
 }

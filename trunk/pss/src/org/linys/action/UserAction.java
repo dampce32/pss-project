@@ -171,7 +171,7 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 	 */
 	public void getRootRightMain(){
 		try {
-			String path = "tree.json";
+			/*String path = "tree.json";
 			String pathname = getRequest().getSession().getServletContext().getRealPath(path);
 			File file = new File(pathname);
 			String tree = "";
@@ -180,10 +180,10 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			ajaxJson(tree);
-			/*String userId = getSession(User.LOGIN_USERID).toString();
+			ajaxJson(tree);*/
+			String userId = getSession(User.LOGIN_USERID).toString();
 			String jsonArray = userService.getRootRightMain(userId);
-			ajaxJson(jsonArray);*/
+			ajaxJson(jsonArray);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
