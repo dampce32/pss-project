@@ -2,7 +2,7 @@
 (function($) {  
   // 插件的定义  
   $.fn.buyInit = function() {
-	  
+	  $(this).mask({maskMsg:'正在加载界面'});
 	  var $this = $(this);
 	  var id = $(this).attr('id');
 	  var width = $(document.body).width();
@@ -379,7 +379,7 @@
 		$('#note1s',editForm).val(note1Array.join(LYS.join));
 		$('#note2s',editForm).val(note2Array.join(LYS.join));
 		$('#note3s',editForm).val(note3Array.join(LYS.join));
-		
+		$(editDialog).mask({maskMsg:'正在保存'});
 		return true;
 	}
 	//保存
@@ -402,6 +402,7 @@
 				}else{
 					$.messager.alert('提示',result.message,'error');
 				}
+				$(editDialog).mask('hide');
 			}
 		 });
 	}
@@ -539,7 +540,7 @@
 			$.messager.alert("提示","请选择需要"+msg+"数据行","warning");
 			return;
 		}
-		$.messager.confirm("提示","确定要"+msg+"该记录?"+msg+"后系统将进行财务计算!!",function(t){ 
+		$.messager.confirm("提示","确定要"+msg+"记录?"+msg+"后系统将进行财务计算!!",function(t){ 
 			if(t){
 				var url = 'inWarehouse/updateStatusBuy.do';
 				var content ={buyId:buyId,status:status};
@@ -579,7 +580,7 @@
 		for ( var int = 0; int < rows.length; int++) {
 			idArray.push(rows[int].buyId);
 		}
-		$.messager.confirm("提示","确定要"+msg+"选中的记录"+msg+"后系统将进行库存和财务计算!!",function(t){ 
+		$.messager.confirm("提示","确定要"+msg+"记录?"+msg+"后系统将进行库存和财务计算!!",function(t){ 
 			if(t){
 				var url = 'inWarehouse/mulUpdateStatusBuy.do';
 				var content ={ids:idArray.join(LYS.join),status:status};
@@ -695,6 +696,12 @@
 	        calculate(rowIndex);  
 	    });  
 	    function calculate(rowIndex){  
+	    	if(qtyEditor.target.val()==''){
+	    		$(qtyEditor.target).numberbox('setValue',0.00);
+	    	}
+	    	if(priceEditor.target.val()==''){
+	    		$(priceEditor.target).numberbox('setValue',0.00);
+	    	}
 	        var cost = qtyEditor.target.val() * priceEditor.target.val();  
 	        $(amountEditor.target).numberbox('setValue',cost);
 	        //更新未完成
@@ -773,14 +780,14 @@
 				 unitName:row.unitName,
 				 sizeName:row.sizeName,
 				 colorId:row.colorId,
-				 qty:0,
+				 qty:0.00,
 				 price:row.buyingPrice,
-				 amount:0,
+				 amount:0.00,
 				 note1:'',
 				 note2:'',
 				 note3:'',
-				 receiveQty:0,
-				 unReceiveQty:0
+				 receiveQty:0.00,
+				 unReceiveQty:0.00
 			});
 		}
 		 $(buyDetail).datagrid('endEdit', lastIndex);
@@ -812,15 +819,32 @@
 	 //应付金额发生改变
 	 $('#amount',editForm).numberbox({
 		 onChange:function(newValue,oldValue){
+			 if(newValue==''){
+				 $('#amount',editForm).numberbox('setValue',0.00);
+				 newValue = 0.00;
+			 }
 			 $('#payAmount',editForm).numberbox('setValue',newValue);
 		 }
 	});
 	 //其他费用：运费发生改变
 	 $('#otherAmount',editForm).numberbox({
 		 onChange:function(newValue,oldValue){
+			 if(newValue==''){
+				 $('#otherAmount',editForm).numberbox('setValue',0.00);
+				 newValue = 0.00;
+			 }
 			 var amount =$('#amount',editForm).numberbox('getValue');
 			 var totalAmount = parseFloat(amount)+parseFloat(newValue-oldValue);
 			 $('#amount',editForm).numberbox('setValue',totalAmount);
+		 }
+	});
+	 //预付订金
+	 $('#payAmount',editForm).numberbox({
+		 onChange:function(newValue,oldValue){
+			 if(newValue==''){
+				 $('#payAmount',editForm).numberbox('setValue',0.00);
+				 newValue = 0.00;
+			 }
 		 }
 	});
 	//打印 
@@ -844,42 +868,36 @@
 	 var addDialog = $('#addDialog',$this);
 	 var addForm = $('#addForm',addDialog);
 	 
-	 var addData = null;
 	 //添加
 	 var onAddProduct = function(){
-		if(addData==null){
-			var url = 'dict/queryByDictionaryKindsDataDict.do';
-			var content ={ids:'size,color,unit'};
-			addData = syncCallService(url,content);
-		}
 		//规格
 	   $('#size',addDialog).combobox({
-			valueField:'dataDictionaryId',
-			textField:'dataDictionaryName',
+			valueField:'sizeId',
+			textField:'sizeName',
 			width:150,
-			data:addData.size,
+			data:PSS.getSizeList(),
 			onSelect:function(record){
-				$('#sizeId',addDialog).val(record.dataDictionaryId);
+				$('#sizeId',addDialog).val(record.sizeId);
 			}
 	  })
 	  //颜色
 	   $('#color',addDialog).combobox({
-			valueField:'dataDictionaryId',
-			textField:'dataDictionaryName',
+			valueField:'colorId',
+			textField:'colorName',
 			width:150,
-			data:addData.color,
+			data:PSS.getColorList(),
 			onSelect:function(record){
-				$('#colorId',addDialog).val(record.dataDictionaryId);
+				$('#colorId',addDialog).val(record.colorId);
 			}
 	  })
 	  //单位
 	   $('#unit',addDialog).combobox({
-			valueField:'dataDictionaryId',
-			textField:'dataDictionaryName',
+			valueField:'unitId',
+			textField:'unitName',
 			width:150,
-			data:addData.unit,
+			data:PSS.getUnitList(),
 			onSelect:function(record){
-				$('#unitId',addDialog).val(record.dataDictionaryId);
+				$('#unitId',addDialog).val(record.unitId);
 			}
 	  })
 	  //商品类型
@@ -982,5 +1000,6 @@
 	    	{text:'退出',iconCls:'icon-cancel',handler:function(){onAddExit();}
 		}]
 	});
+	 $(this).mask('hide');
   }
 })(jQuery);   
