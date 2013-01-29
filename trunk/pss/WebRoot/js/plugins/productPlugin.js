@@ -124,60 +124,58 @@
 			}
 		}]
 	});    
+	var initChoose = function(){
+		//规格
+		   $('#size',editDialog).combobox({
+				valueField:'sizeId',
+				textField:'sizeName',
+				width:150,
+				data:PSS.getSizeList(),
+				onSelect:function(record){
+					$('#sizeId',editDialog).val(record.sizeId);
+				}
+		  })
+		  //颜色
+		   $('#color',editDialog).combobox({
+				valueField:'colorId',
+				textField:'colorName',
+				width:150,
+				data:PSS.getColorList(),
+				onSelect:function(record){
+					$('#colorId',editDialog).val(record.colorId);
+				}
+		  })
+		  //单位
+		   $('#unit',editDialog).combobox({
+				valueField:'unitId',
+				textField:'unitName',
+				width:150,
+				data:PSS.getUnitList(),
+				onSelect:function(record){
+					$('#unitId',editDialog).val(record.unitId);
+				}
+		  })
+		  //商品类型
+		  $('#productType',editForm).combogrid({
+			    panelWidth:480, 
+				mode: 'remote',  
+				url: 'dict/queryCombogridProductType.do',
+				idField: 'productTypeId',  
+				textField: 'productTypeName',  
+				pagination:true,
+				columns: [[  
+				    {field:'productTypeName',title:'商品类型',width:150,sortable:true},  
+				    {field:'productTypeCode',title:'商品类型编号',width:150,sortable:true}
+				]],
+				onSelect:function(rowIndex, rowData){
+					$('#productTypeId',editDialog).val(rowData.productTypeId);
+				}
+			});
+	}
 	//添加
 	var onAdd = function(){
 		$(editForm).form('clear');
-		if(result==null){
-			var url = 'dict/queryByDictionaryKindsDataDict.do';
-			var content ={ids:'size,color,unit'};
-			result = syncCallService(url,content);
-		}
-		//规格
-	   $('#size',editDialog).combobox({
-			valueField:'dataDictionaryId',
-			textField:'dataDictionaryName',
-			width:150,
-			data:result.size,
-			onSelect:function(record){
-				$('#sizeId',editDialog).val(record.dataDictionaryId);
-			}
-	  })
-	  //颜色
-	   $('#color',editDialog).combobox({
-			valueField:'dataDictionaryId',
-			textField:'dataDictionaryName',
-			width:150,
-			data:result.color,
-			onSelect:function(record){
-				$('#colorId',editDialog).val(record.dataDictionaryId);
-			}
-	  })
-	  //单位
-	   $('#unit',editDialog).combobox({
-			valueField:'dataDictionaryId',
-			textField:'dataDictionaryName',
-			width:150,
-			data:result.unit,
-			onSelect:function(record){
-				$('#unitId',editDialog).val(record.dataDictionaryId);
-			}
-	  })
-	  //商品类型
-	  $('#productType',editForm).combogrid({
-		    panelWidth:480, 
-			mode: 'remote',  
-			url: 'dict/queryCombogridProductType.do',
-			idField: 'productTypeId',  
-			textField: 'productTypeName',  
-			pagination:true,
-			columns: [[  
-			    {field:'productTypeName',title:'商品类型',width:80,sortable:true},  
-			    {field:'productTypeCode',title:'商品类型编号',width:80,sortable:true}
-			]],
-			onSelect:function(rowIndex, rowData){
-				$('#productTypeId',editDialog).val(rowData.productTypeId);
-			}
-		});
+		initChoose();
 	   	$('#buyingPrice',editDialog).numberbox('setValue',0.0);
 	   	$('#salePrice',editDialog).numberbox('setValue',0.0);
 		$(editDialog).dialog('open');
@@ -257,45 +255,7 @@
 			return;
 		}
 		$(editForm).form('clear');
-		if(result==null){
-			var url = 'dict/queryByDictionaryKindsDataDict.do';
-			var content ={ids:'size,color,unit'};
-			result = syncCallService(url,content);
-		}
-		//规格
-	   $('#size',editDialog).combobox({
-			valueField:'dataDictionaryId',
-			textField:'dataDictionaryName',
-			width:150,
-			data:result.size
-	  })
-	  //颜色
-	   $('#color',editDialog).combobox({
-			valueField:'dataDictionaryId',
-			textField:'dataDictionaryName',
-			width:150,
-			data:result.color
-	  })
-	  //单位
-	   $('#unit',editDialog).combobox({
-			valueField:'dataDictionaryId',
-			textField:'dataDictionaryName',
-			width:150,
-			data:result.unit
-	  })
-	  //商品类型
-	  $('#productType',editForm).combogrid({
-		    panelWidth:480, 
-			mode: 'remote',  
-			url: 'dict/queryCombogridProductType.do',
-			idField: 'productTypeId',  
-			textField: 'productTypeName',  
-			pagination:true,
-			columns: [[  
-			    {field:'productTypeName',title:'商品类型',width:80,sortable:true},  
-			    {field:'productTypeCode',title:'商品类型编号',width:80,sortable:true}
-			]]
-		});
+		initChoose();
 		$(editDialog).dialog('open');
 		$(editForm).form('load',selectRow);
 		$('#buyingPrice',editDialog).numberbox('setValue',selectRow.buyingPrice);

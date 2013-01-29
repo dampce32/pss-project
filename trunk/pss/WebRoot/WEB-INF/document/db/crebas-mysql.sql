@@ -1,16 +1,20 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2013-01-20 11:04:06                          */
+/* Created on:     2013-01-29 14:46:37                          */
 /*==============================================================*/
 
 
 drop table if exists T_Bank;
+
+drop table if exists T_BankStatements;
 
 drop table if exists T_Buy;
 
 drop table if exists T_BuyDetail;
 
 drop table if exists T_Customer;
+
+drop table if exists T_CustomerType;
 
 drop table if exists T_DataDictionary;
 
@@ -24,11 +28,21 @@ drop table if exists T_DeliverRejectDetail;
 
 drop table if exists T_Employee;
 
+drop table if exists T_Expense;
+
 drop table if exists T_Express;
+
+drop table if exists T_Income;
 
 drop table if exists T_InvoiceType;
 
 drop table if exists T_Pay;
+
+drop table if exists T_PayDetail;
+
+drop table if exists T_Prefix;
+
+drop table if exists T_Prepay;
 
 drop table if exists T_Product;
 
@@ -41,6 +55,8 @@ drop table if exists T_ReceiveDetail;
 drop table if exists T_Reject;
 
 drop table if exists T_RejectDetail;
+
+drop table if exists T_ReportConfig;
 
 drop table if exists T_Right;
 
@@ -63,6 +79,11 @@ drop table if exists T_UserRole;
 drop table if exists T_Warehouse;
 
 /*==============================================================*/
+/* User: pss                                                    */
+/*==============================================================*/
+create user pss;
+
+/*==============================================================*/
 /* Table: T_Bank                                                */
 /*==============================================================*/
 create table T_Bank
@@ -70,8 +91,23 @@ create table T_Bank
    bankId               varchar(32) not null,
    bankName             varchar(100),
    bankShortName        varchar(50),
-   amount               float,
+   amount               double,
    primary key (bankId)
+);
+
+/*==============================================================*/
+/* Table: T_BankStatements                                      */
+/*==============================================================*/
+create table T_BankStatements
+(
+   bankStatementsId     varchar(32) not null,
+   bankId               varchar(32) not null,
+   employeeId           varchar(32),
+   amount               double not null,
+   bankStatementsDate   date not null,
+   bankStatementsKind   varchar(20) not null,
+   status               int not null,
+   primary key (bankStatementsId)
 );
 
 /*==============================================================*/
@@ -80,17 +116,18 @@ create table T_Bank
 create table T_Buy
 (
    buyId                varchar(32) not null,
-   invoiceTypeId        varchar(32),
    supplierId           varchar(32),
    employeeId           varchar(32),
    bankId               varchar(32),
+   invoiceTypeId        varchar(32),
    buyCode              varchar(50) not null,
    sourceCode           varchar(50),
    buyDate              date not null,
    receiveDate          date,
-   otherAmount          float,
-   amount               float,
-   payAmount            float,
+   otherAmount          double,
+   amount               double,
+   payAmount            double,
+   checkAmount          double,
    statue               int,
    note                 varchar(100),
    primary key (buyId)
@@ -105,12 +142,12 @@ create table T_BuyDetail
    buyId                varchar(32),
    productId            varchar(32),
    colorId              varchar(32),
-   qty                  float,
-   price                float,
+   qty                  double,
+   price                double,
    note1                varchar(50),
    note2                varchar(50),
    note3                varchar(50),
-   receiveQty           float,
+   receiveQty           double,
    primary key (buyDetailId)
 );
 
@@ -120,9 +157,26 @@ create table T_BuyDetail
 create table T_Customer
 (
    customerId           varchar(32) not null,
+   customerTypeID       varchar(32),
    customerCode         varchar(50) not null,
-   customerName         varchar(100) not null,
+   customerName         varchar(100),
+   contacter            varchar(100),
+   phone                varchar(50),
+   status               int not null,
+   note                 varchar(1000),
    primary key (customerId)
+);
+
+/*==============================================================*/
+/* Table: T_CustomerType                                        */
+/*==============================================================*/
+create table T_CustomerType
+(
+   customerTypeID       varchar(32) not null,
+   customerTypeCode     varchar(100),
+   customerTypeName     varchar(500),
+   note                 varchar(1000),
+   primary key (customerTypeID)
 );
 
 /*==============================================================*/
@@ -146,12 +200,12 @@ alter table T_DataDictionary comment '系统中用到的一些基础的数据：用kind 区分开
 create table T_Deliver
 (
    deliverId            varchar(32) not null,
-   customerId           varchar(32),
    expressId            varchar(32),
    warehouseId          varchar(32),
    employeeId           varchar(32),
    bankId               varchar(32),
    invoiceTypeId        varchar(32),
+   customerId           varchar(32),
    deliverCode          varchar(50),
    sourceCode           varchar(50),
    deliverDate          date,
@@ -175,9 +229,9 @@ create table T_DeliverDetail
    productId            varchar(32),
    colorId              varchar(32),
    saleDetailId         varchar(32),
-   qty                  float,
-   price                float,
-   discount             float,
+   qty                  double,
+   price                double,
+   discount             double,
    note1                varchar(50),
    note2                varchar(50),
    note3                varchar(50),
@@ -198,8 +252,8 @@ create table T_DeliverReject
    deliverRejectCode    varchar(50),
    sourceCode           varchar(50),
    deliverRejectDate    date,
-   amount               float,
-   payedAmount          float,
+   amount               double,
+   payedAmount          double,
    note                 varchar(100),
    primary key (deliverRejectId)
 );
@@ -213,8 +267,8 @@ create table T_DeliverRejectDetail
    deliverRejectId      varchar(32),
    productId            varchar(32),
    colorId              varchar(32),
-   qty                  float,
-   price                float,
+   qty                  double,
+   price                double,
    note1                varchar(50),
    note2                varchar(50),
    note3                varchar(50),
@@ -232,6 +286,22 @@ create table T_Employee
 );
 
 /*==============================================================*/
+/* Table: T_Expense                                             */
+/*==============================================================*/
+create table T_Expense
+(
+   expenseId            varchar(32) not null,
+   expenseName          varchar(50),
+   bankId               varchar(32) not null,
+   employeeId           varchar(32),
+   amount               double not null,
+   expenseDate          date not null,
+   note                 varchar(100),
+   status               int,
+   primary key (expenseId)
+);
+
+/*==============================================================*/
 /* Table: T_Express                                             */
 /*==============================================================*/
 create table T_Express
@@ -242,12 +312,28 @@ create table T_Express
 );
 
 /*==============================================================*/
+/* Table: T_Income                                              */
+/*==============================================================*/
+create table T_Income
+(
+   incomeId             varchar(32) not null,
+   bankId               varchar(32) not null,
+   employeeId           varchar(32),
+   incomeName           varchar(50),
+   incomeDate           date not null,
+   note                 varchar(100),
+   amount               double not null,
+   status               int not null,
+   primary key (incomeId)
+);
+
+/*==============================================================*/
 /* Table: T_InvoiceType                                         */
 /*==============================================================*/
 create table T_InvoiceType
 (
    invoiceTypeId        varchar(32) not null,
-   invoiceTypeName      varchar(50),
+   invoiceTypeName      varchar(50) not null,
    primary key (invoiceTypeId)
 );
 
@@ -256,18 +342,68 @@ create table T_InvoiceType
 /*==============================================================*/
 create table T_Pay
 (
-   payId                varchar(3) not null,
+   payId                varchar(32) not null,
    supplierId           varchar(32),
    bankId               varchar(32),
    employeeId           varchar(32),
-   receiveId            varchar(32),
    payCode              varchar(50),
-   payedAmount          float,
-   discountAmount       float,
    payway               varchar(50),
    payDate              date,
    note                 varchar(50),
+   status               int,
    primary key (payId)
+);
+
+/*==============================================================*/
+/* Table: T_PayDetail                                           */
+/*==============================================================*/
+create table T_PayDetail
+(
+   payDetailId          varchar(32) not null,
+   payId                varchar(3),
+   receiveId            varchar(32),
+   prepayId             varchar(32),
+   buyId                varchar(32),
+   rejectId             varchar(32),
+   payKind              varchar(20),
+   sourceCode           varchar(50),
+   sourceDate           varchar(20),
+   amount               double,
+   payedAmount          double,
+   discountAmount       double,
+   payAmount            double,
+   primary key (payDetailId)
+);
+
+/*==============================================================*/
+/* Table: T_Prefix                                              */
+/*==============================================================*/
+create table T_Prefix
+(
+   prefixId             varchar(32) not null,
+   prefixCode           varchar(50),
+   prefix               varchar(50),
+   prefixName           varchar(100),
+   primary key (prefixId),
+   key AK_AK (prefixCode)
+);
+
+/*==============================================================*/
+/* Table: T_Prepay                                              */
+/*==============================================================*/
+create table T_Prepay
+(
+   prepayId             varchar(32) not null,
+   bankId               varchar(32),
+   supplierId           varchar(32),
+   employeeId           varchar(32),
+   prepayCode           varchar(50),
+   prepayDate           date,
+   amount               double,
+   checkAmount          double,
+   note                 varchar(100),
+   status               int,
+   primary key (prepayId)
 );
 
 /*==============================================================*/
@@ -282,10 +418,10 @@ create table T_Product
    sizeId               varchar(32),
    productCode          varchar(50),
    productName          varchar(100),
-   qtyStore             float,
-   amountStore          float,
-   buyingPrice          float,
-   salePrice            float,
+   qtyStore             double,
+   amountStore          double,
+   buyingPrice          double,
+   salePrice            double,
    note                 varchar(50),
    primary key (productId)
 );
@@ -311,15 +447,16 @@ create table T_Receive
    receiveId            varchar(32) not null,
    supplierId           varchar(32),
    warehouseId          varchar(32),
-   invoiceTypeId        varchar(32),
    employeeId           varchar(32),
    bankId               varchar(32),
+   invoiceTypeId        varchar(32),
    receiveCode          varchar(50),
    deliverCode          varchar(50),
    receiveDate          date,
-   amount               float,
-   discountAmount       float,
-   payAmount            float,
+   amount               double,
+   discountAmount       double,
+   payAmount            double,
+   checkAmount          double,
    status               int,
    isPay                int,
    note                 varchar(50),
@@ -336,8 +473,8 @@ create table T_ReceiveDetail
    productId            varchar(32),
    buyDetailId          varchar(32),
    colorId              varchar(32),
-   qty                  float,
-   price                float,
+   qty                  double,
+   price                double,
    note1                varchar(50),
    note2                varchar(50),
    note3                varchar(50),
@@ -353,13 +490,14 @@ create table T_Reject
    warehouseId          varchar(32),
    employeeId           varchar(32),
    supplierId           varchar(32),
-   invoiceTypeId        varchar(32),
    bankId               varchar(32),
+   invoiceTypeId        varchar(32),
    rejectCode           varchar(50),
    buyCode              varchar(50),
    rejectDate           date,
-   amount               float,
-   payAmount            float,
+   amount               double,
+   payAmount            double,
+   checkAmount          double,
    shzt                 int,
    note                 varchar(50),
    primary key (rejectId)
@@ -374,12 +512,26 @@ create table T_RejectDetail
    rejectId             varchar(32),
    productId            varchar(32),
    colorId              varchar(32),
-   qty                  float,
-   price                float,
+   qty                  double,
+   price                double,
    note1                varchar(50),
    note2                varchar(50),
    note3                varchar(50),
    primary key (rejectDetailId)
+);
+
+/*==============================================================*/
+/* Table: T_ReportConfig                                        */
+/*==============================================================*/
+create table T_ReportConfig
+(
+   reportConfigId       varchar(32) not null,
+   reportCode           varchar(50),
+   reportName           varchar(100),
+   reportDetailSql      varchar(100),
+   reportParamsSql      varchar(100),
+   primary key (reportConfigId),
+   key AK_AK (reportCode)
 );
 
 /*==============================================================*/
@@ -392,6 +544,7 @@ create table T_Right
    rightUrl             varchar(100),
    parentRightId        varchar(32),
    isLeaf               int,
+   array                int,
    primary key (rightId)
 );
 
@@ -422,16 +575,16 @@ create table T_RoleRight
 create table T_Sale
 (
    saleId               varchar(32) not null,
-   customerId           varchar(32),
    bankId               varchar(32),
    employeeId           varchar(32),
+   customerId           varchar(32),
    saleCode             varchar(50) not null,
    sourceCode           varchar(50),
    saleDate             date,
    deliverDate          date,
-   otherAmount          float,
-   amount               float,
-   payedAmount          float,
+   otherAmount          double,
+   amount               double,
+   receiptedAmount      double,
    note                 varchar(500),
    status               int,
    primary key (saleId)
@@ -446,13 +599,13 @@ create table T_SaleDetail
    productId            varchar(32),
    colorId              varchar(32),
    saleId               varchar(32),
-   qty                  float,
-   price                float,
-   discount             float,
+   qty                  double,
+   price                double,
+   discount             double,
    note1                varchar(50),
    note2                varchar(50),
    note3                varchar(50),
-   hadSaleQty           float,
+   hadSaleQty           double,
    primary key (saleDetailId)
 );
 
@@ -464,8 +617,8 @@ create table T_Store
    storeId              varchar(32) not null,
    warehouseId          varchar(32),
    productId            varchar(32),
-   qty                  float,
-   amount               float,
+   qty                  double,
+   amount               double,
    primary key (storeId)
 );
 
@@ -518,14 +671,20 @@ create table T_Warehouse
    primary key (warehouseId)
 );
 
+alter table T_BankStatements add constraint FK_Reference_97 foreign key (bankId)
+      references T_Bank (bankId) on delete restrict on update restrict;
+
+alter table T_BankStatements add constraint FK_Reference_98 foreign key (employeeId)
+      references T_Employee (employeeId) on delete restrict on update restrict;
+
+alter table T_Buy add constraint FK_Reference_100 foreign key (invoiceTypeId)
+      references T_InvoiceType (invoiceTypeId) on delete restrict on update restrict;
+
 alter table T_Buy add constraint FK_Reference_35 foreign key (supplierId)
       references T_Supplier (supplierId) on delete restrict on update restrict;
 
 alter table T_Buy add constraint FK_Reference_36 foreign key (employeeId)
       references T_Employee (employeeId) on delete restrict on update restrict;
-
-alter table T_Buy add constraint FK_T_BUY_REFERENCE_T_INVOIC foreign key (invoiceTypeId)
-      references T_InvoiceType (invoiceTypeId);
 
 alter table T_Buy add constraint FK_Reference_38 foreign key (bankId)
       references T_Bank (bankId) on delete restrict on update restrict;
@@ -539,7 +698,10 @@ alter table T_BuyDetail add constraint FK_Reference_40 foreign key (colorId)
 alter table T_BuyDetail add constraint FK_T_BUYDET_REFERENCE_T_BUY foreign key (buyId)
       references T_Buy (buyId);
 
-alter table T_Deliver add constraint FK_Reference_67 foreign key (customerId)
+alter table T_Customer add constraint FK_Reference_81 foreign key (customerTypeID)
+      references T_CustomerType (customerTypeID) on delete restrict on update restrict;
+
+alter table T_Deliver add constraint FK_Reference_101 foreign key (customerId)
       references T_Customer (customerId) on delete restrict on update restrict;
 
 alter table T_Deliver add constraint FK_Reference_68 foreign key (expressId)
@@ -569,6 +731,9 @@ alter table T_DeliverDetail add constraint FK_Reference_75 foreign key (colorId)
 alter table T_DeliverDetail add constraint FK_Reference_76 foreign key (saleDetailId)
       references T_SaleDetail (saleDetailId) on delete restrict on update restrict;
 
+alter table T_DeliverReject add constraint FK_Reference_102 foreign key (customerId)
+      references T_Customer (customerId) on delete restrict on update restrict;
+
 alter table T_DeliverReject add constraint FK_Reference_77 foreign key (bankId)
       references T_Bank (bankId) on delete restrict on update restrict;
 
@@ -581,9 +746,6 @@ alter table T_DeliverReject add constraint FK_Reference_79 foreign key (warehous
 alter table T_DeliverReject add constraint FK_Reference_80 foreign key (invoiceTypeId)
       references T_InvoiceType (invoiceTypeId) on delete restrict on update restrict;
 
-alter table T_DeliverReject add constraint FK_Reference_81 foreign key (customerId)
-      references T_Customer (customerId) on delete restrict on update restrict;
-
 alter table T_DeliverRejectDetail add constraint FK_Reference_82 foreign key (deliverRejectId)
       references T_DeliverReject (deliverRejectId) on delete restrict on update restrict;
 
@@ -592,6 +754,18 @@ alter table T_DeliverRejectDetail add constraint FK_Reference_83 foreign key (pr
 
 alter table T_DeliverRejectDetail add constraint FK_Reference_84 foreign key (colorId)
       references T_DataDictionary (dataDictionaryId) on delete restrict on update restrict;
+
+alter table T_Expense add constraint FK_Reference_95 foreign key (bankId)
+      references T_Bank (bankId) on delete restrict on update restrict;
+
+alter table T_Expense add constraint FK_Reference_96 foreign key (employeeId)
+      references T_Employee (employeeId) on delete restrict on update restrict;
+
+alter table T_Income add constraint FK_Reference_93 foreign key (bankId)
+      references T_Bank (bankId) on delete restrict on update restrict;
+
+alter table T_Income add constraint FK_Reference_94 foreign key (employeeId)
+      references T_Employee (employeeId) on delete restrict on update restrict;
 
 alter table T_Pay add constraint FK_Reference_34 foreign key (supplierId)
       references T_Supplier (supplierId) on delete restrict on update restrict;
@@ -602,8 +776,29 @@ alter table T_Pay add constraint FK_Reference_58 foreign key (bankId)
 alter table T_Pay add constraint FK_Reference_59 foreign key (employeeId)
       references T_Employee (employeeId) on delete restrict on update restrict;
 
-alter table T_Pay add constraint FK_Reference_60 foreign key (receiveId)
+alter table T_PayDetail add constraint FK_Reference_85 foreign key (payId)
+      references T_Pay (payId) on delete restrict on update restrict;
+
+alter table T_PayDetail add constraint FK_Reference_86 foreign key (receiveId)
       references T_Receive (receiveId) on delete restrict on update restrict;
+
+alter table T_PayDetail add constraint FK_Reference_90 foreign key (prepayId)
+      references T_Prepay (prepayId) on delete restrict on update restrict;
+
+alter table T_PayDetail add constraint FK_Reference_91 foreign key (buyId)
+      references T_Buy (buyId) on delete restrict on update restrict;
+
+alter table T_PayDetail add constraint FK_Reference_92 foreign key (rejectId)
+      references T_Reject (rejectId) on delete restrict on update restrict;
+
+alter table T_Prepay add constraint FK_Reference_87 foreign key (bankId)
+      references T_Bank (bankId) on delete restrict on update restrict;
+
+alter table T_Prepay add constraint FK_Reference_88 foreign key (supplierId)
+      references T_Supplier (supplierId) on delete restrict on update restrict;
+
+alter table T_Prepay add constraint FK_Reference_89 foreign key (employeeId)
+      references T_Employee (employeeId) on delete restrict on update restrict;
 
 alter table T_Product add constraint FK_T_PRODUC_REFERENCE_T_Size foreign key (sizeId)
       references T_DataDictionary (dataDictionaryId);
@@ -671,14 +866,14 @@ alter table T_RoleRight add constraint FK_T_ROLERI_REFERENCE_T_RIGHT foreign key
 alter table T_RoleRight add constraint FK_T_ROLERI_REFERENCE_T_ROLE foreign key (roleId)
       references T_Role (roleId);
 
-alter table T_Sale add constraint FK_Reference_61 foreign key (customerId)
-      references T_Customer (customerId) on delete restrict on update restrict;
-
 alter table T_Sale add constraint FK_Reference_62 foreign key (bankId)
       references T_Bank (bankId) on delete restrict on update restrict;
 
 alter table T_Sale add constraint FK_Reference_63 foreign key (employeeId)
       references T_Employee (employeeId) on delete restrict on update restrict;
+
+alter table T_Sale add constraint FK_Reference_99 foreign key (customerId)
+      references T_Customer (customerId) on delete restrict on update restrict;
 
 alter table T_SaleDetail add constraint FK_Reference_64 foreign key (productId)
       references T_Product (productId) on delete restrict on update restrict;

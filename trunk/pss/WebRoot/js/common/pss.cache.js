@@ -1,4 +1,14 @@
 var PSS={};
+//商品规格
+PSS.SizeList = null;
+PSS.getSizeList = function(){
+	if(PSS.SizeList==null){
+		var url = 'dict/queryByKindComboboxDataDict.do';
+		var content ={kind:'size'};
+		PSS.SizeList = syncCallService(url,content);
+	}
+	return PSS.SizeList;
+}
 //商品颜色
 PSS.ColorList = null;
 PSS.getColorList = function(){
@@ -8,6 +18,16 @@ PSS.getColorList = function(){
 		PSS.ColorList = syncCallService(url,content);
 	}
 	return PSS.ColorList;
+}
+//商品单位
+PSS.UnitList = null;
+PSS.getUnitList = function(){
+	if(PSS.UnitList==null){
+		var url = 'dict/queryByKindComboboxDataDict.do';
+		var content ={kind:'unit'};
+		PSS.UnitList = syncCallService(url,content);
+	}
+	return PSS.UnitList;
 }
 //银行
 PSS.BankList = null;
