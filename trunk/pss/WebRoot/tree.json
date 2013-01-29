@@ -143,10 +143,6 @@
 		"text":"销售退货",
 		"attributes":{"rightUrl":"outWarehouse/deliverReject.do"}
 	},{
-		"id":"1-1",
-		"text":"销售收款",
-		"attributes":{"rightUrl":"finance/pay.do"}
-	},{
 		"id":"3-3",
 		"text":"当前库存",
 		"attributes":{"rightUrl":"store/store.do"}

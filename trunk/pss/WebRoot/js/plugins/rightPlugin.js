@@ -41,9 +41,11 @@
 			rownumbers:true,
 			pagination:true,
 			toolbar:[	
-						{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},
-						{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},
-						{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}}
+						{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},'-',
+						{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},'-',
+						{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}},'-',
+						{id:'moveUp'+id,text:'上移',iconCls:'icon-up',handler:function(){onMove(-1)}},'-',
+						{id:'moveUp'+id,text:'下移',iconCls:'icon-down',handler:function(){onMove(1)}},'-'
 					],
 			onDblClickRow:function(rowIndex, rowData){
 				onUpdate();
@@ -51,6 +53,8 @@
 			onClickRow:function(rowIndex, rowData){
 				selectRow = rowData;
 				selectIndex = rowIndex;
+				$(rightList).datagrid('unselectAll');
+				$(rightList).datagrid('selectRow',selectIndex);
 			}
 	 });
 	//编辑框
@@ -216,5 +220,67 @@
 		});
 		selectRow = null;
 	}
+	//移动
+	var onMove = function(direction){
+		var rows  = $(rightList).datagrid('getRows');
+		if(direction==-1){
+			if(selectIndex==0){
+				$.messager.alert('提示',"已经是第一条记录了","warming");
+				return;
+			}
+		}else if(direction==1){//下移
+			var rows  = $(rightList).datagrid('getRows');
+			if(selectIndex==rows.length-1){
+				$.messager.alert('提示',"已经是最后一条记录了","warming");
+				return;
+			}
+		}
+		var updateRow = rows[selectIndex+direction];
+		var rightName = selectRow.rightName;
+		var rightUrl = selectRow.rightUrl;
+		var rightId = selectRow.rightId;
+		//后台更新排序
+		var url = "system/updateArrayRight.do";
+		var content = {rightId:rightId,updateRightId:updateRow.rightId};
+		var result = syncCallService(url,content);
+		if(result.isSuccess){
+			//更新树节点
+			var node = $(rightTree).tree('find',rows[selectIndex].rightId);
+			var updateNode = $(rightTree).tree('find',rows[selectIndex+direction].rightId);
+			$(rightTree).tree('update', {
+				target: node.target,
+				text: updateNode.text,
+				id: updateNode.id
+			});
+			
+			$(rightTree).tree('update', {
+				target: updateNode.target,
+				text: node.text,
+				id: node.id
+			});
+			
+			$(rightList).datagrid('updateRow',{
+				index: selectIndex,
+				row: updateRow
+			});
+			$(rightList).datagrid('updateRow',{
+				index: selectIndex+direction,
+				row: {
+					rightId:rightId,
+					rightName:rightName,
+					rightUrl:rightUrl
+				}
+			});
+			$(rightList).datagrid('unselectAll');
+			$(rightList).datagrid('selectRow',selectIndex+direction);
+			selectIndex = selectIndex+direction;
+			selectRow = $(rightList).datagrid('getSelected');
+		}else{
+			$.messager.alert('提示',result.message,"error");
+		}
+		
+		
+	}
+	
   }
 })(jQuery);   

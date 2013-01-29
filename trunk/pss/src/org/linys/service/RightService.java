@@ -82,5 +82,15 @@ public interface RightService extends BaseService<Right, String> {
 	 * @return
 	 */
 	ServiceResult save(Right model);
+	/**
+	 * @Description: 更新排序
+	 * @Create: 2013-1-29 上午9:44:45
+	 * @author lys
+	 * @update logs
+	 * @param rightId
+	 * @param updateRightId
+	 * @return
+	 */
+	ServiceResult updateArray(String rightId, String updateRightId);
 
 }
