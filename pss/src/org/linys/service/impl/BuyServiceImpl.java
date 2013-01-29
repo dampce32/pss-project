@@ -3,6 +3,7 @@ package org.linys.service.impl;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -152,7 +153,8 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String> implements BuyS
 				
 				Product product = new Product();
 				product.setProductId(productId);
-				if(StringUtils.isNotEmpty(colorId)){
+				
+				if(StringUtils.isNotEmpty(colorId)){//颜色没填保护
 					DataDictionary color = new DataDictionary();
 					color.setDataDictionaryId(colorId);
 					buyDetail.setColor(color);
@@ -160,8 +162,18 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String> implements BuyS
 				
 				buyDetail.setBuy(model);
 				buyDetail.setProduct(product);
-				buyDetail.setQty(new Double(qty));
-				buyDetail.setPrice(new Double(price));
+				if(StringUtils.isNotEmpty(qty)){//数量没输入保护
+					buyDetail.setQty(new Double(qty));
+				}else{
+					buyDetail.setQty(0.0);
+				}
+				
+				if(StringUtils.isNotEmpty(price)){//单价没输入保护
+					buyDetail.setPrice(new Double(price));
+				}else{
+					buyDetail.setQty(0.0);
+				}
+				
 				buyDetail.setNote1(note1);
 				buyDetail.setNote2(note2);
 				buyDetail.setNote3(note3);
@@ -214,13 +226,22 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String> implements BuyS
 						BuyDetail buyDetail = new BuyDetail();
 						buyDetail.setBuy(model);
 						buyDetail.setProduct(product);
-						if(StringUtils.isNotEmpty(colorId)){
+						if(StringUtils.isNotEmpty(colorId)){//颜色没填保护
 							DataDictionary color = new DataDictionary();
 							color.setDataDictionaryId(colorId);
 							buyDetail.setColor(color);
 						}
-						buyDetail.setQty(new Double(qty));
-						buyDetail.setPrice(new Double(price));
+						if(StringUtils.isNotEmpty(qty)){//数量没输入保护
+							buyDetail.setQty(new Double(qty));
+						}else{
+							buyDetail.setQty(0.0);
+						}
+						
+						if(StringUtils.isNotEmpty(price)){//单价没输入保护
+							buyDetail.setPrice(new Double(price));
+						}else{
+							buyDetail.setQty(0.0);
+						}
 						buyDetail.setNote1(note1);
 						buyDetail.setNote2(note2);
 						buyDetail.setNote3(note3);
@@ -229,12 +250,24 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String> implements BuyS
 				}else{
 					BuyDetail oldModel = buyDetailDAO.load(buyDetailId);
 					
-					DataDictionary color = new DataDictionary();
-					color.setDataDictionaryId(colorId);
+					if(StringUtils.isNotEmpty(colorId)){//颜色没填保护
+						DataDictionary color = new DataDictionary();
+						color.setDataDictionaryId(colorId);
+						oldModel.setColor(color);
+					}else{
+						oldModel.setColor(null);
+					}
+					if(StringUtils.isNotEmpty(qty)){//数量没输入保护
+						oldModel.setQty(new Double(qty));
+					}else{
+						oldModel.setQty(0.0);
+					}
 					
-					oldModel.setColor(color);
-					oldModel.setQty(new Double(qty));
-					oldModel.setPrice(new Double(price));
+					if(StringUtils.isNotEmpty(price)){//单价没输入保护
+						oldModel.setPrice(new Double(price));
+					}else{
+						oldModel.setQty(0.0);
+					}
 					oldModel.setNote1(note1);
 					oldModel.setNote2(note2);
 					oldModel.setNote3(note3);
@@ -329,6 +362,23 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String> implements BuyS
 				if(model.getStatus()==1){//如果是由未审改为已审
 					oldBank.setAmount(oldBank.getAmount()-oldBuy.getPayAmount());
 				}else if(model.getStatus()==0){//如果是由已审改为未审
+					//需要判断该采购单是否已经进入了 入库单 或 付款单 
+					Map<String,Object> countBuyMap = buyDAO.countBuy(model.getBuyId()).get(0);
+					String countBuyMsg = null;
+					if(!"0".equals(countBuyMap.get("receiveCount"))){
+						countBuyMsg = "该采购单已加入采购入库单";
+					} 
+					if(!"0".equals(countBuyMap.get("payCount"))){
+						if(countBuyMsg==null){
+							countBuyMsg = "该采购单已加入采购付款单";
+						}else{
+							countBuyMsg+="和采购付款单";
+						}
+					}
+					if(countBuyMsg!=null){
+						continue;
+					}
+					
 					oldBank.setAmount(oldBank.getAmount()+oldBuy.getPayAmount());
 				}
 				bankDAO.update(oldBank);
@@ -385,6 +435,23 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String> implements BuyS
 			if(model.getStatus()==1){//如果是由未审改为已审
 				oldBank.setAmount(oldBank.getAmount()-oldBuy.getPayAmount());
 			}else if(model.getStatus()==0){//如果是由已审改为未审
+				//需要判断该采购单是否已经进入了 入库单 或 付款单 
+				Map<String,Object> countBuyMap = buyDAO.countBuy(model.getBuyId()).get(0);
+				String countBuyMsg = null;
+				if(!"0".equals(countBuyMap.get("receiveCount"))){
+					countBuyMsg = "该采购单已加入采购入库单";
+				} 
+				if(!"0".equals(countBuyMap.get("payCount"))){
+					if(countBuyMsg==null){
+						countBuyMsg = "该采购单已加入采购付款单";
+					}else{
+						countBuyMsg+="和采购付款单";
+					}
+				}
+				if(countBuyMsg!=null){
+					result.setMessage(countBuyMsg+"已不能修改采购单状态");
+					return result;
+				}
 				oldBank.setAmount(oldBank.getAmount()+oldBuy.getPayAmount());
 			}
 			bankDAO.update(oldBank);

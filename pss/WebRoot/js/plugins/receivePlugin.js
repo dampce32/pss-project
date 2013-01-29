@@ -586,7 +586,7 @@
 			$.messager.alert("提示","请选择需要"+msg+"数据行","warning");
 			return;
 		}
-		$.messager.confirm("提示","确定要"+msg+"选中的记录?"+msg+"后系统将进行库存计算和财务计算!!",function(t){ 
+		$.messager.confirm("提示","确定要"+msg+"记录?"+msg+"后系统将进行库存计算和财务计算!!",function(t){ 
 			if(t){
 				var url = 'inWarehouse/updateStatusReceive.do';
 				var content ={receiveId:receiveId,status:status};
@@ -626,7 +626,7 @@
 		for ( var i = 0; i < rows.length; i++) {
 			idArray.push(rows[i].receiveId);
 		}
-		$.messager.confirm("提示","确定要"+msg+"选中的记录?"+msg+"后系统将进行库存和财务计算!!",function(t){ 
+		$.messager.confirm("提示","确定要"+msg+"记录?"+msg+"后系统将进行库存和财务计算!!",function(t){ 
 			if(t){
 				var url = 'inWarehouse/mulUpdateStatusReceive.do';
 				var content ={ids:idArray.join(LYS.join),status:status};

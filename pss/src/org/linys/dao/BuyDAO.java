@@ -2,6 +2,7 @@ package org.linys.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.linys.bean.Pager;
 import org.linys.model.Buy;
@@ -57,5 +58,14 @@ public interface BuyDAO extends BaseDAO<Buy,String>{
 	 * @return
 	 */
 	Buy init(String buyId);
+	/**
+	 * @Description: 统计其他模块用到的采购单次数
+	 * @Create: 2013-1-29 下午5:07:57
+	 * @author lys
+	 * @update logs
+	 * @param buyId
+	 * @return
+	 */
+	List<Map<String, Object>> countBuy(String buyId);
 
 }

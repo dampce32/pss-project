@@ -2,6 +2,7 @@ package org.linys.dao.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
@@ -126,6 +127,28 @@ public class BuyDAOImpl extends BaseDAOImpl<Buy, String> implements BuyDAO {
 		criteria.createAlias("supplier", "supplier",CriteriaSpecification.LEFT_JOIN);
 		
 		return (Buy) criteria.uniqueResult();
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.BuyDAO#countBuy(java.lang.String)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Map<String, Object>> countBuy(String buyId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select * ");
+		sb.append("from(select count(1) receiveCount ");
+		sb.append("	from t_receivedetail a ");
+		sb.append("	left join t_buydetail b on a.buyDetailId = b.buyDetailId ");
+		sb.append("	where buyId = :buyId)a ");
+		sb.append("left join(select count(1) payCount ");
+		sb.append("	from t_paydetail a ");
+		sb.append("	where buyId = :buyId)b on 1 =1  ");
+
+		Query query = getCurrentSession().createSQLQuery(sb.toString());
+		query.setString("buyId", buyId);
+		
+		return query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
 	}
 
 }

@@ -435,7 +435,7 @@ CREATE TABLE `t_pay` (
 DROP TABLE IF EXISTS `t_paydetail`;
 CREATE TABLE `t_paydetail` (
   `payDetailId` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
-  `payId` varchar(3) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `payId` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
   `receiveId` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
   `prepayId` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
   `buyId` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
