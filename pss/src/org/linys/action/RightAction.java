@@ -137,4 +137,23 @@ public class RightAction extends BaseAction implements ModelDriven<Right> {
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	}
+	/**
+	 * @Description: 更新排序
+	 * @Create: 2013-1-29 上午9:41:52
+	 * @author lys
+	 * @update logs
+	 */
+	public void updateArray(){
+		String rightId = getParameter("rightId");
+		String updateRightId = getParameter("updateRightId");
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = rightService.updateArray(rightId,updateRightId);
+		} catch (Exception e) {
+			result.setMessage("更新排序失败");
+			logger.error("更新排序失败", e);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
 }

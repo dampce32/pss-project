@@ -76,7 +76,8 @@
 				{text:'删除',iconCls:'icon-remove',handler:function(){onMulDelete()}},'-',
 				{text:'已审',iconCls:'icon-info',handler:function(){onMulUpdateStatus(1)}},'-',
 				{text:'反审',iconCls:'icon-warn',handler:function(){onMulUpdateStatus(0)}},'-',
-				{text:'清款',iconCls:'icon-clear',handler:function(){onMulUpateIsPay()}}
+				{text:'清款',iconCls:'icon-clear',handler:function(){onMulUpdateIsPay()}}
+				
 		  ],
 		  onDblClickRow:function(rowIndex, rowData){
 				onUpdate();

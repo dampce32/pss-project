@@ -250,5 +250,26 @@ public class RightServiceImpl extends BaseServiceImpl<Right, String> implements 
 		result.setIsSuccess(true);
 		return result;
 	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.RightService#updateArray(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public ServiceResult updateArray(String rightId, String updateRightId) {
+		ServiceResult result = new ServiceResult(false);
+		if(StringUtils.isEmpty(rightId)||StringUtils.isEmpty(updateRightId)){
+			result.setMessage("请选择要改变权限排序的权限");
+			return result;
+		}
+		Right oldModel = rightDAO.load(rightId);
+		Right updateRight = rightDAO.load(updateRightId);
+		Integer oldArray = oldModel.getArray();
+		Integer upateArray = updateRight.getArray();
+		oldModel.setArray(upateArray);
+		updateRight.setArray(oldArray);
+		
+		result.setIsSuccess(true);
+		return result;
+	}
 	
 }

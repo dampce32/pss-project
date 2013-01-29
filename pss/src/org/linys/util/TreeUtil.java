@@ -113,7 +113,7 @@ public class TreeUtil {
 		treeNode.setId(right.getRightId());
 		treeNode.setText(right.getRightName());
 		treeNode.setChecked(right.getState());
-		if(!right.getIsLeaf()){
+		if(!right.getIsLeaf()&&!"系统权限".equals(right.getRightName())){
 			treeNode.setState(StateType.closed);
 		}
 		treeNode.getAttributes().put("rightUrl", right.getRightUrl());

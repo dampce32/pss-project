@@ -271,7 +271,7 @@
 			data:PSS.getEmployeeList()
 		})
 		//发票类型
-		$('#invoiceTypeId',editDialog).combobox({
+		$('#invoiceType',editDialog).combobox({
 			valueField:'invoiceTypeId',
 			textField:'invoiceTypeName',
 			width:250,
