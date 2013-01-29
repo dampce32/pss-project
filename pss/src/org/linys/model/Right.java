@@ -1,6 +1,8 @@
 package org.linys.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -66,6 +68,10 @@ public class Right extends BaseModel{
 	 * 角色权限
 	 */
 	private Set<RoleRight> roleRights = new HashSet<RoleRight>(0);
+	/**
+	 * 子权限List
+	 */
+	private List<Right> childrenRightList = new ArrayList<Right>();
 
 	// Constructors
 
@@ -158,6 +164,14 @@ public class Right extends BaseModel{
 
 	public void setRoleRights(Set<RoleRight> roleRights) {
 		this.roleRights = roleRights;
+	}
+	@Transient
+	public List<Right> getChildrenRightList() {
+		return childrenRightList;
+	}
+
+	public void setChildrenRightList(List<Right> childrenRightList) {
+		this.childrenRightList = childrenRightList;
 	}
 
 
