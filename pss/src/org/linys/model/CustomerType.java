@@ -26,7 +26,7 @@ public class CustomerType extends BaseModel{
 	private static final long serialVersionUID = -3712506982901176883L;
 	
 	@Id
-	@Column(name = "dataDictionaryId", unique = true, nullable = false, length = 32)
+	@Column(name = "customerTypeID", unique = true, nullable = false, length = 32)
 	@GeneratedValue(generator="uuid")
 	@GenericGenerator(name="uuid",strategy="uuid")
 	/**

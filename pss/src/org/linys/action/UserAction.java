@@ -1,11 +1,7 @@
 package org.linys.action;
 
-import java.io.File;
-import java.io.IOException;
-
 import javax.annotation.Resource;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.linys.model.User;
