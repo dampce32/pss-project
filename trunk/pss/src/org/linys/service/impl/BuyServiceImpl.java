@@ -370,10 +370,10 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String> implements BuyS
 					//需要判断该采购单是否已经进入了 入库单 或 付款单 
 					Map<String,Object> countBuyMap = buyDAO.countBuy(model.getBuyId()).get(0);
 					String countBuyMsg = null;
-					if(!"0".equals(countBuyMap.get("receiveCount"))){
+					if(!"0".equals(countBuyMap.get("receiveCount").toString())){
 						countBuyMsg = "该采购单已加入采购入库单";
 					} 
-					if(!"0".equals(countBuyMap.get("payCount"))){
+					if(!"0".equals(countBuyMap.get("payCount").toString())){
 						if(countBuyMsg==null){
 							countBuyMsg = "该采购单已加入采购付款单";
 						}else{
@@ -443,7 +443,6 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String> implements BuyS
 				//需要判断该采购单是否已经进入了 入库单 或 付款单 
 				Map<String,Object> countBuyMap = buyDAO.countBuy(model.getBuyId()).get(0);
 				String countBuyMsg = null;
-				System.out.println(countBuyMap.get("receiveCount"));
 				if(!"0".equals(countBuyMap.get("receiveCount").toString())){
 					countBuyMsg = "该采购单已加入采购入库单";
 				} 
