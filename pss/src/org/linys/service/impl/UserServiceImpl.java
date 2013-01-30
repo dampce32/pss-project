@@ -51,7 +51,7 @@ public class UserServiceImpl extends BaseServiceImpl<User,String> implements Use
 			result.setMessage("该登录名称已存在，请换个登录名称");
 			return result;
 		}
-		String userPwd = MD5Util.getMD5(model.getUserCode());
+		String userPwd = MD5Util.getMD5("123456");
 		model.setUserPwd(userPwd);
 		userDAO.save(model);
 		result.setIsSuccess(true);
