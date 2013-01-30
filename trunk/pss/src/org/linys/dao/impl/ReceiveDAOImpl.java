@@ -201,4 +201,21 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 		query.setString("receiveId", receiveId);
 		return new Double(query.uniqueResult().toString());
 	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.ReceiveDAO#countReceive(java.lang.String)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Map<String,Object>> countReceive(String receiveId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select count(a.receiveId) countPay ");
+		sb.append("from t_paydetail a  ");
+		sb.append("where a.receiveId = :receiveId ");
+
+		Query query = getCurrentSession().createSQLQuery(sb.toString());
+		query.setString("receiveId", receiveId);
+		
+		return query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
+	}
 }

@@ -2,7 +2,7 @@
 (function($) {  
   // 插件的定义  
   $.fn.receiveOtherInit = function() {
-	  
+	  $(this).mask({maskMsg:'正在加载界面'});
 	  var $this = $(this);
 	  var id = $(this).attr('id');
 	  var width = $(document.body).width();
@@ -336,6 +336,7 @@
 		$('#note2s',editForm).val(note2Array.join(LYS.join));
 		$('#note3s',editForm).val(note3Array.join(LYS.join));
 		$('#kind',editForm).val('other');
+		$(editDialog).mask({maskMsg:'正在保存'});
 		return true;
 	}
 	//保存
@@ -347,6 +348,7 @@
 				return setValue();
 			},
 			success: function(data){
+				$(editDialog).mask('hide');
 				var result = eval('('+data+')');
 				if(result.isSuccess){
 					var fn = function(){
@@ -623,6 +625,12 @@
 	        calculate(rowIndex);  
 	    });  
 	    function calculate(rowIndex){  
+	    	if(qtyEditor.target.val()==''){
+	    		$(qtyEditor.target).numberbox('setValue',0.00);
+	    	}
+	    	if(priceEditor.target.val()==''){
+	    		$(priceEditor.target).numberbox('setValue',0.00);
+	    	}
 	        var cost = qtyEditor.target.val() * priceEditor.target.val();  
 	        $(amountEditor.target).numberbox('setValue',cost);
 	    }  
@@ -821,6 +829,7 @@
 		var sizeName = $('#size',addForm).combobox('getText');
 		$('#sizeId',addForm).val(sizeId);
 		$('#sizeName',addForm).val(sizeName);
+		$(editDialog).mask({maskMsg:'正在保存'});
 		return true;
 	}
 	 //保存商品
@@ -865,5 +874,6 @@
 	    	{text:'退出',iconCls:'icon-cancel',handler:function(){onAddExit();}
 		}]
 	});
+	 $(this).mask('hide');
   }
 })(jQuery);   

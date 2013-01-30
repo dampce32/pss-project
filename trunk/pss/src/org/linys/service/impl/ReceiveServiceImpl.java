@@ -92,7 +92,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			String note3s) {
 		ServiceResult result = new ServiceResult(false);
 		if(model==null){
-			result.setMessage("请填写收货单信息");
+			result.setMessage("请填写入库单信息");
 			return result;
 		}
 		
@@ -127,16 +127,16 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			result.setMessage("请选择商品");
 			return result;
 		}
-		String[] productIdArray = StringUtil.split(productIds, GobelConstants.SPLIT_SEPARATOR);
-		String[] delReceiveDetailIdArray = StringUtil.split(delReceiveDetailIds, GobelConstants.SPLIT_SEPARATOR);
-		String[] receiveDetailIdArray = StringUtil.split(receiveDetailIds, GobelConstants.SPLIT_SEPARATOR);
-		String[] buyDetailIdArray = StringUtil.split(buyDetailIds, GobelConstants.SPLIT_SEPARATOR);
-		String[] colorIdArray = StringUtil.split(colorIds, GobelConstants.SPLIT_SEPARATOR);
-		String[] qtyArray = StringUtil.split(qtys, GobelConstants.SPLIT_SEPARATOR);
-		String[] priceArray = StringUtil.split(prices, GobelConstants.SPLIT_SEPARATOR);
-		String[] note1Array = StringUtil.split(note1s, GobelConstants.SPLIT_SEPARATOR);
-		String[] note2Array = StringUtil.split(note2s, GobelConstants.SPLIT_SEPARATOR);
-		String[] note3Array = StringUtil.split(note3s, GobelConstants.SPLIT_SEPARATOR);
+		String[] productIdArray = StringUtil.split(productIds);
+		String[] delReceiveDetailIdArray = StringUtil.split(delReceiveDetailIds);
+		String[] receiveDetailIdArray = StringUtil.split(receiveDetailIds);
+		String[] buyDetailIdArray = StringUtil.split(buyDetailIds);
+		String[] colorIdArray = StringUtil.split(colorIds);
+		String[] qtyArray = StringUtil.split(qtys);
+		String[] priceArray = StringUtil.split(prices);
+		String[] note1Array = StringUtil.split(note1s);
+		String[] note2Array = StringUtil.split(note2s);
+		String[] note3Array = StringUtil.split(note3s);
 		if(productIdArray==null||productIdArray.length==0){
 			result.setMessage("请选择商品");
 			return result;
@@ -181,8 +181,16 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 					color.setDataDictionaryId(colorId);
 					receiveDetail.setColor(color); 
 				}
-				receiveDetail.setQty(new Double(qty));
-				receiveDetail.setPrice(new Double(price));
+				if(StringUtils.isNotEmpty(qty)){//数量没输入保护
+					receiveDetail.setQty(new Double(qty));
+				}else{
+					receiveDetail.setQty(0.0);
+				}
+				if(StringUtils.isNotEmpty(price)){//单价没输入保护
+					receiveDetail.setPrice(new Double(price));
+				}else{
+					receiveDetail.setPrice(0.0);
+				}
 				receiveDetail.setNote1(note1);
 				receiveDetail.setNote2(note2);
 				receiveDetail.setNote3(note3);
@@ -194,14 +202,14 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 				receiveDetailDAO.save(receiveDetail);
 			}
 		}else{
-			//更新收货单
+			//更新入库单
 			Receive oldReceive = receiveDAO.load(model.getReceiveId());
 			if(oldReceive==null){
-				result.setMessage("要更新的收货单已不存在");
+				result.setMessage("要更新的入库单已不存在");
 				return result;
 			}
 			if(oldReceive.getStatus()==1){
-				result.setMessage("要更新的收货单已审核已不能修改");
+				result.setMessage("要更新的入库单已审核已不能修改");
 				return result;
 			}
 			oldReceive.setDeliverCode(model.getDeliverCode());
@@ -218,7 +226,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			oldReceive.setNote(model.getNote());
 			receiveDAO.update(oldReceive);
 			
-			//删除已删的收货单明细
+			//删除已删的入库单明细
 			if(!"".equals(delReceiveDetailIds)){
 				for (String delReceiveDetailId : delReceiveDetailIdArray) {
 					ReceiveDetail oldModel = receiveDetailDAO.load(delReceiveDetailId);
@@ -227,7 +235,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 					}
 				}
 			}
-			//根据收货单明细Id更新或新增
+			//根据入库单明细Id更新或新增
 			for (int i = 0 ;i<receiveDetailIdArray.length;i++) {
 				String receiveDetailId = receiveDetailIdArray[i];
 				String buyDetailId = buyDetailIdArray[i];
@@ -242,7 +250,6 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 						Product product = new Product();
 						product.setProductId(productId);
 						
-						
 						ReceiveDetail receiveDetail = new ReceiveDetail();
 						receiveDetail.setReceive(model);
 						receiveDetail.setProduct(product);
@@ -251,8 +258,16 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 							color.setDataDictionaryId(colorId);
 							receiveDetail.setColor(color);
 						}
-						receiveDetail.setQty(new Double(qty));
-						receiveDetail.setPrice(new Double(price));
+						if(StringUtils.isNotEmpty(qty)){//数量没输入保护
+							receiveDetail.setQty(new Double(qty));
+						}else{
+							receiveDetail.setQty(0.0);
+						}
+						if(StringUtils.isNotEmpty(price)){//单价没输入保护
+							receiveDetail.setPrice(new Double(price));
+						}else{
+							receiveDetail.setPrice(0.0);
+						}
 						receiveDetail.setNote1(note1);
 						receiveDetail.setNote2(note2);
 						receiveDetail.setNote3(note3);
@@ -265,12 +280,21 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 				}else{
 					ReceiveDetail oldModel = receiveDetailDAO.load(receiveDetailId);
 					
-					DataDictionary color = new DataDictionary();
-					color.setDataDictionaryId(colorId);
-					
-					oldModel.setColor(color);
-					oldModel.setQty(new Double(qty));
-					oldModel.setPrice(new Double(price));
+					if(StringUtils.isNotEmpty(colorId)){
+						DataDictionary color = new DataDictionary();
+						color.setDataDictionaryId(colorId);
+						oldModel.setColor(color);
+					}
+					if(StringUtils.isNotEmpty(qty)){//数量没输入保护
+						oldModel.setQty(new Double(qty));
+					}else{
+						oldModel.setQty(0.0);
+					}
+					if(StringUtils.isNotEmpty(price)){//单价没输入保护
+						oldModel.setPrice(new Double(price));
+					}else{
+						oldModel.setPrice(0.0);
+					}
 					oldModel.setNote1(note1);
 					oldModel.setNote2(note2);
 					oldModel.setNote3(note3);
@@ -314,13 +338,17 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	public ServiceResult delete(Receive model) {
 		ServiceResult result = new ServiceResult(false);
 		if(model==null||StringUtils.isEmpty(model.getReceiveId())){
-			result.setMessage("请选择要删除的收货单");
+			result.setMessage("请选择要删除的入库单");
 			return result;
 		}
 		Receive oldReceive = receiveDAO.load(model.getReceiveId());
 		
 		if(oldReceive==null){
-			result.setMessage("要删除的收货单已不存在");
+			result.setMessage("要删除的入库单已不存在");
+			return result;
+		}
+		if(oldReceive.getStatus().intValue()==1){
+			result.setMessage("要删除的入库单已审核通过已不能删除");
 			return result;
 		}
 		receiveDAO.delete(oldReceive);
@@ -335,12 +363,12 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	public ServiceResult mulDelete(String ids) {
 		ServiceResult result = new ServiceResult(false);
 		if(StringUtils.isEmpty(ids)){
-			result.setMessage("请选择要删除的收货单");
+			result.setMessage("请选择要删除的入库单");
 			return result;
 		}
 		String[] idArray =StringUtil.split(ids,GobelConstants.SPLIT_SEPARATOR);
 		if(idArray.length==0){
-			result.setMessage("请选择要删除的收货单");
+			result.setMessage("请选择要删除的入库单");
 			return result;
 		}
 		boolean haveDel = false;
@@ -352,7 +380,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			}
 		}
 		if(!haveDel){
-			result.setMessage("没有可删除的收货单");
+			result.setMessage("没有可删除的入库单");
 			return result;
 		}
 		result.setIsSuccess(true);
@@ -366,22 +394,22 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	public ServiceResult updateStatus(String kind,Receive model) {
 		ServiceResult result = new ServiceResult(false);
 		if(model==null||StringUtils.isEmpty(model.getReceiveId())){
-			result.setMessage("请选择要修改审核状态的收货单");
+			result.setMessage("请选择要修改审核状态的入库单");
 			return result;
 		}
 		Receive oldReceive = receiveDAO.load(model.getReceiveId());
 		
 		if(oldReceive==null){
-			result.setMessage("要修改审核状态的收货单已不存在");
+			result.setMessage("要修改审核状态的入库单已不存在");
 			return result;
 		}
 		if(oldReceive.getStatus().intValue()==model.getStatus().intValue()){
-			result.setMessage("要修改审核状态的收货单已是要修改的状态，请刷新界面");
+			result.setMessage("要修改审核状态的入库单已是要修改的状态，请刷新界面");
 			return result;
 		}
 		
 		if(model.getStatus()==1){//如果是由未审改为已审
-			//将该收货单下的商品入库
+			//将该入库单下的商品入库
 			List<ReceiveDetail> receiveDetailList = receiveDetailDAO.queryByReceiveId(model.getReceiveId());
 			//将对应商品入库
 			for (ReceiveDetail receiveDetail : receiveDetailList) {
@@ -420,7 +448,17 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 				}
 			}
 		}else if(model.getStatus()==0){//如果是由已审改为未审
-			//将该收货单下的商品入库
+			//需要判断入库单是否已经进入付款单
+			Map<String,Object> countReceiveMap = receiveDAO.countReceive(model.getReceiveId()).get(0);
+			String countReceiveMsg = null;
+			if(!"0".equals(countReceiveMap.get("countPay").toString())){
+				countReceiveMsg = "该入库单已加入采购付款单";
+			} 
+			if(countReceiveMsg!=null){
+				result.setMessage(countReceiveMsg+",已不能修改入库单状态");
+				return result;
+			}
+			//将该入库单下的商品入库
 			List<ReceiveDetail> receiveDetailList = receiveDetailDAO.queryByReceiveId(model.getReceiveId());
 			//更新对应商品的库存数量
 			for (ReceiveDetail receiveDetail : receiveDetailList) {
@@ -467,12 +505,12 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	public ServiceResult mulUpdateStatus(String kind,String ids, Receive model) {
 		ServiceResult result = new ServiceResult(false);
 		if(StringUtils.isEmpty(ids)){
-			result.setMessage("请选择要修改审核状态的收货单");
+			result.setMessage("请选择要修改审核状态的入库单");
 			return result;
 		}
 		String[] idArray =StringUtil.split(ids,GobelConstants.SPLIT_SEPARATOR);
 		if(idArray.length==0){
-			result.setMessage("请选择要修改审核状态的收货单");
+			result.setMessage("请选择要修改审核状态的入库单");
 			return result;
 		}
 		if(model==null||model.getStatus()==null){
@@ -484,7 +522,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			Receive oldReceive = receiveDAO.load(id);
 			if(oldReceive!=null&&oldReceive.getStatus().intValue()!=model.getStatus().intValue()){
 				if(model.getStatus()==1){//如果是由未审改为已审
-					//将该收货单下的商品入库
+					//将该入库单下的商品入库
 					List<ReceiveDetail> receiveDetailList = receiveDetailDAO.queryByReceiveId(id);
 					//将对应商品入库
 					for (ReceiveDetail receiveDetail : receiveDetailList) {
@@ -523,7 +561,16 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 						}
 					}
 				}else if(model.getStatus()==0){//如果是由已审改为未审
-					//将该收货单下的商品入库
+					//需要判断入库单是否已经进入付款单
+					Map<String,Object> countReceiveMap = receiveDAO.countReceive(id).get(0);
+					String countReceiveMsg = null;
+					if(!"0".equals(countReceiveMap.get("countPay").toString())){
+						countReceiveMsg = "该入库单已加入采购付款单";
+					} 
+					if(countReceiveMsg!=null){
+						continue;
+					}
+					//将该入库单下的商品入库
 					List<ReceiveDetail> receiveDetailList = receiveDetailDAO.queryByReceiveId(id);
 					//更新对应商品的库存数量
 					for (ReceiveDetail receiveDetail : receiveDetailList) {
@@ -562,7 +609,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 			}
 		}
 		if(!haveUpdateStatus){
-			result.setMessage("没有可修改审核状态的收货单");
+			result.setMessage("没有可修改审核状态的入库单");
 			return result;
 		}
 		result.setIsSuccess(true);
@@ -576,16 +623,25 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	public ServiceResult updateIsPay(Receive model) {
 		ServiceResult result = new ServiceResult(false);
 		if(model==null||StringUtils.isEmpty(model.getReceiveId())){
-			result.setMessage("请选择要清款的收货单");
+			result.setMessage("请选择要清款的入库单");
 			return result;
 		}
 		Receive oldReceive = receiveDAO.load(model.getReceiveId());
 		
 		if(oldReceive==null){
-			result.setMessage("要清款的收货单已不存在");
+			result.setMessage("要清款的入库单已不存在");
 			return result;
 		}
-		
+		//如果该入库单已进入付款单则不能进行清款了
+		Map<String,Object> countReceiveMap = receiveDAO.countReceive(model.getReceiveId()).get(0);
+		String countReceiveMsg = null;
+		if(!"0".equals(countReceiveMap.get("countPay").toString())){
+			countReceiveMsg = "该入库单已加入采购付款单";
+		} 
+		if(countReceiveMsg!=null){
+			result.setMessage(countReceiveMsg+",已不能清款");
+			return result;
+		}
 		oldReceive.setIsPay(1);
 		receiveDAO.update(oldReceive);
 		result.setIsSuccess(true);
@@ -599,12 +655,12 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	public ServiceResult mulUpdateIsPay(String ids, Receive model) {
 		ServiceResult result = new ServiceResult(false);
 		if(StringUtils.isEmpty(ids)){
-			result.setMessage("请选择要清款的收货单");
+			result.setMessage("请选择要清款的入库单");
 			return result;
 		}
 		String[] idArray =StringUtil.split(ids,GobelConstants.SPLIT_SEPARATOR);
 		if(idArray.length==0){
-			result.setMessage("请选择要清款的收货单");
+			result.setMessage("请选择要清款的入库单");
 			return result;
 		}
 		if(model==null||model.getIsPay()==null){
@@ -615,13 +671,22 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		for (String id : idArray) {
 			Receive oldReceive = receiveDAO.load(id);
 			if(oldReceive!=null&&oldReceive.getIsPay().intValue()!=model.getIsPay().intValue()){
+				//如果该入库单已进入付款单则不能进行清款了
+				Map<String,Object> countReceiveMap = receiveDAO.countReceive(id).get(0);
+				String countReceiveMsg = null;
+				if(!"0".equals(countReceiveMap.get("countPay").toString())){
+					countReceiveMsg = "该入库单已加入采购付款单";
+				} 
+				if(countReceiveMsg!=null){
+					continue;
+				}
 				oldReceive.setIsPay(model.getIsPay());
 				receiveDAO.update(oldReceive);
 				haveUpdateStatus = true;
 			}
 		}
 		if(!haveUpdateStatus){
-			result.setMessage("没有可清款的收货单");
+			result.setMessage("没有可清款的入库单");
 			return result;
 		}
 		result.setIsSuccess(true);

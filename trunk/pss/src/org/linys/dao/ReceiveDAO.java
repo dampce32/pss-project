@@ -92,5 +92,14 @@ public interface ReceiveDAO extends BaseDAO<Receive,String>{
 	 * @return
 	 */
 	Double getNeedPayAmount(String receiveId);
+	/**
+	 * @Description: 判断入库单是否已经进入付款单
+	 * @Create: 2013-1-30 上午10:32:11
+	 * @author lys
+	 * @update logs
+	 * @param receiveId
+	 * @return
+	 */
+	List<Map<String,Object>> countReceive(String receiveId);
 
 }
