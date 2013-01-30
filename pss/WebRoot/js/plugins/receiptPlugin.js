@@ -534,7 +534,7 @@
 		    {field:'sourceCode',title:'单据号',width:150,align:"center"},
 			{field:'receiptKind',title:'单据类型',width:90,align:"center"},
 		    {field:'sourceDate',title:'单据日期',width:90,align:"center"},
-		    {field:'amount',title:'应付金额',width:90,align:"center"},
+		    {field:'amount',title:'应收金额',width:90,align:"center"},
 		    {field:'receiptedAmount',title:'已收金额',width:90,align:"center"},
 		    {field:'needReceiptAmount',title:'还需收金额',width:90,align:"center",editor:{type:'numberbox',options:{disabled:true,precision:2}}},
 		    {field:'discountAmount',title:'优惠金额',width:90,align:"center",editor:{type:'numberbox',options:{precision:2}}},
@@ -701,7 +701,7 @@
 		 var rows =  $(receiptDetail).datagrid('getRows');
 		 for ( var i = 0; i < rows.length; i++) {
 			var row = rows[i];
-			totalAmount += parseFloat(row.amount);
+			totalAmount += parseFloat(row.needReceiptAmount);
 		}
 		$('#amount',editForm).val(totalAmount);
 		$('#amount',editForm).change();
