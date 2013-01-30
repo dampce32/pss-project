@@ -221,6 +221,7 @@
 		$(editForm).form('clear');
 		initChoose();
 		addBtnStatus();
+		$('#amount',editForm).numberbox('setValue',0.0);
 		$(editDialog).dialog('open');
 	}
 	
@@ -507,5 +508,13 @@
 		$(viewList).datagrid('unselectAll');
 		$(viewList).datagrid('selectRow',selectIndex);
 	}
+	 //优惠金额发生改变
+	 $('#amount',editForm).numberbox({
+		 onChange:function(newValue,oldValue){
+			 if(newValue==''){
+				 $('#amount',editForm).numberbox('setValue',0.00);
+			 }
+		 }
+	});
   }
 })(jQuery);   

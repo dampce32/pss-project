@@ -1,6 +1,7 @@
 package org.linys.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -111,15 +112,18 @@ public class PrepayServiceImpl extends BaseServiceImpl<Prepay, String>
 			if(oldPrepay==null){
 				result.setMessage("要更新的预付单已不存在");
 				return result;
-			}else{
-				oldPrepay.setSupplier(model.getSupplier());
-				oldPrepay.setPrepayDate(model.getPrepayDate());
-				oldPrepay.setAmount(model.getAmount());
-				oldPrepay.setBank(model.getBank());
-				oldPrepay.setEmployee(model.getEmployee());
-				oldPrepay.setNote(model.getNote());
-				prepayDAO.update(oldPrepay);
 			}
+			if(oldPrepay.getStatus()==1){
+				result.setMessage("要更新的预付单已审核通过，已不能修改");
+				return result;
+			}
+			oldPrepay.setSupplier(model.getSupplier());
+			oldPrepay.setPrepayDate(model.getPrepayDate());
+			oldPrepay.setAmount(model.getAmount());
+			oldPrepay.setBank(model.getBank());
+			oldPrepay.setEmployee(model.getEmployee());
+			oldPrepay.setNote(model.getNote());
+			prepayDAO.update(oldPrepay);
 		}
 		//返回值
 		result.addData("prepayId", model.getPrepayId());
@@ -216,6 +220,16 @@ public class PrepayServiceImpl extends BaseServiceImpl<Prepay, String>
 			if(model.getStatus()==1){//如果是由未审改为已审
 				oldBank.setAmount(oldBank.getAmount()-oldPrepay.getAmount());
 			}else if(model.getStatus()==0){//如果是由已审改为未审
+				//需要判断该预付单是否已经进入了 付款单 
+				Map<String,Object> countPrepayMap = prepayDAO.countPrepay(model.getPrepayId()).get(0);
+				String countPrepayMsg = null;
+				if(!"0".equals(countPrepayMap.get("payCount").toString())){
+					countPrepayMsg = "该预付单已加入付款单";
+				} 
+				if(countPrepayMsg!=null){
+					result.setMessage(countPrepayMsg+"已不能修改预付单状态");
+					return result;
+				}
 				oldBank.setAmount(oldBank.getAmount()+oldPrepay.getAmount());
 			}
 			bankDAO.update(oldBank);
@@ -253,6 +267,15 @@ public class PrepayServiceImpl extends BaseServiceImpl<Prepay, String>
 				if(model.getStatus()==1){//如果是由未审改为已审
 					oldBank.setAmount(oldBank.getAmount()-oldPrepay.getAmount());
 				}else if(model.getStatus()==0){//如果是由已审改为未审
+					//需要判断该预付单是否已经进入了 付款单 
+					Map<String,Object> countPrepayMap = prepayDAO.countPrepay(model.getPrepayId()).get(0);
+					String countPrepayMsg = null;
+					if(!"0".equals(countPrepayMap.get("payCount").toString())){
+						countPrepayMsg = "该预付单已加入付款单";
+					} 
+					if(countPrepayMsg!=null){
+						continue;
+					}
 					oldBank.setAmount(oldBank.getAmount()+oldPrepay.getAmount());
 				}
 				bankDAO.update(oldBank);

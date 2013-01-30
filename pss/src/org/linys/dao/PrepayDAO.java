@@ -1,6 +1,7 @@
 package org.linys.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.linys.model.Prepay;
 /**
@@ -31,5 +32,14 @@ public interface PrepayDAO extends BaseDAO<Prepay,String>{
 	 * @return
 	 */
 	Long getTotalCount(Prepay model);
+	/**
+	 * @Description: 判断该预付单是否已经进入了 付款单 
+	 * @Create: 2013-1-30 下午2:43:25
+	 * @author lys
+	 * @update logs
+	 * @param prepayId
+	 * @return
+	 */
+	List<Map<String,Object>> countPrepay(String prepayId);
 
 }

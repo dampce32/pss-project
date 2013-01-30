@@ -1,12 +1,15 @@
 package org.linys.dao.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.linys.dao.PrepayDAO;
 import org.linys.model.Prepay;
 import org.linys.vo.GobelConstants;
@@ -61,6 +64,23 @@ public class PrepayDAOImpl extends BaseDAOImpl<Prepay, String> implements
 		}
 		criteria.setProjection(Projections.rowCount());
 		return new Long(criteria.uniqueResult().toString());
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.PrepayDAO#countPrepay(java.lang.String)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Map<String, Object>> countPrepay(String prepayId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select count(a.prepayId) payCount ");
+		sb.append("from t_paydetail a  ");
+		sb.append("where a.prepayId = :prepayId ");
+
+		Query query = getCurrentSession().createSQLQuery(sb.toString());
+		query.setString("prepayId", prepayId);
+		
+		return query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
 	}
 
 }
