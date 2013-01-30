@@ -368,7 +368,7 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String> implements BuyS
 					oldBank.setAmount(oldBank.getAmount()-oldBuy.getPayAmount());
 				}else if(model.getStatus()==0){//如果是由已审改为未审
 					//需要判断该采购单是否已经进入了 入库单 或 付款单 
-					Map<String,Object> countBuyMap = buyDAO.countBuy(model.getBuyId()).get(0);
+					Map<String,Object> countBuyMap = buyDAO.countBuy(id).get(0);
 					String countBuyMsg = null;
 					if(!"0".equals(countBuyMap.get("receiveCount").toString())){
 						countBuyMsg = "该采购单已加入采购入库单";

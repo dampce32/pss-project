@@ -2,7 +2,7 @@
 (function($) {  
   // 插件的定义  
   $.fn.receiveInit = function() {
-	  
+	  $(this).mask({maskMsg:'正在加载界面'});
 	  var $this = $(this);
 	  var id = $(this).attr('id');
 	  var width = $(document.body).width();
@@ -420,7 +420,7 @@
 		$('#note1s',editForm).val(note1Array.join(LYS.join));
 		$('#note2s',editForm).val(note2Array.join(LYS.join));
 		$('#note3s',editForm).val(note3Array.join(LYS.join));
-		
+		$(editDialog).mask({maskMsg:'正在保存'});
 		return true;
 	}
 	//保存
@@ -433,6 +433,7 @@
 			},
 			success: function(data){
 				var result = eval('('+data+')');
+				$(editDialog).mask('hide');
 				if(result.isSuccess){
 					var fn = function(){
 						var data = result.data;
@@ -443,6 +444,7 @@
 				}else{
 					$.messager.alert('提示',result.message,'error');
 				}
+				
 			}
 		 });
 	}
@@ -788,6 +790,12 @@
 	        calculate(rowIndex);  
 	    });  
 	    function calculate(rowIndex){  
+	    	if(qtyEditor.target.val()==''){
+	    		$(qtyEditor.target).numberbox('setValue',0.00);
+	    	}
+	    	if(priceEditor.target.val()==''){
+	    		$(priceEditor.target).numberbox('setValue',0.00);
+	    	}
 	        var cost = qtyEditor.target.val() * priceEditor.target.val();  
 	        $(amountEditor.target).numberbox('setValue',cost);
 	    }  
@@ -908,6 +916,10 @@
 	//优惠金额发生改变
 	 $('#discountAmount',editForm).numberbox({
 		 onChange:function(newValue,oldValue){
+			 if(newValue==''){
+				 $('#discountAmount',editForm).numberbox('setValue',0.00);
+				 newValue = 0.00;
+			 }
 			 var amount = $('#amount',editForm).numberbox('getValue');
 			 $('#payAmount',editForm).numberbox('setValue',amount-newValue);
 		 }
@@ -915,9 +927,23 @@
 	//运费发生改变
 	 $('#otherAmount',editForm).numberbox({
 		 onChange:function(newValue,oldValue){
+			 if(newValue==''){
+				 $('#otherAmount',editForm).numberbox('setValue',0.00);
+				 newValue = 0.00;
+			 }
 			var amount = $('#amount',editForm).numberbox('getValue');
 			var totalAmount=parseFloat(amount)+parseFloat(newValue-oldValue); 
 			 $('#amount',editForm).numberbox('setValue',totalAmount);
+		 }
+	});
+	 
+	 //实付金额
+	 $('#payAmount',editForm).numberbox({
+		 onChange:function(newValue,oldValue){
+			 if(newValue==''){
+				 $('#payAmount',editForm).numberbox('setValue',0.00);
+				 newValue = 0.00;
+			 }
 		 }
 	});
 	
@@ -1201,5 +1227,6 @@
 	    	{text:'退出',iconCls:'icon-cancel',handler:function(){onAddExit();}
 		}]
 	});
+	 $(this).mask('hide');
   }
 })(jQuery);   
