@@ -171,7 +171,7 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String> implements BuyS
 				if(StringUtils.isNotEmpty(price)){//单价没输入保护
 					buyDetail.setPrice(new Double(price));
 				}else{
-					buyDetail.setQty(0.0);
+					buyDetail.setPrice(0.0);
 				}
 				
 				buyDetail.setNote1(note1);
@@ -186,19 +186,24 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String> implements BuyS
 			if(oldBuy==null){
 				result.setMessage("要更新的采购单已不存在");
 				return result;
-			}else{
-				oldBuy.setSourceCode(model.getSourceCode());
-				oldBuy.setSupplier(model.getSupplier());
-				oldBuy.setBuyDate(model.getBuyDate());
-				oldBuy.setReceiveDate(model.getReceiveDate());
-				oldBuy.setPayAmount(model.getPayAmount());
-				oldBuy.setAmount(model.getAmount());
-				oldBuy.setBank(model.getBank());
-				oldBuy.setInvoiceType(model.getInvoiceType());
-				oldBuy.setEmployee(model.getEmployee());
-				oldBuy.setNote(model.getNote());
-				buyDAO.update(oldBuy);
 			}
+			
+			if(oldBuy.getStatus()==1){
+				result.setMessage("要更新的采购单已审，不能修改了");
+				return result;
+			}
+			
+			oldBuy.setSourceCode(model.getSourceCode());
+			oldBuy.setSupplier(model.getSupplier());
+			oldBuy.setBuyDate(model.getBuyDate());
+			oldBuy.setReceiveDate(model.getReceiveDate());
+			oldBuy.setPayAmount(model.getPayAmount());
+			oldBuy.setAmount(model.getAmount());
+			oldBuy.setBank(model.getBank());
+			oldBuy.setInvoiceType(model.getInvoiceType());
+			oldBuy.setEmployee(model.getEmployee());
+			oldBuy.setNote(model.getNote());
+			buyDAO.update(oldBuy);
 			
 			//删除已删的采购单明细
 			if(!"".equals(delBuyDetailIds)){
@@ -406,7 +411,7 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String> implements BuyS
 			return result;
 		}
 		Buy oldModel = buyDAO.load(model.getBuyId());
-		if(oldModel==null||oldModel.getStatus().intValue()==1){
+		if(oldModel==null){
 			result.setMessage("要删除的采购单已不存在");
 			return result;
 		}
