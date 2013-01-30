@@ -171,7 +171,7 @@
 	},{
 		"id":"1-1",
 		"text":"预收单",
-		"attributes":{"rightUrl":"finance/preReceipt.do"}
+		"attributes":{"rightUrl":"finance/prereceipt.do"}
 	},{
 		"id":"1-1",
 		"text":"销售收款",
