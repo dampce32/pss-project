@@ -2,11 +2,9 @@
 //购买注册后，请用您的注册用户名与注册号替换下面变量中值
 var gr_UserName = '锐浪报表插件本机开发测试注册';
 var gr_SerialNo = '4DFB949E066NYS7W11L8KAT53SA177391Q9LZQ094WUT9C9J3813SX8PTQC4ALPB9UAQN6TMA55Q3BN8E5726Z5A839QAD9P6E76TKNK5';
-
 //区分浏览器(IE or not)
 var agent = navigator.userAgent.toLowerCase();
 var isIE = (agent.indexOf("msie")>0)? true : false;
-
 //1、变量 gr_CodeBase 指定了报表插件的下载位置与版本号，当客户端初次访问报表
 //   时或插件版本升级后访问，将自动下载并安装 Grid++Report 报表插件。应将变量 
 //   gr_CodeBase 的值调整为与实际相符。
