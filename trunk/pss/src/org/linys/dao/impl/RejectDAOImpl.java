@@ -82,7 +82,7 @@ public class RejectDAOImpl extends BaseDAOImpl<Reject, String> implements
 	@Override
 	public List<Map<String,Object>> countReject(String rejectId) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("select count(a.rejectId) countPay ");
+		sb.append("select count(a.rejectId) payCount ");
 		sb.append("from t_paydetail a  ");
 		sb.append("where a.rejectId = :rejectId ");
 

@@ -377,7 +377,7 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 					Map<String,Object> countRejectMap = rejectDAO.countReject(id).get(0);
 					String countRejectMsg = null;
 					if(!"0".equals(countRejectMap.get("payCount").toString())){
-						countRejectMsg = "该采购单已加入付款单";
+						countRejectMsg = "该退货单已加入付款单";
 					} 
 					if(countRejectMsg!=null){
 						continue;
@@ -495,7 +495,7 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 			Map<String,Object> countRejectMap = rejectDAO.countReject(model.getRejectId()).get(0);
 			String countRejectMsg = null;
 			if(!"0".equals(countRejectMap.get("payCount").toString())){
-				countRejectMsg = "该采购单已加入付款单";
+				countRejectMsg = "该退货单已加入付款单";
 			} 
 			if(countRejectMsg!=null){
 				result.setMessage(countRejectMsg+"已不能修改退货单状态");

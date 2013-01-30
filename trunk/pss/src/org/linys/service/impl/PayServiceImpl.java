@@ -152,7 +152,7 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 					Buy buy = new Buy();
 					buy.setBuyId(sourceId);
 					payDetail.setBuy(buy);
-				}else if("采购入库".equals(payKind)){
+				}else if("采购入库单".equals(payKind)){
 					Receive receive = new Receive();
 					receive.setReceiveId(sourceId);
 					payDetail.setReceive(receive);
@@ -231,7 +231,7 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 						Buy buy = new Buy();
 						buy.setBuyId(sourceId);
 						payDetail.setBuy(buy);
-					}else if("采购入库".equals(payKind)){
+					}else if("采购入库单".equals(payKind)){
 						Receive receive = new Receive();
 						receive.setReceiveId(sourceId);
 						payDetail.setReceive(receive);
@@ -392,8 +392,8 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 				String payKind = payDetail.getPayKind();
 				if("采购单预付款".equals(payKind)){
 					Buy oldBuy = payDetail.getBuy();
-					oldBuy.setCheckAmount(oldBuy.getCheckAmount()-payDetail.getPayAmount()-payDetail.getDiscountAmount());
-				}else if("采购入库".equals(payKind)){
+					oldBuy.setCheckAmount(oldBuy.getCheckAmount()-payDetail.getPayAmount());
+				}else if("采购入库单".equals(payKind)){
 					Receive oldReceive = payDetail.getReceive();
 					oldReceive.setCheckAmount(oldReceive.getCheckAmount()+payDetail.getPayAmount()+payDetail.getDiscountAmount());
 					if(oldReceive.getAmount()-oldReceive.getDiscountAmount()-oldReceive.getPayAmount()-oldReceive.getCheckAmount()<=0){//清款
@@ -401,10 +401,10 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 					}
 				}else if("退货单".equals(payKind)){
 					Reject oldReject = payDetail.getReject();
-					oldReject.setCheckAmount(oldReject.getCheckAmount()+payDetail.getPayAmount()+payDetail.getDiscountAmount());
+					oldReject.setCheckAmount(oldReject.getCheckAmount()-payDetail.getPayAmount());
 				}else if("预付单预付款".equals(payKind)){
 					Prepay oldPrepay = payDetail.getPrepay();
-					oldPrepay.setCheckAmount(oldPrepay.getCheckAmount()+payDetail.getPayAmount()+payDetail.getDiscountAmount());
+					oldPrepay.setCheckAmount(oldPrepay.getCheckAmount()-payDetail.getPayAmount());
 				}
 			}
 		}else if(model.getStatus()==0){//如果是由已审改为未审
@@ -418,16 +418,16 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 				String payKind = payDetail.getPayKind();
 				if("采购单预付款".equals(payKind)){
 					Buy oldBuy = payDetail.getBuy();
-					oldBuy.setCheckAmount(oldBuy.getCheckAmount()+payDetail.getPayAmount()+payDetail.getDiscountAmount());
-				}else if("采购入库".equals(payKind)){
+					oldBuy.setCheckAmount(oldBuy.getCheckAmount()+payDetail.getPayAmount());
+				}else if("采购入库单".equals(payKind)){
 					Receive oldReceive = payDetail.getReceive();
 					oldReceive.setCheckAmount(oldReceive.getCheckAmount()-payDetail.getPayAmount()-payDetail.getDiscountAmount());
 				}else if("退货单".equals(payKind)){
 					Reject oldReject = payDetail.getReject();
-					oldReject.setCheckAmount(oldReject.getCheckAmount()-payDetail.getPayAmount()-payDetail.getDiscountAmount());
+					oldReject.setCheckAmount(oldReject.getCheckAmount()+payDetail.getPayAmount());
 				}else if("预付单预付款".equals(payKind)){
 					Prepay oldPrepay = payDetail.getPrepay();
-					oldPrepay.setCheckAmount(oldPrepay.getCheckAmount()-payDetail.getPayAmount()-payDetail.getDiscountAmount());
+					oldPrepay.setCheckAmount(oldPrepay.getCheckAmount()+payDetail.getPayAmount());
 				}
 			}
 		}
@@ -475,8 +475,8 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 						String payKind = payDetail.getPayKind();
 						if("采购单预付款".equals(payKind)){
 							Buy oldBuy = payDetail.getBuy();
-							oldBuy.setCheckAmount(oldBuy.getCheckAmount()-payDetail.getPayAmount()-payDetail.getDiscountAmount());
-						}else if("采购入库".equals(payKind)){
+							oldBuy.setCheckAmount(oldBuy.getCheckAmount()-payDetail.getPayAmount());
+						}else if("采购入库单".equals(payKind)){
 							Receive oldReceive = payDetail.getReceive();
 							oldReceive.setCheckAmount(oldReceive.getCheckAmount()+payDetail.getPayAmount()+payDetail.getDiscountAmount());
 							if(oldReceive.getAmount()-oldReceive.getDiscountAmount()-oldReceive.getPayAmount()-oldReceive.getCheckAmount()<=0){//清款
@@ -484,10 +484,10 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 							}
 						}else if("退货单".equals(payKind)){
 							Reject oldReject = payDetail.getReject();
-							oldReject.setCheckAmount(oldReject.getCheckAmount()-payDetail.getPayAmount()-payDetail.getDiscountAmount());
+							oldReject.setCheckAmount(oldReject.getCheckAmount()-payDetail.getPayAmount());
 						}else if("预付单预付款".equals(payKind)){
 							Prepay oldPrepay =payDetail.getPrepay();
-							oldPrepay.setCheckAmount(oldPrepay.getCheckAmount()-payDetail.getPayAmount()-payDetail.getDiscountAmount());
+							oldPrepay.setCheckAmount(oldPrepay.getCheckAmount()-payDetail.getPayAmount());
 						}
 					}
 				}else if(model.getStatus()==0){//如果是由已审改为未审
@@ -501,16 +501,16 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 						String payKind = payDetail.getPayKind();
 						if("采购单预付款".equals(payKind)){
 							Buy oldBuy = payDetail.getBuy();
-							oldBuy.setCheckAmount(oldBuy.getCheckAmount()+payDetail.getPayAmount()+payDetail.getDiscountAmount());
-						}else if("采购入库".equals(payKind)){
+							oldBuy.setCheckAmount(oldBuy.getCheckAmount()+payDetail.getPayAmount());
+						}else if("采购入库单".equals(payKind)){
 							Receive oldReceive = payDetail.getReceive();
 							oldReceive.setCheckAmount(oldReceive.getCheckAmount()-payDetail.getPayAmount()-payDetail.getDiscountAmount());
 						}else if("退货单".equals(payKind)){
 							Reject oldReject = payDetail.getReject();
-							oldReject.setCheckAmount(oldReject.getCheckAmount()+payDetail.getPayAmount()+payDetail.getDiscountAmount());
+							oldReject.setCheckAmount(oldReject.getCheckAmount()+payDetail.getPayAmount());
 						}else if("预付单预付款".equals(payKind)){
 							Prepay oldPrepay =payDetail.getPrepay();
-							oldPrepay.setCheckAmount(oldPrepay.getCheckAmount()+payDetail.getPayAmount()+payDetail.getDiscountAmount());
+							oldPrepay.setCheckAmount(oldPrepay.getCheckAmount()+payDetail.getPayAmount());
 						}
 					}
 				}
