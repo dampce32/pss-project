@@ -1,6 +1,7 @@
 package org.linys.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.linys.model.Reject;
 /**
@@ -40,5 +41,14 @@ public interface RejectDAO extends BaseDAO<Reject,String>{
 	 * @return
 	 */
 	String getMaxCode(String rejectCode);
+	/**
+	 * @Description: 判断该退货单是否已经进入了 付款单
+	 * @Create: 2013-1-30 下午2:13:52
+	 * @author lys
+	 * @update logs
+	 * @param rejectId
+	 * @return
+	 */
+	List<Map<String,Object>> countReject(String rejectId);
 
 }

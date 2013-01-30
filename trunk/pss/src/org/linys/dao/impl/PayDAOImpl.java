@@ -91,7 +91,7 @@ public class PayDAOImpl extends BaseDAOImpl<Pay, String> implements PayDAO {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("select * ");
-        sb.append("from(select a.receiveId sourceId,a.receiveCode sourceCode,'采购入库' payKind,a.receiveDate sourceDate,a.amount,a.discountAmount+a.payAmount+a.checkAmount payedAmount,a.amount-a.discountAmount-a.payAmount-a.checkAmount needPayAmount ");
+        sb.append("from(select a.receiveId sourceId,a.receiveCode sourceCode,'采购入库单' payKind,a.receiveDate sourceDate,a.amount,a.discountAmount+a.payAmount+a.checkAmount payedAmount,a.amount-a.discountAmount-a.payAmount-a.checkAmount needPayAmount ");
         sb.append("	from t_receive a ");
         sb.append("	where a.`status`  = 1 and a.isPay = 0 and a.supplierId =:supplierId ");
         sb.append("	union all ");

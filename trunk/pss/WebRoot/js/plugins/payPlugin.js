@@ -2,7 +2,7 @@
 (function($) {  
   // 插件的定义  
   $.fn.payInit = function() {
-	  
+	  $(this).mask({maskMsg:'正在加载界面'});
 	  var $this = $(this);
 	  var id = $(this).attr('id');
 	  var width = $(document.body).width();
@@ -358,7 +358,7 @@
 		$('#payedAmounts',editForm).val(payedAmountArray.join(LYS.join));
 		$('#discountAmounts',editForm).val(discountAmountArray.join(LYS.join));
 		$('#payAmounts',editForm).val(payAmountArray.join(LYS.join));
-		
+		$(editDialog).mask({maskMsg:'正在保存'});
 		return true;
 	}
 	//保存
@@ -370,6 +370,7 @@
 				return setValue();
 			},
 			success: function(data){
+				$(editDialog).mask('hide');
 				var result = eval('('+data+')');
 				if(result.isSuccess){
 					var fn = function(){
@@ -631,6 +632,9 @@
 	    var discountAmountEditor = editors[1];  
 	    var payAmountEditor = editors[2];  
 	    discountAmountEditor.target.bind('change', function(){  
+	    	if(discountAmountEditor.target.val()==''){
+	    		$(discountAmountEditor.target).numberbox('setValue',0.00);
+	    	}
 	    	//优惠只能是采购入库单，其他付款方式只能要来抵账
 	    	var row = $(payDetail).datagrid('getSelected');
 	    	if(row.payKind!='采购入库单'){
@@ -655,6 +659,9 @@
 			$('#discountAmount',editDialog).numberbox('setValue',totalAmount);
 	    });  
 	    payAmountEditor.target.bind('change', function(){  
+	    	if(payAmountEditor.target.val()==''){
+	    		$(payAmountEditor.target).numberbox('setValue',0.00);
+	    	}
 	    	var payAmount = payAmountEditor.target.val();
 	    	//修改本次实付金额
 	    	var totalAmount = 0 ;
@@ -790,6 +797,9 @@
 	 //优惠金额发生改变
 	 $('#discountAmount',editForm).numberbox({
 		 onChange:function(newValue,oldValue){
+			 if(newValue==''){
+				 $('#discountAmount',editForm).numberbox('setValue',0.00);
+			 }
 			 var amount = $('#amount',editForm).numberbox('getValue');
 			 $('#payAmount',editForm).numberbox('setValue', parseFloat(amount)-newValue);
 		 }
@@ -811,5 +821,6 @@
 		$('#discountAmount',editForm).numberbox('setValue',totalDiscountAmount);
 		$('#payAmount',editForm).numberbox('setValue',totalPayAmount);
 	} 
+	$(this).mask('hide');
   }
 })(jQuery);   
