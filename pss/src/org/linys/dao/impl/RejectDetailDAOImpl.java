@@ -20,6 +20,7 @@ public class RejectDetailDAOImpl extends BaseDAOImpl<RejectDetail, String>
 	public List<RejectDetail> queryByRejectId(String rejectId) {
 		Criteria criteria  = getCurrentSession().createCriteria(RejectDetail.class);
 		criteria.createAlias("product", "product", CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("reject", "reject", CriteriaSpecification.LEFT_JOIN);
 		criteria.add(Restrictions.eq("reject.rejectId", rejectId));
 		return criteria.list();
 	}

@@ -1,13 +1,16 @@
 package org.linys.dao.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.linys.dao.RejectDAO;
 import org.linys.model.Reject;
 import org.linys.vo.GobelConstants;
@@ -70,6 +73,23 @@ public class RejectDAOImpl extends BaseDAOImpl<Reject, String> implements
 		criteria.add(Restrictions.like("rejectCode", rejectCode,MatchMode.START));
 		criteria.setProjection(Projections.max("rejectCode"));
 		return criteria.uniqueResult()==null?null:criteria.uniqueResult().toString();
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.RejectDAO#countReject(java.lang.String)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Map<String,Object>> countReject(String rejectId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select count(a.rejectId) countPay ");
+		sb.append("from t_paydetail a  ");
+		sb.append("where a.rejectId = :rejectId ");
+
+		Query query = getCurrentSession().createSQLQuery(sb.toString());
+		query.setString("rejectId", rejectId);
+		
+		return query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
 	}
 
 }

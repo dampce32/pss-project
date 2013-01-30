@@ -1,6 +1,7 @@
 package org.linys.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -145,15 +146,27 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 				
 				Product product = new Product();
 				product.setProductId(productId);
-				DataDictionary color = new DataDictionary();
-				color.setDataDictionaryId(colorId);
+				
+				if(StringUtils.isNotEmpty(colorId)){//颜色没填保护
+					DataDictionary color = new DataDictionary();
+					color.setDataDictionaryId(colorId);
+					product.setColor(color);
+				}
 				
 				RejectDetail rejectDetail = new RejectDetail();
 				rejectDetail.setReject(model);
 				rejectDetail.setProduct(product);
-				rejectDetail.setColor(color);
-				rejectDetail.setQty(new Double(qty));
-				rejectDetail.setPrice(new Double(price));
+				if(StringUtils.isNotEmpty(qty)){//数量没输入保护
+					rejectDetail.setQty(new Double(qty));
+				}else{
+					rejectDetail.setQty(0.0);
+				}
+				
+				if(StringUtils.isNotEmpty(price)){//单价没输入保护
+					rejectDetail.setPrice(new Double(price));
+				}else{
+					rejectDetail.setPrice(0.0);
+				}
 				rejectDetail.setNote1(note1);
 				rejectDetail.setNote2(note2);
 				rejectDetail.setNote3(note3);
@@ -165,17 +178,22 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 			if(oldReject==null){
 				result.setMessage("要更新的退货单已不存在");
 				return result;
-			}else{
-				oldReject.setBuyCode(model.getBuyCode());
-				oldReject.setSupplier(model.getSupplier());
-				oldReject.setWarehouse(model.getWarehouse());
-				oldReject.setRejectDate(model.getRejectDate());
-				oldReject.setPayAmount(model.getPayAmount());
-				oldReject.setAmount(model.getAmount());
-				oldReject.setEmployee(model.getEmployee());
-				oldReject.setNote(model.getNote());
-				rejectDAO.update(oldReject);
 			}
+			
+			if(oldReject.getStatus()==1){
+				result.setMessage("要更新的退货单已审，不能修改了");
+				return result;
+			}
+			
+			oldReject.setBuyCode(model.getBuyCode());
+			oldReject.setSupplier(model.getSupplier());
+			oldReject.setWarehouse(model.getWarehouse());
+			oldReject.setRejectDate(model.getRejectDate());
+			oldReject.setPayAmount(model.getPayAmount());
+			oldReject.setAmount(model.getAmount());
+			oldReject.setEmployee(model.getEmployee());
+			oldReject.setNote(model.getNote());
+			rejectDAO.update(oldReject);
 			
 			//删除已删的退货单明细
 			if(!"".equals(delRejectDetailIds)){
@@ -199,15 +217,26 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 				if(StringUtils.isEmpty(rejectDetailId)){//新增
 						Product product = new Product();
 						product.setProductId(productId);
-						DataDictionary color = new DataDictionary();
-						color.setDataDictionaryId(colorId);
+						if(StringUtils.isNotEmpty(colorId)){//颜色没填保护
+							DataDictionary color = new DataDictionary();
+							color.setDataDictionaryId(colorId);
+							product.setColor(color);
+						}
 						
 						RejectDetail rejectDetail = new RejectDetail();
 						rejectDetail.setReject(model);
 						rejectDetail.setProduct(product);
-						rejectDetail.setColor(color);
-						rejectDetail.setQty(new Double(qty));
-						rejectDetail.setPrice(new Double(price));
+						if(StringUtils.isNotEmpty(qty)){//数量没输入保护
+							rejectDetail.setQty(new Double(qty));
+						}else{
+							rejectDetail.setQty(0.0);
+						}
+						
+						if(StringUtils.isNotEmpty(price)){//单价没输入保护
+							rejectDetail.setPrice(new Double(price));
+						}else{
+							rejectDetail.setPrice(0.0);
+						}
 						rejectDetail.setNote1(note1);
 						rejectDetail.setNote2(note2);
 						rejectDetail.setNote3(note3);
@@ -215,12 +244,23 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 				}else{
 					RejectDetail oldModel = rejectDetailDAO.load(rejectDetailId);
 					
-					DataDictionary color = new DataDictionary();
-					color.setDataDictionaryId(colorId);
+					if(StringUtils.isNotEmpty(colorId)){//颜色没填保护
+						DataDictionary color = new DataDictionary();
+						color.setDataDictionaryId(colorId);
+						oldModel.setColor(color);
+					}
 					
-					oldModel.setColor(color);
-					oldModel.setQty(new Double(qty));
-					oldModel.setPrice(new Double(price));
+					if(StringUtils.isNotEmpty(qty)){//数量没输入保护
+						oldModel.setQty(new Double(qty));
+					}else{
+						oldModel.setQty(0.0);
+					}
+					
+					if(StringUtils.isNotEmpty(price)){//单价没输入保护
+						oldModel.setPrice(new Double(price));
+					}else{
+						oldModel.setPrice(0.0);
+					}
 					oldModel.setNote1(note1);
 					oldModel.setNote2(note2);
 					oldModel.setNote3(note3);
@@ -316,9 +356,14 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 					List<RejectDetail> rejectDetailList = rejectDetailDAO.queryByRejectId(id);
 					//更新对应商品的库存数量
 					for (RejectDetail rejectDetail : rejectDetailList) {
+						Product product = rejectDetail.getProduct();
 						String[] propertyNames = {"warehouse.warehouseId","product.productId"};
 						Object[] values = {oldReject.getWarehouse().getWarehouseId(),rejectDetail.getProduct().getProductId()};
 						Store store = storeDAO.load(propertyNames, values);
+						
+						if(store==null || store.getQty()-rejectDetail.getQty()<0){
+							throw new RuntimeException("商品:"+product.getProductName()+",超额退货");
+						}
 						store.setQty(store.getQty()-rejectDetail.getQty());
 						store.setAmount(store.getAmount()-rejectDetail.getAmount());
 						storeDAO.update(store);
@@ -329,6 +374,14 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 						productDAO.update(oldProduct);
 					}
 				}else if(model.getStatus()==0){//如果是由已审改为未审
+					Map<String,Object> countRejectMap = rejectDAO.countReject(id).get(0);
+					String countRejectMsg = null;
+					if(!"0".equals(countRejectMap.get("payCount").toString())){
+						countRejectMsg = "该采购单已加入付款单";
+					} 
+					if(countRejectMsg!=null){
+						continue;
+					}
 					//将该退货单下的商品入库
 					List<RejectDetail> rejectDetailList = rejectDetailDAO.queryByRejectId(id);
 					//更新对应商品的库存数量
@@ -385,6 +438,10 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 			result.setMessage("要删除的退货单已不存在");
 			return result;
 		}
+		if(oldReject.getStatus().intValue()==1){
+			result.setMessage("要删除的退货单已审核通过已不能删除");
+			return result;
+		}
 		rejectDAO.delete(oldReject);
 		result.setIsSuccess(true);
 		return result;
@@ -416,9 +473,14 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 			List<RejectDetail> rejectDetailList = rejectDetailDAO.queryByRejectId(model.getRejectId());
 			//更新对应商品的库存数量
 			for (RejectDetail rejectDetail : rejectDetailList) {
+				Product product = rejectDetail.getProduct();
 				String[] propertyNames = {"warehouse.warehouseId","product.productId"};
 				Object[] values = {oldReject.getWarehouse().getWarehouseId(),rejectDetail.getProduct().getProductId()};
 				Store store = storeDAO.load(propertyNames, values);
+				
+				if(store==null || store.getQty()-rejectDetail.getQty()<0){
+					throw new RuntimeException("退货单号:"+rejectDetail.getReject().getRejectCode()+",商品:"+product.getProductName()+",超额退货");
+				}
 				store.setQty(store.getQty()-rejectDetail.getQty());
 				store.setAmount(store.getAmount()-rejectDetail.getAmount());
 				storeDAO.update(store);
@@ -429,6 +491,16 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 				productDAO.update(oldProduct);
 			}
 		}else if(model.getStatus()==0){//如果是由已审改为未审
+			//需要判断该退货单是否已经进入了 付款单 
+			Map<String,Object> countRejectMap = rejectDAO.countReject(model.getRejectId()).get(0);
+			String countRejectMsg = null;
+			if(!"0".equals(countRejectMap.get("payCount").toString())){
+				countRejectMsg = "该采购单已加入付款单";
+			} 
+			if(countRejectMsg!=null){
+				result.setMessage(countRejectMsg+"已不能修改退货单状态");
+				return result;
+			}
 			//将该退货单下的商品入库
 			List<RejectDetail> rejectDetailList = rejectDetailDAO.queryByRejectId(model.getRejectId());
 			//更新对应商品的库存数量

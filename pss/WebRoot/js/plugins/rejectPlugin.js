@@ -2,7 +2,7 @@
 (function($) {  
   // 插件的定义  
   $.fn.rejectInit = function() {
-	  
+	  $(this).mask({maskMsg:'正在加载界面'});
 	  var $this = $(this);
 	  var id = $(this).attr('id');
 	  var width = $(document.body).width();
@@ -242,9 +242,8 @@
 		
 		$(editForm).form('clear');
 		initChoose();
-		$('#amount',editForm).val(0);
-		$('#discountAmount',editForm).val(0);
-		$('#payAmount',editForm).val(0);
+		$('#amount',editForm).numberbox('setValue',0);
+		$('#payAmount',editForm).numberbox('setValue',0);
 		$(editDialog).dialog('open');
 	}
 	
@@ -384,7 +383,7 @@
 		$('#note1s',editForm).val(note1Array.join(LYS.join));
 		$('#note2s',editForm).val(note2Array.join(LYS.join));
 		$('#note3s',editForm).val(note3Array.join(LYS.join));
-		
+		$(editDialog).mask({maskMsg:'正在保存'});
 		return true;
 	}
 	//保存
@@ -396,6 +395,7 @@
 				return setValue();
 			},
 			success: function(data){
+				$(editDialog).mask('hide');
 				var result = eval('('+data+')');
 				if(result.isSuccess){
 					var fn = function(){
@@ -690,6 +690,12 @@
 	        calculate(rowIndex);  
 	    });  
 	    function calculate(rowIndex){ 
+	    	if(qtyEditor.target.val()==''){
+	    		$(qtyEditor.target).numberbox('setValue',0.00);
+	    	}
+	    	if(priceEditor.target.val()==''){
+	    		$(priceEditor.target).numberbox('setValue',0.00);
+	    	}
 	        var cost = qtyEditor.target.val() * priceEditor.target.val();  
 	        $(amountEditor.target).numberbox('setValue',cost);
 	    }  
@@ -812,5 +818,14 @@
 			 $('#payAmount',editForm).numberbox('setValue',newValue);
 		 }
 	});
+	//应付金额发生改变
+	 $('#payAmount',editForm).numberbox({
+		 onChange:function(newValue,oldValue){
+			 if(newValue==''){
+				 $('#payAmount',editForm).numberbox('setValue',0.00);
+			 }
+		 }
+	});
+	 $(this).mask('hide');
   }
 })(jQuery);   
