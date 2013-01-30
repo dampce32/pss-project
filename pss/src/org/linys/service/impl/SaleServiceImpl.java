@@ -96,6 +96,7 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 			sale.setReceiptedAmount(0.0);
 		}
 		sale.setStatus(0);
+		sale.setCheckAmount(0d);
 		saleDao.save(sale);
 		
 		for (int i=0;i<productIdArray.length;i++) {
@@ -305,6 +306,7 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 		}
 		Sale model = saleDao.load(sale.getSaleId());
 		sale.setStatus(model.getStatus());
+		sale.setCheckAmount(model.getCheckAmount());
 		if(sale.getAmount()==null){
 			sale.setAmount(0.0);
 		}
