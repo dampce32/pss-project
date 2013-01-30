@@ -29,7 +29,7 @@
 					{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},
 					{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},
 					{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}},
-					{text:'角色权限',iconCls:'icon-edit',handler:function(){onRoleRight()}}
+					{text:'角色权限',iconCls:'icon-role',handler:function(){onRoleRight()}}
 				],
 		columns:[[
 			{field:'roleName',title:'角色名',width:100,align:"center"}

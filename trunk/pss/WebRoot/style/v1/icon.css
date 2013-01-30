@@ -100,3 +100,9 @@
 .icon-clear{
 	background:url('icons/clear.png') no-repeat;
 }
+.icon-role{
+	background:url('icons/role.png') no-repeat;
+}
+.icon-role-right{
+	background:url('icons/role-right.png') no-repeat;
+}

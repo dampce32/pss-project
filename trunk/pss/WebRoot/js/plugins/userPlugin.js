@@ -33,8 +33,8 @@
 						{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},
 						{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},
 						{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}},
-						{text:'用户角色',iconCls:'icon-edit',handler:function(){onUserRole()}},
-						{text:'用户权限',iconCls:'icon-edit',handler:function(){onUserRight()}}
+						{text:'用户角色',iconCls:'icon-role',handler:function(){onUserRole()}},
+						{text:'用户权限',iconCls:'icon-role-right',handler:function(){onUserRight()}}
 					],
 			columns:[[
 				{field:'userName',title:'用户名称',width:100,align:"center"},
@@ -217,6 +217,7 @@
 			]],
 			onLoadSuccess:function(data){
 				var rows = $(userRoleList).datagrid('getRows');
+				oldIdArray = new Array();
 				for(var i=0;i<rows.length;i++){
 					if(rows[i].checked){
 						oldIdArray.push(rows[i].roleId);
