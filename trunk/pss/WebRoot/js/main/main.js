@@ -8,7 +8,6 @@ $(function(){
 		if(href==null){
 			return false;
 		}
-		
 		addTab(title,href);
 		return false;
 	});
@@ -106,41 +105,47 @@ function addTab(title,href){
 	if($('#tabs').tabs('exists',title)){//选择并更新tab
 		$('#tabs').tabs('select',title);
 	}else{
-		var index = href.indexOf('.');
-		var postfix = href.substring(index+1);
-			var panelInfo = {
-                title:title,
-                closable:true,
-                href:href, border:false, plain:true,
-                extractor:function (d) {
-                    if (!d) {
-                        return d;
-                    }
-                    if (window['LYS']) {
-                        var id = LYS.genId();
-                        return d.replace(/\$\{id\}/, id);
-                    }
-                    return d;
-                },
-                onLoad:function (panel) {
-                    var tab = $('.plugins', this);
-                    if ($(tab).size() == 0) {
-                        return;
-                    }
-                   LYS.initContent(this);
-                }
-            };
-            $('#tabs').tabs('add', panelInfo);
+		if(href.indexOf('.do')!=-1){
+			var index = href.indexOf('.');
+			var postfix = href.substring(index+1);
+				var panelInfo = {
+	                title:title,
+	                closable:true,
+	                href:href, border:false, plain:true,
+	                extractor:function (d) {
+	                    if (!d) {
+	                        return d;
+	                    }
+	                    if (window['LYS']) {
+	                        var id = LYS.genId();
+	                        return d.replace(/\$\{id\}/, id);
+	                    }
+	                    return d;
+	                },
+	                onLoad:function (panel) {
+	                    var tab = $('.plugins', this);
+	                    if ($(tab).size() == 0) {
+	                        return;
+	                    }
+	                   LYS.initContent(this);
+	                }
+	            };
+	            $('#tabs').tabs('add', panelInfo);
+	            
+        }else{
+        	var content = createFrame(href);
+    		$('#tabs').tabs('add',{
+    			title:title,
+    			content:content,
+    			closable:true
+    		});
+        }
+		tabClose();
 	}
-	tabClose();
+	
 }
 
 function createFrame(url) {
-	$('#tabs').tabs('add',{
-		title:title,  
-	    content:createFrame(href),  
-	    closable:true 
-	})
 	var s = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%;height:100%;"></iframe>';
 	return s;
 }
