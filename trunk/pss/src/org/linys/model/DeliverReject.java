@@ -76,6 +76,11 @@ public class DeliverReject extends BaseModel {
 	 * 实退金额
 	 */
 	private Double payedAmount;
+	
+	/**
+	 * 对账金额
+	 */
+	private Double checkAmount;
 	/**
 	 * 审核状态
 	 */
@@ -234,6 +239,14 @@ public class DeliverReject extends BaseModel {
 	public void setDeliverRejectDetails(
 			Set<DeliverRejectDetail> deliverRejectDetails) {
 		this.deliverRejectDetails = deliverRejectDetails;
+	}
+
+	public Double getCheckAmount() {
+		return checkAmount;
+	}
+
+	public void setCheckAmount(Double checkAmount) {
+		this.checkAmount = checkAmount;
 	}
 
 }

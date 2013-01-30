@@ -79,7 +79,7 @@ public class PreReceipt extends BaseModel {
 	private String note;
 	
 	@Id
-	@Column(name = "prepayId", unique = true, nullable = false, length = 32)
+	@Column(name = "preReceiptId", unique = true, nullable = false, length = 32)
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid")
 	public String getPreReceiptId() {

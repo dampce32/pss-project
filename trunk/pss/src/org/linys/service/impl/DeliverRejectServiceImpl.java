@@ -97,6 +97,7 @@ public class DeliverRejectServiceImpl extends BaseServiceImpl<DeliverReject, Str
 		if(deliverReject.getPayedAmount()==null){
 			deliverReject.setPayedAmount(0.0);
 		}
+		deliverReject.setCheckAmount(0d);
 		deliverRejectDao.save(deliverReject);
 		
 		for (int i=0;i<productIdArray.length;i++) {
@@ -182,6 +183,7 @@ public class DeliverRejectServiceImpl extends BaseServiceImpl<DeliverReject, Str
 		DeliverReject model = deliverRejectDao.load(deliverReject.getDeliverRejectId());
 		
 		deliverReject.setStatus(model.getStatus());
+		deliverReject.setCheckAmount(model.getCheckAmount());
 		if(deliverReject.getAmount()==null){
 			deliverReject.setAmount(0.0);
 		}

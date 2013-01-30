@@ -76,6 +76,11 @@ public class Sale extends BaseModel {
 	 * 预收定金
 	 */
 	private Double receiptedAmount;
+	
+	/**
+	 * 对账金额
+	 */
+	private Double checkAmount;
 	/**
 	 * 备注
 	 */
@@ -234,6 +239,14 @@ public class Sale extends BaseModel {
 
 	public void setReceiptedAmount(Double receiptedAmount) {
 		this.receiptedAmount = receiptedAmount;
+	}
+
+	public Double getCheckAmount() {
+		return checkAmount;
+	}
+
+	public void setCheckAmount(Double checkAmount) {
+		this.checkAmount = checkAmount;
 	}
 
 }
