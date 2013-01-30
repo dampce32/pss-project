@@ -77,7 +77,7 @@
 		  var beginDate = $('#beginDate',queryContent).val();
 		  var endDate = $('#endDate',queryContent).val();
 		  var status = $('#status',queryContent).combobox('getValue');
-		  var url = 'finance/queryPreReceipt.do';
+		  var url = 'finance/queryPrereceipt.do';
 		  var queryParams ={preReceiptCode:preReceiptCode,'customer.customerName':customerName,beginDate:beginDate,endDate:endDate,status:status};
 		  $(viewList).datagrid({
 			url:url,
@@ -221,7 +221,7 @@
 	}
 	//保存
 	var onSave = function(){
-		var url = 'finance/savePreReceipt.do'
+		var url = 'finance/savePrereceipt.do'
 		$(editForm).form('submit',{
 			url: url,
 			onSubmit: function(){
@@ -259,7 +259,7 @@
 	 }
 	//打开
 	var onOpen = function(preReceiptId){
-		var url = 'finance/initPreReceipt.do';
+		var url = 'finance/initPrereceipt.do';
 		var content ={preReceiptId:preReceiptId};
 		asyncCallService(url,content,function(result){
 			if(result.isSuccess){
@@ -312,7 +312,7 @@
 		var preReceiptId = $('#preReceiptId',editDialog).val();
 		$.messager.confirm("提示","确定要删除选中的记录?",function(t){ 
 			if(t){
-				var url = 'finance/deletePreReceipt.do';
+				var url = 'finance/deletePrereceipt.do';
 				var content ={preReceiptId:preReceiptId};
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
@@ -343,7 +343,7 @@
 		})
 		$.messager.confirm("提示","确定要删除选中的记录?",function(t){ 
 			if(t){
-				var url = 'finance/mulDelelePreReceipt.do';
+				var url = 'finance/mulDelelePrereceipt.do';
 				var content ={ids:idArray.join(LYS.join)};
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
@@ -373,7 +373,7 @@
 		}
 		$.messager.confirm("提示","确定要"+msg+"选中的记录?"+msg+"后系统将进行财务计算!!",function(t){ 
 			if(t){
-				var url = 'finance/updateStatusPreReceipt.do';
+				var url = 'finance/updateStatusPrereceipt.do';
 				var content ={preReceiptId:preReceiptId,status:status};
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
@@ -413,7 +413,7 @@
 		})
 		$.messager.confirm("提示","确定要"+msg+"选中的记录"+msg+"后系统将进行财务计算!!",function(t){ 
 			if(t){
-				var url = 'finance/mulUpdateStatusPreReceipt.do';
+				var url = 'finance/mulUpdateStatusPrereceipt.do';
 				var content ={ids:idArray.join(LYS.join),status:status};
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
