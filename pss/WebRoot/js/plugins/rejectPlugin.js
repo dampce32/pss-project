@@ -333,10 +333,10 @@
 			$.messager.alert('提示','请选择添加商品','warning');
 			return false;
 		}
-		for ( var int = 0; int < rows.length; int++) {
-			var row = rows[int];
+		for ( var i = 0; i < rows.length; i++) {
+			var row = rows[i];
 			if(row.qty==0){
-				var msg = '第'+(int+1)+'行商品的数量为0,请输入';
+				var msg = '第'+(i+1)+'行商品的数量为0,请输入';
 				$.messager.alert('提示',msg,'warning');
 				return false;
 			}
@@ -362,16 +362,16 @@
 		
 		delRejectDetailIdArray = new Array();
 		//统计原记录中被删除的记录
-		for ( var int = 0; int < oldRejectDetailIdArray.length; int++) {
+		for ( var i = 0; i < oldRejectDetailIdArray.length; i++) {
 			var haveDel = true;
-			for(var i=0;i<rows.length;i++){
-				if(oldRejectDetailIdArray[int]==rows[i].rejectDetailId){
+			for(var j=0;j<rows.length;j++){
+				if(oldRejectDetailIdArray[i]==rows[j].rejectDetailId){
 					haveDel = false;
 					break;
 				}
 			}
 			if(haveDel){
-				delRejectDetailIdArray.push(oldRejectDetailIdArray[int]);
+				delRejectDetailIdArray.push(oldRejectDetailIdArray[i]);
 			}
 		}
 		$('#rejectDetailIds',editForm).val(rejectDetailIdArray.join(LYS.join));
@@ -451,8 +451,8 @@
 			return;
 		}
 		var idArray = new Array();
-		for ( var int = 0; int < rows.length; int++) {
-			idArray.push(rows[int].rejectId);
+		for ( var i = 0; i < rows.length; i++) {
+			idArray.push(rows[i].rejectId);
 		}
 		$.messager.confirm("提示","确定要删除选中的记录?",function(t){ 
 			if(t){
@@ -523,8 +523,8 @@
 			return;
 		}
 		var idArray = new Array();
-		for ( var int = 0; int < rows.length; int++) {
-			idArray.push(rows[int].rejectId);
+		for ( var i = 0; i < rows.length; i++) {
+			idArray.push(rows[i].rejectId);
 		}
 		$.messager.confirm("提示","确定要"+msg+"选中的记录?审核后单据不能再修改和删除，系统将进行库存和财务计算!!",function(t){ 
 			if(t){
@@ -641,9 +641,9 @@
 				 var rows =  $(rejectDetail).datagrid('getRows');
 				 var row = $(rejectDetail).datagrid('getSelected');
 				 var rowIndex = $(rejectDetail).datagrid('getRowIndex',row); 
-				 for ( var int = 0; int < rows.length; int++) {
-					 if(int!=rowIndex){
-						row = rows[int];
+				 for ( var i = 0; i < rows.length; i++) {
+					 if(i!=rowIndex){
+						row = rows[i];
 						totalAmount += parseFloat(row.amount);
 					 }
 				}
@@ -673,8 +673,8 @@
 	  },onLoadSuccess:function(data){
 			var rows = data.rows;
 			oldRejectDetailIdArray = new Array();
-			for ( var int = 0; int < rows.length; int++) {
-				oldRejectDetailIdArray.push(rows[int].rejectDetailId);
+			for ( var i = 0; i < rows.length; i++) {
+				oldRejectDetailIdArray.push(rows[i].rejectDetailId);
 			}
 		}
 	 });
@@ -768,8 +768,8 @@
 			 $.messager.alert('提示','请选择商品',"warning");
 			 return;
 		 }
-		 for ( var int = 0; int < rows.length; int++) {
-			var row = rows[int];
+		 for ( var i = 0; i < rows.length; i++) {
+			var row = rows[i];
 			 $(rejectDetail).datagrid('appendRow',{
 				 rejectDetailId:'',
 				 productId:row.productId,
@@ -805,8 +805,8 @@
 		 //统计删除后的应付金额
 		 var totalAmount = 0 ;
 		 var rows =  $(rejectDetail).datagrid('getRows');
-		 for ( var int = 0; int < rows.length; int++) {
-			var row = rows[int];
+		 for ( var i = 0; i < rows.length; i++) {
+			var row = rows[i];
 			totalAmount += parseFloat(row.amount);
 		}
 		$('#amount',editForm).val(totalAmount);
