@@ -275,8 +275,8 @@
 			receiptAmountArray.push(rows[i].receiptAmount);
 		}
 		
-		$('#receiptDetailIdIds',editForm).val(receiptDetailIdArray.join(LYS.join));
-		$('#delreceiptDetailIdIds',editForm).val(delReciptDetailIdArray.join(LYS.join));
+		$('#receiptDetailIds',editForm).val(receiptDetailIdArray.join(LYS.join));
+		$('#delreceiptDetailIds',editForm).val(delReciptDetailIdArray.join(LYS.join));
 		$('#sourceIds',editForm).val(sourceIdArray.join(LYS.join));
 		$('#sourceCodes',editForm).val(sourceCodeArray.join(LYS.join));
 		$('#sourceDates',editForm).val(sourceDateArray.join(LYS.join));
@@ -395,7 +395,7 @@
 							selectRow = null;
 							selectIndex = null;
 							$(editDialog).dialog('close');
-							$('#searchBtn',queryContent).clcik();
+							$('#searchBtn',queryContent).click();
 						}
 						$.messager.alert('提示','删除成功','info',fn);
 					}else{
@@ -414,7 +414,7 @@
 		}
 		var idArray = new Array();
 		$(rows).each(function(index,row){
-			idArray.push(rows.receiptId);
+			idArray.push(row.receiptId);
 		})
 		$.messager.confirm("提示","确定要删除选中的记录?",function(t){ 
 			if(t){
@@ -423,7 +423,7 @@
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
 						var fn = function(){
-							$('#searchBtn',queryContent).clcik();
+							$('#searchBtn',queryContent).click();
 						}
 						$.messager.alert('提示','删除成功','info',fn);
 					}else{
@@ -435,7 +435,7 @@
 	}
 	//修改审核状态
 	var onUpdateStatus = function(status){
-		var receiptId = $('#payId',editDialog).val();
+		var receiptId = $('#receiptId',editDialog).val();
 		var msg = '';
 		if(status==1){
 			msg ='审核';
@@ -484,7 +484,7 @@
 		}
 		var idArray = new Array();
 		$(rows).each(function(index,row){
-			idArray.push(rows.receiptId);
+			idArray.push(row.receiptId);
 		})
 		$.messager.confirm("提示","确定要"+msg+"选中的记录"+msg+"后系统将进行财务计算!!",function(t){ 
 			if(t){
@@ -493,7 +493,7 @@
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
 						var fn = function(){
-							$('#searchBtn',queryContent).clcik();
+							$('#searchBtn',queryContent).click();
 						}
 						$.messager.alert('提示',msg+'成功','info',fn);
 					}else{
@@ -696,15 +696,7 @@
 		 var rowIndex = $(receiptDetail).datagrid('getRowIndex',row);
 		 $(receiptDetail).datagrid('deleteRow',rowIndex);
 		 lastIndex = null;
-		 //统计删除后的应付金额
-		 var totalAmount = 0 ;
-		 var rows =  $(receiptDetail).datagrid('getRows');
-		 for ( var i = 0; i < rows.length; i++) {
-			var row = rows[i];
-			totalAmount += parseFloat(row.needReceiptAmount);
-		}
-		$('#amount',editForm).val(totalAmount);
-		$('#amount',editForm).change();
+		 summary();
 	 }
 	 //优惠金额发生改变
 	 $('#discountAmount',editForm).numberbox({
