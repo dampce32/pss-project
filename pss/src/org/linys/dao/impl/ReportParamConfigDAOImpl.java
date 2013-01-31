@@ -1,5 +1,9 @@
 package org.linys.dao.impl;
 
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.linys.dao.ReportParamConfigDAO;
 import org.linys.model.ReportParamConfig;
 import org.springframework.stereotype.Repository;
@@ -13,5 +17,16 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ReportParamConfigDAOImpl extends
 		BaseDAOImpl<ReportParamConfig, String> implements ReportParamConfigDAO {
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.ReportParamConfigDAO#queryByReportConfigId(java.lang.String)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ReportParamConfig> queryByReportConfigId(String reportConfigId) {
+		Criteria criteria  = getCurrentSession().createCriteria(ReportParamConfig.class);
+		criteria.add(Restrictions.eq("reportConfig.reportConfigId", reportConfigId));
+		return criteria.list();
+	}
 
 }

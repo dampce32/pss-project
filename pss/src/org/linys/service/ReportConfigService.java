@@ -61,5 +61,14 @@ public interface ReportConfigService extends BaseService<ReportConfig,String>{
 	 * @return
 	 */
 	ReportConfig  getByReportCode(String reportCode);
+	/**
+	 * @Description: 打开初始化
+	 * @Create: 2013-1-31 下午10:19:32
+	 * @author lys
+	 * @update logs
+	 * @param reportConfigId
+	 * @return
+	 */
+	ServiceResult init(String reportConfigId);
 
 }

@@ -119,6 +119,7 @@
 	});    
 	//添加
 	var onAdd = function(){
+		deleteIdArray = new Array();
 		$(editForm).form('clear');
 		$(editDialog).dialog('open');
 	}
@@ -157,7 +158,6 @@
 			reportParamIdArray.push(rows[i].reportParamId);
 			isNeedChooseArray.push(rows[i].isNeedChoose);
 		}
-		
 		$('#reportParamConfigIds',editForm).val(reportParamConfigIdArray.join(LYS.join));
 		$('#deleteIds',editForm).val(deleteIdArray.join(LYS.join));
 		$('#reportParamIds',editForm).val(reportParamIdArray.join(LYS.join));
@@ -196,6 +196,29 @@
 			}
 		 });
 	}
+	//打开
+	var onOpen = function(reportConfigId){
+		var url = 'system/initReportConfig.do';
+		var content ={reportConfigId:reportConfigId};
+		asyncCallService(url,content,function(result){
+			if(result.isSuccess){
+				var data = result.data;
+				var reportConfigData = eval("("+data.reportConfigData+")");
+				$('#reportConfigId',editDialog).val(reportConfigData.reportConfigId);
+				$('#reportCode',editDialog).val(reportConfigData.reportCode);
+				$('#reportName',editDialog).val(reportConfigData.reportName);
+				
+				$('#reportKind',editDialog).combobox('setValue',reportConfigData.reportKind);
+				$('#reportParamsSql',editDialog).val(reportConfigData.reportParamsSql);
+				$('#reportDetailSql',editDialog).val(reportConfigData.reportDetailSql);
+				
+				var detailData = eval("("+data.detailData+")");
+				$(reportParamConfigList).datagrid('loadData',detailData);
+			}else{
+				$.messager.alert('提示',result.message,'error');
+			}
+		});
+	}
 	//修改
 	var onUpdate = function(){
 		if(selectRow==null){
@@ -203,8 +226,8 @@
 			return;
 		}
 		$(editForm).form('clear');
-		$(editDialog).dialog('open');
-		$(editForm).form('load',selectRow);
+		onOpen(selectRow.reportConfigId);
+		deleteIdArray = new Array();
 		$(editDialog).dialog('open');
 	 }
 	//删除
