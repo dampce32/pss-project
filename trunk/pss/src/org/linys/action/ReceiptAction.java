@@ -81,8 +81,8 @@ public class ReceiptAction extends BaseAction implements ModelDriven<Receipt> {
 	public void update(){
 		ServiceResult result = new ServiceResult(false);
 		try {
-			String receiptDetailIdIds = getParameter("receiptDetailIdIds");
-			String delreceiptDetailIdIds = getParameter("delreceiptDetailIdIds");
+			String receiptDetailIds = getParameter("receiptDetailIds");
+			String delreceiptDetailIds = getParameter("delreceiptDetailIds");
 			String sourceIds = getParameter("sourceIds");
 			String sourceCodes = getParameter("sourceCodes");
 			String sourceDates = getParameter("sourceDates");
@@ -91,7 +91,7 @@ public class ReceiptAction extends BaseAction implements ModelDriven<Receipt> {
 			String receiptedAmounts = getParameter("receiptedAmounts");
 			String discountAmounts = getParameter("discountAmounts");
 			String receiptAmounts = getParameter("receiptAmounts");
-			result = receiptService.updateReceipt(receipt, receiptDetailIdIds, delreceiptDetailIdIds, sourceIds, sourceCodes, sourceDates, receiptKinds, 
+			result = receiptService.updateReceipt(receipt, receiptDetailIds, delreceiptDetailIds, sourceIds, sourceCodes, sourceDates, receiptKinds, 
 					amounts, receiptedAmounts, discountAmounts, receiptAmounts);
 		} catch (Exception e) {
 			result.setMessage("后台出错");

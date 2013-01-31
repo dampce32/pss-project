@@ -72,7 +72,7 @@ public class ReceiptDaoImpl extends BaseDAOImpl<Receipt, String> implements Rece
         sb.append("	where a.status = 1 and a.customerId =:customerId and a.receiptedAmount-a.checkAmount>0 ");
         sb.append("	union all  ");
         sb.append("	select a.deliverRejectId,a.deliverRejectCode,'退货单',a.deliverRejectDate,-a.amount,0-a.checkAmount-a.payedAmount,-a.amount+a.payedAmount + a.checkAmount ");
-        sb.append("	from t_DeliverReject a ");
+        sb.append("	from T_DeliverReject a ");
 		sb.append("	where a.status = 1 and a.customerId =:customerId and a.amount-a.payedAmount - a.checkAmount>0 ");
 		sb.append("	union ALL ");
 		sb.append("	select a.preReceiptId,a.preReceiptCode,'预收单预收款',a.preReceiptDate,-a.amount,0-a.checkAmount,-a.amount+a.checkAmount ");
