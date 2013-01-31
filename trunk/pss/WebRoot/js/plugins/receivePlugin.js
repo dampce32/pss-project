@@ -409,7 +409,6 @@
 				delReceiveDetailIdArray.push(oldReceiveDetailIdArray[i]);
 			}
 		}
-		alert(3);
 		$('#receiveDetailIds',editForm).val(receiveDetailIdArray.join(LYS.join));
 		$('#buyDetailIds',editForm).val(buyDetailIdArray.join(LYS.join));
 		$('#delReceiveDetailIds',editForm).val(delReceiveDetailIdArray.join(LYS.join));
@@ -420,7 +419,6 @@
 		$('#note1s',editForm).val(note1Array.join(LYS.join));
 		$('#note2s',editForm).val(note2Array.join(LYS.join));
 		$('#note3s',editForm).val(note3Array.join(LYS.join));
-		alert(333);
 		$(editDialog).mask({maskMsg:'正在保存'});
 		return true;
 	}
