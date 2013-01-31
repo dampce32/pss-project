@@ -282,10 +282,10 @@
 			$.messager.alert('提示','请选择添加商品','warning');
 			return false;
 		}
-		for ( var int = 0; int < rows.length; int++) {
-			var row = rows[int];
+		for ( var i = 0; i < rows.length; i++) {
+			var row = rows[i];
 			if(row.qty==0){
-				var msg = '第'+(int+1)+'行商品的数量为0,请输入';
+				var msg = '第'+(i+1)+'行商品的数量为0,请输入';
 				$.messager.alert('提示',msg,'warning');
 				return false;
 			}
@@ -313,16 +313,16 @@
 		
 		delReceiveDetailIdArray = new Array();
 		//统计原记录中被删除的记录
-		for ( var int = 0; int < oldReceiveDetailIdArray.length; int++) {
+		for ( var i = 0; i < oldReceiveDetailIdArray.length; i++) {
 			var haveDel = true;
-			for(var i=0;i<rows.length;i++){
-				if(oldReceiveDetailIdArray[int]==rows[i].receiveDetailId){
+			for(var j=0;j<rows.length;j++){
+				if(oldReceiveDetailIdArray[i]==rows[j].receiveDetailId){
 					haveDel = false;
 					break;
 				}
 			}
 			if(haveDel){
-				delReceiveDetailIdArray.push(oldReceiveDetailIdArray[int]);
+				delReceiveDetailIdArray.push(oldReceiveDetailIdArray[i]);
 			}
 		}
 		$('#receiveDetailIds',editForm).val(receiveDetailIdArray.join(LYS.join));
@@ -404,8 +404,8 @@
 			return;
 		}
 		var idArray = new Array();
-		for ( var int = 0; int < rows.length; int++) {
-			idArray.push(rows[int].receiveId);
+		for ( var i = 0; i < rows.length; i++) {
+			idArray.push(rows[i].receiveId);
 		}
 		$.messager.confirm("提示","确定要删除选中的记录?",function(t){ 
 			if(t){
@@ -477,8 +477,8 @@
 			return;
 		}
 		var idArray = new Array();
-		for ( var int = 0; int < rows.length; int++) {
-			idArray.push(rows[int].receiveId);
+		for ( var i = 0; i < rows.length; i++) {
+			idArray.push(rows[i].receiveId);
 		}
 		$.messager.confirm("提示","确定要"+msg+"选中的记录?"+msg+"后系统将进行库存计算!!",function(t){ 
 			if(t){
@@ -608,8 +608,8 @@
 	  },onLoadSuccess:function(data){
 			var rows = data.rows;
 			oldReceiveDetailIdArray = new Array();
-			for ( var int = 0; int < rows.length; int++) {
-				oldReceiveDetailIdArray.push(rows[int].receiveDetailId);
+			for ( var i = 0; i < rows.length; i++) {
+				oldReceiveDetailIdArray.push(rows[i].receiveDetailId);
 			}
 		}
 	 });
@@ -696,8 +696,8 @@
 			 $.messager.alert('提示','请选择商品',"warning");
 			 return;
 		 }
-		 for ( var int = 0; int < rows.length; int++) {
-			var row = rows[int];
+		 for ( var i = 0; i < rows.length; i++) {
+			var row = rows[i];
 			 $(receiveDetail).datagrid('appendRow',{
 				 receiveDetailId:'',
 				 productId:row.productId,
