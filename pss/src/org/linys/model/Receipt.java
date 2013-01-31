@@ -73,7 +73,7 @@ public class Receipt extends BaseModel {
 	/**
 	 * 应收金额
 	 */
-	private Double amout;
+	private Double amount;
 	
 	/**
 	 * 本收款单实收金额
@@ -87,7 +87,7 @@ public class Receipt extends BaseModel {
 	private Set<ReceiptDetail> receiptDetails = new HashSet<ReceiptDetail>(0);
 
 	@Id
-	@Column(name = "payId", unique = true, nullable = false, length = 32)
+	@Column(name = "receiptId", unique = true, nullable = false, length = 32)
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid")
 	public String getReceiptId() {
@@ -196,11 +196,11 @@ public class Receipt extends BaseModel {
 		this.receiptDetails = receiptDetails;
 	}
 
-	public Double getAmout() {
-		return amout;
+	public Double getAmount() {
+		return amount;
 	}
 
-	public void setAmout(Double amout) {
-		this.amout = amout;
+	public void setAmount(Double amount) {
+		this.amount = amount;
 	}
 }

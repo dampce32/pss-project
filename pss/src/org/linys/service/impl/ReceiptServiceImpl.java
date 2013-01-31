@@ -34,7 +34,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ReceiptServiceImpl extends BaseServiceImpl<Receipt, String> implements ReceiptService {
-
 	@Resource
 	private ReceiptDao receiptDao;
 	@Resource
@@ -150,7 +149,7 @@ public class ReceiptServiceImpl extends BaseServiceImpl<Receipt, String> impleme
 	}
 
 	public ServiceResult updateReceipt(Receipt receipt,
-			String receiptDetailIdIds, String delreceiptDetailIdIds,
+			String receiptDetailIds, String delreceiptDetailIds,
 			String sourceIds, String sourceCodes, String sourceDates,
 			String receiptKinds, String amounts, String receiptedAmounts,
 			String discountAmounts, String receiptAmounts) {
@@ -169,12 +168,12 @@ public class ReceiptServiceImpl extends BaseServiceImpl<Receipt, String> impleme
 			return result;
 		}
 		
-		if(StringUtils.isEmpty(sourceIds)){
+		if(StringUtils.isEmpty(receiptKinds)){
 			result.setMessage("请选择收款内容");
 			return result;
 		}
-		String[] receiptDetailIdIdArray = StringUtil.split(receiptDetailIdIds);
-		String[] delreceiptDetailIdIdArray = StringUtil.split(delreceiptDetailIdIds);
+		String[] receiptDetailIdArray = StringUtil.split(receiptDetailIds);
+		String[] delreceiptDetailIdIdArray = StringUtil.split(delreceiptDetailIds);
 		String[] sourceIdArray = StringUtil.split(sourceIds);
 		String[] sourceCodeArray = StringUtil.split(sourceCodes);
 		String[] sourceDateArray = StringUtil.split(sourceDates);
@@ -184,13 +183,12 @@ public class ReceiptServiceImpl extends BaseServiceImpl<Receipt, String> impleme
 		String[] discountAmountArray = StringUtil.split(discountAmounts);
 		String[] receiptAmountArray = StringUtil.split(receiptAmounts);
 		
-		for(int i=0;i<delreceiptDetailIdIdArray.length;i++){
-			ReceiptDetail receiptDetail = receiptDetailDao.load(delreceiptDetailIdIdArray[i]);
-			if(receiptDetail==null) continue;
-			receiptDetailDao.delete(receiptDetail);
+		for(String id : delreceiptDetailIdIdArray){
+			if(StringUtils.isEmpty(id)) continue;
+			receiptDetailDao.delete(id);
 		}
 		
-		for (int i = 0; i < sourceIdArray.length; i++) {
+		for (int i = 0; i < receiptKindArray.length; i++) {
 			Double amount = new Double(amountArray[i]!=null?amountArray[i]:"0");
 			Double receiptedAmount = new Double(receiptAmountArray[i]!=null?receiptAmountArray[i]:"0");
 			Double discountAmount = new Double(discountAmountArray[i]!=null?discountAmountArray[i]:"0");
@@ -207,10 +205,13 @@ public class ReceiptServiceImpl extends BaseServiceImpl<Receipt, String> impleme
 		Double totalDiscountAmount = 0.0;//总共优惠金额
 		Double totalReceiptAmount = 0.0;//总共实付金额
 		//先更新
+		Receipt model = receiptDao.load(receipt.getReceiptId());
+		receipt.setStatus(model.getStatus());
+		receiptDao.evict(model);
 		receiptDao.update(receipt);
 		
-		for(int i=0;i<sourceIdArray.length;i++){
-			String receiptDetailId = receiptDetailIdIdArray[i];
+		for(int i=0;i<receiptKindArray.length;i++){
+			String receiptDetailId = receiptDetailIdArray[i];
 			String sourceId = sourceIdArray[i];
 			String sourceCode = sourceCodeArray[i];
 			String sourceDate = sourceDateArray[i];
@@ -228,19 +229,19 @@ public class ReceiptServiceImpl extends BaseServiceImpl<Receipt, String> impleme
 				receiptDetail = receiptDetailDao.load(receiptDetailId);
 			}
 			if(receiptDetail==null) continue;
-			if("销售出库".equals(receiptKind)){
+			if("销售出库".equals(receiptKind) && StringUtils.isNotEmpty(sourceId)){
 				Deliver deliver = new Deliver();
 				deliver.setDeliverId(sourceId);
 				receiptDetail.setDeliver(deliver);
-			}else if("订单预收款".equals(receiptKind)){
+			}else if("订单预收款".equals(receiptKind) && StringUtils.isNotEmpty(sourceId)){
 				Sale sale = new Sale();
 				sale.setSaleId(sourceId);
 				receiptDetail.setSale(sale);
-			}else if("退货单".equals(receiptKind)){
+			}else if("退货单".equals(receiptKind) && StringUtils.isNotEmpty(sourceId)){
 				DeliverReject deliverReject = new DeliverReject();
 				deliverReject.setDeliverRejectId(sourceId);
 				receiptDetail.setDeliverReject(deliverReject);
-			}else if("预收单预收款".equals(receiptKind)){
+			}else if("预收单预收款".equals(receiptKind) && StringUtils.isNotEmpty(sourceId)){
 				PreReceipt preReceipt = new PreReceipt();
 				preReceipt.setPreReceiptId(sourceId);
 				receiptDetail.setPreReceipt(preReceipt);
@@ -345,7 +346,7 @@ public class ReceiptServiceImpl extends BaseServiceImpl<Receipt, String> impleme
 			}
 			Bank bank = model.getBank();
 			if(bank!=null){
-				bank.setAmount(bank.getAmount()+receipt.getReceiptAmount());
+				bank.setAmount(bank.getAmount()+model.getReceiptAmount());
 			}
 		//由审核修改为未审核
 		}else{
@@ -368,7 +369,7 @@ public class ReceiptServiceImpl extends BaseServiceImpl<Receipt, String> impleme
 			}
 			Bank bank = model.getBank();
 			if(bank!=null){
-				bank.setAmount(bank.getAmount()-receipt.getReceiptAmount());
+				bank.setAmount(bank.getAmount()-model.getReceiptAmount());
 			}
 		}
 		model.setStatus(receipt.getStatus());

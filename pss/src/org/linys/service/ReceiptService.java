@@ -44,8 +44,8 @@ public interface ReceiptService extends BaseService<Receipt, String> {
 	 * @author longweier
 	 * @update logs
 	 * @param receipt
-	 * @param receiptDetailIdIds
-	 * @param delreceiptDetailIdIds
+	 * @param receiptDetailIds
+	 * @param delreceiptDetailIds
 	 * @param sourceIds
 	 * @param sourceCodes
 	 * @param sourceDates
@@ -57,7 +57,7 @@ public interface ReceiptService extends BaseService<Receipt, String> {
 	 * @return
 	 * @throws Exception
 	 */
-	public ServiceResult updateReceipt(Receipt receipt,String receiptDetailIdIds,String delreceiptDetailIdIds,String sourceIds, String sourceCodes,
+	public ServiceResult updateReceipt(Receipt receipt,String receiptDetailIds,String delreceiptDetailIds,String sourceIds, String sourceCodes,
 			String sourceDates, String receiptKinds,String amounts, String receiptedAmounts, String discountAmounts,String receiptAmounts);
 
 	/**
