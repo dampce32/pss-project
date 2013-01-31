@@ -16,9 +16,13 @@ public interface ReportConfigService extends BaseService<ReportConfig,String>{
 	 * @author lys
 	 * @update logs
 	 * @param model
+	 * @param isNeedChooses 
+	 * @param reportParamIds 
+	 * @param deleteIds 
+	 * @param reportParamConfigIds 
 	 * @return
 	 */
-	ServiceResult save(ReportConfig model);
+	ServiceResult save(ReportConfig model, String reportParamConfigIds, String deleteIds, String reportParamIds, String isNeedChooses);
 	/**
 	 * @Description: 删除报表配置
 	 * @Create: 2013-1-23 下午2:17:29

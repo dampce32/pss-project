@@ -43,4 +43,6 @@
 	</table>
 	<table name="t_expense" catalog="pss" class="Expense"></table>
 	<table name="t_income" catalog="pss" class="Income"></table>
+	<table name="t_reportparam" catalog="pss" class="ReportParam"></table>
+	<table name="t_reportparamconfig" catalog="pss" class="ReportParamConfig"></table>
 </hibernate-reverse-engineering>

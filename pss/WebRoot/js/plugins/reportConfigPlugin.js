@@ -97,8 +97,8 @@
 	//编辑框
 	$(editDialog).dialog({  
 	    title: '编辑报表配置信息',  
-	    width:500,
-	    height:300,
+	    width:600,
+	    height:600,
 	    closed: true,  
 	    cache: false,  
 	    modal: true,
@@ -124,6 +124,11 @@
 	}
 	//保存前的赋值操作
 	var setValue = function(){
+		var reportKind= $.trim($('#reportKind',editForm).combobox('getValue'));
+		if(reportKind==''){
+			$.messager.alert('提示','请选择报表类型','warning');
+			return false;
+		}
 		var reportCode= $.trim($('#reportCode',editForm).val());
 		if(reportCode==''){
 			$.messager.alert('提示','请填写报表编号','warning');
@@ -139,6 +144,25 @@
 			$.messager.alert('提示','请填写报表明细网格Sql','warning');
 			return false;
 		}
+		//验证添加的商品行
+		$(reportParamConfigList).datagrid('endEdit', lastIndex);
+		$(reportParamConfigList).datagrid('unselectAll');
+		lastIndex = null;
+		var reportParamConfigIdArray = new Array();
+		var reportParamIdArray = new Array();
+		var isNeedChooseArray = new Array();
+		var rows = $(reportParamConfigList).datagrid('getRows');
+		for ( var i = 0; i < rows.length; i++) {
+			reportParamConfigIdArray.push(rows[i].reportParamConfigId);
+			reportParamIdArray.push(rows[i].reportParamId);
+			isNeedChooseArray.push(rows[i].isNeedChoose);
+		}
+		
+		$('#reportParamConfigIds',editForm).val(reportParamConfigIdArray.join(LYS.join));
+		$('#deleteIds',editForm).val(deleteIdArray.join(LYS.join));
+		$('#reportParamIds',editForm).val(reportParamIdArray.join(LYS.join));
+		$('#isNeedChooses',editForm).val(isNeedChooseArray.join(LYS.join));
+		$(editDialog).mask({maskMsg:'正在保存'});
 		return true;
 	}
 	//保存
@@ -150,6 +174,7 @@
 				return setValue();
 			},
 			success: function(data){
+				$(editDialog).mask('hide');
 				var result = eval('('+data+')');
 				if(result.isSuccess){
 					var fn = function(){
@@ -205,5 +230,141 @@
 			}
 		});
 	}
+	//-------报表参数配置--------
+	var reportParamConfigList = $('#reportParamConfigList',editDialog);
+	var lastIndex = null;
+	var isNeedChooses = [
+	 	    		    {isNeedChoose:'0',name:'否'},
+	 	    		    {isNeedChoose:'1',name:'是'}
+	 	];
+	 	function isNeedChooseFormatter(value){
+	 		for(var i=0; i<isNeedChooses.length; i++){
+	 			if (isNeedChooses[i].isNeedChoose == value) return isNeedChooses[i].name;
+	 		}
+	 		return value;
+	 	}
+	var deleteIdArray = null;//修改情况下，删除掉的报表参数配置
+	$(reportParamConfigList).datagrid({
+		  singleSelect:true,	
+		  fit:true,
+		  columns:[[
+		        {field:'paramName',title:'参数名称',width:150,align:"center"},
+			    {field:'paramCode',title:'参数编号',width:150,align:"center"},
+			    {field:'isNeedChoose',title:'是否必须',width:90,align:"center",editor:{type:'combobox',options:{valueField:'isNeedChoose',
+					textField:'name',
+					data:isNeedChooses}},formatter:isNeedChooseFormatter}
+		  ]],
+		  rownumbers:true,
+		  pagination:false,
+		  toolbar:[	
+				{id:'addReportParamConfig'+id,text:'添加参数',iconCls:'icon-add',handler:function(){onSelectReportParamConfig()}},'-',
+				{id:'deleteReportParamConfig'+id,text:'删除参数',iconCls:'icon-remove',handler:function(){onDeleteReportParamConfig()}}
+		  ],
+		  onBeforeLoad:function(){
+				$(this).datagrid('rejectChanges');
+		  },
+		  onClickRow:function(rowIndex){
+			if (lastIndex != rowIndex){
+				$(reportParamConfigList).datagrid('endEdit', lastIndex);
+				$(reportParamConfigList).datagrid('beginEdit', rowIndex);
+			}
+			lastIndex = rowIndex;
+		  }
+		 });
+	//----选择报表参数------
+	var selectDialog = $('#selectDialog',$this);
+	var reportParamList = $('#reportParamList',$this);
+	//编辑框
+	$(selectDialog).dialog({  
+	    title: '选择报表参数',  
+	    width:600,
+	    height:500,
+	    closed: true,  
+	    cache: false,  
+	    modal: true,
+	    closable:false
+	});
+	$(reportParamList).datagrid({
+		  fit:true,
+		  cache: false, 
+		  columns:[[
+			    {field:'ck',checkbox:true},
+			    {field:'paramName',title:'报表参数名称',width:150,align:"center"},
+			    {field:'paramCode',title:'报表参数编号',width:150,align:"center"}
+		  ]],
+		  rownumbers:true,
+		  pagination:true,
+		  toolbar:[	
+				{text:'选择',iconCls:'icon-ok',handler:function(){onSelectOKReportParam()}},
+				{text:'退出',iconCls:'icon-cancel',handler:function(){
+					onExitSelectReportParam();
+				}}
+		  ]
+	 });
+	 var onSelectReportParamConfig = function(){
+		 $(selectDialog).dialog('open');
+		 deleteIdArray = new Array();
+	 }
+	 //查询
+	 $('#searchBtnSelectDialog',selectDialog).click(function(){
+		 searchBtnSelect();
+	 })
+	 var searchBtnSelect = function(){
+		var paramCode = $('#paramCodeSelectDialog',selectDialog).val();
+		
+		var rows = $(reportParamConfigList).datagrid('getRows');
+		var reportParamArray = new Array();
+		for ( var i = 0; i < rows.length; i++) {
+			reportParamArray.push(rows[i].reportParamId);
+		}
+		
+		var url = "system/selectReportParam.do";
+		var content = {paramCode:paramCode,ids:reportParamArray.join(LYS.join)};
+		var result = syncCallService(url,content);
+		if(result.isSuccess){
+			var data = result.data;
+			$(reportParamList).datagrid('loadData',eval("("+data.datagridData+")"));
+		}else{
+			$.messager.alert('提示',result.message,"error");
+		}
+	 }
+	 //选择报表参数
+	 var onSelectOKReportParam = function(){
+		 var rows = $(reportParamList).datagrid('getSelections');
+		 if(rows.length==0){
+			 $.messager.alert('提示','请选择报表参数',"warning");
+			 return;
+		 }
+		 for ( var i = 0; i < rows.length; i++) {
+			var row = rows[i];
+			 $(reportParamConfigList).datagrid('appendRow',{
+				 reportParamConfigId:'',
+				 reportParamId:row.reportParamId,
+				 paramCode:row.paramCode,
+				 paramName:row.paramName,
+				 isNeedChoose:0,
+				 array:''
+			});
+		}
+	    $(reportParamConfigList).datagrid('endEdit', lastIndex);
+	    $(reportParamConfigList).datagrid('unselectAll');
+		lastIndex = null;
+		onExitSelectReportParam();
+	 }
+	 //退出选择报表参数界面
+	 var onExitSelectReportParam = function(){
+		 $(selectDialog).dialog('close');
+		 $(reportParamList).datagrid({url:LYS.ClearUrl});
+	 }
+	 //删除报表参数
+	 var onDeleteReportParamConfig = function(){
+		 var row = $(reportParamConfigList).datagrid('getSelected');
+		 if(row.reportParamConfigId!=''){
+			 deleteIdArray.push(row.reportParamConfigId);
+		 }
+		 var rowIndex = $(reportParamConfigList).datagrid('getRowIndex',row);
+		 $(reportParamConfigList).datagrid('deleteRow',rowIndex);
+		 lastIndex = null;
+	 }
   }
 })(jQuery);   
