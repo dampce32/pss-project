@@ -110,5 +110,23 @@ public class ReportConfigAction extends BaseAction implements
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	}
+	/**
+	 * @Description: 打开初始化
+	 * @Create: 2013-1-31 下午10:18:01
+	 * @author lys
+	 * @update logs
+	 */
+	public void init(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = reportConfigService.init(model.getReportConfigId());
+		} catch (Exception e) {
+			result.setMessage("打开初始化失败");
+			logger.error("打开初始化失败", e);
+			result.setIsSuccess(false);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
 	
 }

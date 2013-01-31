@@ -191,10 +191,31 @@ public class ReportConfigServiceImpl extends
 				}else{
 					ReportParamConfig oldReportParamConfig = reportParamConfigDAO.load(reportParamConfigId);
 					oldReportParamConfig.setArray(i);
+					oldReportParamConfig.setIsNeedChoose(Integer.parseInt(isNeedChoose));
 					reportParamConfigDAO.update(oldReportParamConfig);
 				}
 			}
 		}
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.ReportConfigService#init(java.lang.String)
+	 */
+	@Override
+	public ServiceResult init(String reportConfigId) {
+		ServiceResult result = new ServiceResult(false);
+		ReportConfig reportConfig = reportConfigDAO.load(reportConfigId);
+		String[] propertiesBuy = {"reportConfigId","reportCode","reportName",
+				"reportDetailSql","reportParamsSql","reportKind"};
+		String reportConfigData = JSONUtil.toJson(reportConfig,propertiesBuy);
+		result.addData("reportConfigData",reportConfigData);
+		
+		List<ReportParamConfig> reportParamConfigList = reportParamConfigDAO.queryByReportConfigId(reportConfigId);
+		String[] propertiesDetail = {"reportParamConfigId","reportParam.reportParamId","reportParam.paramCode","reportParam.paramName","isNeedChoose"};
+		String detailData = JSONUtil.toJson(reportParamConfigList,propertiesDetail);
+		result.addData("detailData", detailData);
 		result.setIsSuccess(true);
 		return result;
 	}
