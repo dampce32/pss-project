@@ -42,7 +42,12 @@ public class ReportConfigAction extends BaseAction implements
 	public void save(){
 		ServiceResult result = new ServiceResult(false);
 		try {
-			result = reportConfigService.save(model);
+			String reportParamConfigIds = getParameter("reportParamConfigIds");
+			String deleteIds = getParameter("deleteIds");
+			String reportParamIds = getParameter("reportParamIds");
+			String isNeedChooses = getParameter("isNeedChooses");
+			
+			result = reportConfigService.save(model,reportParamConfigIds,deleteIds,reportParamIds,isNeedChooses);
 		} catch (Exception e) {
 			result.setMessage("保存报表配置失败");
 			logger.error("保存报表配置失败", e);

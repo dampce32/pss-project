@@ -41,6 +41,12 @@ public class ReportConfig extends BaseModel {
 	 * 报表参数Sql
 	 */
 	private String reportParamsSql;
+	/**
+	 * 报表类型：
+	 * 统计报表
+	 * 模块报表
+	 */
+	private String reportKind;
 
 	// Constructors
 
@@ -100,6 +106,14 @@ public class ReportConfig extends BaseModel {
 
 	public void setReportDetailSql(String reportDetailSql) {
 		this.reportDetailSql = reportDetailSql;
+	}
+	@Column(name = "reportKind", length = 20,nullable=false)
+	public String getReportKind() {
+		return reportKind;
+	}
+
+	public void setReportKind(String reportKind) {
+		this.reportKind = reportKind;
 	}
 
 }

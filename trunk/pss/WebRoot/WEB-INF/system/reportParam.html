@@ -1,0 +1,32 @@
+<div class="easyui-layout plugins" data-options="fit:true" ui="reportParamInit" id="${id}">
+	<div data-options="region:'north',border:false" style="height: 35px;overflow: hidden;padding:5px" id="queryContent"> 
+		参数编号:&nbsp;&nbsp;<input id="paramCodeSearch" type="text" size="12"/>&nbsp;&nbsp;&nbsp;
+		<a href="#" class="easyui-linkbutton" id="searchBtn" data-options="iconCls:'icon-search'" style="cursor: pointer;">查 询</a>
+	</div>
+	<div data-options="region:'center',border:false" style="width: 100%;height:100%">
+		<div id="viewList"></div>
+	</div>
+	<div data-options="region:'south',border:false" style="height: 32">
+		<div class="easyui-pagination" id="pager" style="background:#efefef;border:1px solid #ccc;"></div>
+	</div>
+	
+	<div id="editDialog">
+		<form method="post" id="editForm" >
+			<input type="hidden" name="reportParamId" id="reportParamId" />
+			<table border="0" cellpadding="0" cellspacing="0" style="width: 100%">
+				<tr>
+					<td class="tdTitle">参数名称:</td>
+					<td>
+						<input type="text" name="paramName" id="paramName" class="text" style="width: 150px" size="40" />
+					</td>
+				</tr>
+				<tr>
+					<td class="tdTitle">参数编号:</td>
+					<td>
+						<input type="text" name="paramCode" id="paramCode" class="text" style="width: 150px" size="40" />
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
