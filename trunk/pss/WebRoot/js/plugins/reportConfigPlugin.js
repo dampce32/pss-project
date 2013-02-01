@@ -168,6 +168,7 @@
 		$('#deleteIds',editForm).val(deleteIdArray.join(LYS.join));
 		$('#reportParamIds',editForm).val(reportParamIdArray.join(LYS.join));
 		$('#isNeedChooses',editForm).val(isNeedChooseArray.join(LYS.join));
+		
 		$(editDialog).mask({maskMsg:'正在保存'});
 		return true;
 	}
@@ -317,7 +318,9 @@
 		  pagination:false,
 		  toolbar:[	
 				{id:'addReportParamConfig'+id,text:'添加参数',iconCls:'icon-add',handler:function(){onSelectReportParamConfig()}},'-',
-				{id:'deleteReportParamConfig'+id,text:'删除参数',iconCls:'icon-remove',handler:function(){onDeleteReportParamConfig()}}
+				{id:'deleteReportParamConfig'+id,text:'删除参数',iconCls:'icon-remove',handler:function(){onDeleteReportParamConfig()}},'-',
+				{id:'moveUp'+id,text:'上移',iconCls:'icon-up',handler:function(){onMove(-1)}},'-',
+				{id:'moveUp'+id,text:'下移',iconCls:'icon-down',handler:function(){onMove(1)}},'-'
 		  ],
 		  onBeforeLoad:function(){
 				$(this).datagrid('rejectChanges');
@@ -425,5 +428,48 @@
 		 $(reportParamConfigList).datagrid('deleteRow',rowIndex);
 		 lastIndex = null;
 	 }
+	//移动
+	var onMove = function(direction){
+			var rows  = $(reportParamConfigList).datagrid('getRows');
+			var selectRow = $(reportParamConfigList).datagrid('getSelected');
+			var selectIndex = $(reportParamConfigList).datagrid('getRowIndex',selectRow);
+			if(direction==-1){
+				if(selectIndex==0){
+					$.messager.alert('提示',"已经是第一条记录了","warming");
+					return;
+				}
+			}else if(direction==1){//下移
+				var rows  = $(reportParamConfigList).datagrid('getRows');
+				if(selectIndex==rows.length-1){
+					$.messager.alert('提示',"已经是最后一条记录了","warming");
+					return;
+				}
+			}
+			var updateRow = rows[selectIndex+direction];
+			var reportParamConfigId = selectRow.reportParamConfigId;
+			var reportParamId = selectRow.reportParamId;
+			var paramCode = selectRow.paramCode;
+			var paramName = selectRow.paramName;
+			var isNeedChoose = selectRow.isNeedChoose;
+			var array = selectRow.array;
+			
+			$(reportParamConfigList).datagrid('updateRow',{
+				index: selectIndex,
+				row: updateRow
+			});
+			$(reportParamConfigList).datagrid('updateRow',{
+				index: selectIndex+direction,
+				row: {
+					reportParamConfigId:reportParamConfigId,
+					reportParamId:reportParamId,
+					paramCode:paramCode,
+					paramName:paramName,
+					isNeedChoose:isNeedChoose,
+					array:array
+				}
+			});
+			$(reportParamConfigList).datagrid('selectRow',selectIndex+direction);
+			lastIndex = selectIndex+direction;
+		}
   }
 })(jQuery);   
