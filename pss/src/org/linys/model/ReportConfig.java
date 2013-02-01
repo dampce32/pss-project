@@ -1,9 +1,15 @@
 package org.linys.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -50,6 +56,8 @@ public class ReportConfig extends BaseModel {
 	 * 模块报表 0 
 	 */
 	private Integer reportKind;
+	
+	private Set<ReportParamConfig> reportParamConfigs = new HashSet<ReportParamConfig>(0);
 
 	// Constructors
 
@@ -117,6 +125,14 @@ public class ReportConfig extends BaseModel {
 
 	public void setReportKind(Integer reportKind) {
 		this.reportKind = reportKind;
+	}
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "reportConfig")
+	public Set<ReportParamConfig> getReportParamConfigs() {
+		return reportParamConfigs;
+	}
+
+	public void setReportParamConfigs(Set<ReportParamConfig> reportParamConfigs) {
+		this.reportParamConfigs = reportParamConfigs;
 	}
 
 }

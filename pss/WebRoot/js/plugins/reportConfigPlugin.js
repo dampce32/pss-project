@@ -26,17 +26,23 @@
 		  singleSelect:true,
 		  fit:true,
 		  columns:[[
+			    {field:'reportKind',title:'报表类型',width:120,align:"center",formatter: function(value,row,index){
+					if (value==0){
+						return '模块报表';
+					} else {
+						return '统计报表';
+					}
+				}},
 			    {field:'reportCode',title:'报表编号',width:120,align:"center"},
-				{field:'reportName',title:'报表名称',width:200,align:"center"},
-			    {field:'reportParamsSql',title:'报表参数Sql',width:200,align:"center"},
-				{field:'reportDetailSql',title:'报表明细Sql',width:200,align:"center"}
+				{field:'reportName',title:'报表名称',width:200,align:"center"}
 		  ]],
 		  rownumbers:true,
 		  pagination:false,
 		  toolbar:[	
 				{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},
 				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},
-				{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}}
+				{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}},
+				{text:'复制',iconCls:'icon-copy',handler:function(){onCopy()}}
 		  ],
 		  onDblClickRow:function(rowIndex, rowData){
 				onUpdate();
@@ -98,7 +104,7 @@
 	$(editDialog).dialog({  
 	    title: '编辑报表配置信息',  
 	    width:600,
-	    height:600,
+	    height:height-10,
 	    closed: true,  
 	    cache: false,  
 	    modal: true,
@@ -230,6 +236,36 @@
 		deleteIdArray = new Array();
 		$(editDialog).dialog('open');
 	 }
+	//复制
+	var onCopy = function(){
+		if(selectRow==null){
+			$.messager.alert("提示","请选择数据行","warning");
+			return;
+		}
+		$(editForm).form('clear');
+		var url = 'system/initReportConfig.do';
+		var content ={reportConfigId:selectRow.reportConfigId};
+		asyncCallService(url,content,function(result){
+			if(result.isSuccess){
+				var data = result.data;
+				var reportConfigData = eval("("+data.reportConfigData+")");
+				$('#reportCode',editDialog).val(reportConfigData.reportCode);
+				$('#reportName',editDialog).val(reportConfigData.reportName);
+				
+				$('#reportKind',editDialog).combobox('setValue',reportConfigData.reportKind);
+				$('#reportParamsSql',editDialog).val(reportConfigData.reportParamsSql);
+				$('#reportDetailSql',editDialog).val(reportConfigData.reportDetailSql);
+				
+				var detailData = eval("("+data.detailData+")");
+				$(reportParamConfigList).datagrid('loadData',detailData);
+			}else{
+				$.messager.alert('提示',result.message,'error');
+			}
+		});
+		deleteIdArray = new Array();
+		$(editDialog).dialog('open');
+	}
+
 	//删除
 	var onDelete = function(){
 		if(selectRow==null){

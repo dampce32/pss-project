@@ -182,6 +182,17 @@ public class BaseAction extends ActionSupport {
 		return getRequest().getParameter(name);
 	}
 	
+	/**
+	 * @Description: 取得报表模板路径
+	 * @Create: 2013-2-1 下午1:51:04
+	 * @author lys
+	 * @update logs
+	 * @return
+	 */
+	public String getReportTemplatePath(){
+		return getRequest().getSession().getServletContext().getRealPath("/report");
+	}
+	
 	public String getIds() {
 		return ids;
 	}

@@ -13,12 +13,12 @@
 	
 	<div id="editDialog">
 		<div class="easyui-layout" data-options="fit:true">
-			<div data-options="region:'north',border:false" style="height: 140px;overflow: hidden;padding:5px"> 
-				<form method="post" id="editForm" >
+			<div data-options="region:'north',border:false" style="height: 320px;overflow: hidden;padding:5px"> 
+				<form method="post" id="editForm"  enctype="multipart/form-data">
 					<input type="hidden" name="reportConfigId" id="reportConfigId" />
 					<table border="0" cellpadding="0" cellspacing="0" style="width: 100%">
 						<tr>
-							<td class="tdTitle">报表类型:</td>
+							<td class="tdTitle" >报表类型:</td>
 							<td>
 								<select id="reportKind" class="easyui-combobox" name="reportKind" style="width:400px;">  
 								    <option value="0">模块报表</option>  
@@ -33,23 +33,29 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="tdTitle">报表名称:</td>
+							<td class="tdTitle" >报表名称:</td>
 							<td>
 								<input type="text" name="reportName" id="reportName" class="text" style="width: 400px" size="40" />
 							</td>
 						</tr>
 						<tr>
-							<td class="tdTitle" >参数Sql:</td>
-							<td >
-								<input type="text" name="reportParamsSql" id="reportParamsSql" class="text" style="width: 400px" size="40" />
+							<td class="tdTitle" style="padding-top:6px">参数Sql:</td>
+							<td style="padding-top:3px">
+								<textarea style="width: 400px;height: 90px" name="reportParamsSql" id="reportParamsSql"></textarea>
 							</td>
 						</tr>
 						<tr>
 							<td class="tdTitle">明细网格Sql:</td>
-							<td >
-								<input type="text" name="reportDetailSql" id="reportDetailSql" class="text" style="width: 400px" size="40" />
+							<td style="padding-top:3px">
+								<textarea style="width: 400px;height: 90px" name="reportDetailSql" id="reportDetailSql"></textarea>
 							</td>
 						</tr>
+						<tr>
+		    				<td>报表模板文件:</td>
+		    				<td>
+		    					<input type="file" size="30" name="file" id="file" />
+		    				</td>
+		    			</tr>
 					</table>
 					
 					<input type="hidden" name="reportParamConfigIds"  id="reportParamConfigIds" />
