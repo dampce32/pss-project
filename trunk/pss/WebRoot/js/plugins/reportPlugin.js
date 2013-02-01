@@ -2,47 +2,67 @@
 (function($) {  
   // 插件的定义  
   $.fn.reportInit = function() {
-	  var $this = $(this);
-	  var id = $(this).attr('id');
-	  var printDialog = $('#printDialog',$this);
-	  
-	  var paramArray = new Array();
-	  
-	  paramArray.push('txtBeginDate');
-	  paramArray.push('supplier');
-	  paramArray.push('warehouse');
-	  
-	  var appendStr = "";
-		  appendStr += "<tr class = \"hadAdd\" style=\"margin-top:6px\">"+
-			"<td style=\"padding-top:6px\">"+
-				"<a href=\"#\" class=\"easyui-linkbutton\" id=\"searchBtn\"  style=\"cursor: pointer;\" value=\"供应商对账\">供应商对账</a>"+
-			"</td>"+
-			"</tr>";
-	  if ("" != appendStr) {
-			$(appendStr).insertAfter("#reportTable");
+    var $this = $(this);
+    var id = $(this).attr('id');
+	var printDialog = $('#printDialog',$this);
+	var currReportData = null;
+	var currReportParamsData = null;
+	var currReportCode = null;
+	
+	var url = 'system/getReport1ReportConfig.do';
+	var content ={};
+	asyncCallService(url,content,function(result){
+		if(result.isSuccess){
+			var data = result.data;
+			var reportConfig1Data = eval("("+data.reportConfig1Data+")");
+			currReportData = reportConfig1Data;
+			for ( var reportConfig in reportConfig1Data) {
+			 	var appendStr = "";
+			 	appendStr += "<tr class = \"hadAdd\" style=\"margin-top:6px\">"+
+						 		"<td style=\"padding-top:6px\">"+
+						 			"<a href=\"#\" class=\"easyui-linkbutton\" reportCode =\""+reportConfig1Data[reportConfig]["reportCode"]+"\" id=\""+reportConfig1Data[reportConfig]["reportConfigId"]+"\"  style=\"cursor: pointer;\" value=\""+reportConfig1Data[reportConfig]["reportName"]+"\">"+reportConfig1Data[reportConfig]["reportName"]+"</a>"+
+						 		"</td>"+
+						 	 "</tr>";
+			   if ("" != appendStr) {
+				   $(appendStr).insertAfter("#reportTable");
+			   }
+			}
+			 $('.easyui-linkbutton').linkbutton({  
+				    iconCls: 'icon-search'  
+			}); 
+			  
+			 $('.easyui-linkbutton').bind('click', function(){  
+				 var id =  $(this).attr('id');
+				 var text =  $(this).attr('value');
+				 currReportCode =  $(this).attr('reportCode');
+				 //取得该报表对应的参数列表
+				 var url = 'system/getReportParamsReportConfig.do';
+				 var content ={reportConfigId:id};
+				 asyncCallService(url,content,function(result){
+					if(result.isSuccess){
+						 $(".hadAddPrint").remove();
+						 var data = result.data;
+						 var paramsData = eval("("+data.paramsData+")");
+						 currReportParamsData = paramsData;
+						 for ( var i = paramsData.length-1; i >=0; i--) {
+							createChoose(paramsData[i]["paramCode"]);
+						 }
+					     $(printDialog).dialog({
+						    title:text,
+						    width:400,
+						    height:200+paramsData.length*20
+						 })
+						 $(printDialog).dialog('open');
+					}else{
+						$.messager.alert('提示',result.message,'error');
+					}
+				});
+			 });
+		}else{
+			$.messager.alert('提示',result.message,'error');
 		}
-	 $('.easyui-linkbutton').linkbutton({  
-	    iconCls: 'icon-search'  
-	 }); 
-	 
-	 
-	 $('.easyui-linkbutton').bind('click', function(){  
-		 var id =  $(this).attr('id');
-		 var text =  $(this).attr('value');
-		 $(".hadAddPrint").remove();
-		 
-		 for ( var i = paramArray.length-1; i >=0; i--) {
-			 createChoose(paramArray[i]);
-		 }
-		 
-	     $(printDialog).dialog({
-			    title:text,
-			    width:400,
-			    height:200+2*20
-		 })
-		$(printDialog).dialog('open');
-	 });
-	 
+	});
+	  
 	//编辑框
 	$(printDialog).dialog({  
 	    closed: true,  
@@ -65,7 +85,7 @@
 	});    
 	//生成选择条件
 	var createChoose = function(kind){
-		if('supplier'==kind){
+		if('@supplierId'==kind){
 			var appendStr = "";
 			appendStr += "<tr class = \"hadAddPrint\" style=\"padding-top:6px\">"+
 				"<td style=\"padding:10px 16px\">供应商:</td>"+
@@ -88,7 +108,7 @@
 			        {field:'supplierName',title:'供应商名称',width:120}
 			    ]]  
 			});
-		}else if('txtBeginDate'==kind){
+		}else if('@txtBeginDate'==kind){
 			var appendStr = "";
 			appendStr += "<tr class = \"hadAddPrint\" style=\"padding-top:6px\">"+
 					"<td style=\"padding:10px 16px\">日期:</td>"+
@@ -100,7 +120,7 @@
 		    if ("" != appendStr) {
 				$(appendStr).insertAfter("#printTable");
 			}
-		}else if('warehouse'==kind){
+		}else if('@warehouseId'==kind){
 			var appendStr = "";
 			appendStr += "<tr class = \"hadAddPrint\" style=\"padding-top:6px\">"+
 					"<td style=\"padding:10px 16px\">存放仓库:</td>"+
@@ -122,33 +142,75 @@
 	}
 	//打印前检查值
 	var onPrintValue = function(){
-		for ( var i = 0; i < paramArray.length; i++) {
-			var param = paramArray[i];
-			if(param=='txtBeginDate'){
-				var txtBeginDate = $('#txtBeginDate').val();
-				if(''==txtBeginDate){
-					$.messager.alert('提示','请选择开始日期','warning');
-					return false;
+		if(currReportParamsData!=null){
+			for ( var i = 0; i <currReportParamsData.length; i++) {
+				if(currReportParamsData[i]["isNeedChoose"]==1){
+					if(currReportParamsData[i]["paramCode"]=='@txtBeginDate'){
+						var txtBeginDate = $('#txtBeginDate',printDialog).val();
+						if(''==txtBeginDate){
+							$.messager.alert('提示','请选择开始日期','warning');
+							return false;
+						}
+						var txtEndDate = $('#txtEndDate',printDialog).val();
+						if(''==txtEndDate){
+							$.messager.alert('提示','请选择结束日期','warning');
+							return false;
+						}
+						var diff = DateDiff(txtEndDate,txtBeginDate);
+						if(diff<0){
+							$.messager.alert('提示','结束日期必须大于等于开始日期','warning');
+							return false;
+						}
+					}else if('@supplierId'==currReportParamsData[i]["paramCode"]){
+						var supplierId = $('#supplier',printDialog).combogrid('getValue');
+						if(supplierId==''){
+							$.messager.alert('提示','请选择供应商','warning');
+							return false;
+						}
+					}else if('@warehouseId'==currReportParamsData[i]["paramCode"]){
+						var warehouseId = $('#warehouse',printDialog).combobox('getValue');
+						if(warehouseId==''){
+							$.messager.alert('提示','请选择仓库','warning');
+							return false;
+						}
+					}
 				}
-				var txtEndDate = $('#txtEndDate').val();
-				if(''==txtEndDate){
-					$.messager.alert('提示','请选择结束日期','warning');
-					return false;
-				}
-				var diff = DateDiff(txtEndDate,txtBeginDate);
-				if(diff<0){
-					$.messager.alert('提示','结束日期必须大于等于开始日期','warning');
-					return false;
-				}
-			}
+			 }
 		}
 		return true;
 	}
 	//打印预览
 	var onPrint = function(){
 		if(onPrintValue()){
-			
-			window.open("printReport.jsp?report=buy&data=ReportServlet?buyId=402880bb3c8542f0013c854975af0001");
+			var url = "printReport.jsp?report="+currReportCode+"&data=ReportServlet";
+			if(currReportParamsData!=null){
+				for ( var i = 0; i <currReportParamsData.length; i++) {
+					if(currReportParamsData[i]["paramCode"]=='@txtBeginDate'){
+						var txtBeginDate = $('#txtBeginDate',printDialog).val();
+						var txtEndDate = $('#txtEndDate',printDialog).val();
+						if(i==0){
+							url += "?txtBeginDate="+txtBeginDate+LYS.join+"txtEndDate="+txtEndDate;
+						}else{
+							url += LYS.join+"txtBeginDate="+txtBeginDate+LYS.join+"txtEndDate="+txtEndDate;
+						}
+					}else if(currReportParamsData[i]["paramCode"]=='@supplierId'){
+						var supplierId = $('#supplier',printDialog).combogrid('getValue');
+						if(i==0){
+							url += "?supplierId="+supplierId;
+						}else{
+							url += LYS.join+"supplierId="+supplierId;
+						}
+					}else if(currReportParamsData[i]["paramCode"]=='@warehouseId'){
+						var warehouseId = $('#warehouse',printDialog).combobox('getValue');
+						if(i==0){
+							url += "?warehouseId="+warehouseId;
+						}else{
+							url +=  LYS.join+"warehouseId="+warehouseId;
+						}
+					}
+				}
+				window.open(url);
+			}
 		}
 	}
   }

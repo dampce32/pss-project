@@ -129,4 +129,41 @@ public class ReportConfigAction extends BaseAction implements
 		ajaxJson(jsonString);
 	}
 	
+	/**
+	 * @Description: 取得所有的统计报表
+	 * @Create: 2013-1-31 下午10:58:45
+	 * @author lys
+	 * @update logs
+	 */
+	public void getReport1(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = reportConfigService.getReport1();
+		} catch (Exception e) {
+			result.setMessage("取得所有的统计报表失败");
+			logger.error("取得所有的统计报表失败", e);
+			result.setIsSuccess(false);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	
+	/**
+	 * @Description: 取得报表的报表参数
+	 * @Create: 2013-2-1 上午9:05:03
+	 * @author lys
+	 * @update logs
+	 */
+	public void getReportParams(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = reportConfigService.getReportParams(model);
+		} catch (Exception e) {
+			result.setMessage("取得报表的报表参数失败");
+			logger.error("取得报表的报表参数失败", e);
+			result.setIsSuccess(false);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
 }

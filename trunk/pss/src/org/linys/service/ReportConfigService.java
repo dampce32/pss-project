@@ -70,5 +70,23 @@ public interface ReportConfigService extends BaseService<ReportConfig,String>{
 	 * @return
 	 */
 	ServiceResult init(String reportConfigId);
+	/**
+	 * @Description: 取得所有的统计报表
+	 * @Create: 2013-1-31 下午10:59:48
+	 * @author lys
+	 * @update logs
+	 * @param reportConfigId
+	 * @return
+	 */
+	ServiceResult getReport1();
+	/**
+	 * @Description: 取得报表的报表参数
+	 * @Create: 2013-2-1 上午9:06:52
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @return
+	 */
+	ServiceResult getReportParams(ReportConfig model);
 
 }

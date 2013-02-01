@@ -3,6 +3,7 @@ package org.linys.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.linys.dao.ReportParamConfigDAO;
 import org.linys.model.ReportParamConfig;
@@ -26,6 +27,7 @@ public class ReportParamConfigDAOImpl extends
 	public List<ReportParamConfig> queryByReportConfigId(String reportConfigId) {
 		Criteria criteria  = getCurrentSession().createCriteria(ReportParamConfig.class);
 		criteria.add(Restrictions.eq("reportConfig.reportConfigId", reportConfigId));
+		criteria.addOrder(Order.asc("array"));
 		return criteria.list();
 	}
 

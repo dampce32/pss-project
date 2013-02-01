@@ -99,7 +99,7 @@ public class ReportConfigServiceImpl extends
 			result.setMessage("请填写报表配置信息");
 			return result;
 		}
-		if(StringUtils.isEmpty(model.getReportKind())){
+		if(StringUtils.isEmpty(model.getReportKind()+"")){
 			result.setMessage("请填写报表类型");
 			return result;
 		}
@@ -216,6 +216,38 @@ public class ReportConfigServiceImpl extends
 		String[] propertiesDetail = {"reportParamConfigId","reportParam.reportParamId","reportParam.paramCode","reportParam.paramName","isNeedChoose"};
 		String detailData = JSONUtil.toJson(reportParamConfigList,propertiesDetail);
 		result.addData("detailData", detailData);
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.ReportConfigService#getReport1()
+	 */
+	@Override
+	public ServiceResult getReport1() {
+		ServiceResult result = new ServiceResult(false);
+		List<ReportConfig> list = reportConfigDAO.getReport1();
+		String[] properties = {"reportConfigId","reportName","reportCode"};
+		String reportConfig1Data = JSONUtil.toJsonWithoutRows(list,properties);
+		result.addData("reportConfig1Data", reportConfig1Data);
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.ReportConfigService#getReportParams(org.linys.model.ReportConfig)
+	 */
+	@Override
+	public ServiceResult getReportParams(ReportConfig model) {
+		ServiceResult result = new ServiceResult(false);
+		if(model==null||StringUtils.isEmpty(model.getReportConfigId())){
+			result.setMessage("请选择报表");
+			return result;
+		}
+		List<ReportParamConfig> list = reportParamConfigDAO.queryByReportConfigId(model.getReportConfigId());
+		String[] propertiesDetail = {"reportParam.paramName","reportParam.paramCode","isNeedChoose"};
+		String paramsData = JSONUtil.toJsonWithoutRows(list,propertiesDetail);
+		result.addData("paramsData", paramsData);
 		result.setIsSuccess(true);
 		return result;
 	}

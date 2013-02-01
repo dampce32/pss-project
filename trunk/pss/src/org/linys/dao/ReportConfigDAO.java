@@ -25,5 +25,13 @@ public interface ReportConfigDAO extends BaseDAO<ReportConfig,String>{
 	 * @return
 	 */
 	Long getTotalCount(ReportConfig model);
+	/**
+	 * @Description: 取得所有的统计报表
+	 * @Create: 2013-1-31 下午11:02:14
+	 * @author lys
+	 * @update logs
+	 * @return
+	 */
+	List<ReportConfig> getReport1();
 
 }
