@@ -1,9 +1,13 @@
 package org.linys.service.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.linys.dao.ReportConfigDAO;
 import org.linys.dao.ReportParamConfigDAO;
@@ -11,6 +15,7 @@ import org.linys.model.ReportConfig;
 import org.linys.model.ReportParam;
 import org.linys.model.ReportParamConfig;
 import org.linys.service.ReportConfigService;
+import org.linys.util.FileUtil;
 import org.linys.util.JSONUtil;
 import org.linys.util.StringUtil;
 import org.linys.vo.ServiceResult;
@@ -34,7 +39,7 @@ public class ReportConfigServiceImpl extends
 	 * @see org.linys.service.ReportConfigService#delete(org.linys.model.ReportConfig)
 	 */
 	@Override
-	public ServiceResult delete(ReportConfig model) {
+	public ServiceResult delete(ReportConfig model, String reportTemplatePath) {
 		ServiceResult result = new ServiceResult(false);
 		if(model==null||StringUtils.isEmpty(model.getReportConfigId())){
 			result.setMessage("请选择要删除的报表配置");
@@ -45,6 +50,7 @@ public class ReportConfigServiceImpl extends
 			result.setMessage("该报表配置已不存在");
 			return result;
 		}else{
+			FileUtils.deleteQuietly(new File(reportTemplatePath+File.separator+oldModel.getReportCode()+".grf"));
 			reportConfigDAO.delete(oldModel);
 		}
 		result.setIsSuccess(true);
@@ -92,7 +98,7 @@ public class ReportConfigServiceImpl extends
 	 * @see org.linys.service.ReportConfigService#save(org.linys.model.ReportConfig, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public ServiceResult save(ReportConfig model, String reportParamConfigIds,
+	public ServiceResult save(ReportConfig model, File file, String reportTemplatePath, String reportParamConfigIds,
 			String deleteIds, String reportParamIds, String isNeedChooses) {
 		ServiceResult result = new ServiceResult(false);
 		if(model==null){
@@ -115,6 +121,16 @@ public class ReportConfigServiceImpl extends
 			result.setMessage("请填写报表明细网格Sql");
 			return result;
 		}
+		if(StringUtils.isEmpty(model.getReportConfigId())){//新增
+			if(file==null){
+				result.setMessage("请上传报表模板");
+				return result;
+			}
+		}
+		if(file!=null&&"grf".equals(FilenameUtils.getExtension(file.getName()))){
+			result.setMessage("上传的文件格式不正确");
+			return result;
+		}
 		
 		String[] reportParamConfigIdArray = StringUtil.split(reportParamConfigIds);
 		String[] deleteIdArray = StringUtil.split(deleteIds);
@@ -127,8 +143,9 @@ public class ReportConfigServiceImpl extends
 				result.setMessage("该报表编号已存在");
 				return result;
 			}
+			FileUtil.saveFile(file, reportTemplatePath+File.separator+model.getReportCode()+".grf");
 			reportConfigDAO.save(model);
-			for (int i = 0; i < reportParamIdArray.length; i++) {
+			for (int i = 0; i < reportParamIdArray.length&&StringUtils.isNotEmpty(reportParamIdArray[i]); i++) {
 				String reportParamId = reportParamIdArray[i];
 				String isNeedChoose = isNeedChooseArray[i];
 				
@@ -155,11 +172,26 @@ public class ReportConfigServiceImpl extends
 					return result;
 				}
 			}
+			String oldReportCode = oldModel.getReportCode();
 			oldModel.setReportKind(model.getReportKind());
 			oldModel.setReportCode(model.getReportCode());
 			oldModel.setReportName(model.getReportName());
 			oldModel.setReportDetailSql(model.getReportDetailSql());
 			oldModel.setReportParamsSql(model.getReportParamsSql());
+			
+			if(file!=null){
+				//移除原先的模板文件，保存新的模板文件
+				FileUtils.deleteQuietly(new File(reportTemplatePath+File.separator+oldReportCode+".grf"));
+				FileUtil.saveFile(file, reportTemplatePath+File.separator+model.getReportCode()+".grf");
+			}else{
+				if(!model.getReportCode().equals(oldReportCode)){
+					try {
+						FileUtils.moveFile(new File(reportTemplatePath+File.separator+oldReportCode+".grf"), new File(reportTemplatePath+File.separator+model.getReportCode()+".grf"));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
 			
 			
 			//删除已删的报表参数配置
@@ -172,7 +204,7 @@ public class ReportConfigServiceImpl extends
 				}
 			}
 			//根据采购单明细Id更新或新增
-			for (int i = 0 ;i<reportParamIdArray.length;i++) {
+			for (int i = 0 ;i<reportParamIdArray.length&&StringUtils.isNotEmpty(reportParamIdArray[i]);i++) {
 				String reportParamConfigId = reportParamConfigIdArray[i];
 				String reportParamId = reportParamIdArray[i];
 				String isNeedChoose = isNeedChooseArray[i];

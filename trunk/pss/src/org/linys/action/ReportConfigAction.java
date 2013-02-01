@@ -1,5 +1,7 @@
 package org.linys.action;
 
+import java.io.File;
+
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
@@ -28,6 +30,7 @@ public class ReportConfigAction extends BaseAction implements
 	@Resource
 	private ReportConfigService reportConfigService;
 	ReportConfig model = new ReportConfig();
+	private File file;
 	@Override
 	public ReportConfig getModel() {
 		return model;
@@ -47,7 +50,7 @@ public class ReportConfigAction extends BaseAction implements
 			String reportParamIds = getParameter("reportParamIds");
 			String isNeedChooses = getParameter("isNeedChooses");
 			
-			result = reportConfigService.save(model,reportParamConfigIds,deleteIds,reportParamIds,isNeedChooses);
+			result = reportConfigService.save(model,file,getReportTemplatePath(),reportParamConfigIds,deleteIds,reportParamIds,isNeedChooses);
 		} catch (Exception e) {
 			result.setMessage("保存报表配置失败");
 			logger.error("保存报表配置失败", e);
@@ -65,7 +68,7 @@ public class ReportConfigAction extends BaseAction implements
 	public void delete(){
 		ServiceResult result = new ServiceResult(false);
 		try {
-			result = reportConfigService.delete(model);
+			result = reportConfigService.delete(model,getReportTemplatePath());
 		} catch (Exception e) {
 			result.setMessage("删除报表配置失败");
 			logger.error("删除报表配置失败", e);
@@ -165,5 +168,13 @@ public class ReportConfigAction extends BaseAction implements
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
 	}
 }

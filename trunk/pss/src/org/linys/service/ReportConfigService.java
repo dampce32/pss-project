@@ -1,5 +1,7 @@
 package org.linys.service;
 
+import java.io.File;
+
 import org.linys.model.ReportConfig;
 import org.linys.vo.ServiceResult;
 /**
@@ -16,22 +18,25 @@ public interface ReportConfigService extends BaseService<ReportConfig,String>{
 	 * @author lys
 	 * @update logs
 	 * @param model
+	 * @param file 
 	 * @param isNeedChooses 
 	 * @param reportParamIds 
 	 * @param deleteIds 
 	 * @param reportParamConfigIds 
+	 * @param isNeedChooses2 
 	 * @return
 	 */
-	ServiceResult save(ReportConfig model, String reportParamConfigIds, String deleteIds, String reportParamIds, String isNeedChooses);
+	ServiceResult save(ReportConfig model, File file, String reportTemplatePath, String reportParamConfigIds, String deleteIds, String reportParamIds, String isNeedChooses);
 	/**
 	 * @Description: 删除报表配置
 	 * @Create: 2013-1-23 下午2:17:29
 	 * @author lys
 	 * @update logs
 	 * @param model
+	 * @param reportTemplatePath 
 	 * @return
 	 */
-	ServiceResult delete(ReportConfig model);
+	ServiceResult delete(ReportConfig model, String reportTemplatePath);
 	/**
 	 * @Description: 分页查询报表配置
 	 * @Create: 2013-1-23 下午2:17:48

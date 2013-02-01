@@ -13,20 +13,27 @@
 	var content ={};
 	asyncCallService(url,content,function(result){
 		if(result.isSuccess){
+			 $(".hadAddPrint",printDialog).remove();
 			var data = result.data;
 			var reportConfig1Data = eval("("+data.reportConfig1Data+")");
 			currReportData = reportConfig1Data;
-			for ( var reportConfig in reportConfig1Data) {
-			 	var appendStr = "";
-			 	appendStr += "<tr class = \"hadAdd\" style=\"margin-top:6px\">"+
-						 		"<td style=\"padding-top:6px\">"+
-						 			"<a href=\"#\" class=\"easyui-linkbutton\" reportCode =\""+reportConfig1Data[reportConfig]["reportCode"]+"\" id=\""+reportConfig1Data[reportConfig]["reportConfigId"]+"\"  style=\"cursor: pointer;\" value=\""+reportConfig1Data[reportConfig]["reportName"]+"\">"+reportConfig1Data[reportConfig]["reportName"]+"</a>"+
-						 		"</td>"+
-						 	 "</tr>";
-			   if ("" != appendStr) {
+			var appendStr = "";
+			for ( var i = 0; i <reportConfig1Data.length; i++) {
+				
+				if(i%6==0){
+					appendStr += "<tr class = \"hadAdd\" style=\"margin-top:6px\">";
+				}
+				appendStr +="<td style=\"padding:6px\">"+
+					 			"<a href=\"#\" class=\"easyui-linkbutton\" reportCode =\""+reportConfig1Data[i]["reportCode"]+"\" id=\""+reportConfig1Data[i]["reportConfigId"]+"\"  style=\"cursor: pointer;\" value=\""+reportConfig1Data[i]["reportName"]+"\">"+reportConfig1Data[i]["reportName"]+"</a>"+
+					 		"</td>";
+				if(i+1%6==0){
+					appendStr +="</tr>";
+					
+				}
+			}
+			 if ("" != appendStr) {
 				   $(appendStr).insertAfter("#reportTable");
 			   }
-			}
 			 $('.easyui-linkbutton').linkbutton({  
 				    iconCls: 'icon-search'  
 			}); 
@@ -40,7 +47,7 @@
 				 var content ={reportConfigId:id};
 				 asyncCallService(url,content,function(result){
 					if(result.isSuccess){
-						 $(".hadAddPrint").remove();
+						 $(".hadAddPrint",printDialog).remove();
 						 var data = result.data;
 						 var paramsData = eval("("+data.paramsData+")");
 						 currReportParamsData = paramsData;
@@ -94,7 +101,7 @@
 				"</td>"+
 				"</tr>";
 		    if ("" != appendStr) {
-				$(appendStr).insertAfter("#printTable");
+				$(appendStr).insertAfter("#printTable",printDialog);
 			}
 		     
 		   //供应商
@@ -118,7 +125,7 @@
 					"</td>"+
 				"</tr>";
 		    if ("" != appendStr) {
-				$(appendStr).insertAfter("#printTable");
+				$(appendStr).insertAfter("#printTable",printDialog);
 			}
 		}else if('@warehouseId'==kind){
 			var appendStr = "";
@@ -129,7 +136,7 @@
 					"</td>"+
 				"</tr>";
 		    if ("" != appendStr) {
-				$(appendStr).insertAfter("#printTable");
+				$(appendStr).insertAfter("#printTable",printDialog);
 			}
 		    
 		    //仓库
