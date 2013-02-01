@@ -77,7 +77,7 @@ public class ReceiptServiceImpl extends BaseServiceImpl<Receipt, String> impleme
 		
 		for (int i = 0; i < sourceIdArray.length; i++) {
 			Double amount = new Double(amountArray[i]!=null?amountArray[i]:"0");
-			Double receiptedAmount = new Double(receiptAmountArray[i]!=null?receiptAmountArray[i]:"0");
+			Double receiptedAmount = new Double(receiptedAmountArray[i]!=null?receiptedAmountArray[i]:"0");
 			Double discountAmount = new Double(discountAmountArray[i]!=null?discountAmountArray[i]:"0");
 			Double receiptAmount = new Double(receiptAmountArray[i]!=null?receiptAmountArray[i]:"0");
 			if(receiptAmount==0){
@@ -190,7 +190,7 @@ public class ReceiptServiceImpl extends BaseServiceImpl<Receipt, String> impleme
 		
 		for (int i = 0; i < receiptKindArray.length; i++) {
 			Double amount = new Double(amountArray[i]!=null?amountArray[i]:"0");
-			Double receiptedAmount = new Double(receiptAmountArray[i]!=null?receiptAmountArray[i]:"0");
+			Double receiptedAmount = new Double(receiptedAmountArray[i]!=null?receiptedAmountArray[i]:"0");
 			Double discountAmount = new Double(discountAmountArray[i]!=null?discountAmountArray[i]:"0");
 			Double receiptAmount = new Double(receiptAmountArray[i]!=null?receiptAmountArray[i]:"0");
 			if(receiptAmount==0){
