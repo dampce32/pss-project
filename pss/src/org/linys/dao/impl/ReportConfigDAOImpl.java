@@ -71,5 +71,16 @@ public class ReportConfigDAOImpl extends BaseDAOImpl<ReportConfig, String>
 		criteria.setProjection(Projections.rowCount());
 		return new Long(criteria.uniqueResult().toString());
 	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.ReportConfigDAO#getReport1()
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ReportConfig> getReport1() {
+		Criteria criteria  = getCurrentSession().createCriteria(ReportConfig.class);
+		criteria.add(Restrictions.eq("reportKind", 1));
+		return criteria.list();
+	}
 
 }

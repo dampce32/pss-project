@@ -1,5 +1,10 @@
-﻿<%@ page contentType="text/html; charset=utf-8"%>
-<html xmlns="http://www.w3.org/1999/xhtml">
+﻿<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+String data=request.getParameter("data");
+data=data.replace("^","&");
+%>
 <head>
 	<title>打印报表</title>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -29,7 +34,7 @@
 	<script type="text/javascript">
 		
 	    var report = "<%=request.getParameter("report")%>";
-	    var data = "<%=request.getParameter("data")%>"+"&reportCode="+report;
+	    var data = "<%=data%>"+"&reportCode="+report;
 	    CreatePrintViewerEx("100%", "100%","report/"+ report+".grf", data, true, "");
 	</script>
 </body>
