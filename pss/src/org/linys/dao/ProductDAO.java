@@ -51,5 +51,28 @@ public interface ProductDAO extends BaseDAO<Product,String>{
 	 * @return
 	 */
 	Long getTotalCountReject(Product model);
+	/**
+	 * @Description: 默认商品组装，分页选择商品
+	 * @Create: 2013-2-3 上午10:25:03
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @param idArray
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	List<Product> querySelectDefaultPacking(Product model, String[] idArray,
+			Integer page, Integer rows);
+	/**
+	 * @Description: 默认商品组装，选择统计商品
+	 * @Create: 2013-2-3 上午10:25:34
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @param ids
+	 * @return
+	 */
+	Long getTotalCountSelectDefaultPacking(Product model, String[] idArray);
 
 }

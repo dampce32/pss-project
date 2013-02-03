@@ -1,5 +1,7 @@
 package org.linys.model;
 
+import java.text.DecimalFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -29,6 +32,10 @@ public class DefaultPackaging extends BaseModel {
 	 */
 	private String defaultPackagingId;
 	/**
+	 * 隶属商品
+	 */
+	private Product parentProduct;
+	/**
 	 * 商品
 	 */
 	private Product product;
@@ -36,6 +43,10 @@ public class DefaultPackaging extends BaseModel {
 	 * 数量
 	 */
 	private Double qty;
+	/**
+	 * 金额
+	 */
+	private Double amount;
 
 	// Constructors
 
@@ -78,6 +89,25 @@ public class DefaultPackaging extends BaseModel {
 
 	public void setQty(Double qty) {
 		this.qty = qty;
+	}
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "parentProductId")
+	public Product getParentProduct() {
+		return parentProduct;
+	}
+	
+	public void setParentProduct(Product parentProduct) {
+		this.parentProduct = parentProduct;
+	}
+	@Transient
+	public Double getAmount() {
+		this.amount = this.qty*this.product.getBuyingPrice();
+		DecimalFormat df = new DecimalFormat("##########0.00");
+		return Double.parseDouble(df.format(this.amount));
+	}
+
+	public void setAmount(Double amount) {
+		this.amount = amount;
 	}
 
 }

@@ -1,5 +1,7 @@
 package org.linys.dao;
 
+import java.util.List;
+
 import org.linys.model.DefaultPackaging;
 /**
  * @Description:默认商品组装DAO
@@ -9,5 +11,14 @@ import org.linys.model.DefaultPackaging;
  * @vesion 1.0
  */
 public interface DefaultPackagingDAO extends BaseDAO<DefaultPackaging,String>{
+	/**
+	 * @Description: 取得商品product下的默认商品组装
+	 * @Create: 2013-2-3 下午12:05:40
+	 * @author lys
+	 * @update logs
+	 * @param productId
+	 * @return
+	 */
+	List<DefaultPackaging> queryByProductId(String productId);
 
 }

@@ -45,9 +45,13 @@ public interface ProductService extends BaseService<Product,String>{
 	 * @author lys
 	 * @update logs
 	 * @param model
+	 * @param qtys 
+	 * @param productIds 
+	 * @param deleleIds 
+	 * @param defaultPackagingIds 
 	 * @return
 	 */
-	ServiceResult save(Product model);
+	ServiceResult save(Product model, String defaultPackagingIds, String deleleIds, String productIds, String qtys);
 	/**
 	 * @Description: 选择商品
 	 * @Create: 2012-12-30 上午10:25:02
@@ -82,5 +86,27 @@ public interface ProductService extends BaseService<Product,String>{
 	 * @return
 	 */
 	ServiceResult queryStore(Product model, Integer page, Integer rows);
+	/**
+	 * @Description: 默认商品组装，选择商品
+	 * @Create: 2013-2-3 上午10:23:36
+	 * @author lys
+	 * @update logs
+	 * @param model
+	 * @param ids
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	ServiceResult selectDefaultPacking(Product model, String ids, Integer page,
+			Integer rows);
+	/**
+	 * @Description: 打开初始化
+	 * @Create: 2013-2-3 下午12:01:29
+	 * @author lys
+	 * @update logs
+	 * @param productId
+	 * @return
+	 */
+	ServiceResult init(String productId);
 
 }

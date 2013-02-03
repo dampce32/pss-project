@@ -5,10 +5,13 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.linys.dao.DefaultPackagingDAO;
 import org.linys.dao.ProductDAO;
+import org.linys.model.DefaultPackaging;
 import org.linys.model.Product;
 import org.linys.service.ProductService;
 import org.linys.util.JSONUtil;
+import org.linys.util.StringUtil;
 import org.linys.vo.ServiceResult;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,8 @@ import org.springframework.stereotype.Service;
 public class ProductServiceImpl extends BaseServiceImpl<Product, String> implements ProductService {
 	@Resource
 	private ProductDAO productDAO;
+	@Resource
+	private DefaultPackagingDAO defaultPackagingDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.ProductService#delete(org.linys.model.Product)
@@ -72,7 +77,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 	 * (non-Javadoc)   
 	 * @see org.linys.service.ProductService#save(org.linys.model.Product)
 	 */
-	public ServiceResult save(Product model) {
+	public ServiceResult save(Product model, String defaultPackagingIds, String deleleIds, String productIds, String qtys) {
 		ServiceResult result = new ServiceResult(false);
 		if(model==null){
 			result.setMessage("请填写商品信息");
@@ -87,6 +92,18 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 			return result;
 		}
 		
+		String[] defaultPackagingIdArray = StringUtil.split(defaultPackagingIds);
+		String[] deleleIdArray = StringUtil.split(deleleIds);
+		String[] productIdArray = StringUtil.split(productIds);
+		String[] qtyArray = StringUtil.split(qtys);
+		for (int i = 0; i < productIdArray.length&&StringUtils.isNotEmpty(productIdArray[i]); i++) {
+			String qty = qtyArray[i];
+			if("0".equals(qty)){
+				result.setMessage("第"+(i+1)+"行商品数量不能为0");
+				return result;
+			}
+			
+		}
 		if(StringUtils.isEmpty(model.getProductId())){//新增
 			Product oldModel = productDAO.load("productCode", model.getProductCode());
 			if(oldModel!=null){
@@ -96,6 +113,26 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 			model.setQtyStore(0.0);
 			model.setAmountStore(0.0);
 			productDAO.save(model);
+			for (int i = 0; i < productIdArray.length; i++) {
+				String productId = productIdArray[i];
+				String qty = qtyArray[i];
+				
+				DefaultPackaging defaultPackaging = new DefaultPackaging();
+				
+				Product product = new Product();
+				product.setProductId(productId);
+				defaultPackaging.setProduct(product);
+				
+				defaultPackaging.setParentProduct(model);
+				
+				if(StringUtils.isNotEmpty(qty)){//数量没输入保护
+					defaultPackaging.setQty(new Double(qty));
+				}else{
+					defaultPackaging.setQty(0.0);
+				}
+				
+				defaultPackagingDAO.save(defaultPackaging);
+			}
 		}else{
 			Product oldModel = productDAO.load(model.getProductId());
 			if(oldModel==null){
@@ -118,7 +155,47 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 			oldModel.setBuyingPrice(model.getBuyingPrice());
 			oldModel.setSalePrice(model.getSalePrice());
 			
-			productDAO.update(oldModel);
+			//删除已删的默认商品组装
+			if(!"".equals(deleleIdArray)){
+				for (String deleleId : deleleIdArray) {
+					if(StringUtils.isNotEmpty(deleleId)){
+						DefaultPackaging  oldDefaultPackaging = defaultPackagingDAO.load(deleleId);
+						if(oldModel!=null){
+							defaultPackagingDAO.delete(oldDefaultPackaging);
+						}
+					}
+				}
+			}
+			//根据采购单明细Id更新或新增
+			for (int i = 0 ;i<defaultPackagingIdArray.length;i++) {
+				String defaultPackagingId = defaultPackagingIdArray[i];
+				String productId = productIdArray[i];
+				String qty = qtyArray[i];
+				if(StringUtils.isEmpty(defaultPackagingId)){//新增
+					
+					DefaultPackaging defaultPackaging = new DefaultPackaging();
+					
+					Product product = new Product();
+					product.setProductId(productId);
+					defaultPackaging.setProduct(product);
+					
+					if(StringUtils.isNotEmpty(qty)){//数量没输入保护
+						defaultPackaging.setQty(new Double(qty));
+					}else{
+						defaultPackaging.setQty(0.0);
+					}
+					defaultPackaging.setParentProduct(model);
+					defaultPackagingDAO.save(defaultPackaging);
+				}else{
+					DefaultPackaging  oldDefaultPackaging = defaultPackagingDAO.load(defaultPackagingId);
+					
+					if(StringUtils.isNotEmpty(qty)){//数量没输入保护
+						oldDefaultPackaging.setQty(new Double(qty));
+					}else{
+						oldDefaultPackaging.setQty(0.0);
+					}
+				}
+			}
 		}
 		result.setIsSuccess(true);
 		return result;
@@ -189,6 +266,57 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 		result.addData("total", total);
 		String data = JSONUtil.toJson(list,properties,total);
 		result.addData("datagridData", data);
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.ProductService#selectDefaultPacking(org.linys.model.Product, java.lang.String, java.lang.Integer, java.lang.Integer)
+	 */
+	@Override
+	public ServiceResult selectDefaultPacking(Product model, String ids,
+			Integer page, Integer rows) {
+		ServiceResult result = new ServiceResult(false);
+		
+		String[] idArray = {""};
+		if(StringUtils.isNotEmpty(ids)){
+			idArray = StringUtil.split(ids);
+		}
+		//默认商品组装，选择商品
+		List<Product> list = productDAO.querySelectDefaultPacking(model,idArray,page,rows);
+		Long total = productDAO.getTotalCountSelectDefaultPacking(model,idArray);
+		
+		String[] properties = {"productId","productCode","productName",
+				"productType.productTypeId","productType.productTypeName",
+				"unit.dataDictionaryId:unitId","unit.dataDictionaryName:unitName",
+				"color.dataDictionaryId:colorId","color.dataDictionaryName:colorName",
+				"size.dataDictionaryId:sizeId","size.dataDictionaryName:sizeName","buyingPrice"};
+		String data = JSONUtil.toJson(list,properties,total);
+		result.addData("datagridData", data);
+		
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.ProductService#init(java.lang.String)
+	 */
+	@Override
+	public ServiceResult init(String productId) {
+		ServiceResult result = new ServiceResult(false);
+		Product product = productDAO.load(productId);
+		String[] properties = {"productId","productCode","productName","note",
+				"productType.productTypeId","productType.productTypeName",
+				"unit.dataDictionaryId:unitId","color.dataDictionaryId:colorId","size.dataDictionaryId:sizeId","buyingPrice","salePrice"};
+		String productData = JSONUtil.toJson(product,properties);
+		result.addData("productData",productData);
+		
+		List<DefaultPackaging> defaultPackagingList = defaultPackagingDAO.queryByProductId(productId);
+		String[] propertiesDetail = {"defaultPackagingId","product.productId","product.productCode","product.productName",
+				"product.size.dataDictionaryName:sizeName","product.unit.dataDictionaryName:unitName",
+				"qty","product.buyingPrice:price","amount"};
+		String defaultPackagingData = JSONUtil.toJson(defaultPackagingList,propertiesDetail);
+		result.addData("defaultPackagingData", defaultPackagingData);
 		result.setIsSuccess(true);
 		return result;
 	}

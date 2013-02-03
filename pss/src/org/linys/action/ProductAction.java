@@ -38,10 +38,32 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 	public void save(){
 		ServiceResult result = new ServiceResult(false);
 		try {
-			result = productService.save(model);
+			String defaultPackagingIds = getParameter("defaultPackagingIds");
+			String deleleIds = getParameter("deleleIds");
+			String productIds = getParameter("productIds");
+			String qtys = getParameter("qtys");
+			result = productService.save(model,defaultPackagingIds,deleleIds,productIds,qtys);
 		} catch (Exception e) {
 			result.setMessage("保存商品失败");
 			logger.error("保存商品失败", e);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	/**
+	 * @Description: 打开初始化
+	 * @Create: 2013-2-3 下午12:00:55
+	 * @author lys
+	 * @update logs
+	 */
+	public void init(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = productService.init(model.getProductId());
+		} catch (Exception e) {
+			result.setMessage("打开初始化失败");
+			result.setIsSuccess(false);
+			logger.error("打开初始化失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
@@ -151,6 +173,25 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 			result.setMessage("查询当前库存的商品失败");
 			result.setIsSuccess(false);
 			logger.error("查询当前库存的商品失败", e);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	
+	/**
+	 * @Description: 默认商品组装，选择商品
+	 * @Create: 2013-2-3 上午10:22:37
+	 * @author lys
+	 * @update logs
+	 */
+	public void selectDefaultPacking(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = productService.selectDefaultPacking(model,ids,page,rows);
+		} catch (Exception e) {
+			result.setMessage("默认商品组装，选择商品失败");
+			logger.error("默认商品组装，选择商品失败", e);
+			result.setIsSuccess(false);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
