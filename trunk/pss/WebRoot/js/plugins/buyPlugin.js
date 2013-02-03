@@ -391,6 +391,7 @@
 				return setValue();
 			},
 			success: function(data){
+				$(editDialog).mask('hide');
 				var result = eval('('+data+')');
 				if(result.isSuccess){
 					var fn = function(){
@@ -402,7 +403,7 @@
 				}else{
 					$.messager.alert('提示',result.message,'error');
 				}
-				$(editDialog).mask('hide');
+				
 			}
 		 });
 	}

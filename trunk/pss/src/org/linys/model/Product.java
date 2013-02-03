@@ -175,7 +175,7 @@ public class Product extends BaseModel {
 		this.note = note;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
 	public Set<RejectDetail> getRejectDetails() {
 		return this.rejectDetails;
 	}
@@ -184,7 +184,7 @@ public class Product extends BaseModel {
 		this.rejectDetails = rejectDetails;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
 	public Set<ReceiveDetail> getReceiveDetails() {
 		return this.receiveDetails;
 	}
@@ -249,7 +249,7 @@ public class Product extends BaseModel {
 	public void setSalePrice(Double salePrice) {
 		this.salePrice = salePrice;
 	}
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "parentProduct")
 	public Set<DefaultPackaging> getDefaultPackagings() {
 		return defaultPackagings;
 	}
