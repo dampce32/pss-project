@@ -487,7 +487,7 @@
 		}
 		$.messager.confirm("提示","确定要删除选中的记录?",function(t){ 
 			if(t){
-				var url = 'finance/mulDelPay.do';
+				var url = 'finance/mulDeletePay.do';
 				var content ={ids:idArray.join(LYS.join)};
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
