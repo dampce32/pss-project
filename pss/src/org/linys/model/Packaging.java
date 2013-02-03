@@ -59,7 +59,7 @@ public class Packaging extends BaseModel {
 	/**
 	 * 组装数量
 	 */
-	private Double qty;
+	private Integer qty;
 	/**
 	 * 组装成本价
 	 */
@@ -145,12 +145,12 @@ public class Packaging extends BaseModel {
 		this.packagingDate = packagingDate;
 	}
 
-	@Column(name = "qty", nullable = false, precision = 22, scale = 0)
-	public Double getQty() {
+	@Column
+	public Integer getQty() {
 		return this.qty;
 	}
 
-	public void setQty(Double qty) {
+	public void setQty(Integer qty) {
 		this.qty = qty;
 	}
 
