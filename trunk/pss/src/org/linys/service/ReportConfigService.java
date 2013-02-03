@@ -93,5 +93,13 @@ public interface ReportConfigService extends BaseService<ReportConfig,String>{
 	 * @return
 	 */
 	ServiceResult getReportParams(ReportConfig model);
+	/**
+	 * @Description: 取得所有的报表
+	 * @Create: 2013-2-1 下午4:34:27
+	 * @author lys
+	 * @update logs
+	 * @return
+	 */
+	ServiceResult getReportAll();
 
 }
