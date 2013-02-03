@@ -66,6 +66,13 @@ PSS.getWarehouseList = function(){
 	}
 	return PSS.WarehouseList;
 }
+PSS.getWarehouseListIframe = function(){
+	if(PSS.WarehouseList==null){
+		var url = '../dict/queryComboboxWarehouse.do';
+		PSS.WarehouseList = syncCallService(url);
+	}
+	return PSS.WarehouseList;
+}
 //快递
 PSS.ExpressList = null;
 PSS.getExpressList = function(){

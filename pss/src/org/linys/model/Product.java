@@ -91,6 +91,10 @@ public class Product extends BaseModel {
 	 * 收货明细
 	 */
 	private Set<ReceiveDetail> receiveDetails = new HashSet<ReceiveDetail>(0);
+	/**
+	 * 默认组装包装
+	 */
+	private Set<DefaultPackaging> defaultPackagings = new HashSet<DefaultPackaging>(0);
 
 	// Constructors
 
@@ -244,6 +248,14 @@ public class Product extends BaseModel {
 
 	public void setSalePrice(Double salePrice) {
 		this.salePrice = salePrice;
+	}
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+	public Set<DefaultPackaging> getDefaultPackagings() {
+		return defaultPackagings;
+	}
+
+	public void setDefaultPackagings(Set<DefaultPackaging> defaultPackagings) {
+		this.defaultPackagings = defaultPackagings;
 	}
 
 }

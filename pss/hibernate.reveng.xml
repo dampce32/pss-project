@@ -2,22 +2,22 @@
 <!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
 
 <hibernate-reverse-engineering>
-	<table name="T_InvoiceType" schema="dbo" catalog="pss"
+    <table name="t_product" schema="dbo" catalog="pss"
+		class="Product">
+	</table>
+	<table name="t_employee" schema="dbo" catalog="pss"
+		class="Employee">
+	</table>
+	<table name="t_warehouse" schema="dbo" catalog="pss"
+		class="Warehouse">
+	</table>
+	<table name="t_invoicetype" schema="dbo" catalog="pss"
 		class="InvoiceType">
-		<primary-key>
-			<generator class="uuid.string"></generator>
-		</primary-key>
 	</table>
-	<table name="T_Buy" schema="dbo" catalog="pss" class="Buy">
-		<primary-key>
-			<generator class="uuid.string"></generator>
-		</primary-key>
+	<table name="t_buy" schema="dbo" catalog="pss" class="Buy">
 	</table>
-	<table name="T_BuyDetail" schema="dbo" catalog="pss"
+	<table name="t_buydetail" schema="dbo" catalog="pss"
 		class="BuyDetail">
-		<primary-key>
-			<generator class="uuid.string"></generator>
-		</primary-key>
 	</table>
 	<table name="t_customer" catalog="pss" class="Customer"></table>
 	<table name="t_deliver" catalog="pss" class="Deliver"></table>
@@ -44,5 +44,14 @@
 	<table name="t_expense" catalog="pss" class="Expense"></table>
 	<table name="t_income" catalog="pss" class="Income"></table>
 	<table name="t_reportparam" catalog="pss" class="ReportParam"></table>
-	<table name="t_reportparamconfig" catalog="pss" class="ReportParamConfig"></table>
+	<table name="t_reportparamconfig" catalog="pss"
+		class="ReportParamConfig">
+	</table>
+	<table name="t_defaultpackage" catalog="pss"
+		class="DefaultPackage">
+	</table>
+	<table name="t_package" catalog="pss" class="Package"></table>
+	<table name="t_packagedetail" catalog="pss" class="PackageDetail"></table>
+	<table name="t_split" catalog="pss" class="Split"></table>
+	<table name="t_splitdetail" catalog="pss" class="SplitDetail"></table>
 </hibernate-reverse-engineering>

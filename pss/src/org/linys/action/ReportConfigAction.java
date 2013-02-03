@@ -150,6 +150,25 @@ public class ReportConfigAction extends BaseAction implements
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	}
+	/**
+	 * @Description: 取得所有的报表
+	 * @Create: 2013-2-1 下午4:33:44
+	 * @author lys
+	 * @update logs
+	 */
+	public void getReportAll(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = reportConfigService.getReportAll();
+		} catch (Exception e) {
+			result.setMessage("取得所有的报表失败");
+			logger.error("取得所有的报表失败", e);
+			result.setIsSuccess(false);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	
 	
 	/**
 	 * @Description: 取得报表的报表参数

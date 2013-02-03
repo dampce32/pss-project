@@ -1,0 +1,30 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Web报表(B/S报表)演示 - 修改设计一个报表</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<script src="../js/gridpp/CreateControl.js" type="text/javascript"></script>
+	<script type="text/javascript">
+function OnSaveReport()
+{
+    //注释掉以下两行代码即可将设计结果保存到服务器对应目录下的文件中
+	alert("为了保护报表的正常演示，这里放弃了对报表设计的保存！");
+	ReportDesigner.DefaultAction = false;
+}
+	</script>
+    <style type="text/css">
+        html,body {
+            margin:0;
+            height:100%;
+        }
+    </style>
+</head>
+<body style="margin:0">
+    <script type="text/javascript"> 
+        //修改一个报表，在完成报表设计后，将报表保存在web服务器上
+        //前面两个参数分别指定模板载入与保存的URL，
+        //第三个参数指定报表数据的URL，以便在设计时载入数据及时查看效果
+        CreateDesignerEx("100%", "100%", "../grf/2a.grf", "../General/DesignReportSave.jsp?Report=2a.grf", "../data/xmlSaleDetail.jsp", 
+            "<param name='OnSaveReport' value='OnSaveReport'>");
+    </script>
+</body>
+</html>

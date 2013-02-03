@@ -283,5 +283,19 @@ public class ReportConfigServiceImpl extends
 		result.setIsSuccess(true);
 		return result;
 	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.ReportConfigService#getReportAll()
+	 */
+	@Override
+	public ServiceResult getReportAll() {
+		ServiceResult result = new ServiceResult(false);
+		List<ReportConfig> list = reportConfigDAO.queryAll();
+		String[] properties = {"reportConfigId","reportName","reportCode"};
+		String reportConfigData = JSONUtil.toJsonWithoutRows(list,properties);
+		result.addData("reportConfigData", reportConfigData);
+		result.setIsSuccess(true);
+		return result;
+	}
 
 }
