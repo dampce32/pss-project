@@ -25,10 +25,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <body style="margin:0">
     <script type="text/javascript"> 
     	var reportCode = "<%=request.getParameter("reportCode")%>";
+    	var basePath = "<%=basePath%>";
         //修改一个报表，在完成报表设计后，将报表保存在web服务器上
         //前面两个参数分别指定模板载入与保存的URL，
         //第三个参数指定报表数据的URL，以便在设计时载入数据及时查看效果
-        CreateDesignerEx("100%", "100%", "../report/"+reportCode+".grf", "../General/DesignReportSave.jsp?Report=2a.grf", "../data/xmlSaleDetail.jsp", 
+        CreateDesignerEx("100%", "100%", "../report/"+reportCode+".grf", basePath+"ReportServlet?kind=save&reportCode="+reportCode, "", 
             "<param name='OnSaveReport' value='OnSaveReport'>");
     </script>
 </body>
