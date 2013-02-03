@@ -58,7 +58,7 @@ public class Split extends BaseModel {
 	/**
 	 * 拆分数量
 	 */
-	private Double qty;
+	private Integer qty;
 	/**
 	 * 拆分成本价
 	 */
@@ -145,12 +145,12 @@ public class Split extends BaseModel {
 		this.splitDate = splitDate;
 	}
 
-	@Column(name = "qty", nullable = false, precision = 22, scale = 0)
-	public Double getQty() {
+	@Column
+	public Integer getQty() {
 		return this.qty;
 	}
 
-	public void setQty(Double qty) {
+	public void setQty(Integer qty) {
 		this.qty = qty;
 	}
 
