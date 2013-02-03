@@ -139,6 +139,29 @@ $(function() {
 				textField:'warehouseName',
 				data:PSS.getWarehouseListIframe()
 			})
+		}else if('@customerId'==kind){
+			var appendStr = "";
+			appendStr += "<tr class = \"hadAddPrint\" style=\"padding-top:6px\">"+
+				"<td style=\"padding:10px 16px\">客户:</td>"+
+				"<td>"+
+					"<input type=\"text\" id=\"customer\"  style=\"width: 250px\" size=\"40\" />"+
+				"</td>"+
+				"</tr>";
+		    if ("" != appendStr) {
+				$(appendStr).insertAfter("#printTable");
+			}
+			//客户下拉框
+			 $('#customer').combogrid({rownumbers:true, pagination:true,panelWidth:480,
+			 	idField:'customerId',textField:'customerName',mode:'remote',	//此处需要实时查询，要用remote
+		        delay:1000,
+		        url:'../dict/queryCombogridCustomer.do',
+				columns:[[	
+						{field:'customerCode',title:'客户编号',width:80,sortable:true},  
+			    		{field:'customerName',title:'客户名称',width:320,sortable:true}  
+				]],
+				width:250,
+				filter:function(q,row){  if(row.name.toUpperCase().indexOf(q.toUpperCase())>=0)return true;  }
+		    });
 		}
 	}
 	//打印前检查值
@@ -174,6 +197,12 @@ $(function() {
 							$.messager.alert('提示','请选择仓库','warning');
 							return false;
 						}
+					}else if('@customerId'==currReportParamsData[i]["paramCode"]){
+						var customerId = $('#customer').combogrid('getValue');
+						if(customerId==''){
+							$.messager.alert('提示','请选择客户','warning');
+							return false;
+						}
 					}
 				}
 			 }
@@ -207,6 +236,13 @@ $(function() {
 							url += "?warehouseId="+warehouseId;
 						}else{
 							url +=  "^warehouseId="+warehouseId;
+						}
+					}else if(currReportParamsData[i]["paramCode"]=='@customerId'){
+						var customerId = $('#customer').combogrid('getValue');
+						if(i==0){
+							url += "?customerId="+customerId;
+						}else{
+							url += "^customerId="+customerId;
 						}
 					}
 				}
