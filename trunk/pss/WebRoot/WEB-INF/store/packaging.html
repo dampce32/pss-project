@@ -1,6 +1,5 @@
 <div class="easyui-layout plugins" data-options="fit:true" ui="packagingInit" id="${id}">
 	<div data-options="region:'north',border:false" style="height: 35px;overflow: hidden;padding:5px" id="queryContent"> 
-		组装号:&nbsp;&nbsp;<input id="packagingCode" type="text" size="12"/>&nbsp;&nbsp;&nbsp;
 		商品名称:&nbsp;&nbsp;<input id="productName" type="text" size="12"/>&nbsp;&nbsp;&nbsp;
 		组装日期:&nbsp;&nbsp;<input id="beginDate" type="text" size="12" class="Wdate" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
 		----&nbsp;&nbsp;<input id="endDate" type="text" size="12" class="Wdate" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>&nbsp;&nbsp;&nbsp;
@@ -28,11 +27,9 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="tdTitle">商品:</td>
+							<td class="tdTitle">仓库:</td>
 							<td>
-								<input type="hidden" name="product.productId" id="productId"/>
-								<input type="text" id="product" style="width: 250px" />
-								<input type="button" id="selectBtn" value="...."/>
+								<input type="text" name="warehouse.warehouseId" id="warehouseId"  style="width: 250px">
 							</td>
 							<td class="tdTitle">组装日期:</td>
 							<td>
@@ -40,13 +37,15 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="tdTitle">仓库:</td>
+							<td class="tdTitle">商品:</td>
 							<td>
-								<input type="text" name="warehouse.warehouseId" id="warehouseId"  style="width: 250px">
+								<input type="hidden" name="product.productId" id="productId"/>
+								<input type="text" id="product" style="width: 250px" />
+								<input type="button" id="selectBtn" value="...."/>
 							</td>
 							<td class="tdTitle">数量:</td>
 							<td>
-								<input type="text" name="qty" id="qty" style="width: 150px" size="40" class="easyui-numberbox"  data-options="min:0,precision:0"/>
+								<input type="text" name="qty" id="qty" style="width: 150px" size="40" class="easyui-numberbox"  data-options="min:1,precision:0"/>
 							</td>
 						</tr>
 						<tr>
