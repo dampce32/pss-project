@@ -48,6 +48,10 @@ public class SystemConfigServiceImpl extends
 	public ServiceResult init() {
 		ServiceResult result = new ServiceResult(false);
 		SystemConfig oldModel = systemConfigDAO.init();
+		if(oldModel==null){
+			result.setMessage("系统还没有系统配置信息，请联系管理员");
+			return result;
+		}
 		String[] properties = {"systemConfigId","companyName","companyPhone","companyFax","companyAddr"};
 		String systemConfigData = JSONUtil.toJson(oldModel, properties);
 		result.addData("systemConfigData", systemConfigData);

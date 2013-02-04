@@ -76,7 +76,8 @@
 				{text:'删除',iconCls:'icon-remove',handler:function(){onMulDelete()}},'-',
 				{text:'已审',iconCls:'icon-info',handler:function(){onMulUpdateStatus(1)}},'-',
 				{text:'反审',iconCls:'icon-warn',handler:function(){onMulUpdateStatus(0)}},'-',
-				{text:'清款',iconCls:'icon-clear',handler:function(){onMulUpdateIsPay()}}
+				{text:'清款',iconCls:'icon-clear',handler:function(){onMulUpdateIsPay()}},'-',
+				{text:'打印',iconCls:'icon-print',handler:function(){onPrint()}}
 				
 		  ],
 		  onDblClickRow:function(rowIndex, rowData){
@@ -193,6 +194,7 @@
 	    },
 	    toolbar:[	
 		 			{id:'save'+id,text:'保存',iconCls:'icon-save',handler:function(){onSave();}},'-',
+		 			{id:'print'+id,text:'打印',iconCls:'icon-print',handler:function(){onPrintIn()}},'-',
 		 			{id:'add'+id,text:'新增',iconCls:'icon-add',handler:function(){onAdd();}},'-',
 		 			{id:'delete'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDelete();}},'-',
 		 			{id:'sh'+id,text:'审核',iconCls:'icon-info',handler:function(){onUpdateStatus(1);}},'-',
@@ -209,6 +211,7 @@
 	//新增时，按钮的状态
 	var addBtnStatus = function(){
 		$('#save'+id).linkbutton('enable');
+		$('#print'+id).linkbutton('disable');
 		$('#add'+id).linkbutton('disable');
 		$('#delete'+id).linkbutton('disable');
 		$('#sh'+id).linkbutton('disable');
@@ -223,6 +226,7 @@
 	//审核通过按钮的状态
 	var shBtnStatus = function(){
 		$('#save'+id).linkbutton('disable');
+		$('#print'+id).linkbutton('enable');
 		$('#add'+id).linkbutton('enable');
 		$('#delete'+id).linkbutton('disable');
 		$('#sh'+id).linkbutton('disable');
@@ -234,6 +238,7 @@
 	//反审后的按钮状态
 	var fsBtnStatus = function(){
 		$('#save'+id).linkbutton('enable');
+		$('#print'+id).linkbutton('enable');
 		$('#add'+id).linkbutton('enable');
 		$('#delete'+id).linkbutton('enable');
 		$('#sh'+id).linkbutton('enable');
@@ -245,6 +250,7 @@
 	//清款后的状态
 	var qkBtnStatus = function(){
 		$('#save'+id).linkbutton('disable');
+		$('#print'+id).linkbutton('enable');
 		$('#add'+id).linkbutton('enable');
 		$('#delete'+id).linkbutton('disable');
 		$('#sh'+id).linkbutton('disable');
@@ -705,6 +711,23 @@
 		//界面选中
 		$(viewList).datagrid('unselectAll');
 		$(viewList).datagrid('selectRow',selectIndex);
+	}
+	//打印 
+	var onPrint = function(){
+		if(selectRow ==null){
+			$.messager.alert('提示','请选中要打印的记录行','warning');
+    		return;
+		}
+		print(selectRow.receiveId);
+	}
+	//打印
+	var print = function(receiveId){
+		window.open("printReport.jsp?report=receive&data=ReportServlet?receiveId="+receiveId);
+	}
+	//内层打印
+	var onPrintIn = function(){
+		var receiveId = $('#receiveId',editDialog).val();
+		print(receiveId);
 	}
 	//-----收货明细----------
 	var receiveDetail = $('#receiveDetail',editDialog);
