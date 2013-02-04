@@ -42,7 +42,7 @@ public class SplitDetail extends BaseModel {
 	/**
 	 * 数量
 	 */
-	private Double qty;
+	private Integer qty;
 	/**
 	 * 单价
 	 */
@@ -109,12 +109,12 @@ public class SplitDetail extends BaseModel {
 		this.split = split;
 	}
 
-	@Column(name = "qty", nullable = false, precision = 22, scale = 0)
-	public Double getQty() {
+	@Column
+	public Integer getQty() {
 		return this.qty;
 	}
 
-	public void setQty(Double qty) {
+	public void setQty(Integer qty) {
 		this.qty = qty;
 	}
 

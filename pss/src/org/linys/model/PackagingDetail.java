@@ -1,5 +1,7 @@
 package org.linys.model;
 
+import java.text.DecimalFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -43,7 +46,7 @@ public class PackagingDetail extends BaseModel {
 	/**
 	 * 数量
 	 */
-	private Double qty;
+	private Integer qty;
 	/**
 	 * 单价
 	 */
@@ -110,12 +113,12 @@ public class PackagingDetail extends BaseModel {
 		this.product = product;
 	}
 
-	@Column(name = "qty", nullable = false, precision = 22, scale = 0)
-	public Double getQty() {
+	@Column
+	public Integer getQty() {
 		return this.qty;
 	}
 
-	public void setQty(Double qty) {
+	public void setQty(Integer qty) {
 		this.qty = qty;
 	}
 
@@ -155,4 +158,12 @@ public class PackagingDetail extends BaseModel {
 		this.note3 = note3;
 	}
 
+	@Transient
+	public Double getAmount(){
+		if(price==null){
+			return 0D;
+		}
+		DecimalFormat df = new DecimalFormat("######0.00");
+		return Double.parseDouble(df.format(price*qty));
+	}
 }

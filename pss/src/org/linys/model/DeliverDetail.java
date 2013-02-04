@@ -193,6 +193,7 @@ public class DeliverDetail extends BaseModel {
 
 	@Transient
 	public Double getAmount() {
+		if(price==null) return 0d;
 		Double amount = qty*price;
 		if(discount!=null){
 			amount =amount*discount;
