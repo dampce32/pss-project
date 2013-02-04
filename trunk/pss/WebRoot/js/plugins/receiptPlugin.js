@@ -22,18 +22,17 @@
 		editable:false,
 		valueField:'value',
 		textField:'text',
-		width:150,
+		width:50,
 		data:statusList
 	  })
 	  //点击查询按钮
 	 $('#searchBtn',queryContent).click(function(){
-		  var receiptCode = $('#receiptCode',queryContent).val();
 		  var customerName = $('#customer',queryContent).val();
 		  var beginDate = $('#beginDate',queryContent).val();
 		  var endDate = $('#endDate',queryContent).val();
 		  var status = $('#status',queryContent).combobox('getValue');
 		  var url = 'finance/queryReceipt.do';
-		  var queryParams ={receiptCode:receiptCode,'customer.customerName':customerName,beginDate:beginDate,endDate:endDate,status:status};
+		  var queryParams ={'customer.customerName':customerName,beginDate:beginDate,endDate:endDate,status:status};
 		  $(viewList).datagrid({
 			url:url,
 			queryParams:queryParams,
@@ -42,7 +41,6 @@
 	  })
 	  //重置按钮
 	  $('#resetBtn',queryContent).click(function(){
-		  $('#receiptCode',queryContent).val('');
 		  $('#customer',queryContent).val('');
 		  $('#beginDate',queryContent).val('');
 		  $('#endDate',queryContent).val('');
