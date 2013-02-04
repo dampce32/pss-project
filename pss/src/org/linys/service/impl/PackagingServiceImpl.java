@@ -183,6 +183,7 @@ public class PackagingServiceImpl extends BaseServiceImpl<Packaging, String> imp
 		packagingDao.update(packaging);
 		
 		for(String packagingDetailId : delPackagingDetailIdArray){
+			if(StringUtils.isEmpty(packagingDetailId)) continue;
 			PackagingDetail packagingDetail = packagingDetailDao.load(packagingDetailId);
 			if(packagingDetail==null) continue;
 			packagingDetailDao.delete(packagingDetail);
@@ -207,7 +208,7 @@ public class PackagingServiceImpl extends BaseServiceImpl<Packaging, String> imp
 			
 			
 			PackagingDetail packagingDetail = null;
-			if(StringUtils.isEmpty(packagingDetailId)){
+			if(StringUtils.isNotEmpty(packagingDetailId)){
 				packagingDetail = packagingDetailDao.load(packagingDetailId);
 			}else{
 				packagingDetail = new PackagingDetail();
