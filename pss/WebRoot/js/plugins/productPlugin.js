@@ -352,7 +352,7 @@
 			{field:'productName',title:'商品名称',width:200,align:"center"},
 		    {field:'unitName',title:'单位',width:90,align:"center"},
 		    {field:'sizeName',title:'规格',width:90,align:"center"},
-		    {field:'qty',title:'数量',width:90,align:"center",editor:{type:'numberbox',options:{precision:2}}},
+		    {field:'qty',title:'数量',width:90,align:"center",editor:{type:'numberbox',options:{precision:0}}},
 		    {field:'price',title:'单价',width:90,align:"center",editor:{type:'numberbox',options:{disabled:true,precision:2}}},
 		    {field:'amount',title:'金额',width:90,align:"center",editor:{type:'numberbox',options:{disabled:true,precision:2}}}
 	  ]],
@@ -476,9 +476,9 @@
 				 productName:row.productName,
 				 unitName:row.unitName,
 				 sizeName:row.sizeName,
-				 qty:0.00,
+				 qty:1,
 				 price:row.buyingPrice,
-				 amount:0.00
+				 amount:row.buyingPrice
 			});
 		}
 		$(defaultPackagingList).datagrid('endEdit', lastIndex);
