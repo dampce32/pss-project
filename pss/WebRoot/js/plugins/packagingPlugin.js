@@ -26,18 +26,17 @@
 		editable:false,
 		valueField:'value',
 		textField:'text',
-		width:150,
+		width:50,
 		data:statusList
 	  })
 	  //点击查询按钮
 	  $('#searchBtn',queryContent).click(function(){
-		  var packagingCode = $('#packagingCode',queryContent).val();
 		  var productName = $('#productName',queryContent).val();
 		  var beginDate = $('#beginDate',queryContent).val();
 		  var endDate = $('#endDate',queryContent).val();
 		  var status = $('#status',queryContent).combobox('getValue');
 		  var url = 'store/queryPackaging.do';
-		  var queryParams ={packagingCode:packagingCode,'product.productName':productName,beginDate:beginDate,endDate:endDate,status:status};
+		  var queryParams ={'product.productName':productName,beginDate:beginDate,endDate:endDate,status:status};
 		  $(viewList).datagrid({
 			url:url,
 			queryParams:queryParams,
@@ -46,7 +45,6 @@
 	  })
 	  //重置按钮
 	  $('#resetBtn',queryContent).click(function(){
-		  $('#packagingCode',queryContent).val('');
 		  $('#productName',queryContent).val('');
 		  $('#beginDate',queryContent).val('');
 		  $('#endDate',queryContent).val('');
@@ -525,8 +523,15 @@
 		    {field:'unitName',title:'单位',width:90,align:"center"},
 		    {field:'sizeName',title:'规格',width:90,align:"center"},
 		    {field:'colorName',title:'颜色',width:90,align:"center"},
-		    {field:'qty',title:'数量',width:90,align:"center",editor:{type:'numberbox',options:{min:0,precision:0}}},
+		    {field:'qty',title:'单件用量',width:90,align:"center",editor:{type:'numberbox',options:{min:1,precision:0}}},
 		    {field:'price',title:'单价',width:90,align:"center",editor:{type:'numberbox',options:{min:0,precision:2}}},
+		    {field:'totalQty',title:'总量',width:90,align:"center",
+		    	formatter: function(value,row,index){
+		    		var qty = $('#qty',editForm).numberbox('getValue');
+		    		if(qty=='' || row.qty=='') return 0;
+		    		return parseInt(qty)*parseInt(row.qty);
+				},
+		    	editor:{type:'numberbox',options:{disabled:true,precision:0}}},
 		    {field:'amount',title:'金额',width:90,align:"center",editor:{type:'numberbox',options:{disabled:true,precision:2}}},
 		    {field:'warehouseId',title:'仓库',width:90,align:"center",editor:{type:'combobox',options:{valueField:'warehouseId',
 				textField:'warehouseName',
@@ -548,24 +553,29 @@
 	    var editors = $(packagingDetail).datagrid('getEditors', rowIndex);  
 	    var qtyEditor = editors[0];  
 	    var priceEditor = editors[1];  
-	    var amountEditor = editors[2];  
-	    qtyEditor.target.bind('change', function(){  
+	    var totalQtyEditor = editors[2];
+	    var amountEditor = editors[3];  
+	    qtyEditor.target.bind('change', function(newValue,oldValue){  
+	    	if(newValue==''){
+	    	    $(qtyEditor.target).numberbox('setValue',oldValue);
+	    		return;
+	    	}
 	        calculate(rowIndex);  
 	    });  
 	    priceEditor.target.bind('change', function(){  
 	        calculate(rowIndex);  
 	    });  
 	    function calculate(rowIndex){  
-	    	var qty = qtyEditor.target.val();
+	    	var qty = $('#qty',editForm).numberbox('getValue');
+	    	var perqty = qtyEditor.target.val();
 	    	var price = priceEditor.target.val();
-	    	if(qty==''){
-	    		qty=0;
-	    	}
 	    	if(price==''){
 	    		price=0;
 	    	}
-	        var cost = parseFloat(qty)*parseFloat(price);  
-	        $(amountEditor.target).numberbox('setValue',cost);
+	    	var totalQty =parseInt(perqty*qty);
+	        var amount = parseFloat(totalQty)*parseFloat(price);  
+	        $(totalQtyEditor.target).numberbox('setValue',totalQty);
+	        $(amountEditor.target).numberbox('setValue',amount);
 	    }  
 	}  
 	//编辑框
@@ -635,6 +645,7 @@
 	 }
 	 //选择商品
 	 var onSelectOKProduct = function(){
+		 var warehouseId = $('#warehouseId',editDialog).combobox('getValue');
 		 var rows = $(productList).datagrid('getSelections');
 		 if(rows.length==0){
 			 $.messager.alert('提示','请选择商品',"warning");
@@ -648,13 +659,23 @@
 				 if(result.isSuccess){
 					var data = result.data;
 					$(packagingDetail).datagrid('loadData',eval("("+data.defaultPackagingData+")"));
+					if(warehouseId!=''){
+						var rows = $(packagingDetail).datagrid('getRows');
+						$(rows).each(function(index,row){
+							 row.warehouseId = warehouseId;
+							 $(packagingDetail).datagrid('updateRow',{index:index,row:row});
+						})
+					}
 					$('#productId',editForm).val(row.productId);
 					$('#product',editForm).val(row.productName);
+					$('#price',editForm).numberbox('setValue',row.salePrice);
+					
 				}else{
 					$.messager.alert('提示',result.message,"error");
 				}
 			 })
 		 }else{
+			 var qty = $('#qty',editForm).numberbox('getValue');
 			 $(rows).each(function(index,row){
 			 $(packagingDetail).datagrid('appendRow',{
 				 packagingDetailId:'',
@@ -663,10 +684,12 @@
 				 productName:row.productName,
 				 unitName:row.unitName,
 				 sizeName:row.sizeName,
-				 colorId:row.colorId,
-				 qty:0,
+				 colorName:row.colorName,
+				 qty:1,
+				 warehouseId:warehouseId,
 				 price:row.salePrice,
-				 amount:0,
+				 amount:row.salePrice,
+				 totalQty:qty,
 				 note1:'',
 				 note2:'',
 				 note3:''
@@ -709,16 +732,33 @@
 	 //数量发生改变
 	 $('#qty',editForm).numberbox({
 		 onChange:function(newValue,oldValue){
-		  	 if(parseFloat(newValue)==parseFloat(oldValue)) return;
-			 if(newValue==''){
-				 newValue=0;
+		 	 if(newValue==''){
+				 $('#qty',editForm).numberbox('setValue',oldValue);
+				 return;
 			 }
+		  	 if(parseFloat(newValue)==parseFloat(oldValue)) return;
 			 var price = $('#price',editForm).numberbox('getValue');
 			 if(price==''){
 				price=0;
 			 }
 			 var totalAmount =parseFloat(newValue*price); 
+			 if(lastIndex!=null){
+				$(packagingDetail).datagrid('endEdit', lastIndex);
+			 	$(packagingDetail).datagrid('unselectAll');
+			 	lastIndex = null;
+			 }
 			 $('#amount',editForm).numberbox('setValue',totalAmount);
+			 var rows = $(packagingDetail).datagrid('getRows');
+			 $(rows).each(function(index,row){
+				 var totalQty = row.qty*newValue;
+				 var price = row.price;
+				 if(price==''){
+					 price = 0;
+				 }
+				 row.totalQty = totalQty;
+				 row.amount = parseFloat(totalQty*price);
+				 $(packagingDetail).datagrid('updateRow',{index:index,row:row});
+			 })
 		 }
 	});
 	 var addDialog = $('#addDialog',$this);
