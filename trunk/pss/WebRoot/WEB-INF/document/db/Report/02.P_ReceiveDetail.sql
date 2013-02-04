@@ -1,6 +1,6 @@
-DROP PROCEDURE IF EXISTS `P_BuyDetail`;
+DROP PROCEDURE IF EXISTS `P_ReceiveDetail`;
 DELIMITER ;;
-CREATE  PROCEDURE `P_BuyDetail`(in buyId_in varchar(32))
+CREATE  PROCEDURE `P_ReceiveDetail`(in receiveId varchar(32))
 BEGIN
 	select 
 		b.productCode,
@@ -12,12 +12,19 @@ BEGIN
 		a.price,
 		a.qty*a.price amount,
 		a.note1 
-	from t_buydetail a
+	from t_Receivedetail a
   left join t_product b on a.productId = b.productId
   left join t_datadictionary c on a.colorId = c.dataDictionaryId
   left join t_datadictionary d on b.sizeId = d.dataDictionaryId
   left join t_datadictionary e on b.unitId = e.dataDictionaryId
-  where buyId = buyId_in;
+  where a.receiveId = receiveId;
 END
 ;;
 DELIMITER ;
+
+
+
+
+/*
+call P_ReceiveDetail('402880bb3c8542f0013c857b66580007')
+*/

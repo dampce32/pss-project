@@ -66,7 +66,7 @@ public class ReportConfigServiceImpl extends
 		
 		List<ReportConfig> list = reportConfigDAO.query(model,page,rows);
 		
-		String[] properties = {"reportConfigId","reportCode","reportName","reportDetailSql","reportParamsSql"};
+		String[] properties = {"reportConfigId","reportCode","reportName","reportDetailSql","reportParamsSql","reportKind"};
 		String data = JSONUtil.toJson(list,properties);
 		result.addData("datagridData", data);
 		
