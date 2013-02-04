@@ -26,7 +26,7 @@ function Install_Detect()
     {
         document.write('<div style="width: 100%; background-color: #fff8dc; text-align: center; vertical-align: middle; line-height: 20pt; padding-bottom: 12px; padding-top: 12px;">');
             document.write('<strong> 此网站需要安装 锐浪报表插件 才能保证其正常运行<br /></strong>');
-            document.write('<a href="' + grInstallPath + '/grbsctl5.msi"><span style="color: #ff0000"><strong>点击此处下载锐浪报表插件安装包<br /></strong></span></a>');
+            document.write('<a href="' + grInstallPath + '/grbsctl5.exe"><span style="color: #ff0000"><strong>点击此处下载锐浪报表插件安装包<br /></strong></span></a>');
             document.write('锐浪报表插件安装后，<a href="#" onclick="javascript:document.location.reload();">点击此处</a> 重新加载此网站');
         document.write('</div>');
         return false;
