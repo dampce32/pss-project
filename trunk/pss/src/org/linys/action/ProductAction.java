@@ -196,4 +196,25 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	}
+	
+	/**
+	 * 
+	 * @Description: 查询某个商品的默认保证
+	 * @Create: 2013-2-4 下午02:19:41
+	 * @author longweier
+	 * @update logs
+	 * @throws Exception
+	 */
+	public void queryDefaultPacking(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = productService.selectDefaultPacking(model);
+		} catch (Exception e) {
+			result.setMessage("默认商品组装，选择商品失败");
+			logger.error("默认商品组装，选择商品失败", e);
+			result.setIsSuccess(false);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
 }

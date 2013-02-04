@@ -3,6 +3,7 @@ package org.linys.dao;
 import java.util.List;
 
 import org.linys.model.DefaultPackaging;
+import org.linys.model.Product;
 /**
  * @Description:默认商品组装DAO
  * @Copyright: 福州骏华信息有限公司 (c)2013
@@ -16,9 +17,9 @@ public interface DefaultPackagingDAO extends BaseDAO<DefaultPackaging,String>{
 	 * @Create: 2013-2-3 下午12:05:40
 	 * @author lys
 	 * @update logs
-	 * @param productId
+	 * @param product
 	 * @return
 	 */
-	List<DefaultPackaging> queryByProductId(String productId);
+	List<DefaultPackaging> queryByProductId(Product product);
 
 }
