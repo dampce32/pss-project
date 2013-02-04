@@ -42,7 +42,7 @@ public class DefaultPackaging extends BaseModel {
 	/**
 	 * 数量
 	 */
-	private Double qty;
+	private Integer qty;
 	/**
 	 * 金额
 	 */
@@ -82,12 +82,12 @@ public class DefaultPackaging extends BaseModel {
 		this.product = product;
 	}
 
-	@Column(name = "qty", precision = 22, scale = 0)
-	public Double getQty() {
+	@Column
+	public Integer getQty() {
 		return this.qty;
 	}
 
-	public void setQty(Double qty) {
+	public void setQty(Integer qty) {
 		this.qty = qty;
 	}
 	@ManyToOne(fetch = FetchType.LAZY)
