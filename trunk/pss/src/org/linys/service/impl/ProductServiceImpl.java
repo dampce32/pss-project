@@ -98,7 +98,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 		String[] qtyArray = StringUtil.split(qtys);
 		for (int i = 0; i < productIdArray.length&&StringUtils.isNotEmpty(productIdArray[i]); i++) {
 			String qty = qtyArray[i];
-			if("0".equals(qty)){
+			if("0".equals(qty) || StringUtils.isEmpty(qty)){
 				result.setMessage("第"+(i+1)+"行商品数量不能为0");
 				return result;
 			}
