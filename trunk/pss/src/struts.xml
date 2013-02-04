@@ -96,6 +96,7 @@
 	
 	<package name="store" namespace="/store" extends="basePackage">
 		<action name="*Store" class="storeAction" method="{1}"></action>
+		<action name="*Packaging" class="packagingAction" method="{1}"></action>
 		<action name="*">
 			<result>/WEB-INF/store/{1}.html</result>
 		</action>
