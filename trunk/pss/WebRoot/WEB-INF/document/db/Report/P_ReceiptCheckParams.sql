@@ -5,7 +5,11 @@ CREATE  PROCEDURE `P_ReceiptCheckParams`(
 	IN warehouseId varchar(32)
 )
 BEGIN
-	select a.customerName,b.warehouseName
+	select 
+		a.customerName,
+		a.phone,
+		a.fax,
+		b.warehouseName
   from(select *
 		from t_customer a
 		where a.customerId = customerId)a

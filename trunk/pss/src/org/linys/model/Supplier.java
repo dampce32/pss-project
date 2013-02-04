@@ -40,6 +40,39 @@ public class Supplier extends BaseModel {
 	 * 供应商编号
 	 */
 	private String supplierCode;
+	
+	/**
+	 * 联系人
+	 */
+	private String contact;
+	/**
+	 * 地址
+	 */
+	private String addr;
+	/**
+	 * 电话
+	 */
+	private String phone;
+	/**
+	 * 传真
+	 */
+	private String fax;
+	/**
+	 * E-mail
+	 */
+	private String email;
+	/**
+	 * 备注1
+	 */
+	private String note1;
+	/**
+	 * 备注2
+	 */
+	private String note2;
+	/**
+	 * 备注3
+	 */
+	private String note3;
 	/**
 	 * 收货单
 	 */
@@ -103,6 +136,69 @@ public class Supplier extends BaseModel {
 
 	public void setReceives(Set<Receive> receives) {
 		this.receives = receives;
+	}
+	@Column(name = "contact", length = 50)
+	public String getContact() {
+		return contact;
+	}
+
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
+	@Column(name = "addr", length = 100)
+	public String getAddr() {
+		return addr;
+	}
+
+	public void setAddr(String addr) {
+		this.addr = addr;
+	}
+	@Column(name = "phone", length = 20)
+	public String getPhone() {
+		return phone;
+	}
+	
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	@Column(name = "fax", length = 20)
+	public String getFax() {
+		return fax;
+	}
+
+	public void setFax(String fax) {
+		this.fax = fax;
+	}
+	@Column(name = "email", length = 50)
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	@Column(name = "note1", length = 100)
+	public String getNote1() {
+		return note1;
+	}
+
+	public void setNote1(String note1) {
+		this.note1 = note1;
+	}
+	@Column(name = "note2", length = 100)
+	public String getNote2() {
+		return note2;
+	}
+
+	public void setNote2(String note2) {
+		this.note2 = note2;
+	}
+	@Column(name = "note3", length = 100)
+	public String getNote3() {
+		return note3;
+	}
+
+	public void setNote3(String note3) {
+		this.note3 = note3;
 	}
 
 }

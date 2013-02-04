@@ -28,7 +28,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, String> imple
 	public String queryCustomer(Integer pageNumber, Integer pageSize,Customer customer) {
 		Pager pager = new Pager(pageNumber, pageSize);
 		pager = customerDao.queryCustomer(pager, customer);
-		String[] property = {"customerId","customerCode","customerName","contacter","phone","status","note","customerType.customerTypeID","customerType.customerTypeName"};
+		String[] property = {"customerId","customerCode","customerName","contacter","phone","fax","status","note","customerType.customerTypeID","customerType.customerTypeName"};
 		String jsonArray = JSONUtil.toJson(pager.getList(), property, pager.getTotalCount());
 		return jsonArray;
 	}

@@ -64,6 +64,14 @@ public class SupplierServiceImpl extends BaseServiceImpl<Supplier, String>
 			}
 			oldModel.setSupplierCode(model.getSupplierCode());
 			oldModel.setSupplierName(model.getSupplierName());
+			oldModel.setContact(model.getContact());
+			oldModel.setAddr(model.getAddr());
+			oldModel.setPhone(model.getPhone());
+			oldModel.setFax(model.getFax());
+			oldModel.setEmail(model.getEmail());
+			oldModel.setNote1(model.getNote1());
+			oldModel.setNote2(model.getNote2());
+			oldModel.setNote3(model.getNote3());
 			
 			supplierDAO.update(oldModel);
 		}
@@ -101,7 +109,8 @@ public class SupplierServiceImpl extends BaseServiceImpl<Supplier, String>
 		
 		List<Supplier> list = supplierDAO.query(model,page,rows);
 		
-		String[] properties = {"supplierId","supplierCode","supplierName"};
+		String[] properties = {"supplierId","supplierCode","supplierName","contact","addr",
+					"phone","fax","email","note1","note2","note3"};
 		String data = JSONUtil.toJson(list,properties);
 		result.addData("datagridData", data);
 		
