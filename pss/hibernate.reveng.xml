@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
 
 <hibernate-reverse-engineering>
-    <table name="t_product" schema="dbo" catalog="pss"
+	<table name="t_product" schema="dbo" catalog="pss"
 		class="Product">
 	</table>
 	<table name="t_employee" schema="dbo" catalog="pss"
@@ -14,8 +14,7 @@
 	<table name="t_invoicetype" schema="dbo" catalog="pss"
 		class="InvoiceType">
 	</table>
-	<table name="t_buy" schema="dbo" catalog="pss" class="Buy">
-	</table>
+	<table name="t_buy" schema="dbo" catalog="pss" class="Buy"></table>
 	<table name="t_buydetail" schema="dbo" catalog="pss"
 		class="BuyDetail">
 	</table>
@@ -54,4 +53,5 @@
 	<table name="t_packagedetail" catalog="pss" class="PackageDetail"></table>
 	<table name="t_split" catalog="pss" class="Split"></table>
 	<table name="t_splitdetail" catalog="pss" class="SplitDetail"></table>
+	<table name="t_systemconfig" catalog="pss" class="SystemConfig"></table>
 </hibernate-reverse-engineering>

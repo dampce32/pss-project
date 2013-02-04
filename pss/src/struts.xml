@@ -44,6 +44,7 @@
 	</package>
 	<!-- 系统管理 -->
 	<package name="system" namespace="/system" extends="basePackage">
+		<action name="*SystemConfig" class="systemConfigAction" method="{1}"></action>
 		<action name="*ReportParam" class="reportParamAction" method="{1}"></action>
 		<action name="*ReportConfig" class="reportConfigAction" method="{1}"></action>
 		<action name="*Prefix" class="prefixAction" method="{1}"></action>
