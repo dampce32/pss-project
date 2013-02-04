@@ -106,6 +106,13 @@ public class DefaultPackaging extends BaseModel {
 		return Double.parseDouble(df.format(this.amount));
 	}
 
+	@Transient
+	public Double getSaleAmount(){
+		Double price = product.getSalePrice();
+		if(price==null) return null;
+		DecimalFormat df = new DecimalFormat("##########0.00");
+		return Double.parseDouble(df.format(qty*price));
+	}
 	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
