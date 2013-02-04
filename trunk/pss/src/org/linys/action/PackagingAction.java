@@ -148,7 +148,7 @@ public class PackagingAction extends BaseAction implements ModelDriven<Packaging
 		try {
 			result = packagingService.updateStatus(packaging);
 		} catch (Exception e) {
-			result.setMessage("后台出错");
+			result.setMessage(e.getMessage());
 			logger.error("修改组装单状态出错", e);
 		}
 		ajaxJson(result.toJSON());
@@ -167,7 +167,7 @@ public class PackagingAction extends BaseAction implements ModelDriven<Packaging
 		try {
 			result = packagingService.mulUpdateStatus(ids, packaging.getStatus());
 		} catch (Exception e) {
-			result.setMessage("后台出错");
+			result.setMessage(e.getMessage());
 			logger.error("添加组装单出错", e);
 		}
 		ajaxJson(result.toJSON());

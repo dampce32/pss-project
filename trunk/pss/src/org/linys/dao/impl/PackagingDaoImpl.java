@@ -47,6 +47,7 @@ public class PackagingDaoImpl extends BaseDAOImpl<Packaging, String> implements 
 		Long total = new Long(criteria.setProjection(Projections.rowCount()).uniqueResult().toString());
 		
 		criteria.setProjection(null);
+		criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 		criteria.setFirstResult(pager.getBeginCount()).setMaxResults(pager.getPageSize());
 		
 		pager.setTotalCount(total);
