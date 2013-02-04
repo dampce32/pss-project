@@ -88,6 +88,10 @@ public class PackagingServiceImpl extends BaseServiceImpl<Packaging, String> imp
 				result.setMessage("第"+(i+1)+"行商品仓库不能为空");
 				return result;
 			}
+			if(productIdArray[i].equals(packaging.getProduct().getProductId())){
+				result.setMessage("组装明细不能包含需要组装的产品");
+				return result;
+			}
 		}
 		packaging.setPackagingCode(commonDao.getCode(Packaging.class.getName(), "packagingCode", prefixDao.getPrefix("packaging")));
 		packaging.setStatus(0);

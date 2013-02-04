@@ -164,6 +164,6 @@ public class PackagingDetail extends BaseModel {
 			return 0D;
 		}
 		DecimalFormat df = new DecimalFormat("######0.00");
-		return Double.parseDouble(df.format(price*qty));
+		return Double.parseDouble(df.format(price*qty*packaging.getQty()));
 	}
 }
