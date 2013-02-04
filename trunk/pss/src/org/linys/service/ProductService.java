@@ -2,6 +2,7 @@ package org.linys.service;
 
 import org.linys.model.Product;
 import org.linys.vo.ServiceResult;
+
 /**
  * @Description:商品Service
  * @Copyright: 福州骏华信息有限公司 (c)2012
@@ -109,4 +110,15 @@ public interface ProductService extends BaseService<Product,String>{
 	 */
 	ServiceResult init(String productId);
 
+	/**
+	 * 
+	 * @Description: 查询成品的默认组成
+	 * @Create: 2013-2-4 下午02:06:39
+	 * @author longweier
+	 * @update logs
+	 * @param product
+	 * @return
+	 * @throws Exception
+	 */
+	ServiceResult selectDefaultPacking(Product product);
 }
