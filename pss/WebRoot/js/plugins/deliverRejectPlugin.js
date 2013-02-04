@@ -26,18 +26,17 @@
 		editable:false,
 		valueField:'value',
 		textField:'text',
-		width:150,
+		width:50,
 		data:statusList
 	  })
 	  //点击查询按钮
 	  $('#searchBtn',queryContent).click(function(){
-		  var deliverRejectCode = $('#deliverRejectCode',queryContent).val();
 		  var sourceCode = $('#sourceCode',queryContent).val();
 		  var beginDate = $('#beginDate',queryContent).val();
 		  var endDate = $('#endDate',queryContent).val();
 		  var status = $('#status',queryContent).combobox('getValue');
 		  var url = 'outWarehouse/queryDeliverReject.do';
-		  var queryParams ={deliverRejectCode:deliverRejectCode,sourceCode:sourceCode,beginDate:beginDate,endDate:endDate,status:status};
+		  var queryParams ={sourceCode:sourceCode,beginDate:beginDate,endDate:endDate,status:status};
 		  $(viewList).datagrid({
 			url:url,
 			queryParams:queryParams,
@@ -46,7 +45,6 @@
 	  })
 	  //重置按钮
 	  $('#resetBtn',queryContent).click(function(){
-		  $('#deliverRejectCode',queryContent).val('');
 		  $('#sourceCode',queryContent).val('');
 		  $('#beginDate',queryContent).val('');
 		  $('#endDate',queryContent).val('');
