@@ -7,6 +7,7 @@ import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
 import org.linys.dao.DefaultPackagingDAO;
 import org.linys.model.DefaultPackaging;
+import org.linys.model.Product;
 import org.springframework.stereotype.Repository;
 /**
  * @Description:默认商品组装DAO实现类
@@ -24,10 +25,11 @@ public class DefaultPackagingDAOImpl extends
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DefaultPackaging> queryByProductId(String productId) {
+	public List<DefaultPackaging> queryByProductId(Product product) {
 		Criteria criteria  = getCurrentSession().createCriteria(DefaultPackaging.class);
 		criteria.createAlias("product", "product", CriteriaSpecification.LEFT_JOIN);
-		criteria.add(Restrictions.eq("parentProduct.productId", productId));
+		
+		criteria.add(Restrictions.eq("parentProduct", product));
 		return criteria.list();
 	}
 }

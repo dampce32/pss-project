@@ -311,10 +311,26 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 		String productData = JSONUtil.toJson(product,properties);
 		result.addData("productData",productData);
 		
-		List<DefaultPackaging> defaultPackagingList = defaultPackagingDAO.queryByProductId(productId);
+		List<DefaultPackaging> defaultPackagingList = defaultPackagingDAO.queryByProductId(product);
 		String[] propertiesDetail = {"defaultPackagingId","product.productId","product.productCode","product.productName",
 				"product.size.dataDictionaryName:sizeName","product.unit.dataDictionaryName:unitName",
 				"qty","product.buyingPrice:price","amount"};
+		String defaultPackagingData = JSONUtil.toJson(defaultPackagingList,propertiesDetail);
+		result.addData("defaultPackagingData", defaultPackagingData);
+		result.setIsSuccess(true);
+		return result;
+	}
+	
+	public ServiceResult selectDefaultPacking(Product product) {
+		ServiceResult result = new ServiceResult(false);
+		if(product==null || StringUtils.isEmpty(product.getProductId())){
+			result.setMessage("参数有误");
+			return result;
+		}
+		List<DefaultPackaging> defaultPackagingList = defaultPackagingDAO.queryByProductId(product);
+		String[] propertiesDetail = {"product.productId","product.productCode","product.productName","product.color.dataDictionaryName:colorName",
+				"product.size.dataDictionaryName:sizeName","product.unit.dataDictionaryName:unitName",
+				"qty","product.salePrice:price","saleAmount:amount"};
 		String defaultPackagingData = JSONUtil.toJson(defaultPackagingList,propertiesDetail);
 		result.addData("defaultPackagingData", defaultPackagingData);
 		result.setIsSuccess(true);
