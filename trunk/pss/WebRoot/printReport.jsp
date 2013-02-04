@@ -18,11 +18,6 @@ data=data.replace("^","&");
     </style>
     <script language="javascript" type="text/javascript">
 	    Install_InsertReport();
-	    
-		function cmbLanguage_onchange() 
-		{
-			Report.Language = cmbLanguage.value;
-		}
 	</script>
 </head>
 <body style="margin:0">
