@@ -31,7 +31,15 @@
 		  fit:true,
 		  columns:[[
 			    {field:'supplierCode',title:'供应商编号',width:120,align:"center"},
-				{field:'supplierName',title:'供应商名称',width:300,align:"center"}
+				{field:'supplierName',title:'供应商名称',width:200,align:"center"},
+				{field:'contact',title:'联系人',width:90,align:"center"},
+				{field:'addr',title:'地址',width:200,align:"center"},
+				{field:'phone',title:'电话',width:90,align:"center"},
+				{field:'fax',title:'传真',width:90,align:"center"},
+				{field:'email',title:'E-mail',width:90,align:"center"},
+				{field:'note1',title:'备注1',width:120,align:"center"},
+				{field:'note2',title:'备注2',width:120,align:"center"},
+				{field:'note3',title:'备注3',width:120,align:"center"}
 		  ]],
 		  rownumbers:true,
 		  pagination:false,
@@ -99,8 +107,8 @@
 	//编辑框
 	$(editDialog).dialog({  
 	    title: '编辑供应商信息',  
-	    width:600,
-	    height:300,
+	    width:800,
+	    height:400,
 	    closed: true,  
 	    cache: false,  
 	    modal: true,

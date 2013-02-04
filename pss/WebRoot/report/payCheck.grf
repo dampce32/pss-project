@@ -301,6 +301,12 @@
 		Item
 			Name='warehouseName'
 		End
+		Item
+			Name='phone'
+		End
+		Item
+			Name='fax'
+		End
 	End
 	Items Section
 		Item
@@ -349,7 +355,7 @@
 					Top=1.19063
 					Width=4.78896
 					Height=1.00542
-					Text='电话：'
+					Text='电话：[#{phone}#]'
 				End
 				Item
 					Type=MemoBox
@@ -358,7 +364,7 @@
 					Top=1.19063
 					Width=4.39208
 					Height=1.00542
-					Text='传真：'
+					Text='传真：[#{fax}#]'
 				End
 			End
 		End

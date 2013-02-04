@@ -58,7 +58,13 @@ public class Customer extends BaseModel {
 	/**
 	 * 联系电话
 	 */
+	@Column(name = "phone", length = 50)
 	private String phone;
+	/**
+	 * 传真
+	 */
+	@Column(name = "fax", length = 50)
+	private String fax;
 	
 	/**
 	 * 客户状态  0:无效   1:有效
@@ -188,5 +194,13 @@ public class Customer extends BaseModel {
 			customerType = new CustomerType();
 		}
 		customerType.setCustomerTypeID(customerTypeID);
+	}
+
+	public String getFax() {
+		return fax;
+	}
+
+	public void setFax(String fax) {
+		this.fax = fax;
 	}
 }

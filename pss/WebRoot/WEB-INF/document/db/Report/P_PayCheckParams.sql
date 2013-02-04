@@ -5,7 +5,11 @@ CREATE  PROCEDURE `P_PayCheckParams`(
 	IN warehouseId varchar(32)
 )
 BEGIN
-	select a.supplierName,b.warehouseName
+	select 
+		a.supplierName,
+		a.phone,
+		a.fax,
+		b.warehouseName
   from(select *
 		from t_supplier a
 		where a.supplierId = supplierId)a
