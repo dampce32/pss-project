@@ -8,7 +8,7 @@
 		Weight=400
 		Charset=134
 	End
-	QuerySQL='call p_buyParams('402880bb3c5ff0a4013c5ff7046d0001')'
+	QuerySQL='call P_BuyParams ('402880bb3c8542f0013c854975af0001')'
 	Object Printer
 		LeftMargin=0.5
 		TopMargin=0.5
@@ -16,9 +16,10 @@
 		BottomMargin=0.5
 	End
 	Object DetailGrid
+		AppendBlankRow=T
 		Object Recordset
 			ConnectionString='Provider=MSDASQL.1;Password=root;Persist Security Info=True;User ID=root;Data Source=pss;Extended Properties="DSN=pss;UID=root;PWD=root;"'
-			QuerySQL='call P_BuyDetail( '402880bb3c5ff0a4013c5ff7046d0001')'
+			QuerySQL='call P_BuyDetail( '402880bb3c8542f0013c854975af0001')'
 			Items Field
 				Item
 					Name='productCode'
@@ -326,18 +327,22 @@
 		Item
 			Name='note'
 		End
+		Item
+			Name='companyName'
+		End
 	End
 	Items Section
 		Item
 			Type=ReportHeader
 			Name='ReportHeader1'
-			Height=2.19604
+			Height=3.20146
 			Items Control
 				Item
 					Type=StaticBox
 					Name='StaticBox2'
 					Center=Horizontal
 					Left=7.3025
+					Top=1.00542
 					Width=5.3975
 					Height=1.19063
 					Object Font
@@ -352,9 +357,9 @@
 				Item
 					Type=MemoBox
 					Name='MemoBox1'
-					Left=14.605
-					Top=0.185208
-					Width=5.18583
+					Left=15.3988
+					Top=1.19063
+					Width=4.39208
 					Height=1.00542
 					Text='采购单号:[#{buyCode}#]'
 				End
@@ -362,7 +367,7 @@
 					Type=MemoBox
 					Name='MemoBox2'
 					Left=0.211667
-					Top=1.19063
+					Top=2.19604
 					Width=5.18583
 					Height=1.00542
 					Text='供应商：[#{supplierName}#]'
@@ -371,8 +376,8 @@
 					Type=MemoBox
 					Name='MemoBox3'
 					Left=5.3975
-					Top=1.19063
-					Width=5.18583
+					Top=2.19604
+					Width=5.21229
 					Height=1.00542
 					Text='原始单号：[#{sourceCode}#]'
 				End
@@ -380,7 +385,7 @@
 					Type=MemoBox
 					Name='MemoBox4'
 					Left=10.6098
-					Top=1.19063
+					Top=2.19604
 					Width=4.78896
 					Height=1.00542
 					Text='订单日期：[#{buyDate}:yyyy/MM/dd#]'
@@ -389,10 +394,27 @@
 					Type=MemoBox
 					Name='MemoBox5'
 					Left=15.3988
-					Top=1.19063
+					Top=2.19604
 					Width=4.39208
 					Height=1.00542
 					Text='订单交期：[#{receiveDate}:yyyy/MM/dd#]'
+				End
+				Item
+					Type=StaticBox
+					Name='StaticBox3'
+					Center=Horizontal
+					Left=1.79917
+					Width=16.4042
+					Height=1.00542
+					Object Font
+						Name='宋体'
+						Size=217500,0
+						Bold=T
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='公司名'
+					Parameter='companyName'
 				End
 			End
 		End
@@ -414,7 +436,7 @@
 					Top=0.79375
 					Width=5.18583
 					Height=1.00542
-					Text='供应商：[#{supplierName}#]'
+					Text='供应商：'
 				End
 				Item
 					Type=MemoBox
