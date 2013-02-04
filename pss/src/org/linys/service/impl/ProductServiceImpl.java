@@ -126,9 +126,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 				defaultPackaging.setParentProduct(model);
 				
 				if(StringUtils.isNotEmpty(qty)){//数量没输入保护
-					defaultPackaging.setQty(new Double(qty));
+					defaultPackaging.setQty(new Integer(qty));
 				}else{
-					defaultPackaging.setQty(0.0);
+					defaultPackaging.setQty(0);
 				}
 				
 				defaultPackagingDAO.save(defaultPackaging);
@@ -180,9 +180,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 					defaultPackaging.setProduct(product);
 					
 					if(StringUtils.isNotEmpty(qty)){//数量没输入保护
-						defaultPackaging.setQty(new Double(qty));
+						defaultPackaging.setQty(new Integer(qty));
 					}else{
-						defaultPackaging.setQty(0.0);
+						defaultPackaging.setQty(0);
 					}
 					defaultPackaging.setParentProduct(model);
 					defaultPackagingDAO.save(defaultPackaging);
@@ -190,9 +190,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 					DefaultPackaging  oldDefaultPackaging = defaultPackagingDAO.load(defaultPackagingId);
 					
 					if(StringUtils.isNotEmpty(qty)){//数量没输入保护
-						oldDefaultPackaging.setQty(new Double(qty));
+						oldDefaultPackaging.setQty(new Integer(qty));
 					}else{
-						oldDefaultPackaging.setQty(0.0);
+						oldDefaultPackaging.setQty(0);
 					}
 				}
 			}
