@@ -31,7 +31,7 @@ public interface PackagingService extends BaseService<Packaging, String> {
 	 * @return
 	 * @throws Exception
 	 */
-	public ServiceResult addPackaging(Packaging packaging,String productIds,String qtys,String prices,String warehouseIds,String note1s, String note2s,String note3s );
+	public ServiceResult addPackaging(Packaging packaging,String productIds,String qtys,String prices,String warehouseIds,String note1s, String note2s,String note3s);
 	
 	/**
 	 * 
