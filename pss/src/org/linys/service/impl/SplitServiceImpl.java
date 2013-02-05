@@ -462,7 +462,7 @@ public class SplitServiceImpl extends BaseServiceImpl<Split, String> implements 
 		List<SplitDetail> list = splitDetailDao.querySplitDetail(split);
 		String[] propertiesDetail = {"splitDetailId","product.productId","product.productCode","product.productName",
 				"product.size.dataDictionaryName:sizeName","product.unit.dataDictionaryName:unitName","product.color.dataDictionaryName:colorName",
-				"warehouse.warehouseId","qty","price","amount","note1","note2","note3"};
+				"warehouse.warehouseId","qty","price","totalQty","amount","note1","note2","note3"};
 		
 		String detailData = JSONUtil.toJson(list,propertiesDetail);
 		result.addData("detailData", detailData);

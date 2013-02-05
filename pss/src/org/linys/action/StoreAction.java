@@ -102,4 +102,17 @@ public class StoreAction extends BaseAction implements ModelDriven<Store> {
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	}
+	
+	/**
+	 * 
+	 * @Description: 查询某个仓库某个商品的数量
+	 * @Create: 2013-2-5 下午02:55:19
+	 * @author longweier
+	 * @update logs
+	 * @throws Exception
+	 */
+	public void queryQty(){
+		String jsonString = storeService.queryProductStore(ids, ids2);
+		ajaxJson(jsonString);
+	}
 }

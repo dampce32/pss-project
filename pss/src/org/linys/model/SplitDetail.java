@@ -165,4 +165,9 @@ public class SplitDetail extends BaseModel {
 		DecimalFormat df = new DecimalFormat("######0.00");
 		return Double.parseDouble(df.format(price*qty*split.getQty()));
 	}
+	
+	@Transient
+	public Integer getTotalQty(){
+		return split.getQty()*qty;
+	}
 }

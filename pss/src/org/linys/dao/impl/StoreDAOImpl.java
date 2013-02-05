@@ -12,13 +12,15 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.linys.dao.StoreDAO;
+import org.linys.model.Product;
 import org.linys.model.Store;
+import org.linys.model.Warehouse;
 import org.linys.vo.GobelConstants;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
 
 @Repository
-public class StoreDAOImpl extends BaseDAOImpl<Store, String> implements
-		StoreDAO {
+public class StoreDAOImpl extends BaseDAOImpl<Store, String> implements StoreDAO {
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.dao.StoreDAO#query(org.linys.model.Store, java.lang.Integer, java.lang.Integer)
@@ -170,6 +172,22 @@ public class StoreDAOImpl extends BaseDAOImpl<Store, String> implements
 		
 		criteria.setProjection(Projections.rowCount());
 		return new Long(criteria.uniqueResult().toString());
+	}
+	
+	public Store getStore(Product product, Warehouse warehouse) {
+		Assert.notNull(product, "product is required");
+		Assert.notNull(warehouse, "warehouse is required");
+		
+		Criteria criteria = getCurrentSession().createCriteria(Store.class);
+		criteria.createAlias("product", "product",CriteriaSpecification.LEFT_JOIN);
+		criteria.createAlias("product.productType", "productType",CriteriaSpecification.LEFT_JOIN);
+		
+		criteria.add(Restrictions.eq("product",product));
+		criteria.add(Restrictions.eq("warehouse", warehouse));
+		
+		criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
+		
+		return (Store) criteria.uniqueResult();
 	}
 
 }
