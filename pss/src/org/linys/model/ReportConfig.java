@@ -101,7 +101,7 @@ public class ReportConfig extends BaseModel {
 		this.reportCode = reportCode;
 	}
 
-	@Column(name = "reportName", length = 100)
+	@Column(name = "reportName", length = 1000)
 	public String getReportName() {
 		return reportName;
 	}
@@ -110,7 +110,7 @@ public class ReportConfig extends BaseModel {
 		this.reportName = reportName;
 	}
 
-	@Column(name = "reportDetailSql", length = 100)
+	@Column(name = "reportDetailSql", length = 1000)
 	public String getReportDetailSql() {
 		return reportDetailSql;
 	}
