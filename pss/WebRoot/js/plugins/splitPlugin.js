@@ -513,7 +513,8 @@
 	  pagination:false,
 	  toolbar:[	
 			{id:'addProduct'+id,text:'添加商品',iconCls:'icon-add',handler:function(){onSelectProduct()}},'-',
-			{id:'deleteProduct'+id,text:'删除商品',iconCls:'icon-remove',handler:function(){onDeleteProduct()}}
+			{id:'deleteProduct'+id,text:'删除商品',iconCls:'icon-remove',handler:function(){onDeleteProduct()}},'-',
+			{id:'showStroe'+id,text:'显示库存',iconCls:'icon-view',handler:function(){onShowStore()}}
 	  ],
 	  columns:[[
 		    {field:'splitDetailId',hidden:true},
@@ -525,17 +526,10 @@
 		    {field:'colorName',title:'颜色',width:90,align:"center"},
 		    {field:'qty',title:'单件用量',width:90,align:"center",editor:{type:'numberbox',options:{min:1,precision:0}}},
 		    {field:'price',title:'单价',width:90,align:"center",editor:{type:'numberbox',options:{min:0,precision:2}}},
-		    {field:'totalQty',title:'总量',width:90,align:"center",
-		    	formatter: function(value,row,index){
-		    		var qty = $('#qty',editForm).numberbox('getValue');
-		    		if(qty=='' || row.qty=='') return 0;
-		    		return parseInt(qty)*parseInt(row.qty);
-				},
-		    	editor:{type:'numberbox',options:{disabled:true,precision:0}}},
+		    {field:'totalQty',title:'总量',width:90,align:"center",editor:{type:'numberbox',options:{disabled:true,precision:0}}},
 		    {field:'amount',title:'金额',width:90,align:"center",editor:{type:'numberbox',options:{disabled:true,precision:2}}},
 		    {field:'warehouseId',title:'仓库',width:90,align:"center",editor:{type:'combobox',options:{valueField:'warehouseId',
-				textField:'warehouseName',
-				data:warehouseIds}},formatter:warehouseFormatter},
+				textField:'warehouseName',data:warehouseIds}},formatter:warehouseFormatter},
 		    {field:'note1',title:'备注1',width:80,align:"center",editor:{type:'text'}},
 		    {field:'note2',title:'备注2',width:80,align:"center",editor:{type:'text'}},
 		    {field:'note3',title:'备注3',width:80,align:"center",editor:{type:'text'}}
@@ -659,13 +653,13 @@
 				 if(result.isSuccess){
 					var data = result.data;
 					$(splitDetail).datagrid('loadData',eval("("+data.defaultPackagingData+")"));
-					if(warehouseId!=''){
-						var rows = $(splitDetail).datagrid('getRows');
-						$(rows).each(function(index,row){
-							 row.warehouseId = warehouseId;
-							 $(splitDetail).datagrid('updateRow',{index:index,row:row});
-						})
-					}
+					var qty = $('#qty',editForm).numberbox('getValue');
+					var rows = $(splitDetail).datagrid('getRows');
+					$(rows).each(function(index,row){
+						 row.warehouseId = warehouseId;
+						 row.totalQty = parseInt(qty)*parseInt(row.qty)
+						 $(splitDetail).datagrid('updateRow',{index:index,row:row});
+					})
 					$('#productId',editForm).val(row.productId);
 					$('#product',editForm).val(row.productName);
 					$('#price',editForm).numberbox('setValue',row.salePrice);
@@ -902,5 +896,77 @@
 	    	{text:'退出',iconCls:'icon-cancel',handler:function(){onAddExit();}
 		}]
 	}); 
+	 
+	 //显示商品库存
+	var onShowStore = function(){
+		 if(lastIndex!=null){
+			$(splitDetail).datagrid('endEdit', lastIndex);
+		 	$(splitDetail).datagrid('unselectAll');
+		 	lastIndex = null;
+		 }
+		var rows = $(splitDetail).datagrid('getRows');
+		if(rows.length==0){
+			$.messager.alert('提示','无商品信息','warning');
+			return;
+		}
+		var flag = true;
+		var productIdArray = new Array();
+		var warehouseIdArray = new Array(); 
+		var line = 0;
+		$(rows).each(function(index,row){
+			if(row.warehouseId==''){
+				line = index+1;
+				flag = false;
+				return false;
+			}
+			productIdArray.push(row.productId);
+			warehouseIdArray.push(row.warehouseId);
+		 }) 
+		if(!flag){
+			$.messager.alert('提示','第'+line+'行商品仓库为空','warning');
+			return;
+		}
+		var url = 'store/queryQtyStore.do';
+		var content = {ids:productIdArray.join(LYS.join),ids2:warehouseIdArray.join(LYS.join)}
+		$(storeList).datagrid({
+			url:url,
+			queryParams:content
+		})
+		$(showStoreDialog).dialog('open');
+	}
+	var showStoreDialog = $('#showStoreDialog',$this);
+	var storeList = $('#storeList',showStoreDialog);
+	//显示库存
+	$(showStoreDialog).dialog({  
+	    title: '商品库存列表',  
+	    width:700,
+	    height:500,
+	    closed: true,  
+	    cache: false,  
+	    modal: true,
+	    closable:false,
+	    toolbar:[
+	    	{text:'退出',iconCls:'icon-cancel',handler:function(){$(showStoreDialog).dialog('close');}
+		}]
+	});
+	
+	$(storeList).datagrid({
+		fitColumns:true,
+		cache: false,
+		rownumbers:true,
+		pagination:false,
+		width:685,
+	    height:430,
+		columns:[[
+		    {field:'productCode',title:'商品编号',width:90,align:"center"},
+			{field:'productName',title:'商品名称',width:120,align:"center"},
+		    {field:'productTypeName',title:'商品类型',width:120,align:"center"},
+		    {field:'warehouseName',title:'仓库',width:120,align:"center"},
+		    {field:'unitName',title:'单位',width:90,align:"center"},
+		    {field:'sizeName',title:'规格',width:90,align:"center"},
+		    {field:'colorName',title:'颜色',width:90,align:"center"},
+		    {field:'qty',title:'库存数',width:90,align:"center"}
+		]]
+	 });
   }
 })(jQuery);   
