@@ -181,7 +181,12 @@ public class DeliverRejectServiceImpl extends BaseServiceImpl<DeliverReject, Str
 			}
 		}
 		DeliverReject model = deliverRejectDao.load(deliverReject.getDeliverRejectId());
-		
+		if(model.getStatus()==1){
+			result.setMessage("该退货单已审核,不能修改");
+			return result;
+		}else{
+			deliverRejectDao.evict(model);
+		}
 		deliverReject.setStatus(model.getStatus());
 		deliverReject.setCheckAmount(model.getCheckAmount());
 		if(deliverReject.getAmount()==null){

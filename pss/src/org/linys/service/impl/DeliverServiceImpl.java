@@ -475,7 +475,12 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 			}
 		}
 		Deliver model = deliverDao.load(deliver.getDeliverId());
-		
+		if(model.getStatus()==1){
+			result.setMessage("该出库单已审核,不能修改");
+			return result;
+		}else{
+			deliverDao.evict(model);
+		}
 		deliver.setStatus(model.getStatus());
 		deliver.setCheckAmount(model.getCheckAmount());
 		deliver.setIsReceipt(model.getIsReceipt());

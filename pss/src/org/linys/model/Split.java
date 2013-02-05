@@ -1,5 +1,6 @@
 package org.linys.model;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 /**
@@ -190,4 +192,12 @@ public class Split extends BaseModel {
 		this.splitDetails = splitDetails;
 	}
 
+	@Transient
+	public Double getAmount(){
+		if(price==null){
+			return 0D;
+		}
+		DecimalFormat df = new DecimalFormat("######0.00");
+		return Double.parseDouble(df.format(price*qty));
+	}
 }

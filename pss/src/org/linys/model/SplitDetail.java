@@ -1,5 +1,7 @@
 package org.linys.model;
 
+import java.text.DecimalFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 /**
@@ -154,4 +157,12 @@ public class SplitDetail extends BaseModel {
 		this.note3 = note3;
 	}
 
+	@Transient
+	public Double getAmount(){
+		if(price==null){
+			return 0D;
+		}
+		DecimalFormat df = new DecimalFormat("######0.00");
+		return Double.parseDouble(df.format(price*qty*split.getQty()));
+	}
 }

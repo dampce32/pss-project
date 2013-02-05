@@ -63,6 +63,10 @@ public class PreReceiptServiceImpl extends BaseServiceImpl<PreReceipt, String> i
 			preReceiptDao.save(preReceipt);
 		}else{
 			PreReceipt model = preReceiptDao.load(preReceipt.getPreReceiptId());
+			if(model.getStatus()==1){
+				result.setMessage("该预收已审核,不能修改");
+				return result;
+			}
 			model.setCustomer(preReceipt.getCustomer());
 			model.setPreReceiptDate(preReceipt.getPreReceiptDate());
 			model.setAmount(preReceipt.getAmount());

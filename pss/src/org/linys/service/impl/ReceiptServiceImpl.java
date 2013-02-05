@@ -172,6 +172,7 @@ public class ReceiptServiceImpl extends BaseServiceImpl<Receipt, String> impleme
 			result.setMessage("请选择收款内容");
 			return result;
 		}
+		
 		String[] receiptDetailIdArray = StringUtil.split(receiptDetailIds);
 		String[] delreceiptDetailIdIdArray = StringUtil.split(delreceiptDetailIds);
 		String[] sourceIdArray = StringUtil.split(sourceIds);
@@ -182,11 +183,6 @@ public class ReceiptServiceImpl extends BaseServiceImpl<Receipt, String> impleme
 		String[] receiptedAmountArray = StringUtil.split(receiptedAmounts);
 		String[] discountAmountArray = StringUtil.split(discountAmounts);
 		String[] receiptAmountArray = StringUtil.split(receiptAmounts);
-		
-		for(String id : delreceiptDetailIdIdArray){
-			if(StringUtils.isEmpty(id)) continue;
-			receiptDetailDao.delete(id);
-		}
 		
 		for (int i = 0; i < receiptKindArray.length; i++) {
 			Double amount = new Double(amountArray[i]!=null?amountArray[i]:"0");
@@ -206,9 +202,20 @@ public class ReceiptServiceImpl extends BaseServiceImpl<Receipt, String> impleme
 		Double totalReceiptAmount = 0.0;//总共实付金额
 		//先更新
 		Receipt model = receiptDao.load(receipt.getReceiptId());
+		if(model.getStatus()==1){
+			result.setMessage("该收款单已审核,不能修改");
+			return result;
+		}else{
+			receiptDao.evict(model);
+		}
 		receipt.setStatus(model.getStatus());
 		receiptDao.evict(model);
 		receiptDao.update(receipt);
+		
+		for(String id : delreceiptDetailIdIdArray){
+			if(StringUtils.isEmpty(id)) continue;
+			receiptDetailDao.delete(id);
+		}
 		
 		for(int i=0;i<receiptKindArray.length;i++){
 			String receiptDetailId = receiptDetailIdArray[i];
