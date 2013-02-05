@@ -8,12 +8,14 @@ BEGIN
 			a.payway,
 			d.bankName,
 			b.supplierName,
-			c.companyName
+			c.companyName,
+			e.employeeName
 	from t_pay a
 	left join t_supplier b on a.supplierId = b.supplierId
 	left join (select a.companyName
 			from t_systemConfig a) c on 1 = 1
   left join t_bank d on a.bankId = d.bankId
+  left join t_employee e on a.employeeId = e.employeeId
 	where a.payId = payId;
 END
 ;;
