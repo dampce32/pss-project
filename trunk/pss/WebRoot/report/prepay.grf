@@ -1,0 +1,215 @@
+﻿Object Report
+	Version='5.8.0.0'
+	Title='Grid++Report'
+	PageDivideLine=T
+	Object Font
+		Name='宋体'
+		Size=90000,0
+		Weight=400
+		Charset=134
+	End
+	ConnectionString='Provider=MSDASQL.1;Password=root;Persist Security Info=True;User ID=root;Data Source=pss;Extended Properties="DSN=pss;UID=root;PWD=root;"'
+	QuerySQL='CALL P_PrepayParams('402880bb3ca975a4013ca981eaba0006')'
+	Object Printer
+		LeftMargin=0.5
+		TopMargin=0.5
+		RightMargin=0.5
+		BottomMargin=0.5
+	End
+	Object DetailGrid
+		Object Recordset
+			QuerySQL='select 1;'
+			Items Field
+				Item
+					Name='1'
+					Type=Float
+				End
+			End
+		End
+		Items Column
+			Item
+				Name='Column1'
+				Width=19.976
+			End
+		End
+		Object ColumnContent
+			Height=0
+			Items ColumnContentCell
+				Item
+					Column='Column1'
+				End
+			End
+		End
+		Object ColumnTitle
+			Height=0
+			Items ColumnTitleCell
+				Item
+					GroupTitle=F
+					Column='Column1'
+					Text='Column1'
+				End
+			End
+		End
+		Items Group
+			Item
+				Name='Group1'
+				Object GroupHeader
+					Height=1
+					Items Control
+						Item
+							Type=MemoBox
+							Name='MemoBox11'
+							Width=7.01146
+							Height=1.00542
+							Text='供应商：[#{supplierName}#]'
+						End
+						Item
+							Type=MemoBox
+							Name='MemoBox12'
+							Left=7.01146
+							Width=6.985
+							Height=1.00542
+							Text='付款日期：[#{prepayDate}:yyyy/MM/dd#]'
+						End
+						Item
+							Type=MemoBox
+							Name='MemoBox13'
+							Left=13.9965
+							Top=-0.0264583
+							Width=6.00604
+							Height=1.00542
+							Text='单据编号：[#{prepayCode}#]'
+						End
+					End
+				End
+				Object GroupFooter
+					Height=1
+					Items Control
+						Item
+							Type=MemoBox
+							Name='MemoBox18'
+							Left=13.8113
+							Width=6.19125
+							Height=1.00542
+							Text='制单：[#{employeeName}#]'
+						End
+					End
+				End
+			End
+			Item
+				Name='Group2'
+				Object GroupHeader
+					Height=1
+					Items Control
+						Item
+							Type=MemoBox
+							Name='MemoBox14'
+							Width=7.01146
+							Height=1.00542
+							Text='付款金额：[#{amount}#]'
+						End
+						Item
+							Type=MemoBox
+							Name='MemoBox15'
+							Left=7.01146
+							Width=6.985
+							Height=1.00542
+							Text='大写金额：[#{amount}:$$#]'
+						End
+						Item
+							Type=MemoBox
+							Name='MemoBox16'
+							Left=13.9965
+							Width=6.00604
+							Height=1.00542
+							Text='付款账户：[#{bankName}#]'
+						End
+					End
+				End
+				Object GroupFooter
+					Height=1
+					Items Control
+						Item
+							Type=MemoBox
+							Name='MemoBox17'
+							Width=20.0025
+							Height=1.00542
+							Text='备注：[#{note}#]'
+						End
+					End
+				End
+			End
+		End
+	End
+	Items Parameter
+		Item
+			Name='prepayCode'
+		End
+		Item
+			Name='prepayDate'
+			DataType=DateTime
+		End
+		Item
+			Name='amount'
+			DataType=Float
+		End
+		Item
+			Name='supplierName'
+		End
+		Item
+			Name='bankName'
+		End
+		Item
+			Name='employeeName'
+		End
+		Item
+			Name='note'
+		End
+		Item
+			Name='companyName'
+		End
+	End
+	Items Section
+		Item
+			Type=ReportHeader
+			Name='ReportHeader1'
+			Height=2.19604
+			Items Control
+				Item
+					Type=StaticBox
+					Name='StaticBox2'
+					Center=Horizontal
+					Left=6.53521
+					Top=1.00542
+					Width=6.90563
+					Height=1.19063
+					Object Font
+						Name='宋体'
+						Size=217500,0
+						Bold=T
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='供应商预付款单'
+				End
+				Item
+					Type=StaticBox
+					Name='StaticBox3'
+					Center=Horizontal
+					Left=1.79917
+					Width=16.4042
+					Height=1.00542
+					Object Font
+						Name='宋体'
+						Size=217500,0
+						Bold=T
+						Charset=134
+					End
+					TextAlign=MiddleCenter
+					Text='公司名'
+					Parameter='companyName'
+				End
+			End
+		End
+	End
+End
