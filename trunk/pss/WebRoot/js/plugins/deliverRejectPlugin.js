@@ -105,6 +105,7 @@
 	  //新增时，按钮的状态
 	  var addBtnStatus = function(){
 		$('#save'+id).linkbutton('enable');
+		$('#print'+id).linkbutton('disable');
 		$('#add'+id).linkbutton('disable');
 		$('#delete'+id).linkbutton('disable');
 		$('#sh'+id).linkbutton('disable');
@@ -117,6 +118,7 @@
 	  //审核通过按钮的状态
 	  var shBtnStatus = function(){
 		$('#save'+id).linkbutton('disable');
+		$('#print'+id).linkbutton('enable');
 		$('#add'+id).linkbutton('enable');
 		$('#delete'+id).linkbutton('disable');
 		$('#sh'+id).linkbutton('disable');
@@ -127,6 +129,7 @@
 	  //反审后的按钮状态
 	  var fsBtnStatus = function(){
 		$('#save'+id).linkbutton('enable');
+		$('#print'+id).linkbutton('enable');
 		$('#add'+id).linkbutton('enable');
 		$('#delete'+id).linkbutton('enable');
 		$('#sh'+id).linkbutton('enable');
@@ -300,7 +303,8 @@
 				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},'-',
 				{text:'删除',iconCls:'icon-remove',handler:function(){onMulDelete()}},'-',
 				{text:'已审',iconCls:'icon-info',handler:function(){onMulUpdateStatus(1)}},'-',
-				{text:'反审',iconCls:'icon-warn',handler:function(){onMulUpdateStatus(0)}}
+				{text:'反审',iconCls:'icon-warn',handler:function(){onMulUpdateStatus(0)}},'-',
+				{text:'打印',iconCls:'icon-print',handler:function(){onPrint()}}
 		  ],
 		columns:[[
 		        {field:'deliverRejectId',checkbox:true},
@@ -498,6 +502,23 @@
 		$(viewList).datagrid('unselectAll');
 		$(viewList).datagrid('selectRow',selectIndex);
 	}
+	//打印 
+	var onPrint = function(){
+		if(selectRow ==null){
+			$.messager.alert('提示','请选中要打印的记录行','warning');
+    		return;
+		}
+		print(selectRow.deliverRejectId);
+	}
+	//打印
+	var print = function(deliverRejectId){
+		window.open("printReport.jsp?report=deliverReject&data=ReportServlet?deliverRejectId="+deliverRejectId);
+	}
+	//内层打印
+	var onPrintIn = function(){
+		var deliverRejectId = $('#deliverRejectId',editDialog).val();
+		print(deliverRejectId);
+	}
 	var onExit = function(){
 		$(editDialog).dialog('close');
 		$(editForm).form('clear');
@@ -514,6 +535,7 @@
 	    closable:false,
 	    toolbar:[	
 	 			{id:'save'+id,text:'保存',iconCls:'icon-save',handler:function(){onSave();}},'-',
+	 			{id:'print'+id,text:'打印',iconCls:'icon-print',handler:function(){onPrintIn()}},'-',
 	 			{id:'add'+id,text:'新增',iconCls:'icon-add',handler:function(){onAdd();}},'-',
 	 			{id:'delete'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDelete();}},'-',
 	 			{id:'sh'+id,text:'审核',iconCls:'icon-info',handler:function(){onUpdateStatus(1);}},'-',
