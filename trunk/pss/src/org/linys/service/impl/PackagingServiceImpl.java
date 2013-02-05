@@ -180,6 +180,13 @@ public class PackagingServiceImpl extends BaseServiceImpl<Packaging, String> imp
 				return result;
 			}
 		}
+		Packaging model = packagingDao.load(packaging.getPackagingId());
+		if(model.getStatus()==1){
+			result.setMessage("该组装单已审核,不能修改");
+			return result;
+		}else{
+			packagingDao.evict(model);
+		}
 		packaging.setStatus(0);
 		if(packaging.getPrice()==null){
 			packaging.setPrice(0.0);
@@ -316,7 +323,7 @@ public class PackagingServiceImpl extends BaseServiceImpl<Packaging, String> imp
 				values =new Object[]{packagingDetail.getWarehouse(),detailProduct};
 				Store detailStore = storeDao.load(propertyNames, values);
 				
-				if(detailStore==null || detailStore.getQty()-packagingDetail.getQty()<0){
+				if(detailStore==null || detailStore.getQty()-model.getQty()*packagingDetail.getQty()<0){
 					throw new RuntimeException("商品"+detailProduct.getProductName()+",数量不足");
 				}
 				

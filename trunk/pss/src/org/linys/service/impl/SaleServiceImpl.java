@@ -305,6 +305,10 @@ public class SaleServiceImpl extends BaseServiceImpl<Sale, String> implements Sa
 			}
 		}
 		Sale model = saleDao.load(sale.getSaleId());
+		if(model.getStatus()==1){
+			result.setMessage("该组装单已审核,不能修改");
+			return result;
+		}
 		sale.setStatus(model.getStatus());
 		sale.setCheckAmount(model.getCheckAmount());
 		if(sale.getAmount()==null){
