@@ -1,7 +1,7 @@
 // 创建一个闭包  
 (function($) {  
   // 插件的定义  
-  $.fn.packagingInit = function() {
+  $.fn.splitInit = function() {
 	  var $this = $(this);
 	  var id = $(this).attr('id');
 	  var width = $(document.body).width();
@@ -9,7 +9,7 @@
 	  var selectRow = null;
 	  var selectIndex = null;
 	  
-	  var delPackagingDetailIdArray = null;
+	  var delSplitDetailIdArray = null;
 	  
 	  var singleSelect = false;
 	  
@@ -18,7 +18,7 @@
 	  var editForm = $('#editForm',editDialog);
 	  var selectDialog = $('#selectDialog',$this);
 	  var viewList =  $('#viewList',$this);
-	  var packagingDetail = $('#packagingDetail',editDialog);
+	  var splitDetail = $('#splitDetail',editDialog);
 	  var productList = $('#productList',selectDialog);
 	  
 	  var statusList = [{"value":"-1","text":"所有","selected":true},{"value":"1","text":"已审"},{"value":"0","text":"未审"}]; 
@@ -35,7 +35,7 @@
 		  var beginDate = $('#beginDate',queryContent).val();
 		  var endDate = $('#endDate',queryContent).val();
 		  var status = $('#status',queryContent).combobox('getValue');
-		  var url = 'store/queryPackaging.do';
+		  var url = 'store/querySplit.do';
 		  var queryParams ={'product.productName':productName,beginDate:beginDate,endDate:endDate,status:status};
 		  $(viewList).datagrid({
 			url:url,
@@ -106,9 +106,9 @@
 		selectIndex==null
 		selectRow==null
 		$(editForm).form('clear');
-		var rows  = $(packagingDetail).datagrid('getRows');
+		var rows  = $(splitDetail).datagrid('getRows');
 		if(rows.length!=0){
-			$(packagingDetail).datagrid({url:LYS.ClearUrl});
+			$(splitDetail).datagrid({url:LYS.ClearUrl});
 		}
 		initChoose();
 		$('#selectBtn',editForm).show();
@@ -116,17 +116,17 @@
 		$('#price',editForm).numberbox('setValue', 0.0);
 		$('#amount',editForm).numberbox('setValue', 0.0);
 		addBtnStatus();
-		delPackagingDetailIdArray = new Array();
+		delSplitDetailIdArray = new Array();
 		$(editDialog).dialog('open');
 	  }
-	  //修改组装单
+	  //修改拆分单
 	  var onUpdate = function(){
 		  if(selectRow==null){
 			$.messager.alert("提示","请选择数据行","warning");
 			return;
 		}
 		initChoose();
-		onOpen(selectRow.packagingId);
+		onOpen(selectRow.splitId);
 		$(editDialog).dialog('open');
 	  }
 	  //批量删除
@@ -140,9 +140,9 @@
 			if(t){
 				var idArray = new Array();
 				$(rows).each(function(index,item){
-					idArray.push(item.packagingId);
+					idArray.push(item.splitId);
 				})
-				var url = 'store/mulDeletePackaging.do';
+				var url = 'store/mulDeleteSplit.do';
 				var content ={ids:idArray.join(LYS.join)};
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
@@ -174,9 +174,9 @@
 			if(t){
 				var idArray = new Array();
 				$(rows).each(function(index,item){
-					idArray.push(item.packagingId);
+					idArray.push(item.splitId);
 				})
-				var url = 'store/mulUpdateStatusPackaging.do';
+				var url = 'store/mulUpdateStatusSplit.do';
 				var content ={ids:idArray.join(LYS.join),status:status};
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
@@ -192,10 +192,10 @@
 		});
 	  }
 	  //打开
-	  var onOpen = function(packagingId){
-		delPackagingDetailIdArray = new Array();
-		var url = 'store/initPackaging.do';
-		var content ={packagingId:packagingId};
+	  var onOpen = function(splitId){
+		delSplitDetailIdArray = new Array();
+		var url = 'store/initSplit.do';
+		var content ={splitId:splitId};
 		asyncCallService(url,content,function(result){
 			if(result.isSuccess){
 				var preDisable = false;
@@ -221,21 +221,21 @@
 				$('#selectBtn',editForm).hide();
 				
 				var data =  result.data;
-				var packagingData = eval("("+data.packagingData+")");
+				var splitData = eval("("+data.splitData+")");
 				
-				$('#packagingId',editForm).val(packagingData.packagingId);
-				$('#packagingCode',editForm).val(packagingData.packagingCode);
-				$('#productId',editForm).val(packagingData.productId);
-				$('#product',editForm).val(packagingData.productName);
-				$('#packagingDate',editForm).val(packagingData.packagingDate);
-				$('#warehouseId',editDialog).combobox('setValue',packagingData.warehouseId);
-				$('#qty',editForm).numberbox('setValue',packagingData.qty);
-				$('#price',editForm).numberbox('setValue',packagingData.price);
-				$('#amount',editDialog).numberbox('setValue',packagingData.amount);
-				$('#employeeId',editDialog).combobox('setValue',packagingData.employeeId);
-				$('#note',editForm).val(packagingData.note);
+				$('#splitId',editForm).val(splitData.splitId);
+				$('#splitCode',editForm).val(splitData.splitCode);
+				$('#productId',editForm).val(splitData.productId);
+				$('#product',editForm).val(splitData.productName);
+				$('#splitDate',editForm).val(splitData.splitDate);
+				$('#warehouseId',editDialog).combobox('setValue',splitData.warehouseId);
+				$('#qty',editForm).numberbox('setValue',splitData.qty);
+				$('#price',editForm).numberbox('setValue',splitData.price);
+				$('#amount',editDialog).numberbox('setValue',splitData.amount);
+				$('#employeeId',editDialog).combobox('setValue',splitData.employeeId);
+				$('#note',editForm).val(splitData.note);
 				
-				if(packagingData.status==1){
+				if(splitData.status==1){
 					$('#status',editDialog).val('已审核');
 					shBtnStatus();
 				}else{
@@ -244,7 +244,7 @@
 				}
 				
 				var detailData = eval("("+data.detailData+")");
-				$(packagingDetail).datagrid('loadData',detailData);
+				$(splitDetail).datagrid('loadData',detailData);
 			}else{
 				$.messager.alert('提示',result.message,'error');
 			}
@@ -267,9 +267,9 @@
 				{text:'反审',iconCls:'icon-warn',handler:function(){onMulUpdateStatus(0)}}
 		  ],
 		columns:[[
-		        {field:'packagingId',checkbox:true},
-				{field:'packagingCode',title:'组装单号',width:120,align:"center"},
-				{field:'packagingDate',title:'组装日期',width:80,align:"center"},
+		        {field:'splitId',checkbox:true},
+				{field:'splitCode',title:'拆分单号',width:120,align:"center"},
+				{field:'splitDate',title:'拆分日期',width:80,align:"center"},
 				{field:'warehouseName',title:'仓库',width:120,align:"center"},
 				{field:'productName',title:'商品名称',width:200,align:"center"},
 				{field:'sizeName',title:'规格',width:80,align:"center"},
@@ -314,10 +314,10 @@
 			$.messager.alert('提示','请选择仓库','warning');
 			return false;
 		}
-		//组装单日期
-		var packagingDate = $('#packagingDate',editForm).val();
-		if(packagingDate==''){
-			$.messager.alert('提示','请选择组装日期','warning');
+		//拆分单日期
+		var splitDate = $('#splitDate',editForm).val();
+		if(splitDate==''){
+			$.messager.alert('提示','请选择拆分日期','warning');
 			return false;
 		}
 		//经办人
@@ -333,11 +333,11 @@
 			return false;
 		}
 		if(lastIndex!=null){
-			$(packagingDetail).datagrid('endEdit', lastIndex);
+			$(splitDetail).datagrid('endEdit', lastIndex);
 		}
-		$(packagingDetail).datagrid('unselectAll');
+		$(splitDetail).datagrid('unselectAll');
 		lastIndex = null;
-		var rows = $(packagingDetail).datagrid('getRows');
+		var rows = $(splitDetail).datagrid('getRows');
 		if(rows.length==0){
 			$.messager.alert('提示','请选择添加商品','warning');
 			return false;
@@ -349,7 +349,7 @@
 				return false;
 			}
 		})
-		var packagingDetailIdArray = new Array();
+		var splitDetailIdArray = new Array();
 		var productIdArray = new Array();
 		var qtyArray = new Array();
 		var priceArray = new Array();
@@ -358,7 +358,7 @@
 		var note2Array = new Array();
 		var note3Array = new Array();
 		$(rows).each(function(index,row){
-			packagingDetailIdArray.push(row.packagingDetailId);
+			splitDetailIdArray.push(row.splitDetailId);
 			productIdArray.push(row.productId);
 			qtyArray.push(row.qty);
 			priceArray.push(row.price);
@@ -367,8 +367,8 @@
 			note2Array.push(row.note2);
 			note3Array.push(row.note3);
 		})
-		$('#packagingDetailIds',editForm).val(packagingDetailIdArray.join(LYS.join));
-		$('#delPackagingDetailIds',editForm).val(delPackagingDetailIdArray.join(LYS.join));
+		$('#splitDetailIds',editForm).val(splitDetailIdArray.join(LYS.join));
+		$('#delSplitDetailIds',editForm).val(delSplitDetailIdArray.join(LYS.join));
 		$('#productIds',editForm).val(productIdArray.join(LYS.join));
 		$('#qtys',editForm).val(qtyArray.join(LYS.join));
 		$('#prices',editForm).val(priceArray.join(LYS.join));
@@ -380,9 +380,9 @@
 		return true;
 	}
 	var onSave = function(){
-		var url = 'store/addPackaging.do';
-		if($('#packagingId',editForm).val()!=''){
-			url = 'store/updatePackaging.do';
+		var url = 'store/addSplit.do';
+		if($('#splitId',editForm).val()!=''){
+			url = 'store/updateSplit.do';
 		}
 		$(editForm).form('submit',{
 			url: url,
@@ -394,8 +394,8 @@
 				if(result.isSuccess){
 					var fn = function(){
 						var data = result.data;
-						//赋值packagingId，并加载packagingDetail
-						onOpen(data.packagingId);
+						//赋值splitId，并加载splitDetail
+						onOpen(data.splitId);
 					}
 					$.messager.alert('提示','保存成功','info',fn);
 				}else{
@@ -405,11 +405,11 @@
 		 });
 	}
 	var onDelete = function(){
-		var packagingId = $('#packagingId',editDialog).val();
-		$.messager.confirm("提示","确定要删除该组装单吗?",function(t){ 
+		var splitId = $('#splitId',editDialog).val();
+		$.messager.confirm("提示","确定要删除该拆分单吗?",function(t){ 
 			if(t){
-				var url = 'store/deletePackaging.do';
-				var content ={packagingId:packagingId};
+				var url = 'store/deleteSplit.do';
+				var content ={splitId:splitId};
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
 						var fn = function(){
@@ -427,21 +427,21 @@
 		});
 	}
 	var onUpdateStatus = function(status){
-		var packagingId = $('#packagingId',editDialog).val();
+		var splitId = $('#splitId',editDialog).val();
 		var msg = '';
 		if(status==1){
 			msg ='审核';
 		}else{
 			msg = '反审';
 		}
-		if(packagingId==''){
+		if(splitId==''){
 			$.messager.alert("提示","请选择需要"+msg+"数据行","warning");
 			return;
 		}
 		$.messager.confirm("提示","确定要"+msg+"该记录?"+msg+"后系统将进行库存计算!!",function(t){ 
 			if(t){
-				var url = 'store/updateStatusPackaging.do';
-				var content ={packagingId:packagingId,status:status};
+				var url = 'store/updateStatusSplit.do';
+				var content ={splitId:splitId,status:status};
 				asyncCallService(url,content,function(result){
 					if(result.isSuccess){
 						var fn = function(){
@@ -465,7 +465,7 @@
 		var rows = $(viewList).datagrid('getRows');
 		selectIndex = selectIndex + index;
 		selectRow = rows[selectIndex];
-		onOpen(selectRow.packagingId);
+		onOpen(selectRow.splitId);
 		//界面选中
 		$(viewList).datagrid('unselectAll');
 		$(viewList).datagrid('selectRow',selectIndex);
@@ -477,7 +477,7 @@
 	}
 	//编辑框
 	$(editDialog).dialog({  
-	    title: '编辑组装单',  
+	    title: '编辑拆分单',  
 	    width:width,
 	    height:height,
 	    closed: true,  
@@ -506,7 +506,7 @@
 	}
 	var lastIndex = null;
 	//明细
-	$(packagingDetail).datagrid({
+	$(splitDetail).datagrid({
 	  singleSelect:true,	
 	  fit:true,
 	  rownumbers:true,
@@ -516,7 +516,7 @@
 			{id:'deleteProduct'+id,text:'删除商品',iconCls:'icon-remove',handler:function(){onDeleteProduct()}}
 	  ],
 	  columns:[[
-		    {field:'packagingDetailId',hidden:true},
+		    {field:'splitDetailId',hidden:true},
 		    {field:'productId',hidden:true},
 		    {field:'productCode',title:'商品编号',width:90,align:"center"},
 			{field:'productName',title:'商品名称',width:200,align:"center"},
@@ -542,15 +542,15 @@
 	  ]],
 	  onClickRow:function(rowIndex){
 		if (lastIndex != rowIndex){
-			$(packagingDetail).datagrid('endEdit', lastIndex);
-			$(packagingDetail).datagrid('beginEdit', rowIndex);
+			$(splitDetail).datagrid('endEdit', lastIndex);
+			$(splitDetail).datagrid('beginEdit', rowIndex);
 			setEditing(rowIndex);
 		}
 		lastIndex = rowIndex;
 	  }
 	 });
 	var setEditing = function(rowIndex){  
-	    var editors = $(packagingDetail).datagrid('getEditors', rowIndex);  
+	    var editors = $(splitDetail).datagrid('getEditors', rowIndex);  
 	    var qtyEditor = editors[0];  
 	    var priceEditor = editors[1];  
 	    var totalQtyEditor = editors[2];
@@ -658,12 +658,12 @@
 			 asyncCallService(url,content,function(result){
 				 if(result.isSuccess){
 					var data = result.data;
-					$(packagingDetail).datagrid('loadData',eval("("+data.defaultPackagingData+")"));
+					$(splitDetail).datagrid('loadData',eval("("+data.defaultPackagingData+")"));
 					if(warehouseId!=''){
-						var rows = $(packagingDetail).datagrid('getRows');
+						var rows = $(splitDetail).datagrid('getRows');
 						$(rows).each(function(index,row){
 							 row.warehouseId = warehouseId;
-							 $(packagingDetail).datagrid('updateRow',{index:index,row:row});
+							 $(splitDetail).datagrid('updateRow',{index:index,row:row});
 						})
 					}
 					$('#productId',editForm).val(row.productId);
@@ -677,8 +677,8 @@
 		 }else{
 			 var qty = $('#qty',editForm).numberbox('getValue');
 			 $(rows).each(function(index,row){
-			 $(packagingDetail).datagrid('appendRow',{
-				 packagingDetailId:'',
+			 $(splitDetail).datagrid('appendRow',{
+				 splitDetailId:'',
 				 productId:row.productId,
 				 productCode:row.productCode,
 				 productName:row.productName,
@@ -696,8 +696,8 @@
 				});
 			 })
 		 }
-		$(packagingDetail).datagrid('endEdit', lastIndex);
-		$(packagingDetail).datagrid('unselectAll');
+		$(splitDetail).datagrid('endEdit', lastIndex);
+		$(splitDetail).datagrid('unselectAll');
 		lastIndex = null;
 		onExitSelectProduct();
 	 }
@@ -708,10 +708,10 @@
 	 }
 	 //删除商品
 	 var onDeleteProduct = function(){
-		 var row = $(packagingDetail).datagrid('getSelected');
-		 delPackagingDetailIdArray.push(row.packagingDetailId);
-		 var rowIndex = $(packagingDetail).datagrid('getRowIndex',row);
-		 $(packagingDetail).datagrid('deleteRow',rowIndex);
+		 var row = $(splitDetail).datagrid('getSelected');
+		 delSplitDetailIdArray.push(row.splitDetailId);
+		 var rowIndex = $(splitDetail).datagrid('getRowIndex',row);
+		 $(splitDetail).datagrid('deleteRow',rowIndex);
 		 lastIndex = null;
 	 }
 	 //单价发生改变
@@ -743,12 +743,12 @@
 			 }
 			 var totalAmount =parseFloat(newValue*price); 
 			 if(lastIndex!=null){
-				$(packagingDetail).datagrid('endEdit', lastIndex);
-			 	$(packagingDetail).datagrid('unselectAll');
+				$(splitDetail).datagrid('endEdit', lastIndex);
+			 	$(splitDetail).datagrid('unselectAll');
 			 	lastIndex = null;
 			 }
 			 $('#amount',editForm).numberbox('setValue',totalAmount);
-			 var rows = $(packagingDetail).datagrid('getRows');
+			 var rows = $(splitDetail).datagrid('getRows');
 			 $(rows).each(function(index,row){
 				 var totalQty = row.qty*newValue;
 				 var price = row.price;
@@ -757,7 +757,7 @@
 				 }
 				 row.totalQty = totalQty;
 				 row.amount = parseFloat(totalQty*price);
-				 $(packagingDetail).datagrid('updateRow',{index:index,row:row});
+				 $(splitDetail).datagrid('updateRow',{index:index,row:row});
 			 })
 		 }
 	});
