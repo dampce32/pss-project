@@ -53,4 +53,16 @@ public interface StoreService extends BaseService<Store,String>{
 	 */
 	ServiceResult queryByProduct(Store model, Integer page, Integer rows);
 
+	/**
+	 * 
+	 * @Description: 查询某个商品的在某个仓库的当前库存情况
+	 * @Create: 2013-2-5 下午02:56:35
+	 * @author longweier
+	 * @update logs
+	 * @param ids   商品ID
+	 * @param ids2     仓库ID
+	 * @return
+	 * @throws Exception
+	 */
+	String queryProductStore(String ids,String ids2);
 }

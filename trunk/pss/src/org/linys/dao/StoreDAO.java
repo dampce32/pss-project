@@ -3,7 +3,9 @@ package org.linys.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.linys.model.Product;
 import org.linys.model.Store;
+import org.linys.model.Warehouse;
 /**
  * @Description:库存DAO
  * @Copyright: 福州骏华信息有限公司 (c)2013
@@ -53,4 +55,16 @@ public interface StoreDAO extends BaseDAO<Store,String>{
 	 */
 	Long getTotalCountSelectReject(Store model);
 
+	/**
+	 * 
+	 * @Description: 查询某个商品在某个仓库的库存数
+	 * @Create: 2013-2-5 下午03:05:09
+	 * @author longweier
+	 * @update logs
+	 * @param product
+	 * @param warehouse
+	 * @return
+	 * @throws Exception
+	 */
+	Store getStore(Product product,Warehouse warehouse);
 }
