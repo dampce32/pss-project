@@ -169,6 +169,7 @@
 				]],
 				onSelect:function(rowIndex, rowData){
 					$('#productTypeId',editDialog).val(rowData.productTypeId);
+					$('#productCode',editDialog).val(rowData.productTypeCode);
 				}
 			});
 	}
