@@ -10,8 +10,8 @@ import org.linys.dao.ProductTypeDAO;
 import org.linys.model.ProductType;
 import org.linys.service.ProductTypeService;
 import org.linys.util.JSONUtil;
+import org.linys.util.StringUtil;
 import org.linys.util.TreeUtil;
-import org.linys.vo.GobelConstants;
 import org.linys.vo.ServiceResult;
 import org.linys.vo.TreeNode;
 import org.springframework.stereotype.Service;
@@ -160,7 +160,7 @@ public class ProductTypeServiceImpl extends BaseServiceImpl<ProductType, String>
 			result.setMessage("请选择要删除的记录");
 			return result;
 		}
-		String[] idArray = ids.split(GobelConstants.SPLIT);
+		String[] idArray = StringUtil.split(ids);
 		if(idArray.length==0){
 			result.setMessage("请选择要删除的记录");
 			return result;

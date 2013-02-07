@@ -18,8 +18,6 @@
 	  var selectIndex = null;
 	  
 	  var pager = $('#pager',$this);
-	  var pageNumber = 1;
-	  var pageSize = 10;
 	  
 	  //列表
 	  $(viewList).datagrid({
@@ -70,7 +68,7 @@
 		var productName = $('#productNameSearch',queryContent).val();
 		
 		var url = "dict/queryStoreProduct.do";
-		var content = {'productCode':productCode,'productName':productName,page:pageNumber,rows:pageSize};
+		var content = {'productCode':productCode,'productName':productName};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
 			var data = result.data;
