@@ -7,13 +7,17 @@
 	  var selectRow = null;
 	  var selectIndex = null;
 	
-	  var pageNumber = 1;
-	  var pageSize = 20;
 	  var isAdd = false;
 	  var isEdit = false;
 	  var viewList = $('#viewList',$this);
 	  var editDialog = $('#editDialog',$this);
 	  var editForm = $('#editForm',$this);
+	  var queryContent = $('#queryContent',$this);
+	  var searchBtn = $('#searchBtn',$this);
+	  
+	  var pager = $('#pager',$this);
+	  var pageNumber = 1;
+	  var pageSize = 10;
 	  
 	//加载列表
 	  $(viewList).datagrid({
@@ -45,6 +49,14 @@
 			pageNumber = 1;
 		}
 	  });
+	//分页条
+	$(pager).pagination({   
+	    onSelectPage: function(page, rows){
+			pageNumber = page;
+			pageSize = rows;
+			search();
+	    }
+	});
 	//编辑框
 	$(editDialog).dialog({  
 	    title: '编辑商品规格',  
@@ -149,24 +161,44 @@
 		})
 	}
 	//查询
+	$(searchBtn).click(function(){
+		search(true);
+	})
+	//分页操作
 	var search = function(flag){
-		var queryContent = $('.queryContent',$this);
 		var dataDictionaryName = $('#dataDictionaryNameSearch',queryContent).val();
-		var content = {dataDictionaryName:dataDictionaryName,dataDictionaryKind:'size'};
 		//取得列表信息
 		var url = 'dict/queryDataDict.do';
+		var content = {dataDictionaryName:dataDictionaryName,dataDictionaryKind:'size',page:pageNumber,rows:pageSize};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
 			var  data = result.data;
 			var datagridData = eval("("+data.datagridData+")");
 			$(viewList).datagrid('loadData',datagridData);
+			
+			//需要重新重新分页信息
+			if(flag){
+				getTotal(content);
+			}
 		}else{
 			$.messager.alert('提示',result.message,'error');
 		}
-	}
-	//查询
-	$('#search',$this).click(function(){
-		search(true);
-	})
+	} 
+	//统计总数
+	var getTotal = function(content){
+		var url = "dict/getTotalCountDataDict.do";
+		asyncCallService(url,content,
+		function(result){
+			if(result.isSuccess){
+				var data = result.data;
+				$(pager).pagination({  
+					pageNumber:1,
+					total:data.total
+				});
+			}else{
+				$.messager.alert('提示',result.message,"error");
+			}
+		})
+	}	
   }
 })(jQuery);   

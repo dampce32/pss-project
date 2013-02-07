@@ -54,7 +54,7 @@ public class DataDictionaryDAOImpl extends BaseDAOImpl<DataDictionary, String> i
 			criteria.add(Restrictions.like("dataDictionaryName", model.getDataDictionaryName(), MatchMode.ANYWHERE));
 		}
 		criteria.setProjection(Projections.rowCount());
-		return (Long) criteria.uniqueResult();
+		return new Long(criteria.uniqueResult().toString());
 	}
 
 }

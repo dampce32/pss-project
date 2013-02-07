@@ -13,7 +13,7 @@ import org.linys.model.UserRole;
 import org.linys.model.UserRoleId;
 import org.linys.service.UserRoleService;
 import org.linys.util.JSONUtil;
-import org.linys.vo.GobelConstants;
+import org.linys.util.StringUtil;
 import org.linys.vo.ServiceResult;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +56,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole, UserRoleId> i
 			result.setMessage("请选择用户");
 			return result;
 		}
-		String[] idArray = ids.split(GobelConstants.SPLIT);
+		String[] idArray = StringUtil.split(ids);
 		if(idArray.length==0){
 			result.setMessage("请选中角色");
 			return result;
@@ -64,7 +64,7 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole, UserRoleId> i
 		if(oldIds==null||"null".equals(oldIds)){
 			oldIds="";
 		}
-		String[] oldIdArray = oldIds.split(GobelConstants.SPLIT);
+		String[] oldIdArray = StringUtil.split(oldIds);
 		
 		List<String> deleteIdList = new ArrayList<String>();
 		List<String> addIdList = new ArrayList<String>();

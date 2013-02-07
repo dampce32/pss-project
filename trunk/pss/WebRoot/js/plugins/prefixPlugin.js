@@ -6,7 +6,6 @@
 	  var id = $(this).attr('id');
 	  var width = $(document.body).width();
 	  var height = $(document.body).height();
-	  
 	  var queryContent = $('#queryContent',$this);
 	  var searchBtn = $('#searchBtn',$this);
 	 
@@ -16,7 +15,6 @@
 	  var viewList =  $('#viewList',$this);
 	  var selectRow = null;
 	  var selectIndex = null;
-	  
 	  var pager = $('#pager',$this);
 	  var pageNumber = 1;
 	  var pageSize = 10;
@@ -32,7 +30,7 @@
 		  columns:[[
 			    {field:'prefixCode',title:'编号前缀编号',width:120,align:"center"},
 			    {field:'prefixName',title:'编号前缀名称',width:300,align:"center"},
-				{field:'prefix',title:'编号前缀',width:300,align:"center"},
+				{field:'prefix',title:'编号前缀',width:300,align:"center"}
 		  ]],
 		  rownumbers:true,
 		  pagination:false,

@@ -7,6 +7,8 @@
 	  var selectRow = null;
 	  var selectIndex = null;
 	
+	  var queryContent = $('#queryContent',$this);
+	  var searchBtn = $('#searchBtn',$this);
 	  var pageNumber = 1;
 	  var pageSize = 20;
 	  var isAdd = false;
@@ -45,6 +47,14 @@
 			pageNumber = 1;
 		}
 	  });
+	//分页条
+	$(pager).pagination({   
+	    onSelectPage: function(page, rows){
+			pageNumber = page;
+			pageSize = rows;
+			search();
+	    }
+	});
 	//编辑框
 	$(editDialog).dialog({  
 	    title: '编辑商品单位',  
@@ -152,7 +162,7 @@
 	var search = function(flag){
 		var queryContent = $('.queryContent',$this);
 		var dataDictionaryName = $('#dataDictionaryNameSearch',queryContent).val();
-		var content = {dataDictionaryName:dataDictionaryName,dataDictionaryKind:'unit'};
+		var content = {dataDictionaryName:dataDictionaryName,dataDictionaryKind:'unit',page:pageNumber,rows:pageSize};
 		//取得列表信息
 		var url = 'dict/queryDataDict.do';
 		var result = syncCallService(url,content);
@@ -160,6 +170,10 @@
 			var  data = result.data;
 			var datagridData = eval("("+data.datagridData+")");
 			$(viewList).datagrid('loadData',datagridData);
+			//需要重新重新分页信息
+			if(flag){
+				getTotal(content);
+			}
 		}else{
 			$.messager.alert('提示',result.message,'error');
 		}
@@ -168,5 +182,21 @@
 	$('#search',$this).click(function(){
 		search(true);
 	})
+	//统计总数
+	var getTotal = function(content){
+		var url = "dict/getTotalCountDataDict.do";
+		asyncCallService(url,content,
+		function(result){
+			if(result.isSuccess){
+				var data = result.data;
+				$(pager).pagination({  
+					pageNumber:1,
+					total:data.total
+				});
+			}else{
+				$.messager.alert('提示',result.message,"error");
+			}
+		})
+	}	
   }
 })(jQuery);   

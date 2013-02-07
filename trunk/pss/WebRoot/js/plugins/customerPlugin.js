@@ -99,6 +99,7 @@
 				{field:'customerTypeName',title:'客户类型',width:150,align:"center"},
 				{field:'contacter',title:'联系人',width:100,align:"center"},
 				{field:'phone',title:'联系电话',width:150,align:"center"},
+				{field:'addr',title:'地址',width:150,align:"center"},
 				{field:'status',title:'状态',width:100,align:"center",
 					formatter: function(value,row,index){
 						if (value==0){
