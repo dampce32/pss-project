@@ -415,10 +415,10 @@ public class SplitServiceImpl extends BaseServiceImpl<Split, String> implements 
 			}else{
 				Product splitProduct = model.getProduct();
 				Object[] values = {model.getWarehouse(),splitProduct};
-				Store soplitStore = storeDao.load(propertyNames, values);
+				Store splitStore = storeDao.load(propertyNames, values);
 				//更新拆分商品库存
-				soplitStore.setQty(soplitStore.getQty()+model.getQty());
-				soplitStore.setAmount(soplitStore.getAmount()+model.getAmount());
+				splitStore.setQty(splitStore.getQty()+model.getQty());
+				splitStore.setAmount(splitStore.getAmount()+model.getAmount());
 				//更新商品数量
 				splitProduct.setQtyStore(splitProduct.getQtyStore()+model.getQty());
 				splitProduct.setAmountStore(splitProduct.getAmountStore()+model.getAmount());

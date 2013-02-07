@@ -31,6 +31,14 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee, String>
 			result.setMessage("请填写员工姓名");
 			return result;
 		}
+		if(model.getStartWorkDate()==null){
+			result.setMessage("请选择入职日期");
+			return result;
+		}
+		if(model.getStatus()==null){
+			result.setMessage("请选择状态");
+			return result;
+		}
 		
 		if(StringUtils.isEmpty(model.getEmployeeId())){//新增
 			employeeDAO.save(model);
@@ -40,8 +48,23 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee, String>
 				result.setMessage("该员工已不存在");
 				return result;
 			}
-			oldModel.setEmployeeName(model.getEmployeeName());
-			employeeDAO.update(oldModel);
+//			oldModel.setEmployeeName(model.getEmployeeName());
+//			oldModel.setSex(model.getSex());
+//			oldModel.setBirthday(model.getBirthday());
+//			oldModel.setIsMarry(model.getIsMarry());
+//			oldModel.setEducation(model.getEducation());
+//			oldModel.setNation(model.getNation());
+//			oldModel.setNativePlace(model.getNativePlace());
+//			oldModel.setResidence(model.getResidence());
+//			oldModel.setMajor(model.getMajor());
+//			oldModel.setStartWorkDate(model.getStartWorkDate());
+//			oldModel.setSalary(model.getSalary());
+//			oldModel.setBankNo(model.getBankNo());
+//			oldModel.setIdNo(model.getIdNo());
+//			oldModel.setPhone(model.getStartWorkDate());
+			
+			employeeDAO.evict(oldModel);
+			employeeDAO.update(model);
 		}
 		result.setIsSuccess(true);
 		return result;
@@ -77,7 +100,10 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee, String>
 		
 		List<Employee> list = employeeDAO.query(model,page,rows);
 		
-		String[] properties = {"employeeId","employeeName"};
+		String[] properties = {"employeeId","employeeName","sex","birthday","isMarry","nation","nativePlace",
+				"residence","education","major","startWorkDate","salary","bankNo","idNo","phone",
+				"telPhone","qq","note","status"};
+		
 		String data = JSONUtil.toJson(list,properties);
 		result.addData("datagridData", data);
 		

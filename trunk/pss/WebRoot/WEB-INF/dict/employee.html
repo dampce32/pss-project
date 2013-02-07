@@ -17,7 +17,111 @@
 				<tr>
 					<td class="tdTitle">员工名称:</td>
 					<td>
-						<input type="text" name="employeeName" id="employeeName" class="text" style="width: 150px" size="40" />
+						<input type="text" name="employeeName" id="employeeName" class="text" style="width: 250px" size="40" />
+					</td>
+					<td class="tdTitle">性别:</td>
+					<td>
+						<select id="sex" class="easyui-combobox" name="sex" style="width:250px;">  
+						    <option value="男">男</option>  
+						    <option value="女">女</option>  
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="tdTitle">出生日期:</td>
+					<td>
+						<input type="text" name="birthday" id="birthday"  style="width: 250px" size="40" class="Wdate" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
+					</td>
+					<td class="tdTitle">婚否:</td>
+					<td>
+						<select id="isMarry" class="easyui-combobox" name="isMarry" style="width:250px;">  
+						    <option value="否">否</option>  
+						    <option value="是">是</option>  
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="tdTitle">民族:</td>
+					<td>
+						<input type="text" name="nation" id="nation" class="text" style="width: 250px" size="40" />
+					</td>
+					<td class="tdTitle">籍贯:</td>
+					<td>
+						<input type="text" name="nativePlace" id="nativePlace" class="text" style="width: 250px" size="40" />
+					</td>
+				</tr>
+				<tr>
+					<td class="tdTitle">户口所在地:</td>
+					<td colspan="3">
+						<input type="text" name="residence" id="residence" class="residence" style="width: 630px" size="40" />
+					</td>
+				</tr>
+				<tr>
+					<td class="tdTitle">学历:</td>
+					<td>
+						<input type="text" name="education" id="education" class="text" style="width: 250px" size="40" />
+					</td>
+					<td class="tdTitle">专业:</td>
+					<td>
+						<input type="text" name="major" id="major" class="text" style="width: 250px" size="40" />
+					</td>
+				</tr>
+				<tr>
+					<td class="tdTitle">入职日期:</td>
+					<td>
+						<input type="text" name="startWorkDate" id="startWorkDate" class="Wdate"  style="width: 250px" size="40" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
+					</td>
+					<td class="tdTitle">工资:</td>
+					<td>
+						<input type="text" name="salary" id="salary"  style="width: 250px" size="40" class="easyui-numberbox"  data-options="precision:2"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="tdTitle">银行账号:</td>
+					<td colspan="3">
+						<input type="text" name="bankNo" id="bankNo" class="text" style="width: 630px" size="40" />
+					</td>
+				</tr>
+				<tr>
+					<td class="tdTitle">身份证号:</td>
+					<td colspan="3">
+						<input type="text" name="idNo" id="idNo" class="text" style="width: 630px" size="40" />
+					</td>
+				</tr>
+				<tr>
+					<td class="tdTitle">电话:</td>
+					<td>
+						<input type="text" name="phone" id="phone" class="text" style="width: 250px" size="40" />
+					</td>
+					<td class="tdTitle">手机:</td>
+					<td>
+						<input type="text" name="telPhone" id="telPhone" class="text" style="width: 250px" size="40" />
+					</td>
+				</tr>
+				<tr>
+					<td class="tdTitle">QQ:</td>
+					<td>
+						<input type="text" name="qq" id="qq" class="text" style="width: 250px" size="40" />
+					</td>
+					<td class="tdTitle">Email:</td>
+					<td>
+						<input type="text" name="email" id="email" class="text" style="width: 250px" size="40" />
+					</td>
+				</tr>
+				<tr>
+					<td class="tdTitle">备注:</td>
+					<td colspan="3"  >
+						<textarea style="width: 630px;height: 100px" id="note" name="note" class="text"></textarea>
+					</td>
+					</td>
+				</tr>
+				<tr>
+					<td class="tdTitle">状态:</td>
+					<td colspan="3" style="padding-top: 6px">
+						<select id="status" class="easyui-combobox" name="status" style="width:250px;">  
+						    <option value="1">在职</option>  
+						    <option value="0">离职</option>  
+						</select>
 					</td>
 				</tr>
 			</table>
