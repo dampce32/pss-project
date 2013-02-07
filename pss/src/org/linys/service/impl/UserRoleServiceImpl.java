@@ -61,10 +61,11 @@ public class UserRoleServiceImpl extends BaseServiceImpl<UserRole, UserRoleId> i
 			result.setMessage("请选中角色");
 			return result;
 		}
-		if(oldIds==null||"null".equals(oldIds)){
-			oldIds="";
+		String[] oldIdArray = {} ;
+		if(StringUtils.isNotEmpty(oldIds)){
+			oldIdArray = StringUtil.split(oldIds);
 		}
-		String[] oldIdArray = StringUtil.split(oldIds);
+		
 		
 		List<String> deleteIdList = new ArrayList<String>();
 		List<String> addIdList = new ArrayList<String>();

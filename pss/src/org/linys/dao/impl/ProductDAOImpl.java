@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.linys.dao.ProductDAO;
@@ -43,6 +44,8 @@ public class ProductDAOImpl extends BaseDAOImpl<Product, String> implements Prod
 		
 		criteria.setFirstResult(begin);
 		criteria.setMaxResults(rows);
+		
+		criteria.addOrder(Order.asc("productCode"));
 		
 		return criteria.list();
 	}
@@ -94,7 +97,7 @@ public class ProductDAOImpl extends BaseDAOImpl<Product, String> implements Prod
 		
 		criteria.setFirstResult(begin);
 		criteria.setMaxResults(rows);
-		
+		criteria.addOrder(Order.asc("productCode"));
 		return criteria.list();
 	}
 	/*
@@ -147,7 +150,7 @@ public class ProductDAOImpl extends BaseDAOImpl<Product, String> implements Prod
 		
 		criteria.setFirstResult(begin);
 		criteria.setMaxResults(rows);
-		
+		criteria.addOrder(Order.asc("productCode"));
 		return criteria.list();
 	}
 	/*

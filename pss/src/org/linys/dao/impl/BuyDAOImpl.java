@@ -9,6 +9,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
@@ -45,6 +46,8 @@ public class BuyDAOImpl extends BaseDAOImpl<Buy, String> implements BuyDAO {
 		criteria.setFirstResult(begin);
 		criteria.setMaxResults(rows);
 		
+		criteria.addOrder(Order.desc("buyDate"));
+		criteria.addOrder(Order.desc("buyCode"));
 		return criteria.list();
 	}
 	/*
