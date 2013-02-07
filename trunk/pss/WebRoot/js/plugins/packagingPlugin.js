@@ -833,6 +833,7 @@
 			]],
 			onSelect:function(rowIndex, rowData){
 				$('#productTypeId',addDialog).val(rowData.productTypeId);
+				$('#productCode',addDialog).val(rowData.productTypeCode);
 			}
 		});
 	    $('#buyingPrice',addDialog).numberbox('setValue',0.0);
