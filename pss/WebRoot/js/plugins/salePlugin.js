@@ -555,7 +555,7 @@
 				textField:'colorName',
 				data:colors}},formatter:colorFormatter},
 		    {field:'qty',title:'数量',width:90,align:"center",editor:{type:'numberbox',options:{precision:2}}},
-		    {field:'price',title:'单价',width:90,align:"center",editor:{type:'numberbox',options:{min:0,precision:2}}},
+		    {field:'price',title:'单价',width:90,align:"center",editor:{type:'numberbox',options:{min:0,precision:5}}},
 		    {field:'discount',title:'折扣',width:90,align:"center",editor:{type:'numberbox',options:{min:0,max:1,precision:2}}},
 		    {field:'amount',title:'金额',width:90,align:"center",editor:{type:'numberbox',options:{disabled:true,precision:2,
 		    	onChange:function(newValue,oldValue){

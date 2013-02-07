@@ -605,7 +605,7 @@
 				textField:'colorName',
 				data:colors}},formatter:colorFormatter},
 		    {field:'qty',title:'数量',width:90,align:"center",editor:{type:'numberbox',options:{precision:2}}},
-		    {field:'price',title:'单价',width:90,align:"center",editor:{type:'numberbox',options:{precision:2}}},
+		    {field:'price',title:'单价',width:90,align:"center",editor:{type:'numberbox',options:{precision:5}}},
 		    {field:'amount',title:'金额',width:90,align:"center",editor:{type:'numberbox',options:{disabled:true,precision:2}}},
 		    {field:'note1',title:'备注1',width:120,align:"center",editor:{type:'text'}},
 		    {field:'note2',title:'备注2',width:120,align:"center",editor:{type:'text'}},

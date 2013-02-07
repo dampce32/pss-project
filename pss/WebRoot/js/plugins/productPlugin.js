@@ -354,7 +354,7 @@
 		    {field:'unitName',title:'单位',width:90,align:"center"},
 		    {field:'sizeName',title:'规格',width:90,align:"center"},
 		    {field:'qty',title:'数量',width:90,align:"center",editor:{type:'numberbox',options:{precision:0}}},
-		    {field:'price',title:'单价',width:90,align:"center",editor:{type:'numberbox',options:{disabled:true,precision:2}}},
+		    {field:'price',title:'单价',width:90,align:"center",editor:{type:'numberbox',options:{disabled:true,precision:5}}},
 		    {field:'amount',title:'金额',width:90,align:"center",editor:{type:'numberbox',options:{disabled:true,precision:2}}}
 	  ]],
 	  rownumbers:true,
