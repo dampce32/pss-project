@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.linys.dao.PrefixDAO;
@@ -33,6 +34,8 @@ public class PrefixDAOImpl extends BaseDAOImpl<Prefix, String> implements Prefix
 		if(model!=null&&StringUtils.isNotEmpty(model.getPrefixName())){
 			criteria.add(Restrictions.like("prefixName", model.getPrefixName(), MatchMode.ANYWHERE));
 		}
+		
+		criteria.addOrder(Order.asc("prefixCode"));
 		return criteria.list();
 	}
 	/*

@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
@@ -49,6 +50,8 @@ public class PrepayDAOImpl extends BaseDAOImpl<Prepay, String> implements
 		criteria.setFirstResult(begin);
 		criteria.setMaxResults(rows);
 		
+		criteria.addOrder(Order.desc("prepayDate"));
+		criteria.addOrder(Order.desc("prepayCode"));
 		return criteria.list();
 	}
 	/*

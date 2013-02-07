@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.linys.dao.ReportConfigDAO;
@@ -51,6 +52,7 @@ public class ReportConfigDAOImpl extends BaseDAOImpl<ReportConfig, String>
 		criteria.setFirstResult(begin);
 		criteria.setMaxResults(rows);
 		
+		criteria.addOrder(Order.asc("reportCode"));
 		return criteria.list();
 	}
 	/*
@@ -80,6 +82,7 @@ public class ReportConfigDAOImpl extends BaseDAOImpl<ReportConfig, String>
 	public List<ReportConfig> getReport1() {
 		Criteria criteria  = getCurrentSession().createCriteria(ReportConfig.class);
 		criteria.add(Restrictions.eq("reportKind", 1));
+		criteria.addOrder(Order.asc("reportCode"));
 		return criteria.list();
 	}
 

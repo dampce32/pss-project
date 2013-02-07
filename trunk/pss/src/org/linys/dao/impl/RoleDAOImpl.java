@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.linys.dao.RoleDAO;
 import org.linys.model.Role;
@@ -22,6 +23,7 @@ public class RoleDAOImpl extends BaseDAOImpl<Role, String> implements RoleDAO {
 		if(model!=null&&StringUtils.isNotEmpty(model.getRoleName())){
 			criteria.add(Restrictions.like("roleName", model.getRoleName(), MatchMode.ANYWHERE));
 		}
+		criteria.addOrder(Order.asc("roleName"));
 		return criteria.list();
 	}
 	/*
@@ -31,6 +33,7 @@ public class RoleDAOImpl extends BaseDAOImpl<Role, String> implements RoleDAO {
 	@SuppressWarnings("unchecked")
 	public List<Role> queryAll() {
 		Criteria criteria = getCurrentSession().createCriteria(Role.class);
+		criteria.addOrder(Order.asc("roleName"));
 		return criteria.list();
 	}
 }

@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.linys.dao.UserDAO;
@@ -48,6 +49,8 @@ public class UserDAOImpl  extends BaseDAOImpl<User,String> implements UserDAO{
 		Integer begin = (page-1)*rows;
 		criteria.setFirstResult(begin);
 		criteria.setMaxResults(rows);
+		
+		criteria.addOrder(Order.asc("userCode"));
 		return criteria.list();
 	}
 	/*

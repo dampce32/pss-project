@@ -3,6 +3,7 @@ package org.linys.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.linys.dao.BankStatementsDAO;
@@ -52,6 +53,7 @@ public class BankStatementsDAOImpl extends BaseDAOImpl<BankStatements, String> i
 		criteria.setFirstResult(begin);
 		criteria.setMaxResults(rows);
 		
+		criteria.addOrder(Order.desc("bankStatementsDate"));
 		return criteria.list();
 	}
 	/*

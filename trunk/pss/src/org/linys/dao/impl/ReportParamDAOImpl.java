@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.linys.dao.ReportParamDAO;
@@ -46,6 +47,8 @@ public class ReportParamDAOImpl extends BaseDAOImpl<ReportParam, String>
 		
 		criteria.setFirstResult(begin);
 		criteria.setMaxResults(rows);
+		
+		criteria.addOrder(Order.asc("paramCode"));
 		
 		return criteria.list();
 	}
@@ -93,6 +96,7 @@ public class ReportParamDAOImpl extends BaseDAOImpl<ReportParam, String>
 		criteria.setFirstResult(begin);
 		criteria.setMaxResults(rows);
 		
+		criteria.addOrder(Order.asc("paramCode"));
 		return criteria.list();
 	}
 	/*

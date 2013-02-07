@@ -5,6 +5,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.linys.bean.Pager;
@@ -39,6 +40,7 @@ public class CustomerDaoImpl extends BaseDAOImpl<Customer, String> implements Cu
 		criteria.setProjection(null);
 		criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 		criteria.setFirstResult(pager.getBeginCount()).setMaxResults(pager.getPageSize());
+		criteria.addOrder(Order.asc("customerCode"));
 		
 		pager.setTotalCount(total);
 		pager.setList(criteria.list());

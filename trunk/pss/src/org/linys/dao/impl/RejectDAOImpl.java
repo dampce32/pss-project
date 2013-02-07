@@ -8,6 +8,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
@@ -46,6 +47,8 @@ public class RejectDAOImpl extends BaseDAOImpl<Reject, String> implements
 		criteria.setFirstResult(begin);
 		criteria.setMaxResults(rows);
 		
+		criteria.addOrder(Order.desc("rejectDate"));
+		criteria.addOrder(Order.desc("rejectCode"));
 		return criteria.list();
 	}
 	/*

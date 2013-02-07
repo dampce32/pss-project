@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.linys.dao.ExpenseDAO;
@@ -57,6 +58,7 @@ public class ExpenseDAOImpl extends BaseDAOImpl<Expense, String> implements
 		criteria.setFirstResult(begin);
 		criteria.setMaxResults(rows);
 		
+		criteria.addOrder(Order.asc("expenseName"));	
 		return criteria.list();
 	}
 	/*

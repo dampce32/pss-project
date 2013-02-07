@@ -8,6 +8,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
@@ -143,6 +144,7 @@ public class StoreDAOImpl extends BaseDAOImpl<Store, String> implements StoreDAO
 		criteria.setFirstResult(begin);
 		criteria.setMaxResults(rows);
 		
+		criteria.addOrder(Order.asc("product.productCode"));
 		return criteria.list();
 	}
 	/*
