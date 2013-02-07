@@ -107,7 +107,7 @@ public class ProductTypeAction extends BaseAction implements ModelDriven<Product
 		ajaxJson(result.toJSON());
 	}
 	/**
-	 * @Description: 批量删除
+	 * @Description: 批量删除商品类别
 	 * @Create: 2012-10-27 下午12:00:30
 	 * @author lys
 	 * @update logs
@@ -118,8 +118,8 @@ public class ProductTypeAction extends BaseAction implements ModelDriven<Product
 		try {
 			result = productTypeService.mulDelete(ids);
 		} catch (Throwable e) {
-			logger.error("删除银行失败", e);
-			result.setMessage("删除银行失败");
+			logger.error("删除商品类别失败", e);
+			result.setMessage("删除商品类别失败");
 		}
 		ajaxJson(result.toJSON());
 	}

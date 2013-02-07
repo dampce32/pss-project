@@ -188,7 +188,7 @@
 			for(var i=0;i<rows.length;i++){
 				idArray.push(rows[i].productTypeId);
 			}
-			var ids = idArray.join(LYS.Join);
+			var ids = idArray.join(LYS.join);
 			var url = "dict/mulDeleteProductType.do";
 			var content = {ids:ids};
 			$.post(url,content,
@@ -198,7 +198,7 @@
 						for(var i=0;i<rows.length>0;i++){
 							$(productTypeTree).tree('remove',$(productTypeTree).tree('find',rows[i].productTypeId).target);
 						}
-						$(productTypeList).datagrid('reload');
+						search();
 					}else{
 						$.messager.alert('提示',result.message,"error");
 					}
@@ -230,6 +230,7 @@
 			queryParams:content
 		});
 		selectRow = null;
+		$(productTypeList).datagrid('unselectAll');
 	}
   }
 })(jQuery);   
