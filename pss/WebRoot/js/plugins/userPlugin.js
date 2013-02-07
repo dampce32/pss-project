@@ -276,7 +276,7 @@
 	var onSaveUserRole = function(){
 		if(setValueUserRole()){
 			var userId = selectRow.userId;
-			var content = {'user.userId':userId,ids: idArray.join(LYS.Join),oldIds:oldIdArray.join(LYS.Join)};
+			var content = {'user.userId':userId,ids: idArray.join(LYS.join),oldIds:oldIdArray.join(LYS.join)};
 			var url = "system/updateRoleUserRole.do";
 			$.post(url,content,
 				function(result){

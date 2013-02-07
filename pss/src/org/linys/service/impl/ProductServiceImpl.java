@@ -113,7 +113,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 			model.setQtyStore(0.0);
 			model.setAmountStore(0.0);
 			productDAO.save(model);
-			for (int i = 0; i < productIdArray.length; i++) {
+			for (int i = 0; i < productIdArray.length&&StringUtils.isNotEmpty(productIdArray[i]); i++) {
 				String productId = productIdArray[i];
 				String qty = qtyArray[i];
 				
@@ -167,7 +167,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 				}
 			}
 			//根据采购单明细Id更新或新增
-			for (int i = 0 ;i<defaultPackagingIdArray.length;i++) {
+			for (int i = 0 ;i<defaultPackagingIdArray.length&&StringUtils.isNotEmpty(productIdArray[i]);i++) {
 				String defaultPackagingId = defaultPackagingIdArray[i];
 				String productId = productIdArray[i];
 				String qty = qtyArray[i];
