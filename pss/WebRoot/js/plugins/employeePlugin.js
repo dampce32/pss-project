@@ -26,7 +26,32 @@
 		  singleSelect:true,
 		  fit:true,
 		  columns:[[
-				{field:'employeeName',title:'员工名称',width:200,align:"center"}
+				{field:'status',title:'状态',width:60,align:"center",
+					formatter: function(value,row,index){
+						if (value==0){
+							return '<img src="style/v1/icons/warn.png"/>';
+						} else {
+							return '<img src="style/v1/icons/info.png"/>';
+						}
+					}
+				},
+				{field:'employeeName',title:'员工名称',width:200,align:"center"},
+				{field:'sex',title:'性别',width:50,align:"center"},
+				{field:'birthday',title:'出生日期',width:100,align:"center"},
+				{field:'isMarry',title:'婚否',width:50,align:"center"},
+				{field:'nation',title:'民族',width:50,align:"center"},
+				{field:'nativePlace',title:'籍贯',width:100,align:"center"},
+				{field:'residence',title:'户口所在地',width:200,align:"center"},
+				{field:'education',title:'学历',width:50,align:"center"},
+				{field:'major',title:'专业',width:100,align:"center"},
+				{field:'startWorkDate',title:'入职日期',width:80,align:"center"},
+				{field:'salary',title:'工资',width:80,align:"center"},
+				{field:'bankNo',title:'银行账号',width:100,align:"center"},
+				{field:'idNo',title:'身份证号',width:100,align:"center"},
+				{field:'phone',title:'电话',width:100,align:"center"},
+				{field:'telPhone',title:'手机',width:100,align:"center"},
+				{field:'qq',title:'QQ',width:100,align:"center"},
+				{field:'note',title:' 备注',width:200,align:"center"}
 		  ]],
 		  rownumbers:true,
 		  pagination:false,
@@ -93,8 +118,8 @@
 	//编辑框
 	$(editDialog).dialog({  
 	    title: '编辑员工信息',  
-	    width:600,
-	    height:300,
+	    width:800,
+	    height:600,
 	    closed: true,  
 	    cache: false,  
 	    modal: true,
@@ -116,6 +141,7 @@
 	//添加
 	var onAdd = function(){
 		$(editForm).form('clear');
+		$('#salary',editForm).numberbox('setValue',0);
 		$(editDialog).dialog('open');
 	}
 	//保存前的赋值操作
@@ -123,6 +149,16 @@
 		var employeeName = $.trim($('#employeeName',editForm).val());
 		if(employeeName==''){
 			$.messager.alert('提示','请填写员工名称','warning');
+			return false;
+		}
+		var startWorkDate = $.trim($('#startWorkDate',editForm).val());
+		if(startWorkDate==''){
+			$.messager.alert('提示','请选择入职日期','warning');
+			return false;
+		}
+		var status = $.trim($('#status',editForm).combobox('getValue'));
+		if(status==''){
+			$.messager.alert('提示','请选择状态','warning');
 			return false;
 		}
 		return true;
@@ -191,5 +227,13 @@
 			}
 		});
 	}
+	 //优惠金额发生改变
+	 $('#salary',editForm).numberbox({
+		 onChange:function(newValue,oldValue){
+			 if(newValue==''){
+				 $('#salary',editForm).numberbox('setValue',0.00);
+			 }
+		 }
+	});
   }
 })(jQuery);   
