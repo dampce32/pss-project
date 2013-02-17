@@ -806,11 +806,7 @@
 			columns: [[  
 			    {field:'productTypeName',title:'商品类型',width:120,sortable:true},  
 			    {field:'productTypeCode',title:'商品类型编号',width:120,sortable:true}
-			]],
-			onSelect:function(rowIndex, rowData){
-				$('#productTypeId',addDialog).val(rowData.productTypeId);
-				$('#productCode',addDialog).val(rowData.productTypeCode);
-			}
+			]]
 		});
 	   	$('#buyingPrice',addDialog).numberbox('setValue',0.0);
 	   	$('#salePrice',addDialog).numberbox('setValue',0.0);
@@ -818,11 +814,6 @@
 	}
 	//保存前的赋值操作
 	var setAddValue = function(){
-		var productCode = $.trim($('#productCode',addForm).val());
-		if(productCode==''){
-			$.messager.alert('提示','请填写商品编号','warning');
-			return false;
-		}
 		var productName = $.trim($('#productName',addForm).val());
 		if(productName==''){
 			$.messager.alert('提示','请填写商品名称','warning');
@@ -867,6 +858,15 @@
 				var result = eval('('+data+')');
 				if(result.isSuccess){
 					var fn = function(){
+						if(result.isUnitChange){
+							PSS.UnitList = null;
+						}
+						if(result.isSizeChange){
+							PSS.SizeList = null;
+						}
+						if(result.isColorChange){
+							PSS.ColorList = null;
+						}
 						onAddExit();
 						searchBtnSelect();
 					}
