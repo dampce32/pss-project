@@ -44,9 +44,11 @@
 		  rownumbers:true,
 		  pagination:false,
 		  toolbar:[	
-				{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},
-				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},
-				{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}}
+				{text:'添加',iconCls:'icon-add',handler:function(){onAdd()}},'-',
+				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},'-',
+				{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}},'-',
+				{text:'下载上传模板',iconCls:'icon-download',handler:function(){onDownload()}},'-',
+				{text:'上传',iconCls:'icon-upload',handler:function(){onUpload()}},'-',
 		  ],
 		  onDblClickRow:function(rowIndex, rowData){
 				onUpdate();
@@ -209,6 +211,75 @@
 				});
 			}
 		});
+	}
+	//下载
+	var onDownload = function(){
+		var url = 'common/downloadTemplateCommon.do?fileName='+encodeURIComponent(encodeURIComponent('供应商'))+'.xls';
+		window.open(url);
+	}
+	//-----上传文件--------
+	var uploadDialog = $('#uploadDialog',$this);
+	var uploadForm = $('#uploadForm',uploadDialog);
+	//编辑框
+	$(uploadDialog).dialog({  
+	    title: '上传文件',  
+	    width:400,
+	    height:300,
+	    closed: true,  
+	    cache: false,  
+	    modal: true,
+	    closable:false,
+	    toolbar:[{
+			text:'上传',
+			iconCls:'icon-save',
+			handler:function(){
+				onUploadSave();
+			}
+		},'-',{
+			text:'退出',
+			iconCls:'icon-cancel',
+			handler:function(){
+				$(uploadDialog).dialog('close');
+			}
+		}]
+	});
+	//上传文件
+	var onUpload = function(){
+		$(uploadForm).form('clear');
+		$(uploadDialog).dialog('open');
+	}
+	//上传保存前检查
+	var setValueUpload = function(){
+		var file = $('#file',uploadForm).val();
+		if(file == ''){
+			$.messager.alert('提示','文件不能为空!','warning');
+			return;
+		} 
+		 var pos = file.lastIndexOf("\\");
+		$('#fileName',uploadForm).val(file.substring(pos+1));
+		$(uploadDialog).mask({maskMsg:'正在保存'});
+		return true;
+	}
+	//上传保存
+	var onUploadSave = function(){
+		$(uploadForm).form('submit',{
+			url: 'dict/uploadSupplier.do',
+			onSubmit: function(){
+				return setValueUpload();
+			},
+			success: function(data){
+				$(uploadDialog).mask('hide');
+				var result = eval('('+data+')');
+				if(result.isSuccess){
+					var fn = function(){
+						$(uploadDialog).dialog('close');
+					}
+					$.messager.alert('提示','上传成功','info',fn);
+				}else{
+					$.messager.alert('提示',result.message,'error');
+				}
+			}
+		 });
 	}
   }
 })(jQuery);   

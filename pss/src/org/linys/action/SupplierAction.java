@@ -114,5 +114,24 @@ public class SupplierAction extends BaseAction implements ModelDriven<Supplier> 
 		String jsonArray = supplierService.queryCombogrid(page, rows,model);
 		ajaxJson(jsonArray);
 	}
+	/**
+	 * @Description: 上传供应商
+	 * @Create: 2013-2-16 下午4:12:39
+	 * @author lys
+	 * @update logs
+	 */
+	public void upload(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			String fileName = getParameter("fileName");
+			result = supplierService.upload(file,getTemplatePath(),fileName);
+		} catch (Exception e) {
+			result.setMessage(e.getMessage());
+			logger.error("上传供应商失败", e);
+			result.setIsSuccess(false);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
 
 }

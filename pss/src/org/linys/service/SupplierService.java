@@ -1,5 +1,7 @@
 package org.linys.service;
 
+import java.io.File;
+
 import org.linys.model.Supplier;
 import org.linys.vo.ServiceResult;
 /**
@@ -59,5 +61,17 @@ public interface SupplierService extends BaseService<Supplier,String>{
 	 * @return
 	 */
 	String queryCombogrid(Integer page, Integer rows, Supplier model);
+	/**
+	 * @Description: 上传供应商
+	 * @Create: 2013-2-16 下午4:15:59
+	 * @author lys
+	 * @update logs
+	 * @param file
+	 * @param templatePath
+	 * @param fileName 
+	 * @return
+	 * @throws Exception 
+	 */
+	ServiceResult upload(File file, String templatePath, String fileName) throws Exception;
 
 }

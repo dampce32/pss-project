@@ -1,5 +1,6 @@
 package org.linys.action;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -61,6 +62,10 @@ public class BaseAction extends ActionSupport {
 	 * 结束时间
 	 */
 	protected String endDate;
+	/**
+	 * 上传文件
+	 */
+	protected File file;
 	
 	/**
 	 * 
@@ -192,6 +197,16 @@ public class BaseAction extends ActionSupport {
 	public String getReportTemplatePath(){
 		return getRequest().getSession().getServletContext().getRealPath("/report");
 	}
+	/**
+	 * @Description: 取得下载模板路径
+	 * @Create: 2013-2-16 下午3:28:16
+	 * @author lys
+	 * @update logs
+	 * @return
+	 */
+	public String getTemplatePath(){
+		return getRequest().getSession().getServletContext().getRealPath("/template");
+	}
 	
 	public String getIds() {
 		return ids;
@@ -255,5 +270,13 @@ public class BaseAction extends ActionSupport {
 
 	public void setIds2(String ids2) {
 		this.ids2 = ids2;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
 	}
 }
