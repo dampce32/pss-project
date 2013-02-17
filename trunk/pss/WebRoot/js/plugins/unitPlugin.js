@@ -162,7 +162,6 @@
 	}
 	//查询
 	var search = function(flag){
-		var queryContent = $('.queryContent',$this);
 		var dataDictionaryName = $('#dataDictionaryNameSearch',queryContent).val();
 		var content = {dataDictionaryName:dataDictionaryName,dataDictionaryKind:'unit',page:pageNumber,rows:pageSize};
 		//取得列表信息

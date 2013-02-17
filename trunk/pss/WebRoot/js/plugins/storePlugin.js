@@ -66,9 +66,10 @@
 	var search = function(){
 		var productCode = $('#productCodeSearch',queryContent).val();
 		var productName = $('#productNameSearch',queryContent).val();
-		
+		var options = $(viewList).datagrid('options');
 		var url = "dict/queryStoreProduct.do";
-		var content = {'productCode':productCode,'productName':productName};
+		var content = {'productCode':productCode,'productName':productName,productName:productName,page:options.pageNumber,rows:options.pageSize};
+		
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
 			var data = result.data;
@@ -79,6 +80,12 @@
 			$.messager.alert('提示',result.message,"error");
 		}
 	} 
+	//分页条
+	$(viewList).datagrid('getPager').pagination({   
+	    onSelectPage: function(page, rows){
+			search();
+	    }
+	});
 	//----------库存明细-------------
 	var storeList = $('#storeList',$this);
 	//列表
