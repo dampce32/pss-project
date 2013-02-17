@@ -132,7 +132,7 @@ public class DataDictionaryServiceImpl extends BaseServiceImpl<DataDictionary, S
 	 */
 	@Override
 	public String queryByKindCombobox(String kind) {
-		List<DataDictionary> list = dataDictionaryDAO.query("dataDictionaryKind", kind);
+		List<DataDictionary> list = dataDictionaryDAO.queryByKindCombobox(kind);
 		
 		String[] properties = {"dataDictionaryId:"+kind+"Id","dataDictionaryName:"+kind+"Name"};
 		return JSONUtil.toJsonWithoutRows(list,properties);

@@ -74,5 +74,14 @@ public interface ProductDAO extends BaseDAO<Product,String>{
 	 * @return
 	 */
 	Long getTotalCountSelectDefaultPacking(Product model, String[] idArray);
+	/**
+	 * @Description: 取得新商品编号
+	 * @Create: 2013-2-17 下午2:56:03
+	 * @author lys
+	 * @update logs
+	 * @param productCode
+	 * @return
+	 */
+	String getNewProductCode(String productCode);
 
 }

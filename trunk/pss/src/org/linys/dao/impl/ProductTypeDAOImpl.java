@@ -117,8 +117,8 @@ public class ProductTypeDAOImpl extends BaseDAOImpl<ProductType, String> impleme
 		Criteria criteria = getCurrentSession().createCriteria(ProductType.class);
 		criteria.add(Restrictions.isNotNull("parentProductType"));
 		
-		if(StringUtils.isNotEmpty(model.getProductTypeName())){
-			criteria.add(Restrictions.like("productTypeName", model.getProductTypeName(),MatchMode.ANYWHERE));
+		if(StringUtils.isNotEmpty(model.getProductTypeCode())){
+			criteria.add(Restrictions.like("productTypeCode", model.getProductTypeCode(),MatchMode.ANYWHERE));
 		} 
 		
 		if(page<1){
@@ -141,8 +141,8 @@ public class ProductTypeDAOImpl extends BaseDAOImpl<ProductType, String> impleme
 		Criteria criteria = getCurrentSession().createCriteria(ProductType.class);
 		criteria.add(Restrictions.isNotNull("parentProductType"));
 		
-		if(StringUtils.isNotEmpty(model.getProductTypeName())){
-			criteria.add(Restrictions.like("productTypeName", model.getProductTypeName(),MatchMode.ANYWHERE));
+		if(StringUtils.isNotEmpty(model.getProductTypeCode())){
+			criteria.add(Restrictions.like("productTypeCode", model.getProductTypeCode(),MatchMode.ANYWHERE));
 		} 
 		criteria.setProjection(Projections.rowCount());
 		String total = criteria.uniqueResult().toString();

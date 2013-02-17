@@ -403,7 +403,6 @@
 				}else{
 					$.messager.alert('提示',result.message,'error');
 				}
-				
 			}
 		 });
 	}

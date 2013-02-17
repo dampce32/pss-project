@@ -58,5 +58,18 @@ public class DataDictionaryDAOImpl extends BaseDAOImpl<DataDictionary, String> i
 		criteria.setProjection(Projections.rowCount());
 		return new Long(criteria.uniqueResult().toString());
 	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.DataDictionaryDAO#queryByKindCombobox(java.lang.String, java.lang.String)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DataDictionary> queryByKindCombobox(String kind) {
+		Criteria criteria  = getCurrentSession().createCriteria(DataDictionary.class);
+		criteria.add(Restrictions.eq("dataDictionaryKind", kind));
+		
+		criteria.addOrder(Order.asc("dataDictionaryName"));
+		return criteria.list();
+	}
 
 }

@@ -5,10 +5,14 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.linys.dao.DataDictionaryDAO;
 import org.linys.dao.DefaultPackagingDAO;
 import org.linys.dao.ProductDAO;
+import org.linys.dao.ProductTypeDAO;
+import org.linys.model.DataDictionary;
 import org.linys.model.DefaultPackaging;
 import org.linys.model.Product;
+import org.linys.model.ProductType;
 import org.linys.service.ProductService;
 import org.linys.util.JSONUtil;
 import org.linys.util.StringUtil;
@@ -21,6 +25,10 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 	private ProductDAO productDAO;
 	@Resource
 	private DefaultPackagingDAO defaultPackagingDAO;
+	@Resource
+	private DataDictionaryDAO dataDictionaryDAO;
+	@Resource
+	private ProductTypeDAO productTypeDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.ProductService#delete(org.linys.model.Product)
@@ -83,13 +91,56 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 			result.setMessage("请填写商品信息");
 			return result;
 		}
-		if(StringUtils.isEmpty(model.getProductCode())){
-			result.setMessage("请填写商品编号");
-			return result;
-		}
-		if(model.getProductType()==null){
+		if(model.getProductType()==null||StringUtils.isEmpty(model.getProductType().getProductTypeId())){
 			result.setMessage("请选择商品类型");
 			return result;
+		}
+		//输入原来下拉选择项中没有情况验证
+		//商品类型
+		if(model.getProductType()!=null&&StringUtils.isNotEmpty(model.getProductType().getProductTypeId())){
+			ProductType productType = productTypeDAO.get(model.getProductType().getProductTypeId());
+			if(productType==null){
+				result.setMessage("请选择商品类型");
+				return result;
+			}else{
+				model.setProductCode(productType.getProductTypeCode());
+			}
+		}
+		//单位
+		if(model.getUnit()!=null&&StringUtils.isNotEmpty(model.getUnit().getDataDictionaryId())){
+			DataDictionary unit = dataDictionaryDAO.get(model.getUnit().getDataDictionaryId());
+			if(unit==null){
+				unit = new DataDictionary();
+				unit.setDataDictionaryKind("unit");
+				unit.setDataDictionaryName(model.getUnit().getDataDictionaryId());
+				dataDictionaryDAO.save(unit);
+				result.addData("isUnitChange", true);
+			}
+			model.setUnit(unit);
+		}
+		//规格
+		if(model.getSize()!=null&&StringUtils.isNotEmpty(model.getSize().getDataDictionaryId())){
+			DataDictionary size = dataDictionaryDAO.get(model.getSize().getDataDictionaryId());
+			if(size==null){
+				size = new DataDictionary();
+				size.setDataDictionaryKind("size");
+				size.setDataDictionaryName(model.getSize().getDataDictionaryId());
+				dataDictionaryDAO.save(size);
+				result.addData("isSizeChange", true);
+			}
+			model.setSize(size);
+		}
+		//颜色
+		if(model.getColor()!=null&&StringUtils.isNotEmpty(model.getColor().getDataDictionaryId())){
+			DataDictionary color = dataDictionaryDAO.get(model.getColor().getDataDictionaryId());
+			if(color==null){
+				color = new DataDictionary();
+				color.setDataDictionaryKind("color");
+				color.setDataDictionaryName(model.getColor().getDataDictionaryId());
+				dataDictionaryDAO.save(color);
+				result.addData("isColorChange", true);
+			}
+			model.setColor(color);
 		}
 		
 		String[] defaultPackagingIdArray = StringUtil.split(defaultPackagingIds);
@@ -105,11 +156,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 			
 		}
 		if(StringUtils.isEmpty(model.getProductId())){//新增
-			Product oldModel = productDAO.load("productCode", model.getProductCode());
-			if(oldModel!=null){
-				result.setMessage("该商品编号已存在");
-				return result;
-			}
+			//取得商品类型下的新增编号
+			
+			model.setProductCode(productDAO.getNewProductCode(model.getProductCode()));
 			model.setQtyStore(0.0);
 			model.setAmountStore(0.0);
 			productDAO.save(model);
@@ -130,7 +179,6 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 				}else{
 					defaultPackaging.setQty(0);
 				}
-				
 				defaultPackagingDAO.save(defaultPackaging);
 			}
 		}else{
@@ -138,16 +186,45 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 			if(oldModel==null){
 				result.setMessage("该商品已不存在");
 				return result;
-			}else if(!oldModel.getProductCode().equals(model.getProductCode())){
-				Product oldProduct = productDAO.load("productCode", model.getProductCode());
-				if(oldProduct!=null){
-					result.setMessage("该商品编号已存在");
-					return result;
-				}
 			}
-			oldModel.setProductCode(model.getProductCode());
+			//输入原来下拉选择项中没有情况验证
+			//单位
+			if(model.getUnit()!=null&&StringUtils.isNotEmpty(model.getUnit().getDataDictionaryId())){
+				DataDictionary unit = dataDictionaryDAO.get(model.getUnit().getDataDictionaryId());
+				if(unit==null){
+					unit = new DataDictionary();
+					unit.setDataDictionaryKind("unit");
+					unit.setDataDictionaryName(model.getUnit().getDataDictionaryId());
+					dataDictionaryDAO.save(unit);
+					result.addData("isUnitChange", true);
+				}
+				model.setUnit(unit);
+			}
+			//规格
+			if(model.getSize()!=null&&StringUtils.isNotEmpty(model.getSize().getDataDictionaryId())){
+				DataDictionary size = dataDictionaryDAO.get(model.getSize().getDataDictionaryId());
+				if(size==null){
+					size = new DataDictionary();
+					size.setDataDictionaryKind("size");
+					size.setDataDictionaryName(model.getSize().getDataDictionaryId());
+					dataDictionaryDAO.save(size);
+					result.addData("isSizeChange", true);
+				}
+				model.setSize(size);
+			}
+			//颜色
+			if(model.getColor()!=null&&StringUtils.isNotEmpty(model.getColor().getDataDictionaryId())){
+				DataDictionary color = dataDictionaryDAO.get(model.getColor().getDataDictionaryId());
+				if(color==null){
+					color = new DataDictionary();
+					color.setDataDictionaryKind("color");
+					color.setDataDictionaryName(model.getColor().getDataDictionaryId());
+					dataDictionaryDAO.save(color);
+					result.addData("isColorChange", true);
+				}
+				model.setColor(color);
+			}
 			oldModel.setProductName(model.getProductName());
-			oldModel.setProductType(model.getProductType());
 			oldModel.setColor(model.getColor());
 			oldModel.setSize(model.getSize());
 			oldModel.setUnit(model.getUnit());
@@ -197,6 +274,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 				}
 			}
 		}
+		result.addData("productId", model.getProductId());
 		result.setIsSuccess(true);
 		return result;
 	}

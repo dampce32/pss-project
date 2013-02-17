@@ -86,6 +86,15 @@ public interface BaseDAO<T,PK extends Serializable> {
 	 */
 	public T load(PK id);
 	/**
+	 * @Description: 根据id取得model
+	 * @Create: 2013-2-17 下午2:13:21
+	 * @author lys
+	 * @update logs
+	 * @param id
+	 * @return
+	 */
+	public T get(PK id);
+	/**
 	 * @Description: 根据某种属性取得model
 	 * @Create: 2012-9-17 下午11:33:29
 	 * @author lys
