@@ -101,7 +101,20 @@
 			}
 		})
 	}	
-		
+	//新增时，按钮的状态
+	var addBtnStatus = function(){
+		$('#save'+id).linkbutton('enable');
+		$('#add'+id).linkbutton('disable');
+		$('#delete'+id).linkbutton('disable');
+		$('#pre'+id).linkbutton('disable');
+		$('#next'+id).linkbutton('disable');
+	}
+	//更新时，按钮的状态
+	var updateBtnStatus = function(){
+		$('#save'+id).linkbutton('enable');
+		$('#add'+id).linkbutton('enable');
+		$('#delete'+id).linkbutton('enable');
+	}	
 	//编辑框
 	$(editDialog).dialog({  
 	    title: '编辑系统商品信息',  
@@ -119,75 +132,66 @@
 	    		$(defaultPackagingList).datagrid('loadData',LYS.ClearData);
 	    	}
 	    },
-	    toolbar:[{
-			text:'保存',
-			iconCls:'icon-save',
-			handler:function(){
-				onSave();
-			}
-		},'-',{
-			text:'退出',
-			iconCls:'icon-cancel',
-			handler:function(){
-				$(editDialog).dialog('close');
-			}
-		}]
-	});    
-	var initChoose = function(){
+	    toolbar:[{id:'save'+id,text:'保存',iconCls:'icon-save',handler:function(){onSave();}},'-',
+	             {id:'add'+id,text:'新增',iconCls:'icon-add',handler:function(){onAdd();}},'-',
+				{id:'delete'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDeleteIn();}},'-',
+	 			{id:'pre'+id,text:'上一笔',iconCls:'icon-left',handler:function(){onOpenIndex(-1);}},'-',
+	 			{id:'next'+id,text:'下一笔',iconCls:'icon-right',handler:function(){onOpenIndex(1);}},'-',
+	 			{text:'退出',iconCls:'icon-cancel',handler:function(){
+	 					$(editDialog).dialog('close');
+	 				}
+	 			}]
+	});
+	var initCombobox = function(){
 		//规格
-		   $('#size',editDialog).combobox({
-				valueField:'sizeId',
-				textField:'sizeName',
-				width:250,
-				data:PSS.getSizeList()
-		  })
-		  //颜色
-		   $('#color',editDialog).combobox({
-				valueField:'colorId',
-				textField:'colorName',
-				width:250,
-				data:PSS.getColorList()
-		  })
-		  //单位
-		   $('#unit',editDialog).combobox({
-				valueField:'unitId',
-				textField:'unitName',
-				width:250,
-				data:PSS.getUnitList()
-		  })
-		  //商品类型
-		  $('#productType',editForm).combogrid({
-			    panelWidth:480, 
-				mode: 'remote',  
-				url: 'dict/queryCombogridProductType.do',
-				idField: 'productTypeId',  
-				textField: 'productTypeName',  
-				pagination:true,
-				columns: [[  
-				    {field:'productTypeName',title:'商品类型',width:150,sortable:true},  
-				    {field:'productTypeCode',title:'商品类型编号',width:150,sortable:true}
-				]],
-				onSelect:function(rowIndex, rowData){
-					$('#productTypeId',editDialog).val(rowData.productTypeId);
-					$('#productCode',editDialog).val(rowData.productTypeCode);
-				}
-			});
+	   $('#size',editDialog).combobox({
+			valueField:'sizeId',
+			textField:'sizeName',
+			width:250,
+			data:PSS.getSizeList()
+	  })
+	  //颜色
+	   $('#color',editDialog).combobox({
+			valueField:'colorId',
+			textField:'colorName',
+			width:250,
+			data:PSS.getColorList()
+	  })
+	  //单位
+	   $('#unit',editDialog).combobox({
+			valueField:'unitId',
+			textField:'unitName',
+			width:250,
+			data:PSS.getUnitList()
+	  })
+	}
+	var initChoose = function(){
+	  initCombobox();
+	  //商品类型
+	  $('#productType',editForm).combogrid({
+		    panelWidth:480, 
+			mode: 'remote',  
+			url: 'dict/queryCombogridProductType.do',
+			idField: 'productTypeId',  
+			textField: 'productTypeName',  
+			pagination:true,
+			columns: [[  
+			    {field:'productTypeName',title:'商品类型',width:150,sortable:true},  
+			    {field:'productTypeCode',title:'商品类型编号',width:150,sortable:true}
+			]]
+		});
 	}
 	//添加
 	var onAdd = function(){
 		$(editForm).form('clear');
 		initChoose();
+		addBtnStatus();
 	   	$('#buyingPrice',editDialog).numberbox('setValue',0.0);
 	   	$('#salePrice',editDialog).numberbox('setValue',0.0);
 		$(editDialog).dialog('open');
 	}
 	//保存前的赋值操作
 	var setValue = function(){
-		var productCode = $.trim($('#productCode',editForm).val());
-		if(productCode==''){
-			$.messager.alert('提示','请填写商品编号','warning');
-			return false;
-		}
 		var productName = $.trim($('#productName',editForm).val());
 		if(productName==''){
 			$.messager.alert('提示','请填写商品名称','warning');
@@ -195,11 +199,11 @@
 		}
 		//商品类别
 		var productTypeId = $('#productType',editForm).combogrid('getValue');
-		var productTypeName = $('#productType',editForm).combogrid('getText');
 		if(productTypeId==''){
 			$.messager.alert('提示','请选择商品类别','warning');
 			return false;
 		}
+		var productTypeName = $('#productType',editForm).combogrid('getText');
 		$('#productTypeId',editForm).val(productTypeId);
 		$('#productTypeName',editForm).val(productTypeName);
 		//商品单位
@@ -247,9 +251,8 @@
 	}
 	//保存
 	var onSave = function(){
-		var url = 'dict/saveProduct.do'
 		$(editForm).form('submit',{
-			url: url,
+			url: 'dict/saveProduct.do',
 			onSubmit: function(){
 				return setValue();
 			},
@@ -258,23 +261,35 @@
 				var result = eval('('+data+')');
 				if(result.isSuccess){
 					var fn = function(){
-						var productId = $.trim($('#productId',editForm).val());
-						if(productId==''){//新增
-							search(true);
-						}else{
-							var row = $(editForm).serializeObject();
-							$(viewList).datagrid('updateRow',{index:selectIndex,row:row});	
+						var data = result.data;
+						if(data.isUnitChange){
+							PSS.UnitList = null;
 						}
-						$(editDialog).dialog('close');
-						$(editForm).form('clear');
+						if(data.isSizeChange){
+							PSS.SizeList = null;
+						}
+						if(data.isColorChange){
+							PSS.ColorList = null;
+						}
+						initCombobox();
+						onOpen(data.productId);
 					}
 					$.messager.alert('提示','保存成功','info',fn);
-					
 				}else{
 					$.messager.alert('提示',result.message,'error');
 				}
 			}
 		 });
+	}
+	//上下一笔
+	var onOpenIndex = function(index){
+		var rows = $(viewList).datagrid('getRows');
+		selectIndex = selectIndex + index;
+		selectRow = rows[selectIndex];
+		onOpen(selectRow.productId);
+		//界面选中
+		$(viewList).datagrid('unselectAll');
+		$(viewList).datagrid('selectRow',selectIndex);
 	}
 	//打开
 	var onOpen = function(productId){
@@ -282,13 +297,33 @@
 		var content ={productId:productId};
 		asyncCallService(url,content,function(result){
 			if(result.isSuccess){
+				$(editDialog).dialog('open');
+				var preDisable = false;
+				var nextDisable = false;
+				if(selectIndex==null||selectIndex==0){
+					preDisable = true;
+				}
+				var rows = $(viewList).datagrid('getRows');
+				if(selectIndex==null||selectIndex==rows.length-1){
+					nextDisable = true;
+				}
+				if(preDisable){
+					$('#pre'+id).linkbutton('disable');
+				}else{
+					$('#pre'+id).linkbutton('enable');
+				}
+				if(nextDisable){
+					$('#next'+id).linkbutton('disable');
+				}else{
+					$('#next'+id).linkbutton('enable');
+				}
 				var data = result.data;
 				var productData = eval("("+data.productData+")");
 				$('#productId',editDialog).val(productData.productId);
+				$('#productType',editDialog).combogrid('setValue',productData.productTypeId);
+				$('#productType',editDialog).combobox('disable');
 				$('#productCode',editDialog).val(productData.productCode);
 				$('#productName',editDialog).val(productData.productName);
-				
-				$('#productType',editForm).combogrid('setValue',productData.productTypeId);
 				$('#color',editForm).combobox('setValue',productData.colorId);
 				$('#size',editForm).combobox('setValue',productData.sizeId);
 				$('#unit',editForm).combobox('setValue',productData.unitId);
@@ -299,7 +334,8 @@
 			   	
 			   	var defaultPackagingData = eval("("+data.defaultPackagingData+")");
 				$(defaultPackagingList).datagrid('loadData',defaultPackagingData);
-				$(editDialog).dialog('open');
+				
+				updateBtnStatus();
 			}else{
 				$.messager.alert('提示',result.message,'error');
 			}
@@ -317,6 +353,28 @@
 		onOpen(selectRow.productId);
 	 }
 	//删除
+	var onDeleteIn = function(){
+		var productId = $('#productId',editDialog).val();
+		$.messager.confirm("提示","确定要删除记录?",function(t){ 
+			if(t){
+				var url = 'dict/deleteProduct.do';
+				var content ={productId:productId};
+				asyncCallService(url,content,function(result){
+					if(result.isSuccess){
+						var fn = function(){
+							selectRow = null;
+							selectIndex = null;
+							$(editDialog).dialog('close');
+							search(true);
+						}
+						$.messager.alert('提示','删除成功','info',fn);
+					}else{
+						$.messager.alert('提示',result.message,'error');
+					}
+				});
+			}
+		});
+	}
 	var onDelete = function(){
 		if(selectRow==null){
 			 $.messager.alert('提示',"请选中要删除的纪录","warming");

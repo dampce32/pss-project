@@ -113,15 +113,15 @@ public class BuyServiceImpl extends BaseServiceImpl<Buy, String> implements BuyS
 			result.setMessage("请选择商品");
 			return result;
 		}
-		String[] productIdArray = StringUtil.split(productIds, GobelConstants.SPLIT_SEPARATOR);
-		String[] delBuyDetailIdArray = StringUtil.split(delBuyDetailIds, GobelConstants.SPLIT_SEPARATOR);
-		String[] buyDetailIdArray = StringUtil.split(buyDetailIds, GobelConstants.SPLIT_SEPARATOR);
-		String[] colorIdArray = StringUtil.split(colorIds, GobelConstants.SPLIT_SEPARATOR);
-		String[] qtyArray = StringUtil.split(qtys, GobelConstants.SPLIT_SEPARATOR);
-		String[] priceArray = StringUtil.split(prices, GobelConstants.SPLIT_SEPARATOR);
-		String[] note1Array = StringUtil.split(note1s, GobelConstants.SPLIT_SEPARATOR);
-		String[] note2Array = StringUtil.split(note2s, GobelConstants.SPLIT_SEPARATOR);
-		String[] note3Array = StringUtil.split(note3s, GobelConstants.SPLIT_SEPARATOR);
+		String[] productIdArray = StringUtil.split(productIds);
+		String[] delBuyDetailIdArray = StringUtil.split(delBuyDetailIds);
+		String[] buyDetailIdArray = StringUtil.split(buyDetailIds);
+		String[] colorIdArray = StringUtil.split(colorIds);
+		String[] qtyArray = StringUtil.split(qtys);
+		String[] priceArray = StringUtil.split(prices);
+		String[] note1Array = StringUtil.split(note1s);
+		String[] note2Array = StringUtil.split(note2s);
+		String[] note3Array = StringUtil.split(note3s);
 		if(productIdArray==null||productIdArray.length==0){
 			result.setMessage("请选择商品");
 			return result;

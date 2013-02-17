@@ -100,6 +100,10 @@ public abstract class BaseDAOImpl<T,PK extends Serializable> implements BaseDAO<
 	public T load(PK id) {
 		return hibernateTemplate.load(entityClass, id);
 	}
+	
+	public T get(PK id) {
+		return hibernateTemplate.get(entityClass, id);
+	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public T load(String propertyName, Object value) {

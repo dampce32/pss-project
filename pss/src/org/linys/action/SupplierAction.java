@@ -60,9 +60,13 @@ public class SupplierAction extends BaseAction implements ModelDriven<Supplier> 
 		try {
 			result = supplierService.delete(model);
 		} catch (Exception e) {
-			result.setMessage("删除供应商失败");
+			if(e instanceof org.springframework.dao.DataIntegrityViolationException){
+				result.setMessage("该供应商在其他模块已被使用，不能删除");
+			}else{
+				result.setMessage("删除供应商失败");
+				logger.error("删除供应商失败", e);
+			}
 			result.setIsSuccess(false);
-			logger.error("删除供应商失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);

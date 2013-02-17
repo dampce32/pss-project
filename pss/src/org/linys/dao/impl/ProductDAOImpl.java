@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -173,6 +174,30 @@ public class ProductDAOImpl extends BaseDAOImpl<Product, String> implements Prod
 		criteria.add(Restrictions.not(Restrictions.in("productId", idArray)));
 		criteria.setProjection(Projections.rowCount());
 		return new Long(criteria.uniqueResult().toString());
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.ProductDAO#getNewProductCode(java.lang.String)
+	 */
+	@Override
+	public String getNewProductCode(String productCode) {
+		StringBuilder hql = new StringBuilder();
+		hql.append("select max(productCode) " );
+		hql.append("from Product ");
+		hql.append("where  productCode like :productCode");
+		Query query = getCurrentSession().createQuery(hql.toString());
+		query.setString("productCode", productCode+"%");
+		Object result = query.uniqueResult();
+		String maxCode = result==null?null:result.toString();
+		int index = 0;
+		if(maxCode!=null){
+			String code = maxCode.substring(productCode.length(), maxCode.length());
+			if(StringUtils.isNotEmpty(code)){
+				index = Integer.parseInt(code);	
+			}
+		}
+		maxCode = productCode+String.format("%04d", index+1);
+		return maxCode;
 	}
 
 }

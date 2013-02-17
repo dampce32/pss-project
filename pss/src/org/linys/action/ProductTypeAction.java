@@ -131,7 +131,7 @@ public class ProductTypeAction extends BaseAction implements ModelDriven<Product
 	 */
 	public void queryCombogrid(){
 		try {
-			model.setProductTypeName(q);
+			model.setProductTypeCode(q);
 			String jsonString = productTypeService.queryCombogrid(model,page,rows);
 			ajaxJson(jsonString);
 		} catch (Exception e) {
