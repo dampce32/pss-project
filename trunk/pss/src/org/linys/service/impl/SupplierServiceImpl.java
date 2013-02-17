@@ -1,13 +1,20 @@
 package org.linys.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.linys.dao.SupplierDAO;
 import org.linys.model.Supplier;
 import org.linys.service.SupplierService;
+import org.linys.util.ExcelPOIUtil;
 import org.linys.util.JSONUtil;
 import org.linys.vo.ServiceResult;
 import org.springframework.stereotype.Service;
@@ -140,6 +147,60 @@ public class SupplierServiceImpl extends BaseServiceImpl<Supplier, String>
 		String[] properties = {"supplierId","supplierCode","supplierName"};
 		String ajaxString = JSONUtil.toJson(list,properties,total);
 		return ajaxString;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.SupplierService#upload(java.io.File, java.lang.String)
+	 */
+	@Override
+	public ServiceResult upload(File file, String templatePath,String fileName) throws Exception {
+		ServiceResult result = new ServiceResult(false);
+		result = ExcelPOIUtil.uploadValidate(file,templatePath,"供应商",fileName);
+		if(!result.getIsSuccess()){
+			return result;
+		}
+		InputStream is = new FileInputStream(file);
+		HSSFWorkbook workBook = new HSSFWorkbook(is);
+		HSSFSheet sheet = workBook.getSheetAt(0);
+		int rows = sheet.getPhysicalNumberOfRows(); // 获得行数
+		for (int j = 1; j < rows; j++) { // 行循环
+			HSSFRow row = sheet.getRow(j);
+			if (row != null) {
+				//取得对应的列数据
+				String supplierCode  = ExcelPOIUtil.getCellValue(row.getCell(0));
+				String supplierName  = ExcelPOIUtil.getCellValue(row.getCell(1));
+				String contact  = ExcelPOIUtil.getCellValue(row.getCell(2));
+				String email  = ExcelPOIUtil.getCellValue(row.getCell(3));
+				String addr  = ExcelPOIUtil.getCellValue(row.getCell(4));
+				String phone  = ExcelPOIUtil.getCellValue(row.getCell(5));
+				String fax  = ExcelPOIUtil.getCellValue(row.getCell(6));
+				String note1  = ExcelPOIUtil.getCellValue(row.getCell(7));
+				String note2  = ExcelPOIUtil.getCellValue(row.getCell(8));
+				String note3  = ExcelPOIUtil.getCellValue(row.getCell(9));
+				//检查供应商编号是否已存在，存在则放弃本次的上传
+				Supplier oldSupplier = supplierDAO.load("supplierCode", supplierCode);
+				if(oldSupplier!=null){
+					is.close();
+					throw new RuntimeException("供应商编号"+supplierCode+"已存在");
+				}else{
+					Supplier supplier = new Supplier();
+					supplier.setSupplierCode(supplierCode);
+					supplier.setSupplierName(supplierName);
+					supplier.setContact(contact);
+					supplier.setEmail(email);
+					supplier.setAddr(addr);
+					supplier.setPhone(phone);
+					supplier.setFax(fax);
+					supplier.setNote1(note1);
+					supplier.setNote2(note2);
+					supplier.setNote3(note3);
+					supplierDAO.save(supplier);
+				}
+			}
+		}
+		is.close();
+		result.setIsSuccess(true);
+		return result;
 	}
 
 }
