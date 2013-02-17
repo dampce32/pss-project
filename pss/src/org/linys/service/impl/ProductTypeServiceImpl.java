@@ -145,6 +145,7 @@ public class ProductTypeServiceImpl extends BaseServiceImpl<ProductType, String>
 				return result;
 			}
 		}
+		oldModel.setProductTypeCode(model.getProductTypeCode());
 		oldModel.setProductTypeName(model.getProductTypeName());
 		productTypeDAO.update(oldModel);
 		result.setIsSuccess(true);

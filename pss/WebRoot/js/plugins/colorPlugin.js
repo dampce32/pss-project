@@ -118,6 +118,7 @@
 							var row = $(editForm).serializeObject();
 							$(viewList).datagrid('updateRow',{index:selectIndex,row:row});
 						}
+						PSS.ColorList = null;
 						$(editDialog).dialog('close');
 					}
 					$.messager.alert('提示','保存成功','info',fn);
@@ -150,6 +151,7 @@
 				$.post(url,content,
 					function(result){
 						if(result.isSuccess){
+							PSS.ColorList = null;
 							$(viewList).datagrid('deleteRow',selectIndex);
 						}else{
 							$.messager.alert('提示',result.message,"error");

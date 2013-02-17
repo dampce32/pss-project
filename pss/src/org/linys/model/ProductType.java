@@ -5,7 +5,6 @@ package org.linys.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -110,7 +109,7 @@ public class ProductType extends BaseModel {
 		this.productTypeCode = productTypeCode;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "parentProductType")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "parentProductType")
 	public Set<ProductType> getChildrenProductTypes() {
 		return this.childrenProductTypes;
 	}

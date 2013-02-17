@@ -61,9 +61,13 @@ public class WarehouseAction extends BaseAction implements
 		try {
 			result = warehouseService.delete(model);
 		} catch (Exception e) {
-			result.setMessage("删除仓库失败");
+			if(e instanceof org.springframework.dao.DataIntegrityViolationException){
+				result.setMessage("记录已被使用，不能删除");
+			}else{
+				result.setMessage("删除仓库失败");
+				logger.error("删除仓库失败", e);
+			}
 			result.setIsSuccess(false);
-			logger.error("删除仓库失败", e);
 		}
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
