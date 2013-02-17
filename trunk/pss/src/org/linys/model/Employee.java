@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -151,7 +150,7 @@ public class Employee extends BaseModel {
 		this.employeeName = employeeName;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "employee")
+	@OneToMany( fetch = FetchType.LAZY, mappedBy = "employee")
 	public Set<Reject> getRejects() {
 		return this.rejects;
 	}
@@ -160,7 +159,7 @@ public class Employee extends BaseModel {
 		this.rejects = rejects;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "employee")
+	@OneToMany( fetch = FetchType.LAZY, mappedBy = "employee")
 	public Set<Receive> getReceives() {
 		return this.receives;
 	}

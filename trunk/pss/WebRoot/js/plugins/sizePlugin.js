@@ -120,6 +120,7 @@
 							var row = $(editForm).serializeObject();
 							$(viewList).datagrid('updateRow',{index:selectIndex,row:row});
 						}
+						PSS.SizeList = null;
 						$(editDialog).dialog('close');
 					}
 					$.messager.alert('提示','保存成功','info',fn);
@@ -152,6 +153,7 @@
 				$.post(url,content,
 					function(result){
 						if(result.isSuccess){
+							PSS.SizeList = null;
 							$(viewList).datagrid('deleteRow',selectIndex);
 						}else{
 							$.messager.alert('提示',result.message,"error");

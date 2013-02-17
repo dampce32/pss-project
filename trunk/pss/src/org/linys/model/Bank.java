@@ -3,7 +3,6 @@ package org.linys.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -102,7 +101,7 @@ public class Bank extends BaseModel {
 	}
 
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bank")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bank")
 	public Set<Receive> getReceives() {
 		return this.receives;
 	}

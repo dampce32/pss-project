@@ -117,9 +117,13 @@ public class ProductTypeAction extends BaseAction implements ModelDriven<Product
 		ServiceResult result = new ServiceResult(false);	
 		try {
 			result = productTypeService.mulDelete(ids);
-		} catch (Throwable e) {
-			logger.error("删除商品类别失败", e);
-			result.setMessage("删除商品类别失败");
+		} catch (Exception e) {
+			if(e instanceof org.hibernate.exception.ConstraintViolationException){
+				result.setMessage("记录已被使用，不能删除");
+			}else{
+				logger.error("删除商品类别失败", e);
+				result.setMessage("删除商品类别失败");
+			}
 		}
 		ajaxJson(result.toJSON());
 	}
