@@ -321,7 +321,6 @@
 				var productData = eval("("+data.productData+")");
 				$('#productId',editDialog).val(productData.productId);
 				$('#productType',editDialog).combogrid('setValue',productData.productTypeId);
-				$('#productType',editDialog).combobox('disable');
 				$('#productCode',editDialog).val(productData.productCode);
 				$('#productName',editDialog).val(productData.productName);
 				$('#color',editForm).combobox('setValue',productData.colorId);

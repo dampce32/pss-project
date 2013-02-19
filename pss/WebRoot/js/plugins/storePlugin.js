@@ -105,7 +105,7 @@
 				}}
 		  ]],
 		  rownumbers:true,
-		  pagination:true
+		  pagination:false
 	 });
   }
 })(jQuery);   
