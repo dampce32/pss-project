@@ -224,6 +224,10 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 				}
 				model.setColor(color);
 			}
+			model.setProductCode(productDAO.getNewProductCode(model.getProductCode()));
+			
+			oldModel.setProductCode(model.getProductCode());
+			oldModel.setProductType(model.getProductType());
 			oldModel.setProductName(model.getProductName());
 			oldModel.setColor(model.getColor());
 			oldModel.setSize(model.getSize());
