@@ -88,7 +88,7 @@ public class Product extends BaseModel {
 	 */
 	private Double memberPrice;
 	/**
-	 * 零售单价
+	 * 零售价格
 	 */
 	private Double salePrice;
 	/**

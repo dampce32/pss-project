@@ -70,12 +70,30 @@ public class Customer extends BaseModel {
 	 */
 	private String addr;
 	
+	
 	/**
 	 * 客户状态  0:无效   1:有效
 	 */
 	@Column(updatable=false)
 	private Integer status;
+	/**
+	 * 价格等级
+	 * 批发价格--wholesalePrice
+	 * VIP价格--vipPrice
+	 * 会员价格--memberPrice
+	 * 零售价格--salePrice
+	 */
+	@Column(name = "priceLevel", length = 50)
+	private String priceLevel;
 	
+	public String getPriceLevel() {
+		return priceLevel;
+	}
+
+	public void setPriceLevel(String priceLevel) {
+		this.priceLevel = priceLevel;
+	}
+
 	/**
 	 * 备注
 	 */
