@@ -13,7 +13,7 @@
 	
 	<div id="editDialog">
 		<div class="easyui-layout" data-options="fit:true">
-			<div data-options="region:'north',border:false" style="height: 170px;overflow: hidden;padding:5px"> 
+			<div data-options="region:'north',border:false" style="height: 210px;overflow: hidden;padding:5px"> 
 				<form method="post" id="editForm" >
 					<input type="hidden" name="productId" id="productId" />
 					<table border="0" cellpadding="0" cellspacing="0" style="width: 100%">
@@ -56,19 +56,42 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="tdTitle">预设进价:</td>
+							<td class="tdTitle">批发价格:</td>
 							<td>
-								<input type="text"  name = "buyingPrice"  id="buyingPrice"  style="width: 250px" size="40" class="easyui-numberbox"  data-options="min:0,precision:5"/>
+								<input type="text"  name = "wholesalePrice"  id="wholesalePrice"  style="width: 250px" size="40" class="easyui-numberbox"  data-options="min:0,precision:5"/>
 							</td>
-							<td class="tdTitle">零售单价:</td>
+							<td class="tdTitle">VIP价格:</td>
+							<td>
+								<input type="text"  name = "vipPrice"  id="vipPrice"  style="width: 250px" size="40"  class="easyui-numberbox"  data-options="min:0,precision:5"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="tdTitle">会员价格:</td>
+							<td>
+								<input type="text"  name = "memberPrice"  id="memberPrice"  style="width: 250px" size="40" class="easyui-numberbox"  data-options="min:0,precision:5"/>
+							</td>
+							<td class="tdTitle">零售价格:</td>
 							<td>
 								<input type="text"  name = "salePrice"  id="salePrice"  style="width: 250px" size="40"  class="easyui-numberbox"  data-options="min:0,precision:5"/>
 							</td>
 						</tr>
 						<tr>
+							<td class="tdTitle">预设进价:</td>
+							<td>
+								<input type="text"  name = "buyingPrice"  id="buyingPrice"  style="width: 250px" size="40" class="easyui-numberbox"  data-options="min:0,precision:5"/>
+							</td>
+							<td class="tdTitle">状态:</td>
+							<td >
+								<select id="status" class="easyui-combobox" name="status" style="width:250px;">  
+								    <option value="1" selected="selected">在用</option>  
+								    <option value="0">停用</option>  
+								</select>
+							</td>
+						</tr>
+						<tr>
 							<td class="tdTitle">备注:</td>
 							<td colspan="3">
-								<textarea style="width: 745px;height: 50px" name="note" id = "note"></textarea>
+								<textarea style="width: 746px;height: 50px" name="note" id = "note"></textarea>
 							</td>
 						</tr>
 						

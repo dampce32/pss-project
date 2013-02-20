@@ -63,7 +63,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 				"unit.dataDictionaryId:unitId","unit.dataDictionaryName:unitName",
 				"color.dataDictionaryId:colorId","color.dataDictionaryName:colorName",
 				"size.dataDictionaryId:sizeId","size.dataDictionaryName:sizeName",
-				"qtyStore","priceStore","amountStore","buyingPrice","salePrice"};
+				"qtyStore","priceStore","amountStore","buyingPrice",
+				"wholesalePrice","vipPrice","memberPrice","salePrice","status"};
 		String data = JSONUtil.toJson(list,properties);
 		result.addData("datagridData", data);
 		
@@ -233,8 +234,28 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 			oldModel.setSize(model.getSize());
 			oldModel.setUnit(model.getUnit());
 			oldModel.setNote(model.getNote());
-			oldModel.setBuyingPrice(model.getBuyingPrice());
+			//修改不填0保护
+			if(model.getSalePrice()==null){
+				model.setSalePrice(0.0);
+			}
+			if(model.getWholesalePrice()==null){
+				model.setWholesalePrice(0.0);
+			}
+			if(model.getVipPrice()==null){
+				model.setVipPrice(0.0);
+			}
+			if(model.getMemberPrice()==null){
+				model.setMemberPrice(0.0);
+			}
+			
 			oldModel.setSalePrice(model.getSalePrice());
+			oldModel.setWholesalePrice(model.getWholesalePrice());
+			oldModel.setVipPrice(model.getWholesalePrice());
+			oldModel.setMemberPrice(model.getMemberPrice());
+			oldModel.setBuyingPrice(model.getBuyingPrice());
+			
+			
+			oldModel.setStatus(model.getStatus());
 			
 			//删除已删的默认商品组装
 			if(!"".equals(deleleIdArray)){
@@ -389,7 +410,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 		Product product = productDAO.load(productId);
 		String[] properties = {"productId","productCode","productName","note",
 				"productType.productTypeId","productType.productTypeName",
-				"unit.dataDictionaryId:unitId","color.dataDictionaryId:colorId","size.dataDictionaryId:sizeId","buyingPrice","salePrice"};
+				"unit.dataDictionaryId:unitId","color.dataDictionaryId:colorId","size.dataDictionaryId:sizeId","buyingPrice",
+				"wholesalePrice","vipPrice","memberPrice","salePrice","status"};
 		String productData = JSONUtil.toJson(product,properties);
 		result.addData("productData",productData);
 		
