@@ -76,6 +76,18 @@ public class Product extends BaseModel {
 	 */
 	private Double buyingPrice;
 	/**
+	 * 批发价格
+	 */
+	private Double wholesalePrice;
+	/**
+	 * VIP价格
+	 */
+	private Double vipPrice;
+	/**
+	 * 会员价格
+	 */
+	private Double memberPrice;
+	/**
 	 * 零售单价
 	 */
 	private Double salePrice;
@@ -83,6 +95,13 @@ public class Product extends BaseModel {
 	 * 备注
 	 */
 	private String note;
+	/**
+	 * 商品状态
+	 * 0 停用
+	 * 1 在用
+	 */
+	private Integer status;
+
 	/**
 	 * 退货明细
 	 */
@@ -248,6 +267,37 @@ public class Product extends BaseModel {
 
 	public void setSalePrice(Double salePrice) {
 		this.salePrice = salePrice;
+	}
+	@Column(name = "wholesalePrice", precision = 53, scale = 0)
+	public Double getWholesalePrice() {
+		return wholesalePrice;
+	}
+
+	public void setWholesalePrice(Double wholesalePrice) {
+		this.wholesalePrice = wholesalePrice;
+	}
+	@Column(name = "vipPrice", precision = 53, scale = 0)
+	public Double getVipPrice() {
+		return vipPrice;
+	}
+
+	public void setVipPrice(Double vipPrice) {
+		this.vipPrice = vipPrice;
+	}
+	@Column(name = "memberPrice", precision = 53, scale = 0)
+	public Double getMemberPrice() {
+		return memberPrice;
+	}
+	public void setMemberPrice(Double memberPrice) {
+		this.memberPrice = memberPrice;
+	}
+	@Column(name = "status")
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "parentProduct")
 	public Set<DefaultPackaging> getDefaultPackagings() {

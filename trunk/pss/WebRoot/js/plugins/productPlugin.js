@@ -29,6 +29,15 @@
 		  singleSelect:true,
 		  fit:true,
 		  columns:[[
+				{field:'status',title:'状态',width:60,align:"center",
+					formatter: function(value,row,index){
+						if (value==0){
+							return '<img src="style/v1/icons/warn.png"/>';
+						} else if (value==1){
+							return '<img src="style/v1/icons/info.png"/>';
+						}
+					}
+				},
 			    {field:'productCode',title:'商品编号',width:120,align:"center"},
 				{field:'productName',title:'商品名称',width:300,align:"center"},
 			    {field:'productTypeName',title:'商品类型',width:120,align:"center"},
@@ -36,7 +45,10 @@
 			    {field:'sizeName',title:'规格',width:120,align:"center"},
 			    {field:'colorName',title:'颜色',width:120,align:"center"},
 			    {field:'buyingPrice',title:'预设进价',width:120,align:"center"},
-			    {field:'salePrice',title:'零售单价',width:120,align:"center"},
+			    {field:'wholesalePrice',title:'批发价格',width:120,align:"center"},
+			    {field:'vipPrice',title:'VIP价格',width:120,align:"center"},
+			    {field:'memberPrice',title:'会员价格',width:120,align:"center"},
+			    {field:'salePrice',title:'零售价格',width:120,align:"center"},
 			    {field:'note',title:'备注',width:120,align:"center"}
 		  ]],
 		  rownumbers:true,
@@ -186,8 +198,12 @@
 		$(editForm).form('clear');
 		initChoose();
 		addBtnStatus();
-	   	$('#buyingPrice',editDialog).numberbox('setValue',0.0);
+		$('#wholesalePrice',editDialog).numberbox('setValue',0.0);
+	   	$('#vipPrice',editDialog).numberbox('setValue',0.0);
+	   	$('#memberPrice',editDialog).numberbox('setValue',0.0);
 	   	$('#salePrice',editDialog).numberbox('setValue',0.0);
+	   	$('#buyingPrice',editDialog).numberbox('setValue',0.0);
+	   	$('#status',editDialog).combobox('setValue',1);
 		$(editDialog).dialog('open');
 	}
 	//保存前的赋值操作
@@ -326,9 +342,13 @@
 				$('#color',editForm).combobox('setValue',productData.colorId);
 				$('#size',editForm).combobox('setValue',productData.sizeId);
 				$('#unit',editForm).combobox('setValue',productData.unitId);
+				$('#status',editForm).combobox('setValue',productData.status);
 				
 				$('#buyingPrice',editDialog).numberbox('setValue',productData.buyingPrice);
 			   	$('#salePrice',editDialog).numberbox('setValue',productData.salePrice);
+			   	$('#wholesalePrice',editDialog).numberbox('setValue',productData.wholesalePrice);
+			   	$('#vipPrice',editDialog).numberbox('setValue',productData.vipPrice);
+			   	$('#memberPrice',editDialog).numberbox('setValue',productData.memberPrice);
 			   	$('#note',editDialog).val(productData.note);
 			   	
 			   	var defaultPackagingData = eval("("+data.defaultPackagingData+")");
