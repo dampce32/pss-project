@@ -207,7 +207,15 @@ public class BaseAction extends ActionSupport {
 	public String getTemplatePath(){
 		return getRequest().getSession().getServletContext().getRealPath("/template");
 	}
-	
+	/**
+	 * @Description: 取得跟路径
+	 * @Created Time: 2013-2-20 下午4:41:36
+	 * @Author lys
+	 * @return
+	 */
+	public String getBasePath(){
+		return getRequest().getSession().getServletContext().getRealPath("/");
+	}
 	public String getIds() {
 		return ids;
 	}

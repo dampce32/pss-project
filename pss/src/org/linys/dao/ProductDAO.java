@@ -83,5 +83,23 @@ public interface ProductDAO extends BaseDAO<Product,String>{
 	 * @return
 	 */
 	String getNewProductCode(String productCode);
+	/**
+	 * @Description: 分页查询选择商品
+	 * @Created Time: 2013-2-20 上午10:30:08
+	 * @Author lys
+	 * @param model
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	List<Product> select(Product model, Integer page, Integer rows);
+	/**
+	 * @Description: 统计查询选择商品
+	 * @Created Time: 2013-2-20 上午10:35:16
+	 * @Author lys
+	 * @param model
+	 * @return
+	 */
+	Long getTotalCountSelect(Product model);
 
 }

@@ -156,6 +156,62 @@ public class ProductDAOImpl extends BaseDAOImpl<Product, String> implements Prod
 	}
 	/*
 	 * (non-Javadoc)   
+	 * @see org.linys.dao.ProductDAO#select(org.linys.model.Product, java.lang.Integer, java.lang.Integer)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Product> select(Product model, Integer page, Integer rows) {
+		Criteria criteria  = getCurrentSession().createCriteria(Product.class);
+		criteria.createAlias("productType", "productType", CriteriaSpecification.LEFT_JOIN);
+		
+		if(model!=null&&StringUtils.isNotEmpty(model.getProductCode())){
+			criteria.add(Restrictions.like("productCode", model.getProductCode(),MatchMode.ANYWHERE));
+		}
+		
+		if(model!=null&&StringUtils.isNotEmpty(model.getProductName())){
+			criteria.add(Restrictions.like("productName", model.getProductName(),MatchMode.ANYWHERE));
+		}
+		criteria.add(Restrictions.eq("status", 1));
+		
+		
+		if(page==null||page<1){
+			page = 1;
+		}
+		if(rows==null||rows<0){
+			rows = GobelConstants.DEFAULTPAGESIZE;
+		}
+		
+		Integer begin = (page-1)*rows;
+		
+		criteria.setFirstResult(begin);
+		criteria.setMaxResults(rows);
+		
+		criteria.addOrder(Order.asc("productCode"));
+		
+		return criteria.list();
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.dao.ProductDAO#getTotalCountSelect(org.linys.model.Product)
+	 */
+	@Override
+	public Long getTotalCountSelect(Product model) {
+		Criteria criteria  = getCurrentSession().createCriteria(Product.class);
+		
+		if(model!=null&&StringUtils.isNotEmpty(model.getProductCode())){
+			criteria.add(Restrictions.like("productCode", model.getProductCode(),MatchMode.ANYWHERE));
+		}
+		
+		if(model!=null&&StringUtils.isNotEmpty(model.getProductName())){
+			criteria.add(Restrictions.like("productName", model.getProductName(),MatchMode.ANYWHERE));
+		}
+		criteria.add(Restrictions.eq("status", 1));
+		
+		criteria.setProjection(Projections.rowCount());
+		return new Long(criteria.uniqueResult().toString());
+	}
+	/*
+	 * (non-Javadoc)   
 	 * @see org.linys.dao.ProductDAO#getTotalCountSelectDefaultPacking(org.linys.model.Product, java.lang.String[])
 	 */
 	@Override
@@ -184,9 +240,10 @@ public class ProductDAOImpl extends BaseDAOImpl<Product, String> implements Prod
 		StringBuilder hql = new StringBuilder();
 		hql.append("select max(productCode) " );
 		hql.append("from Product ");
-		hql.append("where  productCode like :productCode");
+		hql.append("where  productCode like :productCode and length(productCode) = :productCodeLength");
 		Query query = getCurrentSession().createQuery(hql.toString());
 		query.setString("productCode", productCode+"%");
+		query.setInteger("productCodeLength", productCode.length()+4);
 		Object result = query.uniqueResult();
 		String maxCode = result==null?null:result.toString();
 		int index = 0;

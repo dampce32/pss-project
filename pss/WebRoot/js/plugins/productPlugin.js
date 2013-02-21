@@ -154,6 +154,22 @@
 	 				}
 	 			}]
 	});
+	//编号双击 后台编号
+	$('#productCode',editDialog).dblclick(function(){
+		var obj = $(this);
+		var productCode = $(obj).val();
+		var url = 'dict/newCodeProduct.do';
+		var content ={productCode:productCode};
+		asyncCallService(url,content,function(result){
+			if(result.isSuccess){
+				var data = result.data;
+				$('#productCode',editDialog).val(data.productCode);
+			}else{
+				$.messager.alert('提示',result.message,'error');
+			}
+		})
+		
+	})
 	var initCombobox = function(){
 		//规格
 	   $('#size',editDialog).combobox({
@@ -193,9 +209,11 @@
 			]]
 		});
 	}
+	
 	//添加
 	var onAdd = function(){
 		$(editForm).form('clear');
+		$('#uploadImgForm',editDialog).form('clear');
 		initChoose();
 		addBtnStatus();
 		$('#wholesalePrice',editDialog).numberbox('setValue',0.0);
@@ -355,6 +373,7 @@
 				$(defaultPackagingList).datagrid('loadData',defaultPackagingData);
 				
 				updateBtnStatus();
+				showImg();
 			}else{
 				$.messager.alert('提示',result.message,'error');
 			}
@@ -367,6 +386,7 @@
 			return;
 		}
 		$(editForm).form('clear');
+		$('#uploadImgForm',editDialog).form('clear');
 		initChoose();
 		deleteIdArray = new Array();
 		onOpen(selectRow.productId);
@@ -574,5 +594,72 @@
 		 $(defaultPackagingList).datagrid('deleteRow',rowIndex);
 		 lastIndex = null;
 	 }
+	 //------商品照片--------
+	 $('#uploadBtn',editDialog).click(function(){
+		 var productId = $('#productId',editDialog).val();
+		 if(productId==''){
+			 $.messager.alert('提示','先保存商品后上传照片','warning');
+		 }else{
+			 if(setValueUploadImg()){
+				 $('#uploadImgForm',editDialog).ajaxSubmit({
+						url:'dict/uploadImgProduct.do',
+						type:'post',
+						uploadFiles:true,
+						dataType:'json',
+						success:function(result){
+							if(result.isSuccess){
+								var fn = function(){
+									showImg();
+								}
+								$.messager.alert('提示','上传成功','info',fn);
+							}else{
+								$.messager.alert('提示',result.message,'error');
+							}
+						}
+				 });
+			 }
+		 }
+	 })
+	 //上传图片前检查
+	 var setValueUploadImg = function(){
+		 var file = $('#file',editDialog).val();
+		 if(file==''){
+			 $.messager.alert('提示','请选择上传文件','warning');
+			 return false;
+		 }
+		 var productId = $('#productId',editDialog).val();
+		 $('#productIdUploadImgForm',editDialog).val(productId);
+		 var pos = file.lastIndexOf("\\");
+		 $('#fileName',editDialog).val(file.substring(pos+1));
+		 return true;
+	 }
+	 //显示图片
+	 var showImg = function(){
+		 var productId = $('#productId',editDialog).val();
+		 if(productId==''){
+			 return;
+		 }
+		 $('#imgPic').attr('src','dict/showImgProduct.do?productId='+productId);
+	 }
+	 $('#removeBtn',editDialog).click(function(){
+		 var productId = $('#productId',editDialog).val();
+		 if(productId==''){
+			 $.messager.alert('提示','先保存商品后上传照片','warning');
+		 }else{
+			var url = 'dict/deleteImgProduct.do';
+			var content ={productId:productId};
+			asyncCallService(url,content,function(result){
+				if(result.isSuccess){
+					var fn = function(){
+						$('#imgPic').attr('src','#');
+						$('#file',newProductDialog).val('');
+					}
+					$.messager.alert('提示','移除成功','info',fn);
+				}else{
+					$.messager.alert('提示',result.message,'error');
+				}
+			});
+		 }
+	 });
   }
 })(jQuery);   
