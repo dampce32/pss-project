@@ -97,6 +97,19 @@
 			    {field:'customerCode',title:'客户编号',width:100,align:"center"},
 				{field:'customerName',title:'客户名称',width:200,align:"center"},
 				{field:'customerTypeName',title:'客户类型',width:150,align:"center"},
+				{field:'priceLevel',title:'价格等级',width:150,align:"center",
+					formatter: function(value,row,index){
+						if (value=='wholesalePrice'){
+							return '批发价格';
+						}else if(value=='vipPrice'){
+							return 'VIP价格';
+						}else if(value=='memberPrice'){
+							return '会员价格';
+						}else if(value=='salePrice'){
+							return '零售价格';
+						}
+					}
+				},
 				{field:'contacter',title:'联系人',width:100,align:"center"},
 				{field:'phone',title:'联系电话',width:150,align:"center"},
 				{field:'addr',title:'地址',width:150,align:"center"},
@@ -139,6 +152,10 @@
 		if(customerCode==''){
 			$.messager.alert('提示','请填写客户编号','warning');
 			return false;
+		}
+		var priceLevel = $('#priceLevel').val();
+		if(priceLevel==''){
+			$.messager.alert('提示','请选择价格等级','warning');
 		}
 		var customerName = $.trim($('#customerName',editForm).val());
 		if(customerName==''){

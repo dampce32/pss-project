@@ -28,7 +28,8 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, String> imple
 	public String queryCustomer(Integer pageNumber, Integer pageSize,Customer customer) {
 		Pager pager = new Pager(pageNumber, pageSize);
 		pager = customerDao.queryCustomer(pager, customer);
-		String[] property = {"customerId","customerCode","customerName","contacter","phone","fax","status","note","customerType.customerTypeID","customerType.customerTypeName","addr"};
+		String[] property = {"customerId","customerCode","customerName","contacter","phone","fax",
+				"priceLevel","status","note","customerType.customerTypeID","customerType.customerTypeName","addr"};
 		String jsonArray = JSONUtil.toJson(pager.getList(), property, pager.getTotalCount());
 		return jsonArray;
 	}
@@ -36,7 +37,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, String> imple
 	public String queryCombogrid(Integer pageNumber, Integer pageSize,Customer customer) {
 		Pager pager = new Pager(pageNumber, pageSize);
 		pager = customerDao.queryCustomer(pager, customer);
-		String[] property = {"customerId","customerCode","customerName"};
+		String[] property = {"customerId","customerCode","customerName","priceLevel"};
 		String jsonArray = JSONUtil.toJson(pager.getList(), property, pager.getTotalCount());
 		return jsonArray;
 	}

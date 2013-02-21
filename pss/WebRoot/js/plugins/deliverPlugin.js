@@ -55,14 +55,27 @@
 	  //初始化
 	  var initChoose = function(){
 		 //客户下拉框
-		 $('#customer',editForm).combogrid({rownumbers:true, pagination:true,panelWidth:480,
+		 $('#customer',editForm).combogrid({rownumbers:true, pagination:true,panelWidth:580,
 		 	idField:'customerId',textField:'customerName',mode:'remote',	//此处需要实时查询，要用remote
 	        delay:1000,
 	        url:'dict/queryCombogridCustomer.do',
 			columns:[[	
 					{field:'customerId',hidden:true}, 
 					{field:'customerCode',title:'客户编号',width:80,sortable:true},  
-		    		{field:'customerName',title:'客户名称',width:320,sortable:true}  
+		    		{field:'customerName',title:'客户名称',width:320,sortable:true},
+		    		{field:'priceLevel',title:'价格等级',width:100,align:"center",
+					formatter: function(value,row,index){
+						if (value=='wholesalePrice'){
+							return '批发价格';
+						}else if(value=='vipPrice'){
+							return 'VIP价格';
+						}else if(value=='memberPrice'){
+							return '会员价格';
+						}else if(value=='salePrice'){
+							return '零售价格';
+						}
+					}
+				}
 			]],
 			width:250,
 			filter:function(q,row){  if(row.name.toUpperCase().indexOf(q.toUpperCase())>=0)return true;  },//自定义的模糊查询	
@@ -706,7 +719,10 @@
 			    {field:'unitName',title:'单位',width:90,align:"center"},
 			    {field:'sizeName',title:'规格',width:90,align:"center"},
 			    {field:'colorName',title:'颜色',width:90,align:"center"},
-			    {field:'salePrice',title:'售价',width:90,align:"center"},
+			    {field:'wholesalePrice',title:'批发价格',width:120,align:"center"},
+			    {field:'vipPrice',title:'VIP价格',width:120,align:"center"},
+			    {field:'memberPrice',title:'会员价格',width:120,align:"center"},
+			    {field:'salePrice',title:'零售价格',width:120,align:"center"},
 			    {field:'note',title:'备注',width:90,align:"center"}
 		  ]]
 	 });
@@ -745,8 +761,26 @@
 		 if(rows.length==0){
 			 $.messager.alert('提示','请选择商品',"warning");
 			 return;
+		 } 
+		 var price = null;
+		 var priceLevel = null;
+		 var g = $('#customer',editDialog).combogrid('grid');	// get datagrid object
+		 if(g!=null){
+			 var r = g.datagrid('getSelected');	// get the selected row
+			 if(r!=null){
+				 priceLevel = r.priceLevel;
+			 }
 		 }
 		 $(rows).each(function(index,row){
+			 if(priceLevel=='wholesalePrice'){
+				 price = row.wholesalePrice;
+			 }else if(priceLevel=='vipPrice'){
+				 price = row.vipPrice;
+			 }else if(priceLevel=='memberPrice'){
+				 price = row.memberPrice;
+			 }else{
+				 price = row.salePrice;
+			 }
 			 $(deliverDetail).datagrid('appendRow',{
 				 deliverDetailId:'',
 				 saleDetailId:'',
@@ -757,7 +791,7 @@
 				 sizeName:row.sizeName,
 				 colorId:row.colorId,
 				 qty:0,
-				 price:row.salePrice,
+				 price:price,
 				 discount:'',
 				 amount:0,
 				 saleCode:'',
