@@ -68,8 +68,8 @@ public class Customer extends BaseModel {
 	/**
 	 * 地址
 	 */
+	@Column(name = "addr", length = 1000)
 	private String addr;
-	
 	
 	/**
 	 * 客户状态  0:无效   1:有效
@@ -225,7 +225,7 @@ public class Customer extends BaseModel {
 	public void setFax(String fax) {
 		this.fax = fax;
 	}
-	@Column(name = "addr", length = 100)
+	
 	public String getAddr() {
 		return addr;
 	}
