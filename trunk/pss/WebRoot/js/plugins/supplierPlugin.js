@@ -48,7 +48,7 @@
 				{text:'修改',iconCls:'icon-edit',handler:function(){onUpdate()}},'-',
 				{text:'删除',iconCls:'icon-remove',handler:function(){onDelete()}},'-',
 				{text:'下载上传模板',iconCls:'icon-download',handler:function(){onDownload()}},'-',
-				{text:'上传',iconCls:'icon-upload',handler:function(){onUpload()}},'-',
+				{text:'上传',iconCls:'icon-upload',handler:function(){onUpload()}},'-'
 		  ],
 		  onDblClickRow:function(rowIndex, rowData){
 				onUpdate();

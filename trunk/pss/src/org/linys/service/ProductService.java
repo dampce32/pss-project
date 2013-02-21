@@ -1,5 +1,7 @@
 package org.linys.service;
 
+import java.io.File;
+
 import org.linys.model.Product;
 import org.linys.vo.ServiceResult;
 
@@ -121,4 +123,23 @@ public interface ProductService extends BaseService<Product,String>{
 	 * @throws Exception
 	 */
 	ServiceResult selectDefaultPacking(Product product);
+	/**
+	 * @Description: 取得新编号
+	 * @Created Time: 2013-2-20 上午11:29:53
+	 * @Author lys
+	 * @param productCode
+	 * @return
+	 */
+	ServiceResult newCode(String productCode);
+	/**
+	 * @Description: 上传图像文件
+	 * @Created Time: 2013-2-20 下午4:35:39
+	 * @Author lys
+	 * @param file
+	 * @param templatePath
+	 * @param fileName
+	 * @param fileName 
+	 * @return
+	 */
+	ServiceResult uploadImg(File file, String templatePath, String productId, String fileName);
 }

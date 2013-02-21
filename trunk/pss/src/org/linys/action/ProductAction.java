@@ -1,10 +1,13 @@
 package org.linys.action;
 
+import java.io.File;
+
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.linys.model.Product;
 import org.linys.service.ProductService;
+import org.linys.util.FileUtil;
 import org.linys.vo.ServiceResult;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -216,6 +219,79 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 		} catch (Exception e) {
 			result.setMessage("默认商品组装，选择商品失败");
 			logger.error("默认商品组装，选择商品失败", e);
+			result.setIsSuccess(false);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	/**
+	 * @Description: 取得新编号
+	 * @Created Time: 2013-2-20 上午11:28:46
+	 * @Author lys
+	 */
+	public void newCode(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			String productCode = request.getParameter("productCode");
+			result = productService.newCode(productCode);
+		} catch (Exception e) {
+			result.setMessage("取得新编号失败");
+			logger.error("取得新编号失败", e);
+			result.setIsSuccess(false);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	/**
+	 * @Description: 上传图片文件
+	 * @Created Time: 2013-2-20 下午4:29:47
+	 * @Author lys
+	 */
+	public void uploadImg(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			String productId = getParameter("productId");
+			String fileName = getParameter("fileName");
+			result = productService.uploadImg(file,getBasePath(),productId,fileName);
+		} catch (Exception e) {
+			result.setMessage("上传图片文件失败");
+			logger.error("上传图片文件失败", e);
+			result.setIsSuccess(false);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	/**
+	 * @Description: 下载图片
+	 * @Created Time: 2013-2-21 上午9:44:42
+	 * @Author lys
+	 */
+	public void showImg(){
+		String productId = getParameter("productId");
+		String rootPath = getBasePath()+"productImg";
+		try {
+			String fileName =File.separator+productId+".png"; 
+			FileUtil.downloadFile(getResponse(), rootPath, fileName);
+		} catch (Exception e) {
+			logger.error("下载文件失败", e);
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * @Description: 删除商品图片
+	 * @Created Time: 2013-2-21 下午2:06:50
+	 * @Author lys
+	 */
+	public void deleteImg(){
+		ServiceResult result = new ServiceResult(false);
+		String productId = getParameter("productId");
+		try {
+			String filePath =getBasePath()+"productImg"+File.separator+productId+".png"; 
+			FileUtil.deleteFile(filePath);
+			result.setIsSuccess(true);
+		} catch (Exception e) {
+			logger.error("删除商品图片失败", e);
+			result.setMessage("删除商品图片失败");
 			result.setIsSuccess(false);
 		}
 		String jsonString = result.toJSON();

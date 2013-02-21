@@ -1,9 +1,11 @@
 package org.linys.service.impl;
 
+import java.io.File;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.linys.dao.DataDictionaryDAO;
 import org.linys.dao.DefaultPackagingDAO;
@@ -14,6 +16,7 @@ import org.linys.model.DefaultPackaging;
 import org.linys.model.Product;
 import org.linys.model.ProductType;
 import org.linys.service.ProductService;
+import org.linys.util.FileUtil;
 import org.linys.util.JSONUtil;
 import org.linys.util.StringUtil;
 import org.linys.vo.ServiceResult;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductServiceImpl extends BaseServiceImpl<Product, String> implements ProductService {
+	
 	@Resource
 	private ProductDAO productDAO;
 	@Resource
@@ -103,8 +107,6 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 			if(productType==null){
 				result.setMessage("请选择商品类型");
 				return result;
-			}else{
-				model.setProductCode(productType.getProductTypeCode());
 			}
 		}
 		//单位
@@ -157,9 +159,12 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 			
 		}
 		if(StringUtils.isEmpty(model.getProductId())){//新增
-			//取得商品类型下的新增编号
-			
-			model.setProductCode(productDAO.getNewProductCode(model.getProductCode()));
+			//检查编号是否已存在
+			Product oldModel = productDAO.load("productCode",model.getProductCode());
+			if(oldModel!=null){
+				result.setMessage("商品编号已存在");
+				return result;
+			}
 			model.setQtyStore(0.0);
 			model.setAmountStore(0.0);
 			productDAO.save(model);
@@ -187,6 +192,13 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 			if(oldModel==null){
 				result.setMessage("该商品已不存在");
 				return result;
+			}
+			if(!oldModel.getProductCode().equals(model.getProductCode())){
+				Product oldProduct = productDAO.load("productCode", model.getProductCode());
+				if(oldProduct!=null){
+					result.setMessage("该商品编号已存在，请重新输入商品编号");
+					return result;
+				}
 			}
 			//输入原来下拉选择项中没有情况验证
 			//单位
@@ -225,7 +237,6 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 				}
 				model.setColor(color);
 			}
-			model.setProductCode(productDAO.getNewProductCode(model.getProductCode()));
 			
 			oldModel.setProductCode(model.getProductCode());
 			oldModel.setProductType(model.getProductType());
@@ -311,8 +322,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 	public ServiceResult select(Product model, Integer page, Integer rows) {
 		ServiceResult result = new ServiceResult(false);
 		
-		List<Product> list = productDAO.query(model,page,rows);
-		Long total = productDAO.getTotalCount(model);
+		List<Product> list = productDAO.select(model,page,rows);
+		Long total = productDAO.getTotalCountSelect(model);
 		
 		String[] properties = {"productId","productCode","productName","note",
 				"productType.productTypeId","productType.productTypeName",
@@ -437,6 +448,42 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 				"qty","product.salePrice:price","saleAmount:amount"};
 		String defaultPackagingData = JSONUtil.toJson(defaultPackagingList,propertiesDetail);
 		result.addData("defaultPackagingData", defaultPackagingData);
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.ProductService#newCode(java.lang.String)
+	 */
+	@Override
+	public ServiceResult newCode(String productCode) {
+		ServiceResult result = new ServiceResult(false);
+		if(productCode==null){
+			result.setMessage("参数有误");
+			return result;
+		}
+		result.addData("productCode", productDAO.getNewProductCode(productCode));
+		result.setIsSuccess(true);
+		return result;
+	}
+	/*
+	 * (non-Javadoc)   
+	 * @see org.linys.service.ProductService#uploadImg(java.io.File, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public ServiceResult uploadImg(File file, String templatePath, String productId,
+			String fileName) {
+		ServiceResult result = new ServiceResult(false);
+		Product oldModel = productDAO.load(productId);
+		if(oldModel==null){
+			result.setMessage("该商品已不存在");
+			return result;
+		}
+		File imgFile = new File(templatePath+File.separator+"productImg"+File.separator+productId+".png");
+		if(imgFile.exists()){
+			FileUtils.deleteQuietly(imgFile);
+		}
+		FileUtil.saveFile(file, templatePath+File.separator+"productImg"+File.separator+productId+".png");
 		result.setIsSuccess(true);
 		return result;
 	}

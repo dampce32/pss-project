@@ -11,6 +11,8 @@ import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
+
 /**
  * @Description: 文件处理类
  * @Copyright: 福州骏华信息有限公司 (c)2013
@@ -120,24 +122,28 @@ public class FileUtil {
 		File file = new File(rootPath + File.separator + fileName);
 
 		try {
-			response.setContentType("APPLICATION/OCTET-STREAM;charset=UTF-8");
+			if(file.exists()){
+				response.setContentType("APPLICATION/OCTET-STREAM;charset=UTF-8");
 
-			response.setHeader("Content-Disposition", "attachment; filename="
-					+ java.net.URLEncoder.encode(fileName, "UTF-8"));
+				response.setHeader("Content-Disposition", "attachment; filename="
+						+ java.net.URLEncoder.encode(fileName, "UTF-8"));
+				
+				response.setHeader("Cache-Control","no-cache");
 
-			is = new BufferedInputStream(new FileInputStream(file));
-			os = response.getOutputStream();
-			bos = new BufferedOutputStream(os);
+				is = new BufferedInputStream(new FileInputStream(file));
+				os = response.getOutputStream();
+				bos = new BufferedOutputStream(os);
 
-			byte[] buffer = new byte[1024];
+				byte[] buffer = new byte[1024];
 
-			int len = 0;
+				int len = 0;
 
-			while (-1 != (len = is.read(buffer))) {
-				bos.write(buffer, 0, len);
+				while (-1 != (len = is.read(buffer))) {
+					bos.write(buffer, 0, len);
 
+				}
+				bos.flush();
 			}
-			bos.flush();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -156,6 +162,18 @@ public class FileUtil {
 				e.printStackTrace();
 			}
 
+		}
+	}
+	/**
+	 * @Description: 删除文件
+	 * @Created Time: 2013-2-21 下午2:11:09
+	 * @Author lys
+	 * @param filePath
+	 */
+	public static void deleteFile(String filePath){
+		File file = new File(filePath);
+		if(file.exists()){
+			FileUtils.deleteQuietly(file);
 		}
 	}
 }
