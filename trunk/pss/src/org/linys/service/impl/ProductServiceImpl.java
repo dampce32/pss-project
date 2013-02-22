@@ -261,7 +261,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 			
 			oldModel.setSalePrice(model.getSalePrice());
 			oldModel.setWholesalePrice(model.getWholesalePrice());
-			oldModel.setVipPrice(model.getWholesalePrice());
+			oldModel.setVipPrice(model.getVipPrice());
 			oldModel.setMemberPrice(model.getMemberPrice());
 			oldModel.setBuyingPrice(model.getBuyingPrice());
 			
