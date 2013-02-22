@@ -891,7 +891,6 @@
 	//------默认商品组装--------
 	var defaultPackagingList = $('#defaultPackagingList',newProductDialog);
 	var lastIndexNewProduct=null;
-	var deleleIdNewProductArray = new Array();
 	$(defaultPackagingList).datagrid({
 	  title:'默认商品组装',
 	  singleSelect:true,	
@@ -1054,7 +1053,7 @@
 			qtyArray.push(rows[i].qty);
 		}
 		$('#defaultPackagingIds',newProductForm).val(defaultPackagingIdArray.join(LYS.join));
-		$('#deleleIds',newProductForm).val(deleleIdNewProductArray.join(LYS.join));
+		$('#deleleIds',newProductForm).val('');
 		$('#productIds',newProductForm).val(productIdArray.join(LYS.join));
 		$('#qtys',newProductForm).val(qtyArray.join(LYS.join));
 		return true;
@@ -1191,9 +1190,6 @@
 	 var onDeleteProductNewProduct = function(){
 		 var row = $(defaultPackagingList).datagrid('getSelected');
 		 var rowIndex = $(defaultPackagingList).datagrid('getRowIndex',row);
-		 if(row.defaultPackagingId!=''){
-			 deleteIdNewProductArray.push(defaultPackagingId);
-		 }
 		 $(defaultPackagingList).datagrid('deleteRow',rowIndex);
 		 lastIndexNewProduct = null;
 	 }
@@ -1230,6 +1226,10 @@
 			 $.messager.alert('提示','请选择上传文件','warning');
 			 return false;
 		 }
+		 if(!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(file)){
+			 $.messager.alert('提示','图片类型必须是.gif,jpeg,jpg,png中的一种','warning');
+			 return false;
+		 }
 		 var productId = $('#productId',newProductDialog).val();
 		 $('#productIdUploadImgForm',newProductDialog).val(productId);
 		 var pos = file.lastIndexOf("\\");
@@ -1254,8 +1254,8 @@
 			asyncCallService(url,content,function(result){
 				if(result.isSuccess){
 					var fn = function(){
-						$('#imgPic').attr('src','#');
-						$('#file',newProductDialog).val('');
+						$('#imgPic',newProductDialog).attr('src','#');
+						$('#uploadImgForm',newProductDialog).form('clear');
 					}
 					$.messager.alert('提示','移除成功','info',fn);
 				}else{

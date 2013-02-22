@@ -214,6 +214,7 @@
 	var onAdd = function(){
 		$(editForm).form('clear');
 		$('#uploadImgForm',editDialog).form('clear');
+		deleleIdArray = new Array();
 		initChoose();
 		addBtnStatus();
 		$('#wholesalePrice',editDialog).numberbox('setValue',0.0);
@@ -372,6 +373,7 @@
 			   	var defaultPackagingData = eval("("+data.defaultPackagingData+")");
 				$(defaultPackagingList).datagrid('loadData',defaultPackagingData);
 				
+				deleleIdArray = new Array();
 				updateBtnStatus();
 				showImg();
 			}else{
@@ -589,7 +591,7 @@
 		 var row = $(defaultPackagingList).datagrid('getSelected');
 		 var rowIndex = $(defaultPackagingList).datagrid('getRowIndex',row);
 		 if(row.defaultPackagingId!=''){
-			 deleteIdArray.push(defaultPackagingId);
+			 deleleIdArray.push(row.defaultPackagingId);
 		 }
 		 $(defaultPackagingList).datagrid('deleteRow',rowIndex);
 		 lastIndex = null;
@@ -627,6 +629,10 @@
 			 $.messager.alert('提示','请选择上传文件','warning');
 			 return false;
 		 }
+		 if(!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(file)){
+			 $.messager.alert('提示','图片类型必须是.gif,jpeg,jpg,png中的一种','warning');
+			 return false;
+		 }
 		 var productId = $('#productId',editDialog).val();
 		 $('#productIdUploadImgForm',editDialog).val(productId);
 		 var pos = file.lastIndexOf("\\");
@@ -639,7 +645,7 @@
 		 if(productId==''){
 			 return;
 		 }
-		 $('#imgPic').attr('src','dict/showImgProduct.do?productId='+productId);
+		 $('#imgPic',editDialog).attr('src','dict/showImgProduct.do?productId='+productId);
 	 }
 	 $('#removeBtn',editDialog).click(function(){
 		 var productId = $('#productId',editDialog).val();
@@ -651,8 +657,8 @@
 			asyncCallService(url,content,function(result){
 				if(result.isSuccess){
 					var fn = function(){
-						$('#imgPic').attr('src','#');
-						$('#file',newProductDialog).val('');
+						$('#imgPic',editDialog).attr('src','#');
+						$('#uploadImgForm',editDialog).form('clear');
 					}
 					$.messager.alert('提示','移除成功','info',fn);
 				}else{
