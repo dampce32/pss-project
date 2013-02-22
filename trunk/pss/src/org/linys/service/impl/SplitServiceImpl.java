@@ -329,19 +329,19 @@ public class SplitServiceImpl extends BaseServiceImpl<Split, String> implements 
 					detailStore.setAmount(0.0);
 					storeDao.save(detailStore);
 				}
+				//更新拆分商品明细库存
+				detailStore.setQty(detailStore.getQty()+model.getQty()*splitDetail.getQty());
+				//detailStore.setAmount(detailStore.getAmount()+model.getQty()*amount);
 				Double price = 0.0;
-				if(detailStore.getQty()!=null && detailStore.getQty()>0){
-					price = detailStore.getAmount()/detailStore.getQty();
+				if(detailProduct.getAmountStore()!=null && detailProduct.getQtyStore()!=null && detailProduct.getQtyStore()>0){
+					price = detailProduct.getAmountStore()/detailProduct.getQtyStore();
 				}
 				//计算金额
 				DecimalFormat df = new DecimalFormat("######0.00");
-				Double amount = Double.parseDouble(df.format(price*splitDetail.getQty()));
-				//更新拆分商品明细库存
-				detailStore.setQty(detailStore.getQty()+model.getQty()*splitDetail.getQty());
-				detailStore.setAmount(detailStore.getAmount()+model.getQty()*amount);
+				Double amount = Double.parseDouble(df.format(price*model.getQty()*splitDetail.getQty()));
 				//更新商品明细数量
 				detailProduct.setQtyStore(detailProduct.getQtyStore()+model.getQty()*splitDetail.getQty());
-				detailProduct.setAmountStore(detailProduct.getAmountStore()+model.getQty()*splitDetail.getAmount());
+				detailProduct.setAmountStore(detailProduct.getAmountStore()+amount);
 			}
 		//由已审修改为未审
 		}else{
@@ -365,18 +365,18 @@ public class SplitServiceImpl extends BaseServiceImpl<Split, String> implements 
 					throw new RuntimeException("商品"+detailProduct.getProductName()+",数量不足,不能反审");
 				}
 				Double price = 0.0;
-				if(detailStore.getQty()!=null && detailStore.getQty()>0){
-					price = detailStore.getAmount()/detailStore.getQty();
+				if(detailProduct.getAmountStore()!=null && detailProduct.getQtyStore()!=null && detailProduct.getQtyStore()>0){
+					price = detailProduct.getAmountStore()/detailProduct.getQtyStore();
 				}
 				//计算金额
 				DecimalFormat df = new DecimalFormat("######0.00");
-				Double amount = Double.parseDouble(df.format(price*splitDetail.getQty()));
+				Double amount = Double.parseDouble(df.format(price*model.getQty()*splitDetail.getQty()));
 				//更新拆分商品明细库存
 				detailStore.setQty(detailStore.getQty()-model.getQty()*splitDetail.getQty());
-				detailStore.setAmount(detailStore.getAmount()-model.getQty()*amount);
+				//detailStore.setAmount(detailStore.getAmount()-model.getQty()*amount);
 				//更新商品明细数量
 				detailProduct.setQtyStore(detailProduct.getQtyStore()-model.getQty()*splitDetail.getQty());
-				detailProduct.setAmountStore(detailProduct.getAmountStore()-model.getQty()*splitDetail.getAmount());
+				detailProduct.setAmountStore(detailProduct.getAmountStore()-amount);
 			}
 		}
 		model.setStatus(split.getStatus());
@@ -420,18 +420,18 @@ public class SplitServiceImpl extends BaseServiceImpl<Split, String> implements 
 						throw new RuntimeException("拆分单号:"+model.getSplitCode()+",商品"+detailProduct.getProductName()+",数量不足");
 					}
 					Double price = 0.0;
-					if(detailStore.getQty()!=null && detailStore.getQty()>0){
-						price = detailStore.getAmount()/detailStore.getQty();
+					if(detailProduct.getAmountStore()!=null && detailProduct.getQtyStore()!=null && detailProduct.getQtyStore()>0){
+						price = detailProduct.getAmountStore()/detailProduct.getQtyStore();
 					}
 					//计算金额
 					DecimalFormat df = new DecimalFormat("######0.00");
-					Double amount = Double.parseDouble(df.format(price*splitDetail.getQty()));
+					Double amount = Double.parseDouble(df.format(price*model.getQty()*splitDetail.getQty()));
 					//更新拆分商品明细库存
 					detailStore.setQty(detailStore.getQty()+model.getQty()*splitDetail.getQty());
-					detailStore.setAmount(detailStore.getAmount()+model.getQty()*amount);
+					//detailStore.setAmount(detailStore.getAmount()+model.getQty()*amount);
 					//更新商品明细数量
 					detailProduct.setQtyStore(detailProduct.getQtyStore()+model.getQty()*splitDetail.getQty());
-					detailProduct.setAmountStore(detailProduct.getAmountStore()+model.getQty()*splitDetail.getAmount());
+					detailProduct.setAmountStore(detailProduct.getAmountStore()+amount);
 				}
 			//由已审修改为未审
 			}else{
@@ -455,18 +455,18 @@ public class SplitServiceImpl extends BaseServiceImpl<Split, String> implements 
 						throw new RuntimeException("拆分单号:"+model.getSplitCode()+",商品"+detailProduct.getProductName()+",数量不足,不能反审");
 					}
 					Double price = 0.0;
-					if(detailStore.getQty()!=null && detailStore.getQty()>0){
-						price = detailStore.getAmount()/detailStore.getQty();
+					if(detailProduct.getAmountStore()!=null && detailProduct.getQtyStore()!=null && detailProduct.getQtyStore()>0){
+						price = detailProduct.getAmountStore()/detailProduct.getQtyStore();
 					}
 					//计算金额
 					DecimalFormat df = new DecimalFormat("######0.00");
-					Double amount = Double.parseDouble(df.format(price*splitDetail.getQty()));
+					Double amount = Double.parseDouble(df.format(price*model.getQty()*splitDetail.getQty()));
 					//更新拆分商品明细库存
 					detailStore.setQty(detailStore.getQty()-model.getQty()*splitDetail.getQty());
-					detailStore.setAmount(detailStore.getAmount()-model.getQty()*amount);
+					//detailStore.setAmount(detailStore.getAmount()-model.getQty()*amount);
 					//更新商品明细数量
 					detailProduct.setQtyStore(detailProduct.getQtyStore()-model.getQty()*splitDetail.getQty());
-					detailProduct.setAmountStore(detailProduct.getAmountStore()-model.getQty()*splitDetail.getAmount());
+					detailProduct.setAmountStore(detailProduct.getAmountStore()-amount);
 				}
 			}
 			model.setStatus(status);

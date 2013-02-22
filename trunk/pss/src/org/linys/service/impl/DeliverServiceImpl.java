@@ -258,18 +258,17 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 					throw new RuntimeException("商品:"+product.getProductName()+",超额出库");
 				}
 				Double price = 0.0;
-				if(store.getQty()!=null && store.getQty()>0){
-					price = store.getAmount()/store.getQty();
+				if(product.getAmountStore()!=null && product.getQtyStore()!=null && product.getQtyStore()>0){
+					price = product.getAmountStore()/product.getQtyStore();
 				}
 				//计算金额
 				DecimalFormat df = new DecimalFormat("######0.00");
 				Double amount = Double.parseDouble(df.format(price*deliverDetail.getQty()));
 				//更新库存
 				store.setQty(store.getQty()-deliverDetail.getQty());
-				store.setAmount(store.getAmount()-amount);
 				//更新商品总的库存数量和金额
 				product.setQtyStore(product.getQtyStore()-deliverDetail.getQty());
-				product.setAmountStore(product.getAmountStore()-deliverDetail.getAmount());
+				product.setAmountStore(product.getAmountStore()-amount);
 				//如果该收货明细是从出库单来得，则需要更新对应出库明细的出货数
 				SaleDetail saleDetail = deliverDetail.getSaleDetail();
 				if(saleDetail!=null){
@@ -297,20 +296,22 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 					store.setAmount(0.0);
 					storeDao.save(store);
 				}
+				//更新商品总的库存数量和金额
+				store.setQty(store.getQty()+deliverDetail.getQty());
+				//store.setAmount(store.getAmount()+amount);
+				
+				Product product = deliverDetail.getProduct();
+				
 				Double price = 0.0;
-				if(store.getQty()!=null && store.getQty()>0){
-					price = store.getAmount()/store.getQty();
+				if(product.getAmountStore()!=null && product.getQtyStore()!=null && product.getQtyStore()>0){
+					price = product.getAmountStore()/product.getQtyStore();
 				}
 				//计算金额
 				DecimalFormat df = new DecimalFormat("######0.00");
 				Double amount = Double.parseDouble(df.format(price*deliverDetail.getQty()));
-				//更新商品总的库存数量和金额
-				store.setQty(store.getQty()+deliverDetail.getQty());
-				store.setAmount(store.getAmount()+amount);
-				
-				Product product = deliverDetail.getProduct();
+				//更新库存
 				product.setQtyStore(product.getQtyStore()+deliverDetail.getQty());
-				product.setAmountStore(product.getAmountStore()+deliverDetail.getAmount());
+				product.setAmountStore(product.getAmountStore()+amount);
 				
 				//如果该出库明细是从出库单得来，则需要更新对应订单明细的出货数
 				SaleDetail saleDetail = deliverDetail.getSaleDetail();
@@ -368,18 +369,20 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 					if(store==null || store.getQty()-deliverDetail.getQty()<0){
 						throw new RuntimeException("出库单号:"+model.getDeliverCode()+",商品:"+product.getProductName()+"超额出库");
 					}
+					//更新商品总的库存数量和金额
+					store.setQty(store.getQty()-deliverDetail.getQty());
+					//store.setAmount(store.getAmount()-amount);
+					
 					Double price = 0.0;
-					if(store.getQty()!=null && store.getQty()>0){
-						price = store.getAmount()/store.getQty();
+					if(product.getAmountStore()!=null && product.getQtyStore()!=null && product.getQtyStore()>0){
+						price = product.getAmountStore()/product.getQtyStore();
 					}
 					//计算金额
 					DecimalFormat df = new DecimalFormat("######0.00");
 					Double amount = Double.parseDouble(df.format(price*deliverDetail.getQty()));
-					//更新商品总的库存数量和金额
-					store.setQty(store.getQty()-deliverDetail.getQty());
-					store.setAmount(store.getAmount()-amount);
+					//更新库存
 					product.setQtyStore(product.getQtyStore()-deliverDetail.getQty());
-					product.setAmountStore(product.getAmountStore()-deliverDetail.getAmount());
+					product.setAmountStore(product.getAmountStore()-amount);
 					//如果该收货明细是从出库单来得，则需要更新对应出库明细的出货数
 					SaleDetail saleDetail = deliverDetail.getSaleDetail();
 					if(saleDetail!=null){
@@ -407,19 +410,21 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 						store.setAmount(0.0);
 						storeDao.save(store);
 					}
+					//更新商品总的库存数量和金额
+					store.setQty(store.getQty()+deliverDetail.getQty());
+					//store.setAmount(store.getAmount()+amount);
+					
+					Product product = deliverDetail.getProduct();
 					Double price = 0.0;
-					if(store.getQty()!=null && store.getQty()>0){
-						price = store.getAmount()/store.getQty();
+					if(product.getAmountStore()!=null && product.getQtyStore()!=null && product.getQtyStore()>0){
+						price = product.getAmountStore()/product.getQtyStore();
 					}
 					//计算金额
 					DecimalFormat df = new DecimalFormat("######0.00");
 					Double amount = Double.parseDouble(df.format(price*deliverDetail.getQty()));
-					//更新商品总的库存数量和金额
-					store.setQty(store.getQty()+deliverDetail.getQty());
-					store.setAmount(store.getAmount()+amount);
-					Product product = deliverDetail.getProduct();
+					//更新库存
 					product.setQtyStore(product.getQtyStore()+deliverDetail.getQty());
-					product.setAmountStore(product.getAmountStore()+deliverDetail.getAmount());
+					product.setAmountStore(product.getAmountStore()+amount);
 					
 					//如果该出库明细是从出库单得来，则需要更新对应订单明细的出货数
 					SaleDetail saleDetail = deliverDetail.getSaleDetail();

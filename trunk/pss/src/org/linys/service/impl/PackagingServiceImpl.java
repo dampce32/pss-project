@@ -328,18 +328,18 @@ public class PackagingServiceImpl extends BaseServiceImpl<Packaging, String> imp
 					throw new RuntimeException("商品"+detailProduct.getProductName()+",数量不足");
 				}
 				Double price = 0.0;
-				if(detailStore.getQty()!=null && detailStore.getQty()>0){
-					price = detailStore.getAmount()/detailStore.getQty();
+				if(detailProduct.getAmountStore()!=null && detailProduct.getQtyStore()!=null && detailProduct.getQtyStore()>0){
+					price = detailProduct.getAmountStore()/detailProduct.getQtyStore();
 				}
 				//计算金额
 				DecimalFormat df = new DecimalFormat("######0.00");
-				Double amount = Double.parseDouble(df.format(price*packagingDetail.getQty()));
+				Double amount = Double.parseDouble(df.format(price*model.getQty()*packagingDetail.getQty()));
 				//更新组装商品明细库存
 				detailStore.setQty(detailStore.getQty()-model.getQty()*packagingDetail.getQty());
-				detailStore.setAmount(detailStore.getAmount()-model.getQty()*amount);
+				//detailStore.setAmount(detailStore.getAmount()-model.getQty()*amount);
 				//更新商品明细数量
 				detailProduct.setQtyStore(detailProduct.getQtyStore()-model.getQty()*packagingDetail.getQty());
-				detailProduct.setAmountStore(detailProduct.getAmountStore()-model.getQty()*packagingDetail.getAmount());
+				detailProduct.setAmountStore(detailProduct.getAmountStore()-amount);
 			}
 		//由已审修改为未审
 		}else{
@@ -363,18 +363,18 @@ public class PackagingServiceImpl extends BaseServiceImpl<Packaging, String> imp
 				values =new Object[]{packagingDetail.getWarehouse(),detailProduct};
 				Store detailStore = storeDao.load(propertyNames, values);
 				Double price = 0.0;
-				if(detailStore.getQty()!=null && detailStore.getQty()>0){
-					price = detailStore.getAmount()/detailStore.getQty();
+				if(detailProduct.getAmountStore()!=null && detailProduct.getQtyStore()!=null && detailProduct.getQtyStore()>0){
+					price = detailProduct.getAmountStore()/detailProduct.getQtyStore();
 				}
 				//计算金额
 				DecimalFormat df = new DecimalFormat("######0.00");
-				Double amount = Double.parseDouble(df.format(price*packagingDetail.getQty()));
+				Double amount = Double.parseDouble(df.format(price*model.getQty()*packagingDetail.getQty()));
 				//更新组装商品明细库存
 				detailStore.setQty(detailStore.getQty()+model.getQty()*packagingDetail.getQty());
-				detailStore.setAmount(detailStore.getAmount()+model.getQty()*amount);
+				//detailStore.setAmount(detailStore.getAmount()+model.getQty()*amount);
 				//更新商品明细数量
 				detailProduct.setQtyStore(detailProduct.getQtyStore()+model.getQty()*packagingDetail.getQty());
-				detailProduct.setAmountStore(detailProduct.getAmountStore()+model.getQty()*packagingDetail.getAmount());
+				detailProduct.setAmountStore(detailProduct.getAmountStore()+amount);
 			}
 		}
 		model.setStatus(packaging.getStatus());
@@ -424,18 +424,18 @@ public class PackagingServiceImpl extends BaseServiceImpl<Packaging, String> imp
 						throw new RuntimeException("组装单号:"+model.getPackagingCode()+"商品:"+detailProduct.getProductName()+",数量不足");
 					}
 					Double price = 0.0;
-					if(detailStore.getQty()!=null && detailStore.getQty()>0){
-						price = detailStore.getAmount()/detailStore.getQty();
+					if(detailProduct.getAmountStore()!=null && detailProduct.getQtyStore()!=null && detailProduct.getQtyStore()>0){
+						price = detailProduct.getAmountStore()/detailProduct.getQtyStore();
 					}
 					//计算金额
 					DecimalFormat df = new DecimalFormat("######0.00");
-					Double amount = Double.parseDouble(df.format(price*packagingDetail.getQty()));
+					Double amount = Double.parseDouble(df.format(price*model.getQty()*packagingDetail.getQty()));
 					//更新组装商品明细库存
 					detailStore.setQty(detailStore.getQty()-model.getQty()*packagingDetail.getQty());
-					detailStore.setAmount(detailStore.getAmount()-model.getQty()*amount);
+					//detailStore.setAmount(detailStore.getAmount()-model.getQty()*amount);
 					//更新商品明细数量
 					detailProduct.setQtyStore(detailProduct.getQtyStore()-model.getQty()*packagingDetail.getQty());
-					detailProduct.setAmountStore(detailProduct.getAmountStore()-model.getQty()*packagingDetail.getAmount());
+					detailProduct.setAmountStore(detailProduct.getAmountStore()-amount);
 				}
 			//由已审修改为未审
 			}else{
@@ -459,18 +459,18 @@ public class PackagingServiceImpl extends BaseServiceImpl<Packaging, String> imp
 					values =new Object[]{packagingDetail.getWarehouse(),detailProduct};
 					Store detailStore = storeDao.load(propertyNames, values);
 					Double price = 0.0;
-					if(detailStore.getQty()!=null && detailStore.getQty()>0){
-						price = detailStore.getAmount()/detailStore.getQty();
+					if(detailProduct.getAmountStore()!=null && detailProduct.getQtyStore()!=null && detailProduct.getQtyStore()>0){
+						price = detailProduct.getAmountStore()/detailProduct.getQtyStore();
 					}
 					//计算金额
 					DecimalFormat df = new DecimalFormat("######0.00");
-					Double amount = Double.parseDouble(df.format(price*packagingDetail.getQty()));
+					Double amount = Double.parseDouble(df.format(price*model.getQty()*packagingDetail.getQty()));
 					//更新组装商品明细库存
 					detailStore.setQty(detailStore.getQty()+model.getQty()*packagingDetail.getQty());
-					detailStore.setAmount(detailStore.getAmount()+model.getQty()*amount);
+					//detailStore.setAmount(detailStore.getAmount()+model.getQty()*amount);
 					//更新商品明细数量
 					detailProduct.setQtyStore(detailProduct.getQtyStore()+model.getQty()*packagingDetail.getQty());
-					detailProduct.setAmountStore(detailProduct.getAmountStore()+model.getQty()*packagingDetail.getAmount());
+					detailProduct.setAmountStore(detailProduct.getAmountStore()+amount);
 				}
 			}
 			model.setStatus(status);
