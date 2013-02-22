@@ -1,5 +1,6 @@
 package org.linys.service.impl;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -331,8 +332,16 @@ public class DeliverRejectServiceImpl extends BaseServiceImpl<DeliverReject, Str
 					store.setAmount(0.0);
 					storeDao.save(store);
 				}
+				Double price = 0.0;
+				if(store.getQty()!=null && store.getQty()>0){
+					price = store.getAmount()/store.getQty();
+				}
+				//计算金额
+				DecimalFormat df = new DecimalFormat("######0.00");
+				Double amount = Double.parseDouble(df.format(price*deliverRejectDetail.getQty()));
+				//更新库存
 				store.setQty(store.getQty()+deliverRejectDetail.getQty());
-				store.setAmount(store.getAmount()+deliverRejectDetail.getAmount());
+				store.setAmount(store.getAmount()+amount);
 				//更新商品中库存数量和金额
 				product.setQtyStore(product.getQtyStore()+deliverRejectDetail.getQty());
 				product.setAmountStore(product.getAmountStore()+deliverRejectDetail.getAmount());
@@ -348,8 +357,16 @@ public class DeliverRejectServiceImpl extends BaseServiceImpl<DeliverReject, Str
 				if(store==null || store.getQty()-deliverRejectDetail.getQty()<0){
 					throw new RuntimeException("商品:"+product.getProductName()+",超额退货");
 				}
+				Double price = 0.0;
+				if(store.getQty()!=null && store.getQty()>0){
+					price = store.getAmount()/store.getQty();
+				}
+				//计算金额
+				DecimalFormat df = new DecimalFormat("######0.00");
+				Double amount = Double.parseDouble(df.format(price*deliverRejectDetail.getQty()));
+				//更新库存
 				store.setQty(store.getQty()-deliverRejectDetail.getQty());
-				store.setAmount(store.getAmount()-deliverRejectDetail.getAmount());
+				store.setAmount(store.getAmount()-amount);
 				//更新商品中库存数量和金额
 				product.setQtyStore(product.getQtyStore()-deliverRejectDetail.getQty());
 				product.setAmountStore(product.getAmountStore()-deliverRejectDetail.getAmount());
@@ -399,8 +416,16 @@ public class DeliverRejectServiceImpl extends BaseServiceImpl<DeliverReject, Str
 						store.setAmount(0.0);
 						storeDao.save(store);
 					}
+					Double price = 0.0;
+					if(store.getQty()!=null && store.getQty()>0){
+						price = store.getAmount()/store.getQty();
+					}
+					//计算金额
+					DecimalFormat df = new DecimalFormat("######0.00");
+					Double amount = Double.parseDouble(df.format(price*deliverRejectDetail.getQty()));
+					//更新库存
 					store.setQty(store.getQty()+deliverRejectDetail.getQty());
-					store.setAmount(store.getAmount()+deliverRejectDetail.getAmount());
+					store.setAmount(store.getAmount()+amount);
 					//更新商品中库存数量和金额
 					product.setQtyStore(product.getQtyStore()+deliverRejectDetail.getQty());
 					product.setAmountStore(product.getAmountStore()+deliverRejectDetail.getAmount());
@@ -416,8 +441,16 @@ public class DeliverRejectServiceImpl extends BaseServiceImpl<DeliverReject, Str
 					if(store==null || store.getQty()-deliverRejectDetail.getQty()<0){
 						throw new RuntimeException("退货单号:"+deliverRejectDetail.getDeliverReject().getDeliverRejectCode()+",商品:"+product.getProductName()+",超额退货");
 					}
+					Double price = 0.0;
+					if(store.getQty()!=null && store.getQty()>0){
+						price = store.getAmount()/store.getQty();
+					}
+					//计算金额
+					DecimalFormat df = new DecimalFormat("######0.00");
+					Double amount = Double.parseDouble(df.format(price*deliverRejectDetail.getQty()));
+					//更新库存
 					store.setQty(store.getQty()-deliverRejectDetail.getQty());
-					store.setAmount(store.getAmount()-deliverRejectDetail.getAmount());
+					store.setAmount(store.getAmount()-amount);
 					//更新商品中库存数量和金额
 					product.setQtyStore(product.getQtyStore()-deliverRejectDetail.getQty());
 					product.setAmountStore(product.getAmountStore()-deliverRejectDetail.getAmount());
