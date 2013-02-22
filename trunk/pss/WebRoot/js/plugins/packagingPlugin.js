@@ -625,7 +625,7 @@
 			    {field:'unitName',title:'单位',width:90,align:"center"},
 			    {field:'sizeName',title:'规格',width:90,align:"center"},
 			    {field:'colorName',title:'颜色',width:90,align:"center"},
-			    {field:'salePrice',title:'售价',width:90,align:"center"},
+			    {field:'buyingPrice',title:'进价',width:90,align:"center"},
 			    {field:'note',title:'备注',width:90,align:"center"}
 		  ]]
 	 });
@@ -704,8 +704,8 @@
 				 colorName:row.colorName,
 				 qty:1,
 				 warehouseId:warehouseId,
-				 price:row.salePrice,
-				 amount:row.salePrice,
+				 price:row.buyingPrice,
+				 amount:row.buyingPrice,
 				 totalQty:qty,
 				 note1:'',
 				 note2:'',
