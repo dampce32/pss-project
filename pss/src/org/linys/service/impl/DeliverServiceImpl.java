@@ -115,7 +115,7 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 			deliver.setReceiptedAmount(0.0);
 		}
 		deliverDao.save(deliver);
-		
+		Double totalAmount = 0d;
 		for (int i=0;i<productIdArray.length;i++) {
 			String saleDetailId = saleDetailIdArray[i];
 			String productId = productIdArray[i];
@@ -159,8 +159,10 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 			deliverDetail.setNote2(note2);
 			deliverDetail.setNote3(note3);
 			
+			totalAmount +=deliverDetail.getAmount();
 			deliverDetailDao.save(deliverDetail);
 		}
+		deliver.setAmount(totalAmount);
 		result.setIsSuccess(true);
 		result.addData("deliverId", deliver.getDeliverId());
 		return result;
