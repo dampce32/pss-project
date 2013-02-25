@@ -514,8 +514,6 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 		if(model.getStatus()==1){
 			result.setMessage("该出库单已审核,不能修改");
 			return result;
-		}else{
-			deliverDao.evict(model);
 		}
 		deliver.setStatus(model.getStatus());
 		deliver.setCheckAmount(model.getCheckAmount());
@@ -529,13 +527,12 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 		if(deliver.getReceiptedAmount()==null){
 			deliver.setReceiptedAmount(0.0);
 		}
-		deliverDao.evict(model);
-		deliverDao.update(deliver);
 		//删除
 		for(String id : delDeliverDetailIdArray){
 			if(StringUtils.isEmpty(id)) continue;
 			deliverDetailDao.delete(id);
 		}
+		Double totalAmount = 0d;
 		//新增、修改
 		for (int i=0;i<productIdArray.length;i++) {
 			String deliverDetailId = deliverDetailIdArray[i];
@@ -582,7 +579,7 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 				deliverDetail.setNote1(note1);
 				deliverDetail.setNote2(note2);
 				deliverDetail.setNote3(note3);
-				
+				totalAmount +=deliverDetail.getAmount();
 				deliverDetailDao.save(deliverDetail);
 				
 			}else{//修改
@@ -608,8 +605,12 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 				deliverDetail.setNote1(note1);
 				deliverDetail.setNote2(note2);
 				deliverDetail.setNote3(note3);
+				totalAmount +=deliverDetail.getAmount();
 			}
 		}
+		deliver.setAmount(totalAmount);
+		deliverDao.evict(model);
+		deliverDao.update(deliver);
 		result.setIsSuccess(true);
 		result.addData("deliverId", deliver.getDeliverId());
 		return result;
