@@ -366,11 +366,14 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 						}
 						store.setQty(store.getQty()-rejectDetail.getQty());
 						store.setAmount(store.getAmount()-rejectDetail.getAmount());
+						
 						storeDAO.update(store);
 						//更新商品中库存数量和金额
 						Product oldProduct =  productDAO.load(rejectDetail.getProduct().getProductId());
 						oldProduct.setQtyStore(oldProduct.getQtyStore()-rejectDetail.getQty());
 						oldProduct.setAmountStore(oldProduct.getAmountStore()-rejectDetail.getAmount());
+						Double priceStore =oldProduct.getQtyStore()==0?0:oldProduct.getAmountStore()/oldProduct.getQtyStore();
+						oldProduct.setPriceStore(priceStore);
 						productDAO.update(oldProduct);
 					}
 				}else if(model.getStatus()==0){//如果是由已审改为未审
@@ -396,6 +399,8 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 						Product oldProduct =  productDAO.load(rejectDetail.getProduct().getProductId());
 						oldProduct.setQtyStore(oldProduct.getQtyStore()+rejectDetail.getQty());
 						oldProduct.setAmountStore(oldProduct.getAmountStore()+rejectDetail.getAmount());
+						Double priceStore =oldProduct.getQtyStore()==0?0:oldProduct.getAmountStore()/oldProduct.getQtyStore();
+						oldProduct.setPriceStore(priceStore);
 						productDAO.update(oldProduct);
 					}
 				}
@@ -488,6 +493,8 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 				Product oldProduct =  productDAO.load(rejectDetail.getProduct().getProductId());
 				oldProduct.setQtyStore(oldProduct.getQtyStore()-rejectDetail.getQty());
 				oldProduct.setAmountStore(oldProduct.getAmountStore()-rejectDetail.getAmount());
+				Double priceStore =oldProduct.getQtyStore()==0?0:oldProduct.getAmountStore()/oldProduct.getQtyStore();
+				oldProduct.setPriceStore(priceStore);
 				productDAO.update(oldProduct);
 			}
 		}else if(model.getStatus()==0){//如果是由已审改为未审
@@ -515,6 +522,8 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 				Product oldProduct =  productDAO.load(rejectDetail.getProduct().getProductId());
 				oldProduct.setQtyStore(oldProduct.getQtyStore()+rejectDetail.getQty());
 				oldProduct.setAmountStore(oldProduct.getAmountStore()+rejectDetail.getAmount());
+				Double priceStore =oldProduct.getQtyStore()==0?0:oldProduct.getAmountStore()/oldProduct.getQtyStore();
+				oldProduct.setPriceStore(priceStore);
 				productDAO.update(oldProduct);
 			}
 		}
