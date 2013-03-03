@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 /**
@@ -98,8 +99,7 @@ public class Store extends BaseModel {
 	public void setQty(Double qty) {
 		this.qty = qty;
 	}
-
-	@Column(name = "amount", precision = 53, scale = 0)
+	@Transient
 	public Double getAmount() {
 		return this.amount;
 	}

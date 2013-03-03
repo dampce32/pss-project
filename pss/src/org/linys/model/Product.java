@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -241,10 +240,10 @@ public class Product extends BaseModel {
 	public void setUnit(DataDictionary unit) {
 		this.unit = unit;
 	}
-	@Transient
+	
+	@Column(name = "priceStore", precision = 22, scale = 0)
 	public Double getPriceStore() {
-		this.priceStore =this.qtyStore==0?0:this.amountStore/this.qtyStore;
-		DecimalFormat df = new DecimalFormat("##########0.00");
+		DecimalFormat df = new DecimalFormat("##########0.00000");
 		return Double.parseDouble(df.format(this.priceStore));
 	}
 

@@ -425,7 +425,6 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 					store.setWarehouse(oldReceive.getWarehouse());
 					store.setProduct(receiveDetail.getProduct());
 					store.setQty(0.0);
-					store.setAmount(0.0);
 					storeDAO.save(store);
 				}
 				store.setQty(store.getQty()+receiveDetail.getQty());
@@ -434,6 +433,8 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 				Product oldProduct = productDAO.load(receiveDetail.getProduct().getProductId());
 				oldProduct.setQtyStore(oldProduct.getQtyStore()+receiveDetail.getQty());
 				oldProduct.setAmountStore(oldProduct.getAmountStore()+receiveDetail.getAmount());
+				Double priceStore =oldProduct.getQtyStore()==0?0:oldProduct.getAmountStore()/oldProduct.getQtyStore();
+				oldProduct.setPriceStore(priceStore);
 				productDAO.update(oldProduct);
 				//如果该收货明细是从采购单来得，则需要更新对应采购明细的收货数
 				if(receiveDetail.getBuyDetail()!=null){
@@ -471,6 +472,8 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 				Product oldProduct = productDAO.load(receiveDetail.getProduct().getProductId());
 				oldProduct.setQtyStore(oldProduct.getQtyStore()-receiveDetail.getQty());
 				oldProduct.setAmountStore(oldProduct.getAmountStore()-receiveDetail.getAmount());
+				Double priceStore =oldProduct.getQtyStore()==0?0:oldProduct.getAmountStore()/oldProduct.getQtyStore();
+				oldProduct.setPriceStore(priceStore);
 				productDAO.update(oldProduct);
 				
 				//如果该收货明细是从采购单来得，则需要更新对应采购明细的收货数
@@ -538,7 +541,6 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 							store.setWarehouse(oldReceive.getWarehouse());
 							store.setProduct(receiveDetail.getProduct());
 							store.setQty(0.0);
-							store.setAmount(0.0);
 							storeDAO.save(store);
 						}
 						store.setQty(store.getQty()+receiveDetail.getQty());
@@ -547,6 +549,8 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 						Product oldProduct = productDAO.load(receiveDetail.getProduct().getProductId());
 						oldProduct.setQtyStore(oldProduct.getQtyStore()+receiveDetail.getQty());
 						oldProduct.setAmountStore(oldProduct.getAmountStore()+receiveDetail.getAmount());
+						Double priceStore =oldProduct.getQtyStore()==0?0:oldProduct.getAmountStore()/oldProduct.getQtyStore();
+						oldProduct.setPriceStore(priceStore);
 						productDAO.update(oldProduct);
 						//如果该收货明细是从采购单来得，则需要更新对应采购明细的收货数
 						if(receiveDetail.getBuyDetail()!=null){
@@ -583,6 +587,8 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 						Product oldProduct = productDAO.load(receiveDetail.getProduct().getProductId());
 						oldProduct.setQtyStore(oldProduct.getQtyStore()-receiveDetail.getQty());
 						oldProduct.setAmountStore(oldProduct.getAmountStore()-receiveDetail.getAmount());
+						Double priceStore =oldProduct.getQtyStore()==0?0:oldProduct.getAmountStore()/oldProduct.getQtyStore();
+						oldProduct.setPriceStore(priceStore);
 						productDAO.update(oldProduct);
 						//如果该收货明细是从采购单来得，则需要更新对应采购明细的收货数
 						if(receiveDetail.getBuyDetail()!=null){
