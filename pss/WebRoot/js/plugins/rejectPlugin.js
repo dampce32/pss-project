@@ -771,10 +771,10 @@
 		var warehouseId = $('#warehouse',editDialog).combobox('getValue'); 
 		var productCode = $('#productCodeSelectDialog',selectDialog).val();
 		var productName = $('#productNameSelectDialog',selectDialog).val();
-		
+		var options = $(productList).datagrid('options');
 		var url = "store/selectRejectStore.do";
 		
-		var content = {'warehouse.warehouseId':warehouseId,'product.productCode':productCode,'product.productName':productName};
+		var content = {'warehouse.warehouseId':warehouseId,'product.productCode':productCode,'product.productName':productName,page:options.pageNumber,rows:options.pageSize};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
 			var data = result.data;
@@ -783,6 +783,12 @@
 			$.messager.alert('提示',result.message,"error");
 		}
 	 }
+	//分页条
+	 $(productList).datagrid('getPager').pagination({   
+	    onSelectPage: function(page, rows){
+	    	searchBtnSelect();
+	    }
+	 });
 	 //选择商品
 	 var onSelectOKProduct = function(){
 		 var rows = $(productList).datagrid('getSelections');
