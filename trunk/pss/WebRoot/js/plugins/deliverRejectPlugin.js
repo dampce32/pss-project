@@ -695,11 +695,16 @@
 	 }
 	 //查询
 	 $('#searchBtnSelectDialog',selectDialog).click(function(){
+		 searchBtnSelect();
+	 })
+	 //查询
+	 var searchBtnSelect = function(){
 		var productCode = $('#productCodeSelectDialog',selectDialog).val();
 		var productName = $('#productNameSelectDialog',selectDialog).val();
 		
+		var options = $(productList).datagrid('options');
 		var url = "dict/selectProduct.do";
-		var content = {productCode:productCode,productName:productName};
+		var content = {productCode:productCode,productName:productName,page:options.pageNumber,rows:options.pageSize};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
 			var data = result.data;
@@ -707,7 +712,13 @@
 		}else{
 			$.messager.alert('提示',result.message,"error");
 		}
-	 })
+	 }
+	//分页条
+	 $(productList).datagrid('getPager').pagination({   
+	    onSelectPage: function(page, rows){
+	    	searchBtnSelect();
+	    }
+	 });
 	 //选择商品
 	 var onSelectOKProduct = function(){
 		 var rows = $(productList).datagrid('getSelections');
