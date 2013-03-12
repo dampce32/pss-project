@@ -165,6 +165,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 				result.setMessage("商品编号已存在");
 				return result;
 			}
+			model.setPriceStore(0.0);
 			model.setQtyStore(0.0);
 			model.setAmountStore(0.0);
 			productDAO.save(model);
