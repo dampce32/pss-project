@@ -2,7 +2,6 @@
 (function($) {  
   // 插件的定义  
   $.fn.buyInit = function() {
-	  $(this).mask({maskMsg:'正在加载界面'});
 	  var $this = $(this);
 	  var id = $(this).attr('id');
 	  var width = $(document.body).width();
@@ -1265,7 +1264,5 @@
 		 }
 	 });
 	//----添加商品e--------
-	
-	 $(this).mask('hide');
   }
 })(jQuery);   
