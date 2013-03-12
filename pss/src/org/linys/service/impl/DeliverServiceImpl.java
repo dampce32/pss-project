@@ -259,9 +259,9 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 				if(store==null || store.getQty()-deliverDetail.getQty()<0){
 					throw new RuntimeException("商品:"+product.getProductName()+",超额出库");
 				}
-				Double price = 0.0;
-				if(product.getAmountStore()!=null && product.getQtyStore()!=null && product.getQtyStore()>0){
-					price = product.getAmountStore()/product.getQtyStore();
+				Double price = product.getPriceStore();
+				if(price==null){
+					price = 0.0;
 				}
 				//计算金额
 				DecimalFormat df = new DecimalFormat("######0.00");
@@ -304,9 +304,9 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 				
 				Product product = deliverDetail.getProduct();
 				
-				Double price = 0.0;
-				if(product.getAmountStore()!=null && product.getQtyStore()!=null && product.getQtyStore()>0){
-					price = product.getAmountStore()/product.getQtyStore();
+				Double price = product.getPriceStore();
+				if(price==null){
+					price = 0.0;
 				}
 				//计算金额
 				DecimalFormat df = new DecimalFormat("######0.00");
@@ -375,9 +375,9 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 					store.setQty(store.getQty()-deliverDetail.getQty());
 					//store.setAmount(store.getAmount()-amount);
 					
-					Double price = 0.0;
-					if(product.getAmountStore()!=null && product.getQtyStore()!=null && product.getQtyStore()>0){
-						price = product.getAmountStore()/product.getQtyStore();
+					Double price = product.getPriceStore();
+					if(price==null){
+						price = 0.0;
 					}
 					//计算金额
 					DecimalFormat df = new DecimalFormat("######0.00");
@@ -417,9 +417,9 @@ public class DeliverServiceImpl extends BaseServiceImpl<Deliver, String> impleme
 					//store.setAmount(store.getAmount()+amount);
 					
 					Product product = deliverDetail.getProduct();
-					Double price = 0.0;
-					if(product.getAmountStore()!=null && product.getQtyStore()!=null && product.getQtyStore()>0){
-						price = product.getAmountStore()/product.getQtyStore();
+					Double price = product.getPriceStore();
+					if(price==null){
+						price = 0.0;
 					}
 					//计算金额
 					DecimalFormat df = new DecimalFormat("######0.00");
