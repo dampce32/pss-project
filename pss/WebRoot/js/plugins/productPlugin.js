@@ -549,9 +549,9 @@
 		if(productId!=''){
 			idArray.push(productId);
 		}
-		
+		var options = $(productList).datagrid('options');
 		var url = "dict/selectDefaultPackingProduct.do";
-		var content = {productCode:productCode,productName:productName,ids:idArray.join(LYS.join)};
+		var content = {productCode:productCode,productName:productName,ids:idArray.join(LYS.join),page:options.pageNumber,rows:options.pageSize};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
 			var data = result.data;
@@ -560,6 +560,12 @@
 			$.messager.alert('提示',result.message,"error");
 		}
 	 }
+	//分页条
+	$(productList).datagrid('getPager').pagination({   
+	    onSelectPage: function(page, rows){
+	    	searchBtnSelect();
+	    }
+	});
 	//选择商品
 	 var onSelectOKProduct = function(){
 		 var rows = $(productList).datagrid('getSelections');
