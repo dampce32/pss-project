@@ -99,7 +99,35 @@ $(function(){
 		  });
 	  }
 	 
-     
+	//----系统提醒--------
+ 	  $('#searchReminder').click(function(){
+ 		 onSearchReminder();
+ 	  })
+ 	  //查询系统提醒
+ 	  var onSearchReminder = function(){
+ 		 var url = "system/getCurrentUserReminder.do";
+	 	 asyncCallService(url,
+	 		function(result){
+	 			if(result.isSuccess){
+	 				var data = result.data;
+	 				$('.addReminder').remove();
+	 				$("#reminderTable").html(data.appendHtml);
+	 				$('#reminderTable a').click(function(){
+	 					var href =$(this).attr('navigateUrl');
+	 					var title =$(this).attr('navigateTabName');
+	 					var rightId =$(this).attr('rightId');
+	 					if(href==null){
+	 						return false;
+	 					}
+	 					addTab(title,href);
+	 				});
+	 			}else{
+	 				$.messager.alert('提示',result.message,"error");
+	 			}
+	 	 	}
+	 	 )
+ 	  }
+ 	 onSearchReminder();
 })
 
 function addTab(title,href){

@@ -3,10 +3,8 @@
 	xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="true"
 	monitoring="autodetect" dynamicConfig="true">
 
-	<diskStore path="C:\\Temp" />
-
 	<defaultCache maxEntriesLocalHeap="10" eternal="false"
-		timeToIdleSeconds="300" timeToLiveSeconds="1200" overflowToDisk="true"
-		diskPersistent="true">
+		timeToIdleSeconds="300" timeToLiveSeconds="1200" overflowToDisk="false"
+		diskPersistent="false">
 	</defaultCache>
 </ehcache>

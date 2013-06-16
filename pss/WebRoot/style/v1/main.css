@@ -20,3 +20,13 @@ text-align:center}
 	text-align: right;	
 	padding: 5px;
 }
+.tdFirstTitle{
+	text-align: right;	
+	padding: 10px 0px 0px 15px;
+}
+.tdFirstContent{
+	padding-top: 10px;
+}
+.contentInput{
+	width: 250px
+}

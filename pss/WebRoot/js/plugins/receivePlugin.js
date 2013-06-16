@@ -935,24 +935,6 @@
 		}
 		$('#amount',editForm).numberbox('setValue',totalAmount);
 	 }
-	 //应付金额发生改变
-	 $('#amount',editForm).numberbox({
-		 onChange:function(newValue,oldValue){
-			 var discountAmount = $('#discountAmount',editForm).numberbox('getValue');
-			 $('#payAmount',editForm).numberbox('setValue',newValue-parseFloat(discountAmount));
-		 }
-	});
-	//优惠金额发生改变
-	 $('#discountAmount',editForm).numberbox({
-		 onChange:function(newValue,oldValue){
-			 if(newValue==''){
-				 $('#discountAmount',editForm).numberbox('setValue',0.00);
-				 newValue = 0.00;
-			 }
-			 var amount = $('#amount',editForm).numberbox('getValue');
-			 $('#payAmount',editForm).numberbox('setValue',amount-newValue);
-		 }
-	});
 	//运费发生改变
 	 $('#otherAmount',editForm).numberbox({
 		 onChange:function(newValue,oldValue){

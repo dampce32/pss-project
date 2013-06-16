@@ -55,6 +55,9 @@ public class DeliverDaoImpl extends BaseDAOImpl<Deliver, String> implements Deli
 		if(deliver.getStatus()!=null && deliver.getStatus()>=0){
 			criteria.add(Restrictions.eq("status", deliver.getStatus()));
 		}
+		if(deliver.getIsReceipt()!=null && deliver.getIsReceipt()>=0){
+			criteria.add(Restrictions.eq("isReceipt", deliver.getIsReceipt()));
+		}
 		Long total = new Long(criteria.setProjection(Projections.rowCount()).uniqueResult().toString());
 		criteria.setProjection(null);
 		criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);

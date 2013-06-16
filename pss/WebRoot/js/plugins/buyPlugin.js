@@ -29,8 +29,8 @@
 		  fit:true,
 		  nowrap:true,
 		  striped: true,
-			collapsible:true,
-			rownumbers:true,
+		  collapsible:true,
+		  rownumbers:true,
 		  columns:[[
 		        {field:'ck',title:'选择',checkbox:true},
 				{field:'buyCode',title:'采购单号',width:150,align:"center"},

@@ -82,3 +82,13 @@ PSS.getExpressList = function(){
 	}
 	return PSS.ExpressList;
 }
+//当前用户Id
+PSS.CurrUserId = null;
+PSS.getCurrUserId = function(){
+	if(PSS.CurrUserId==null){
+		var url = 'system/getCurrIdUser.do';
+		var result = syncCallService(url);
+		PSS.CurrUserId = result.data.userId;
+	}
+	return PSS.CurrUserId;
+}
