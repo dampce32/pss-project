@@ -31,14 +31,25 @@
 		width:50,
 		data:statusList
 	  })
+	  
+	  var isReceiptList = [{"value":"-1","text":"所有","selected":true},{"value":"1","text":"已收款"},{"value":"0","text":"未收款"}]; 
+	  $('#isReceipt',queryContent).combobox({
+		editable:false,
+		valueField:'value',
+		textField:'text',
+		width:80,
+		data:isReceiptList
+	  })
 	  //点击查询按钮
 	  $('#searchBtn',queryContent).click(function(){
 		  var customerName = $('#customer',queryContent).val();
 		  var beginDate = $('#beginDate',queryContent).val();
 		  var endDate = $('#endDate',queryContent).val();
 		  var status = $('#status',queryContent).combobox('getValue');
+		  var isReceipt = $('#isReceipt',queryContent).combobox('getValue');
+		  
 		  var url = 'outWarehouse/queryDeliver.do';
-		  var queryParams ={'customer.customerName':customerName,beginDate:beginDate,endDate:endDate,status:status};
+		  var queryParams ={'customer.customerName':customerName,beginDate:beginDate,endDate:endDate,status:status,isReceipt:isReceipt};
 		  $(viewList).datagrid({
 			url:url,
 			queryParams:queryParams,
@@ -107,6 +118,7 @@
 			valueField:'employeeId',
 			textField:'employeeName',
 			width:150,
+			vaule:PSS.getCurrUserId(),
 			data:PSS.getEmployeeList()
 		})
 		//发票类型
@@ -360,6 +372,11 @@
 					}
 				}
 		  ]],
+		rowStyler: function(index,row){
+			if (row.isReceipt==0){
+				return 'color:red;';
+			}
+		},
 		onDblClickRow:function(rowIndex, rowData){
 			onUpdate();
 		  },

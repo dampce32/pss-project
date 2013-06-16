@@ -253,4 +253,19 @@ public class UserAction extends BaseAction implements ModelDriven<User> {
 		String jsonString = result.toJSON();
 		ajaxJson(jsonString);
 	}
+	/**
+	 * @Description: 取得当前用户Id
+	 * @Created Time: 2013-5-26 下午6:51:47
+	 * @Author lys
+	 */
+	public void getCurrId(){
+		ServiceResult result = new ServiceResult(false);
+		String userId = null;
+		if(getSession(User.LOGIN_USERID)!=null){
+			userId = getSession(User.LOGIN_USERID).toString();
+		}
+		result.addData("userId", userId);
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
 }
