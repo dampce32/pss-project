@@ -316,7 +316,7 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		ServiceResult result = new ServiceResult(false);
 		Receive receive = receiveDAO.load(receiveId);
 		String[] propertiesReceive = {"receiveId","receiveCode","receiveDate","deliverCode",
-				"supplier.supplierId","warehouse.warehouseId","amount","discountAmount","payAmount","otherAmount",
+				"supplier.supplierId","supplier.supplierName","warehouse.warehouseId","amount","discountAmount","payAmount","otherAmount",
 				"bank.bankId","invoiceType.invoiceTypeId","employee.employeeId","note","status","isPay"};
 		String receiveData = JSONUtil.toJson(receive,propertiesReceive);
 		result.addData("receiveData",receiveData);

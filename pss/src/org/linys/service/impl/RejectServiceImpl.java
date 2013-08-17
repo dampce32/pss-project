@@ -282,7 +282,7 @@ public class RejectServiceImpl extends BaseServiceImpl<Reject, String>
 		ServiceResult result = new ServiceResult(false);
 		Reject reject = rejectDAO.load(rejectId);
 		String[] propertiesReject = {"rejectId","rejectCode","rejectDate","buyCode",
-				"supplier.supplierId","warehouse.warehouseId","amount","payAmount",
+				"supplier.supplierId","supplier.supplierName","warehouse.warehouseId","amount","payAmount",
 				"bank.bankId","employee.employeeId","note","status"};
 		String rejectData = JSONUtil.toJson(reject,propertiesReject);
 		result.addData("rejectData",rejectData);
