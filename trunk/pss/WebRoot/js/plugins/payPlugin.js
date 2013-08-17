@@ -247,10 +247,13 @@
 		    panelWidth:450,  
 		    idField:'supplierId',  
 		    textField:'supplierName',  
-		    url:'dict/queryCombogridSupplier.do',  
+		    url:'dict/queryCombogridSupplier.do',
+			mode: 'remote',  
+			pagination:true,
+			rownumbers:true,
 		    columns:[[  
 		        {field:'supplierCode',title:'供应商编号',width:120},
-		        {field:'supplierName',title:'供应商名称',width:120}
+		        {field:'supplierName',title:'供应商名称',width:230}
 		    ]]  
 		});
 		//银行
@@ -443,6 +446,7 @@
 				}
 				
 				$('#supplier',editDialog).combogrid('setValue',payData.supplierId);
+				$('#supplier',editDialog).combogrid('setText',payData.supplierName);
 				$('#payway',editDialog).combobox('setValue',payData.payway);
 				$('#bank',editDialog).combobox('setValue',payData.bankId);
 				$('#employee',editDialog).combobox('setValue',payData.employeeId);

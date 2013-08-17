@@ -25,6 +25,16 @@
 	  
 	  var changeSearch = false;
 	  
+	  
+	  var statusList = [{"value":"-1","text":"所有","selected":true},{"value":"1","text":"已审"},{"value":"0","text":"未审"}]; 
+	  $('#status',queryContent).combobox({
+		editable:false,
+		valueField:'value',
+		textField:'text',
+		width:50,
+		data:statusList
+	  })
+	  
 	  //列表
 	  $(viewList).datagrid({
 		  fit:true,
@@ -34,11 +44,19 @@
 		  rownumbers:true,
 		  columns:[[
 		        {field:'ck',title:'选择',checkbox:true},
-				{field:'receiveCode',title:'入库单号',width:130,align:"center"},
+		        {field:'status',title:'状态',width:50,align:"center",
+					formatter: function(value,row,index){
+						if (value==0){
+							return '<img src="style/v1/icons/warn.png"/>';
+						} else {
+							return '<img src="style/v1/icons/info.png"/>';
+						}
+					}},
+				{field:'receiveCode',title:'入库单号',width:150,align:"center"},
 				{field:'receiveDate',title:'入库日期',width:80,align:"center"},
 				{field:'deliverCode',title:'送货单号',width:120,align:"center"},
 				{field:'warehouseName',title:'存入仓库',width:90,align:"center"},
-				{field:'supplierName',title:'供应商',width:90,align:"center"},
+				{field:'supplierName',title:'供应商',width:170,align:"center"},
 				{field:'amount',title:'应付款',width:80,align:"center"},
 				{field:'payAmount',title:'已付款',width:80,align:"center"},
 				{field:'discountAmount',title:'优惠',width:80,align:"center"},
@@ -50,14 +68,6 @@
 				},
 				{field:'employeeName',title:'经手人',width:90,align:"center"},
 				{field:'note',title:'备注',width:90,align:"center"},
-				{field:'status',title:'状态',width:80,align:"center",
-					formatter: function(value,row,index){
-						if (value==0){
-							return '<img src="style/v1/icons/warn.png"/>';
-						} else {
-							return '<img src="style/v1/icons/info.png"/>';
-						}
-					}},
 				{field:'isPay',title:'付款',width:80,align:"center",
 						formatter: function(value,row,index){
 							if(row.isPay==0){
@@ -119,9 +129,9 @@
 	
 	$("#mulSearch",$this).click(function(){
 		var receiveCode = $('#receiveCodeMulSearch',$this).val();
-		
+		var status = $('#status',queryContent).combobox('getValue');
 		var url = "inWarehouse/queryReceive.do";
-		var content = {receiveCode:receiveCode,page:pageNumber,rows:pageSize};
+		var content = {receiveCode:receiveCode,status:status,page:pageNumber,rows:pageSize};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
 			var data = result.data;
@@ -146,9 +156,9 @@
 	//分页操作
 	var search = function(flag){
 		var receiveCode = $('#receiveCodeSearch',queryContent).val();
-		
+		var status = $('#status',queryContent).combobox('getValue');
 		var url = "inWarehouse/queryReceive.do";
-		var content = {receiveCode:receiveCode,page:pageNumber,rows:pageSize};
+		var content = {receiveCode:receiveCode,status:status,page:pageNumber,rows:pageSize};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
 			var data = result.data;
@@ -283,13 +293,16 @@
 	var initChoose = function(){
 		//供应商
 		$('#supplier',editForm).combogrid({  
+			url:'dict/queryCombogridSupplier.do',
+			mode: 'remote',  
+			pagination:true,
+			rownumbers:true,
 		    panelWidth:450,  
 		    idField:'supplierId',  
 		    textField:'supplierName',  
-		    url:'dict/queryCombogridSupplier.do',  
 		    columns:[[  
 		        {field:'supplierCode',title:'供应商编号',width:120},
-		        {field:'supplierName',title:'供应商名称',width:120}
+		        {field:'supplierName',title:'供应商名称',width:230}
 		    ]]  
 		});
 		//仓库
@@ -496,8 +509,8 @@
 					fsBtnStatus();
 					$('#status',editDialog).val('未审核'); 
 				}
-				
 				$('#supplier',editDialog).combogrid('setValue',receiveData.supplierId);
+				$('#supplier',editDialog).combogrid('setText',receiveData.supplierName);
 				$('#warehouse',editDialog).combobox('setValue',receiveData.warehouseId);
 				
 				$('#otherAmount',editDialog).numberbox('setValue',receiveData.otherAmount);
@@ -774,14 +787,15 @@
 		    {field:'buyCode',title:'采购单号',width:120,align:"center"},
 		    {field:'note1',title:'备注1',width:120,align:"center",editor:{type:'text'}},
 		    {field:'note2',title:'备注2',width:120,align:"center",editor:{type:'text'}},
-		    {field:'note3',title:'备注3',width:120,align:"center",editor:{type:'text'}},
+		    {field:'note3',title:'备注3',width:120,align:"center",editor:{type:'text'}}
 	  ]],
 	  rownumbers:true,
 	  pagination:false,
 	  toolbar:[	
 			{id:'addBuyProduct'+id,text:'从采购单添加商品',iconCls:'icon-add',handler:function(){onSelectBuyProduct()}},'-',
 			{id:'addProduct'+id,text:'添加商品',iconCls:'icon-add',handler:function(){onSelectProduct()}},'-',
-			{id:'deleteProduct'+id,text:'删除商品',iconCls:'icon-remove',handler:function(){onDeleteProduct()}},'-'	  ],
+			{id:'deleteProduct'+id,text:'删除商品',iconCls:'icon-remove',handler:function(){onDeleteProduct()}},'-'	  
+			],
 	  onBeforeLoad:function(){
 			$(this).datagrid('rejectChanges');
 	  },

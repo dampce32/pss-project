@@ -1,32 +1,97 @@
+body td,input{
+	font-size: 12px;
+}
 #index-north{
-	height:28px;
+	height:32px;
 	overflow:hidden;
 }
 #index-north-bd-right{
-padding:3px;
-background:#fafafa;}
+	padding:3px;
+	background:#fafafa;
+}
 #index-left{
-width:180px;
-padding1:1px;
-overflow:hidden;
+	width:180px;
+	padding1:1px;
 }
 #index-left a{
-text-decoration:none}
-#index-south span{
-width:100%;
-display:block;
-text-align:center}
-.tdTitle{
-	text-align: right;	
-	padding: 5px;
+	text-decoration:none;
 }
+#index-south span{
+	width:100%;
+	display:block;
+	text-align:center;
+}
+
 .tdFirstTitle{
 	text-align: right;	
 	padding: 10px 0px 0px 15px;
 }
 .tdFirstContent{
+	font-size:13px;
 	padding-top: 10px;
 }
+
 .contentInput{
+	width: 250px;
+}
+
+.contentInput2{
+	width: 200px;
+}
+
+.tdTitle{
+	text-align: right;	
+	padding: 5px 0px 0px 15px;
+}
+.tdContent{
+	padding-top: 5px;
+}
+.inputField{
 	width: 250px
+}
+.inputSelfInfo{
+	width: 180px
+}
+.queryContent{
+	height: 33px;
+	overflow: hidden;
+	padding: 5px 0px 0px 5px;
+}
+.queryInput{
+	width: 120px
+}
+.paperTitle{
+	margin-top: 5px;
+	font-size: 16px;
+	text-align: center;
+	font-weight: bold;
+}
+.paperTitleP{
+	padding-top: 5px;
+}
+.paperContent{
+	padding: 5px;
+}
+.paperBigItemTitle{
+	font-size: 16px;
+	font-weight: bold;
+}
+.paperBigSmallItem{
+	padding: 5px 5px 5px 15px;
+	font-size: 14px;
+}
+.paperBigSmallItemQuestion{
+	padding: 5px 5px 0px 15px;;
+}
+.options{
+	padding: 3px ;
+}
+.option{
+	padding: 3px 3px 3px 15px;
+}
+.paperBigSmallItemAnswer{
+	color: red;
+}
+.paperBigSmallItemScore{
+	color: red;
 }

@@ -255,13 +255,17 @@
 	var initChoose = function(){
 		//供应商
 		$('#supplier',editForm).combogrid({  
+			url:'dict/queryCombogridSupplier.do',
+			mode: 'remote',  
+			pagination:true,
+			rownumbers:true,
 		    panelWidth:450,  
 		    idField:'supplierId',  
 		    textField:'supplierName',  
 		    url:'dict/queryCombogridSupplier.do',  
 		    columns:[[  
 		        {field:'supplierCode',title:'供应商编号',width:120},
-		        {field:'supplierName',title:'供应商名称',width:120}
+		        {field:'supplierName',title:'供应商名称',width:230}
 		    ]]  
 		});
 		//仓库
@@ -589,6 +593,7 @@
 				}
 				
 				$('#supplier',editDialog).combogrid('setValue',rejectData.supplierId);
+				$('#supplier',editDialog).combogrid('setText',rejectData.supplierName);
 				$('#warehouse',editDialog).combobox('setValue',rejectData.warehouseId);
 				
 				$('#amount',editDialog).val(rejectData.amount);

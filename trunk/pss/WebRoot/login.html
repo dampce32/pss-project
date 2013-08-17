@@ -1,5 +1,5 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head> 
   	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>汉唐进销存系统</title>
@@ -10,6 +10,7 @@
 	<meta http-equiv="description" content="This is my page">
 	<link rel="stylesheet" type="text/css" href="style/v1/easyui/easyui.css">
 	<link rel="stylesheet" type="text/css" href="style/v1/icon.css">
+	<link rel="stylesheet" type="text/css" href="style/v1/login.css">
 	
 	<script type="text/javascript" src="js/common/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript" src="js/common/jquery.easyui.min.js"></script>
@@ -18,39 +19,40 @@
 	<script type="text/javascript" src="js/login.js"></script>
   </head>
   
-  <body>
-    <div style="margin:200px 400px;">
-		<div class="easyui-panel"
-			style="width:550px;height:220px;padding:10px 0px 0px 150px" title="------汉唐进销存系统-----------">
-			<form id="loginForm" method="post">
-				<table>
-					<tr>
-						<td align="right">登录名</td>
-						<td>&nbsp;<input class="easyui-validatebox" name="userCode" type="text" id="userCode" required="true" style="width:150px;" />
-						</td>
-					</tr>
-					<tr>
-						<td align="right">密码</td>
-						<td>&nbsp;<input class="easyui-validatebox" name="userPwd" type="password" id="userPwd" required="true" style="width:150px;" />
-						</td>
-					</tr>
-					<tr>
-						<td>验证码</td>
-						<td>
-							&nbsp;<input type="text" id="loginCaptcha" name="j_captcha" class="formTextS" style="width:150px;text-transform: uppercase;" />
-							<img id="loginCaptchaImage"  src="captcha.jpg" alt="换一张" style="cursor: pointer; margin-bottom:-4px"/>
-						</td>
-					<tr>
-						<td>&nbsp;</td>
-					</tr>
-					<tr>
-						<td align="right">&nbsp;<input name="mindpwd" type="checkbox" id="mindpwd" />
-						</td>
-						<td>&nbsp;&nbsp;记住密码 &nbsp;&nbsp; <input type="button" value="登录"  style="width:100px; height: 30px" iconCls="icon-help" id="loginBtn"></td>
-					</tr>
-				</table>
-			</form>
+<body class="login">
+		<div class="loginDetail">
+			<div class="top">汉唐进销存系统</div>
+			<div class="middle">
+				<form id="loginForm" method="post">
+					<table>
+						<tr>
+							<td align="right">登录名:</td>
+							<td><input class="easyui-validatebox" name="userCode" type="text" id="userCode" required="true" style="width:200px;" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right">密&nbsp;&nbsp;码:</td>
+							<td><input class="easyui-validatebox" name="userPwd" type="password" id="userPwd" required="true" style="width:200px;" />
+							</td>
+						</tr>
+						<tr>
+							<td align="right">验证码:</td>
+							<td>
+								<input type="text" id="loginCaptcha" name="j_captcha" class="formTextS" style="width:113px;text-transform: uppercase;" />
+								<img id="loginCaptchaImage"  src="captcha.jpg" alt="换一张" style="cursor: pointer; margin-bottom:-4px"/>
+							</td>
+					    </tr>
+						<tr>
+							<td align="right">
+							</td>
+							<td><input name="mindpwd" type="checkbox" id="mindpwd" />记住密码 &nbsp;&nbsp;&nbsp;&nbsp; <a id="loginBtn" href="#" class="easyui-linkbutton" iconCls="icon-role" id="modifyPwdBtn">登录</a>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+			<div class="bottom"></div>
 		</div>
 	</div>
-  </body>
+</body>
 </html>

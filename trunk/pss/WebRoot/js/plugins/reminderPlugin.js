@@ -367,7 +367,6 @@
 		var ids = idArray.join(LYS.join);
 		var title = $('#title',selectDialog).val();
 		
-		alert(ids);
 		$(reminderItemList).datagrid({
 			url:'system/selectQueryReminderItem.do',
 			queryParams: {

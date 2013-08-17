@@ -34,6 +34,10 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 		if(model!=null&&StringUtils.isNotEmpty(model.getReceiveCode())){
 			criteria.add(Restrictions.like("receiveCode", model.getReceiveCode(),MatchMode.ANYWHERE));
 		}
+		if(model.getStatus()!=null && model.getStatus()>=0){
+			criteria.add(Restrictions.eq("status", model.getStatus()));
+		}
+		
 		if("other".equals(kind)){
 			criteria.add(Restrictions.isNull("supplier"));
 		}else{
@@ -67,6 +71,9 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getReceiveCode())){
 			criteria.add(Restrictions.like("receiveCode", model.getReceiveCode(),MatchMode.ANYWHERE));
+		}
+		if(model.getStatus()!=null && model.getStatus()>=0){
+			criteria.add(Restrictions.eq("status", model.getStatus()));
 		}
 		if("other".equals(kind)){
 			criteria.add(Restrictions.isNull("supplier"));
