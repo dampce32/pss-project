@@ -15,7 +15,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
- * @Description:
+ * @Description:系统提醒明细
  * @Copyright: 福州骏华信息有限公司 (c)2013
  * @Created Date : 2013-3-4
  * @Author lys
@@ -39,6 +39,10 @@ public class ReminderDetail extends BaseModel {
 	 * 系统提醒项
 	 */
 	private ReminderItem reminderItem;
+	/**
+	 * 排序
+	 */
+	private Integer array;
 
 	// Constructors
 
@@ -82,6 +86,14 @@ public class ReminderDetail extends BaseModel {
 
 	public void setReminderItem(ReminderItem reminderItem) {
 		this.reminderItem = reminderItem;
+	}
+	@Column(name = "array", nullable = false, length = 2)
+	public Integer getArray() {
+		return array;
+	}
+
+	public void setArray(Integer array) {
+		this.array = array;
 	}
 
 }

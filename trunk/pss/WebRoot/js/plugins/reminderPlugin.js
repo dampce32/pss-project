@@ -301,7 +301,9 @@
 	  pagination:false,
 	  toolbar:[	
 			{id:'addReminderItem'+id,text:'添加系统提醒项',iconCls:'icon-add',handler:function(){onSelectReminderItem()}},'-',
-			{id:'deleteReminderItem'+id,text:'删除系统提醒项',iconCls:'icon-remove',handler:function(){onDeleteReminderItem()}}
+			{id:'deleteReminderItem'+id,text:'删除系统提醒项',iconCls:'icon-remove',handler:function(){onDeleteReminderItem()}},'-',
+			{id:'moveUpReminderItem'+id,text:'上移',iconCls:'icon-up',handler:function(){onMoveReminderItem(-1)}},'-',
+			{id:'moveDownReminderItem'+id,text:'下移',iconCls:'icon-down',handler:function(){onMoveReminderItem(1)}}
 	  ],
 	  onBeforeLoad:function(){
 			$(this).datagrid('rejectChanges');
@@ -315,6 +317,41 @@
 			 delReminderDetailIdArray.push(row.reminderDetailId);
 		 }
 		 $(reminderDetail).datagrid('deleteRow',rowIndex);
+	 }
+	 //移动系统提醒明细项
+	 var onMoveReminderItem = function(direction){
+			var selectReminderItem = $(reminderDetail).datagrid('getSelected');
+			var selectIndexReminderItem = $(reminderDetail).datagrid('getRowIndex',selectReminderItem);
+			var rows  = $(reminderDetail).datagrid('getRows');
+			if(direction==-1){
+				if(selectIndexReminderItem==0){
+					$.messager.alert('提示',"已经是第一条记录了","warming");
+					return;
+				}
+			}else if(direction==1){//下移
+				if(selectIndexReminderItem==rows.length-1){
+					$.messager.alert('提示',"已经是最后一条记录了","warming");
+					return;
+				}
+			}
+			var updateRow = rows[selectIndexReminderItem+direction];
+			var title = selectReminderItem.title;
+			var message = selectReminderItem.message;
+			var rightName = selectReminderItem.rightName;
+			$(reminderDetail).datagrid('updateRow',{
+				index: selectIndexReminderItem,
+				row: updateRow
+			});
+			$(reminderDetail).datagrid('updateRow',{
+				index: selectIndexReminderItem+direction,
+				row: {
+					title:title,
+					message:message,
+					rightName:rightName
+				}
+			});
+			$(reminderDetail).datagrid('unselectAll');
+			$(reminderDetail).datagrid('selectRow',selectIndexReminderItem+direction);
 	 }
 	 //---------选择系统提醒项--------------------
 	var selectDialog = $('#selectDialog',$this);

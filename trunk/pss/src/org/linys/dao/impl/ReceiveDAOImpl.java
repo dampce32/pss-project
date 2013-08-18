@@ -37,6 +37,9 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 		if(model.getStatus()!=null && model.getStatus()>=0){
 			criteria.add(Restrictions.eq("status", model.getStatus()));
 		}
+		if(model.getIsPay()!=null && model.getIsPay()>=0){
+			criteria.add(Restrictions.eq("isPay", model.getIsPay()));
+		}
 		
 		if("other".equals(kind)){
 			criteria.add(Restrictions.isNull("supplier"));
@@ -74,6 +77,9 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 		}
 		if(model.getStatus()!=null && model.getStatus()>=0){
 			criteria.add(Restrictions.eq("status", model.getStatus()));
+		}
+		if(model.getIsPay()!=null && model.getIsPay()>=0){
+			criteria.add(Restrictions.eq("isPay", model.getIsPay()));
 		}
 		if("other".equals(kind)){
 			criteria.add(Restrictions.isNull("supplier"));

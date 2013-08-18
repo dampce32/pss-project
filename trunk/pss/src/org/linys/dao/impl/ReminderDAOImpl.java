@@ -97,7 +97,7 @@ public class ReminderDAOImpl extends BaseDAOImpl<Reminder, Integer> implements
 		sql.append( "where b.state = 1)d on c.rightId = d.rightId ");
 		sql.append( "left join t_reminder e on a.reminderId = e.reminderId ");
 		sql.append( "where c.rightId = d.rightId and e.`status` = 1 ");
-		sql.append( "order by e.array asc,b.reminderItemId ");
+		sql.append( "order by e.array asc,a.array asc ");
 		return getCurrentSession().createSQLQuery(sql.toString()).setString("userId", userId).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
 	
 	}

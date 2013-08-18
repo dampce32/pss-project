@@ -25,14 +25,22 @@
 	  
 	  var changeSearch = false;
 	  
-	  
 	  var statusList = [{"value":"-1","text":"所有","selected":true},{"value":"1","text":"已审"},{"value":"0","text":"未审"}]; 
-	  $('#status',queryContent).combobox({
+	  $('#statusSearch',queryContent).combobox({
 		editable:false,
 		valueField:'value',
 		textField:'text',
 		width:50,
 		data:statusList
+	  })
+	  
+	  var isPayList = [{"value":"-1","text":"所有","selected":true},{"value":"1","text":"已付"},{"value":"0","text":"未付"}]; 
+	  $('#isPaySearch',queryContent).combobox({
+		editable:false,
+		valueField:'value',
+		textField:'text',
+		width:50,
+		data:isPayList
 	  })
 	  
 	  //列表
@@ -52,6 +60,14 @@
 							return '<img src="style/v1/icons/info.png"/>';
 						}
 					}},
+				{field:'isPay',title:'是否已付款',width:80,align:"center",
+					formatter: function(value,row,index){
+						if(row.isPay==0){
+							return '未付';
+						}else if(row.isPay==1){
+							return '已付';
+						}
+					}},
 				{field:'receiveCode',title:'入库单号',width:150,align:"center"},
 				{field:'receiveDate',title:'入库日期',width:80,align:"center"},
 				{field:'deliverCode',title:'送货单号',width:120,align:"center"},
@@ -68,14 +84,6 @@
 				},
 				{field:'employeeName',title:'经手人',width:90,align:"center"},
 				{field:'note',title:'备注',width:90,align:"center"},
-				{field:'isPay',title:'付款',width:80,align:"center",
-						formatter: function(value,row,index){
-							if(row.isPay==0){
-								return '未付';
-							}else if(row.isPay==1){
-								return '已付';
-							}
-						}},
 				{field:'invoiceTypeName',title:'开票信息',width:90,align:"center"}
 		  ]],
 		  rownumbers:true,
@@ -129,9 +137,8 @@
 	
 	$("#mulSearch",$this).click(function(){
 		var receiveCode = $('#receiveCodeMulSearch',$this).val();
-		var status = $('#status',queryContent).combobox('getValue');
 		var url = "inWarehouse/queryReceive.do";
-		var content = {receiveCode:receiveCode,status:status,page:pageNumber,rows:pageSize};
+		var content = {receiveCode:receiveCode,page:pageNumber,rows:pageSize};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
 			var data = result.data;
@@ -156,9 +163,10 @@
 	//分页操作
 	var search = function(flag){
 		var receiveCode = $('#receiveCodeSearch',queryContent).val();
-		var status = $('#status',queryContent).combobox('getValue');
+		var status = $('#statusSearch',queryContent).combobox('getValue');
+		var isPay = $('#isPaySearch',queryContent).combobox('getValue');
 		var url = "inWarehouse/queryReceive.do";
-		var content = {receiveCode:receiveCode,status:status,page:pageNumber,rows:pageSize};
+		var content = {receiveCode:receiveCode,status:status,isPay:isPay,page:pageNumber,rows:pageSize};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
 			var data = result.data;

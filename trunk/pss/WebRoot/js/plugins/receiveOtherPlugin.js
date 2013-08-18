@@ -24,7 +24,14 @@
 	  var pageSize = 10;
 	  
 	  var changeSearch = false;
-	  
+	  var statusList = [{"value":"-1","text":"所有","selected":true},{"value":"1","text":"已审"},{"value":"0","text":"未审"}]; 
+	  $('#statusSearch',queryContent).combobox({
+		editable:false,
+		valueField:'value',
+		textField:'text',
+		width:50,
+		data:statusList
+	  })
 	  //列表
 	  $(viewList).datagrid({
 		  fit:true,
@@ -34,7 +41,7 @@
 			rownumbers:true,
 		  columns:[[
 		        {field:'ck',title:'选择',checkbox:true},
-				{field:'receiveCode',title:'入库单号',width:120,align:"center"},
+				{field:'receiveCode',title:'入库单号',width:200,align:"center"},
 				{field:'receiveDate',title:'入库日期',width:80,align:"center"},
 				{field:'deliverCode',title:'原始单号',width:120,align:"center"},
 				{field:'warehouseName',title:'存入仓库',width:90,align:"center"},
@@ -125,9 +132,9 @@
 	//分页操作
 	var search = function(flag){
 		var receiveCode = $('#receiveCodeSearch',queryContent).val();
-		
+		var status = $('#statusSearch',queryContent).combobox('getValue');
 		var url = "inWarehouse/queryReceive.do";
-		var content = {receiveCode:receiveCode,kind:'other',page:pageNumber,rows:pageSize};
+		var content = {receiveCode:receiveCode,kind:'other',status:status,page:pageNumber,rows:pageSize};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
 			var data = result.data;

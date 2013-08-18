@@ -106,6 +106,7 @@ public class ReminderServiceImpl extends BaseServiceImpl<Reminder, Integer>
 				ReminderDetail reminderDetail = new ReminderDetail();
 				reminderDetail.setReminderItem(reminderItem);
 				reminderDetail.setReminder(model);
+				reminderDetail.setArray(i);
 				
 				reminderDetailDAO.save(reminderDetail);
 			}
@@ -133,14 +134,21 @@ public class ReminderServiceImpl extends BaseServiceImpl<Reminder, Integer>
 			for (int i = 0 ;i<reminderDetailIdArray.length;i++) {
 				String reminderDetailId = reminderDetailIdArray[i];
 				String reminderItemId = reminderItemIdArray[i];
+				ReminderItem reminderItem = new ReminderItem();
+				reminderItem.setReminderItemId(Integer.parseInt(reminderItemId));
+				
 				if(StringUtils.isEmpty(reminderDetailId)){//新增
-					ReminderItem reminderItem = new ReminderItem();
-					reminderItem.setReminderItemId(Integer.parseInt(reminderItemId));
-						
 					ReminderDetail reminderDetail = new ReminderDetail();
 					reminderDetail.setReminder(model);
 					reminderDetail.setReminderItem(reminderItem);
+					reminderDetail.setArray(i);
 					reminderDetailDAO.save(reminderDetail);
+				}else{
+					ReminderDetail reminderDetail =reminderDetailDAO.load(Integer.parseInt(reminderDetailId));
+					reminderDetail.setReminder(model);
+					reminderDetail.setReminderItem(reminderItem);
+					reminderDetail.setArray(i);
+					reminderDetailDAO.update(reminderDetail);
 				}
 			}
 		}
