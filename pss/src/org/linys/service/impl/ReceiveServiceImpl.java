@@ -30,7 +30,13 @@ import org.linys.util.StringUtil;
 import org.linys.vo.GobelConstants;
 import org.linys.vo.ServiceResult;
 import org.springframework.stereotype.Service;
-
+/**
+ * @Description:采购入库Service实现类
+ * @Copyright: 福州骏华信息有限公司 (c)2013
+ * @Created Date : 2013-8-18
+ * @author lys
+ * @vesion 1.0
+ */
 @Service
 public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 		implements ReceiveService {

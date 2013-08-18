@@ -349,20 +349,7 @@
 		  ],
 		columns:[[
 		        {field:'deliverId',checkbox:true},
-				{field:'deliverCode',title:'出库单号',width:120,align:"center"},
-				{field:'deliverDate',title:'出库日期',width:80,align:"center"},
-				{field:'sourceCode',title:'原始单号',width:120,align:"center"},
-				{field:'customerName',title:'客户',width:200,align:"center"},
-				{field:'warehouseName',title:'仓库',width:80,align:"center"},
-				{field:'amount',title:'应收金额',width:80,align:"center"},
-				{field:'discountAmount',title:'折扣金额',width:80,align:"center"},
-				{field:'receiptedAmount',title:'实收定金',width:80,align:"center"},
-				{field:'employeeName',title:'经手人',width:90,align:"center"},
-				{field:'invoiceTypeName',title:'发票',width:90,align:"center"},
-				{field:'expressName',title:'快递',width:90,align:"center"},
-				{field:'expressCode',title:'快递单号',width:90,align:"center"},
-				{field:'note',title:'备注',width:90,align:"center"},
-				{field:'status',title:'状态',width:80,align:"center",
+				{field:'status',title:'状态',width:50,align:"center",
 					formatter: function(value,row,index){
 						if (value==0){
 							return '<img src="style/v1/icons/warn.png"/>';
@@ -370,7 +357,30 @@
 							return '<img src="style/v1/icons/info.png"/>';
 						}
 					}
-				}
+				},
+				{field:'isReceipt',title:'是否已收款',width:80,align:"center",
+					formatter: function(value,row,index){
+						if (value==0){
+							return '未收款';
+						} else {
+							return '收款';
+						}
+					}
+				},
+				{field:'deliverCode',title:'出库单号',width:150,align:"center"},
+				{field:'deliverDate',title:'出库日期',width:80,align:"center"},
+				{field:'sourceCode',title:'原始单号',width:120,align:"center"},
+				{field:'customerName',title:'客户',width:200,align:"center"},
+				{field:'warehouseName',title:'仓库',width:80,align:"center"},
+				{field:'amount',title:'应收金额',width:80,align:"center"},
+				{field:'discountAmount',title:'折扣金额',width:80,align:"center"},
+				{field:'receiptedAmount',title:'已收金额',width:80,align:"center"},
+				{field:'checkAmount',title:'已对账金额',width:80,align:"center"},
+				{field:'employeeName',title:'经手人',width:90,align:"center"},
+				{field:'invoiceTypeName',title:'发票',width:90,align:"center"},
+				{field:'expressName',title:'快递',width:90,align:"center"},
+				{field:'expressCode',title:'快递单号',width:90,align:"center"},
+				{field:'note',title:'备注',width:90,align:"center"}
 		  ]],
 		rowStyler: function(index,row){
 			if (row.isReceipt==0){
