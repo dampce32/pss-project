@@ -18,9 +18,11 @@ public interface PayService extends BaseService<Pay,String>{
 	 * @param model
 	 * @param page
 	 * @param rows
+	 * @param endDate 
+	 * @param beginDate 
 	 * @return
 	 */
-	ServiceResult query(Pay model, Integer page, Integer rows);
+	ServiceResult query(Pay model, Integer page, Integer rows, String beginDate, String endDate);
 	/**
 	 * @Description: 统计付款单
 	 * @Create: 2013-1-20 下午2:58:33
@@ -29,7 +31,7 @@ public interface PayService extends BaseService<Pay,String>{
 	 * @param model
 	 * @return
 	 */
-	ServiceResult getTotalCount(Pay model);
+	ServiceResult getTotalCount(Pay model, String beginDate, String endDate);
 	/**
 	 * @Description: 保存付款单
 	 * @Create: 2013-1-20 下午3:09:18

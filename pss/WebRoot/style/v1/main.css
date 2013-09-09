@@ -38,6 +38,14 @@ body td,input{
 .contentInput2{
 	width: 200px;
 }
+.tdFirstTitle{
+	text-align: right;	
+	padding: 10px 0px 0px 15px;
+}
+.tdFirstContent{
+	font-size:13px;
+	padding-top: 10px;
+}
 
 .tdTitle{
 	text-align: right;	

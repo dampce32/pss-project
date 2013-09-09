@@ -40,7 +40,7 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 		ServiceResult result = new ServiceResult(false);
 		try {
 			String kind = getParameter("kind");
-			result = receiveService.query(kind,model,page,rows);
+			result = receiveService.query(kind,model,page,rows,beginDate,endDate);
 		} catch (Exception e) {
 			result.setMessage("查询收货失败");
 			result.setIsSuccess(false);
@@ -59,7 +59,7 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 		ServiceResult result = new ServiceResult(false);
 		try {
 			String kind = getParameter("kind");
-			result = receiveService.getTotalCount(kind,model);
+			result = receiveService.getTotalCount(kind,model,beginDate,endDate);
 		} catch (Exception e) {
 			result.setMessage("统计收货失败");
 			result.setIsSuccess(false);
@@ -264,6 +264,23 @@ public class ReceiveAction extends BaseAction implements ModelDriven<Receive> {
 		} catch (Exception e) {
 			result.setMessage("查询欠款的入库单失败");
 			logger.error("查询欠款的入库单失败", e);
+			result.setIsSuccess(false);
+		}
+		String jsonString = result.toJSON();
+		ajaxJson(jsonString);
+	}
+	/**
+	 * @Description: 取得入库单系统配置
+	 * @Created: 2013-9-9 下午9:10:06
+	 * @Author lys
+	 */
+	public void getSysConfig(){
+		ServiceResult result = new ServiceResult(false);
+		try {
+			result = receiveService.getSysConfig();
+		} catch (Exception e) {
+			result.setMessage("取得入库单系统配置失败");
+			logger.error("取得入库单系统配置失败", e);
 			result.setIsSuccess(false);
 		}
 		String jsonString = result.toJSON();

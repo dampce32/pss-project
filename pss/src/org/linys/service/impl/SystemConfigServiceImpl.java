@@ -37,6 +37,9 @@ public class SystemConfigServiceImpl extends
 		oldModel.setCompanyPhone(model.getCompanyPhone());
 		oldModel.setCompanyFax(model.getCompanyFax());
 		oldModel.setCompanyAddr(model.getCompanyAddr());
+		oldModel.setIsAmountEqPayAmount(model.getIsAmountEqPayAmount());
+		oldModel.setIsOtherAmountInPayAmount(model.getIsOtherAmountInPayAmount());
+		systemConfigDAO.update(oldModel);
 		result.setIsSuccess(true);
 		return result;
 	}
@@ -52,7 +55,8 @@ public class SystemConfigServiceImpl extends
 			result.setMessage("系统还没有系统配置信息，请联系管理员");
 			return result;
 		}
-		String[] properties = {"systemConfigId","companyName","companyPhone","companyFax","companyAddr"};
+		String[] properties = {"systemConfigId","companyName","companyPhone","companyFax",
+				"companyAddr","isAmountEqPayAmount","isOtherAmountInPayAmount"};
 		String systemConfigData = JSONUtil.toJson(oldModel, properties);
 		result.addData("systemConfigData", systemConfigData);
 		result.setIsSuccess(true);

@@ -25,7 +25,20 @@
 	  
 	  var changeSearch = false;
 	  var delPayDetailIdArray = null;
-	  
+	//供应商
+		$('#supplierSearch',queryContent).combogrid({  
+			url:'dict/queryCombogridSupplier.do',
+			mode: 'remote',  
+			pagination:true,
+			rownumbers:true,
+		    panelWidth:450,  
+		    idField:'supplierId',  
+		    textField:'supplierName',  
+		    columns:[[  
+		        {field:'supplierCode',title:'供应商编号',width:120},
+		        {field:'supplierName',title:'供应商名称',width:230}
+		    ]]  
+		});
 	  //列表
 	  $(viewList).datagrid({
 		  fit:true,
@@ -37,7 +50,7 @@
 		        {field:'ck',title:'选择',checkbox:true},
 				{field:'payCode',title:'付款单号',width:120,align:"center"},
 				{field:'payDate',title:'付款日期',width:80,align:"center"},
-				{field:'supplierName',title:'供应商',width:90,align:"center"},
+				{field:'supplierName',title:'供应商',width:170,align:"center"},
 				{field:'discountAmount',title:'优惠金额',width:80,align:"center"},
 				{field:'payAmount',title:'实付金额',width:80,align:"center"},
 				{field:'employeeName',title:'经手人',width:90,align:"center"},
@@ -127,9 +140,12 @@
 	//分页操作
 	var search = function(flag){
 		var payCode = $('#payCodeSearch',queryContent).val();
-		
+		var supplierId = $('#supplierSearch',queryContent).combogrid('getValue');
+		var beginDate = $('#beginDateSearch_'+id).val();
+		var endDate = $('#endDateSearch_'+id,queryContent).val();
 		var url = "finance/queryPay.do";
-		var content = {payCode:payCode,page:pageNumber,rows:pageSize};
+		var content = {payCode:payCode,'supplier.supplierId':supplierId,beginDate:beginDate,
+				endDate:endDate,page:pageNumber,rows:pageSize};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
 			var data = result.data;
@@ -170,6 +186,7 @@
 	    onClose:function(){
 	    	lastIndex = null;
 	    	$(editForm).form('clear');
+	    	search(true);
 			$(payDetail).datagrid({url:LYS.ClearUrl});
 	    },
 	    toolbar:[	

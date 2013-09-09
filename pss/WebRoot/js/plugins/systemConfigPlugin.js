@@ -17,12 +17,32 @@
 			  $('#companyPhone',$this).val(systemConfigData.companyPhone);
 			  $('#companyFax',$this).val(systemConfigData.companyFax);
 			  $('#companyAddr',$this).val(systemConfigData.companyAddr);
+			  if(systemConfigData.isAmountEqPayAmount==1){
+				  $('#isAmountEqPayAmount',$this).prop('checked',true);
+			  }else{
+				  $('#isAmountEqPayAmount',$this).prop('checked',false);
+			  }
+			  if(systemConfigData.isOtherAmountInPayAmount==1){
+				  $('#isOtherAmountInPayAmount',$this).prop('checked',true);
+			  }else{
+				  $('#isOtherAmountInPayAmount',$this).prop('checked',false);
+			  }
 		  }else{
 			  $.messager.alert('提示',result.message,'error');
 		  }
 		  
 	  })
 	 var setValue = function(){
+		  if($('#isAmountEqPayAmount',$this).prop('checked')){
+			  $('#isAmountEqPayAmount',$this).val(1);
+		  }else{
+			  $('#isAmountEqPayAmount',$this).val(-1);
+		  }
+		  if($('#isOtherAmountInPayAmount',$this).prop('checked')){
+			  $('#isOtherAmountInPayAmount',$this).val(1);
+		  }else{
+			  $('#isOtherAmountInPayAmount',$this).val(-1);
+		  }
 		  $(editForm).mask({maskMsg:'正在保存'});
 		  return true;
 	  }

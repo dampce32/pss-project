@@ -15,6 +15,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.linys.dao.ReceiveDAO;
 import org.linys.model.Receive;
+import org.linys.util.DateUtil;
 import org.linys.vo.GobelConstants;
 import org.springframework.stereotype.Repository;
 @Repository
@@ -26,7 +27,7 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Receive> query(String kind,Receive model, Integer page, Integer rows) {
+	public List<Receive> query(String kind,Receive model, Integer page, Integer rows, Date beginDate, Date endDate) {
 		Criteria criteria  = getCurrentSession().createCriteria(Receive.class);
 		
 		criteria.createAlias("supplier", "supplier",CriteriaSpecification.LEFT_JOIN);
@@ -40,7 +41,15 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 		if(model.getIsPay()!=null && model.getIsPay()>=0){
 			criteria.add(Restrictions.eq("isPay", model.getIsPay()));
 		}
-		
+		if(model!=null&&model.getSupplier()!=null&&StringUtils.isNotEmpty(model.getSupplier().getSupplierId())){
+			criteria.add(Restrictions.eq("supplier", model.getSupplier()));
+		}
+		if(beginDate!=null){	
+			criteria.add(Restrictions.ge("receiveDate",beginDate ));
+		}
+		if(endDate!=null){
+			criteria.add(Restrictions.le("receiveDate", endDate));
+		}
 		if("other".equals(kind)){
 			criteria.add(Restrictions.isNull("supplier"));
 		}else{
@@ -69,7 +78,7 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 	 * @see org.linys.dao.ReceiveDAO#getTotalCount(org.linys.model.Receive)
 	 */
 	@Override
-	public Long getTotalCount(String kind,Receive model) {
+	public Long getTotalCount(String kind,Receive model, Date beginDate, Date endDate) {
 		Criteria criteria  = getCurrentSession().createCriteria(Receive.class);
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getReceiveCode())){
@@ -80,6 +89,15 @@ public class ReceiveDAOImpl extends BaseDAOImpl<Receive, String> implements
 		}
 		if(model.getIsPay()!=null && model.getIsPay()>=0){
 			criteria.add(Restrictions.eq("isPay", model.getIsPay()));
+		}
+		if(model!=null&&model.getSupplier()!=null&&StringUtils.isNotEmpty(model.getSupplier().getSupplierId())){
+			criteria.add(Restrictions.eq("supplier", model.getSupplier()));
+		}
+		if(beginDate!=null){	
+			criteria.add(Restrictions.ge("receiveDate", beginDate));
+		}
+		if(endDate!=null){
+			criteria.add(Restrictions.le("receiveDate", endDate));
 		}
 		if("other".equals(kind)){
 			criteria.add(Restrictions.isNull("supplier"));

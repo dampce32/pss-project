@@ -1,4 +1,5 @@
 var PSS={};
+
 //商品规格
 PSS.SizeList = null;
 PSS.getSizeList = function(){

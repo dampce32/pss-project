@@ -16,6 +16,7 @@ import org.linys.dao.ProductDAO;
 import org.linys.dao.ReceiveDAO;
 import org.linys.dao.ReceiveDetailDAO;
 import org.linys.dao.StoreDAO;
+import org.linys.dao.SystemConfigDAO;
 import org.linys.model.Bank;
 import org.linys.model.BuyDetail;
 import org.linys.model.DataDictionary;
@@ -23,6 +24,7 @@ import org.linys.model.Product;
 import org.linys.model.Receive;
 import org.linys.model.ReceiveDetail;
 import org.linys.model.Store;
+import org.linys.model.SystemConfig;
 import org.linys.service.ReceiveService;
 import org.linys.util.DateUtil;
 import org.linys.util.JSONUtil;
@@ -56,22 +58,35 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	private BuyDetailDAO buyDetailDAO;
 	@Resource
 	private PrefixDAO prefixDAO;
+	@Resource
+	private SystemConfigDAO systemConfigDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.ReceiveService#query(org.linys.model.Receive, java.lang.Integer, java.lang.Integer)
 	 */
 	@Override
-	public ServiceResult query(String kind,Receive model, Integer page, Integer rows) {
+	public ServiceResult query(String kind,Receive model, Integer page, Integer rows, String beginDate, String endDate) {
 		ServiceResult result = new ServiceResult(false);
-		
-		List<Receive> list = receiveDAO.query(kind,model,page,rows);
-		
-		String[] properties = {"receiveId","receiveCode","receiveDate","deliverCode",
-				"warehouse.warehouseName","supplier.supplierName","amount","payAmount","discountAmount","checkAmount",
-				"employee.employeeName","note","status","invoiceType.invoiceTypeName","isPay"};
-		String data = JSONUtil.toJson(list,properties);
-		result.addData("datagridData", data);
-		
+		try {
+			Date beginDateDate = null;
+			Date endDateDate = null;
+			if(StringUtils.isNotEmpty(beginDate)){
+				beginDateDate = DateUtil.toDate(beginDate);
+			}
+			if(StringUtils.isNotEmpty(endDate)){
+				endDateDate = DateUtil.toDate(endDate);
+			}
+			
+			List<Receive> list = receiveDAO.query(kind,model,page,rows,beginDateDate,endDateDate);
+			
+			String[] properties = {"receiveId","receiveCode","receiveDate","deliverCode",
+					"warehouse.warehouseName","supplier.supplierName","amount","payAmount","discountAmount","checkAmount","otherAmount",
+					"employee.employeeName","note","status","invoiceType.invoiceTypeName","isPay"};
+			String data = JSONUtil.toJson(list,properties);
+			result.addData("datagridData", data);
+		} catch (ParseException e) {
+			throw new RuntimeException("时间转化错误");
+		}
 		result.setIsSuccess(true);
 		return result;
 	}
@@ -80,10 +95,22 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 	 * @see org.linys.service.ReceiveService#getTotalCount(org.linys.model.Receive)
 	 */
 	@Override
-	public ServiceResult getTotalCount(String kind,Receive model) {
+	public ServiceResult getTotalCount(String kind,Receive model, String beginDate, String endDate) {
 		ServiceResult result = new ServiceResult(false);
-		Long data = receiveDAO.getTotalCount(kind,model);
-		result.addData("total", data);
+		try {
+			Date beginDateDate = null;
+			Date endDateDate = null;
+			if(StringUtils.isNotEmpty(beginDate)){
+				beginDateDate = DateUtil.toDate(beginDate);
+			}
+			if(StringUtils.isNotEmpty(endDate)){
+				endDateDate = DateUtil.toDate(endDate);
+			}
+			Long data = receiveDAO.getTotalCount(kind,model,beginDateDate,endDateDate);
+			result.addData("total", data);
+		} catch (ParseException e) {
+			throw new RuntimeException("时间转化错误");
+		}
 		result.setIsSuccess(true);
 		return result;
 	}
@@ -775,6 +802,15 @@ public class ReceiveServiceImpl extends BaseServiceImpl<Receive, String>
 				model);
 		String datagridData = JSONUtil.toJsonFromListMap(listMap, total);
 		result.addData("datagridData", datagridData); 
+		result.setIsSuccess(true);
+		return result;
+	}
+	@Override
+	public ServiceResult getSysConfig() {
+		ServiceResult result = new ServiceResult(false);
+		SystemConfig systemConfig = systemConfigDAO.init();
+		result.addData("isAmountEqPayAmount", systemConfig.getIsAmountEqPayAmount());
+		result.addData("isOtherAmountInPayAmount", systemConfig.getIsOtherAmountInPayAmount());
 		result.setIsSuccess(true);
 		return result;
 	}

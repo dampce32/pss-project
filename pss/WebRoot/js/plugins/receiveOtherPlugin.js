@@ -133,8 +133,10 @@
 	var search = function(flag){
 		var receiveCode = $('#receiveCodeSearch',queryContent).val();
 		var status = $('#statusSearch',queryContent).combobox('getValue');
+		var beginDate = $('#beginDateSearch_'+id).val();
+		var endDate = $('#endDateSearch_'+id,queryContent).val();
 		var url = "inWarehouse/queryReceive.do";
-		var content = {receiveCode:receiveCode,kind:'other',status:status,page:pageNumber,rows:pageSize};
+		var content = {receiveCode:receiveCode,kind:'other',status:status,beginDate:beginDate,endDate:endDate,page:pageNumber,rows:pageSize};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
 			var data = result.data;
@@ -175,6 +177,7 @@
 	    closable:false,
 	    onClose:function(){
 	    	lastIndex = null;
+	    	search(true);
 	    	$(receiveDetail).datagrid({url:LYS.ClearUrl});
 	    	$(editForm).form('clear');
 	    },

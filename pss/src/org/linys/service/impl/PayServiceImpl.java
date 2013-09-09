@@ -1,5 +1,7 @@
 package org.linys.service.impl;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +21,7 @@ import org.linys.model.Prepay;
 import org.linys.model.Receive;
 import org.linys.model.Reject;
 import org.linys.service.PayService;
+import org.linys.util.DateUtil;
 import org.linys.util.JSONUtil;
 import org.linys.util.StringUtil;
 import org.linys.vo.GobelConstants;
@@ -43,16 +46,26 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 	 * @see org.linys.service.PayService#query(org.linys.model.Pay, java.lang.Integer, java.lang.Integer)
 	 */
 	@Override
-	public ServiceResult query(Pay model, Integer page, Integer rows) {
+	public ServiceResult query(Pay model, Integer page, Integer rows, String beginDate, String endDate) {
 		ServiceResult result = new ServiceResult(false);
-		
-		List<Pay> list = payDAO.query(model,page,rows);
-		
-		String[] properties = {"payId","payCode","payDate","status","supplier.supplierName","payAmount","discountAmount",
-				"employee.employeeName","note"};
-		String data = JSONUtil.toJson(list,properties);
-		result.addData("datagridData", data);
-		
+		try {
+			Date beginDateDate = null;
+			Date endDateDate = null;
+			if(StringUtils.isNotEmpty(beginDate)){
+				beginDateDate = DateUtil.toDate(beginDate);
+			}
+			if(StringUtils.isNotEmpty(endDate)){
+				endDateDate = DateUtil.toDate(endDate);
+			}
+			List<Pay> list = payDAO.query(model,page,rows,beginDateDate,endDateDate);
+			
+			String[] properties = {"payId","payCode","payDate","status","supplier.supplierName","payAmount","discountAmount",
+					"employee.employeeName","note"};
+			String data = JSONUtil.toJson(list,properties);
+			result.addData("datagridData", data);
+		} catch (ParseException e) {
+			throw new RuntimeException("时间转化错误");
+		}
 		result.setIsSuccess(true);
 		return result;
 	}
@@ -61,10 +74,22 @@ public class PayServiceImpl extends BaseServiceImpl<Pay, String> implements
 	 * @see org.linys.service.PayService#getTotalCount(org.linys.model.Pay)
 	 */
 	@Override
-	public ServiceResult getTotalCount(Pay model) {
+	public ServiceResult getTotalCount(Pay model, String beginDate, String endDate) {
 		ServiceResult result = new ServiceResult(false);
-		Long data = payDAO.getTotalCount(model);
-		result.addData("total", data);
+		try {
+			Date beginDateDate = null;
+			Date endDateDate = null;
+			if(StringUtils.isNotEmpty(beginDate)){
+				beginDateDate = DateUtil.toDate(beginDate);
+			}
+			if(StringUtils.isNotEmpty(endDate)){
+				endDateDate = DateUtil.toDate(endDate);
+			}
+			Long data = payDAO.getTotalCount(model,beginDateDate,endDateDate);
+			result.addData("total", data);
+		} catch (ParseException e) {
+			throw new RuntimeException("时间转化错误");
+		}
 		result.setIsSuccess(true);
 		return result;
 	}

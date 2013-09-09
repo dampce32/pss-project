@@ -1,5 +1,6 @@
 package org.linys.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,9 +22,11 @@ public interface PayDAO extends BaseDAO<Pay,String>{
 	 * @param model
 	 * @param page
 	 * @param rows
+	 * @param endDate 
+	 * @param beginDate 
 	 * @return
 	 */
-	List<Pay> query(Pay model, Integer page, Integer rows);
+	List<Pay> query(Pay model, Integer page, Integer rows, Date beginDate, Date endDate);
 	/**
 	 * @Description: 统计付款单
 	 * @Create: 2013-1-20 下午3:12:35
@@ -32,7 +35,7 @@ public interface PayDAO extends BaseDAO<Pay,String>{
 	 * @param model
 	 * @return
 	 */
-	Long getTotalCount(Pay model);
+	Long getTotalCount(Pay model, Date beginDate, Date endDate);
 	/**
 	 * @Description: 打开初始化付款单
 	 * @Create: 2013-1-21 下午3:30:09

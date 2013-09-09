@@ -19,9 +19,11 @@ public interface ReceiveService extends BaseService<Receive,String>{
 	 * @param model
 	 * @param page
 	 * @param rows
+	 * @param endDate 
+	 * @param beginDate 
 	 * @return
 	 */
-	ServiceResult query(String kind, Receive model, Integer page, Integer rows);
+	ServiceResult query(String kind, Receive model, Integer page, Integer rows, String beginDate, String endDate);
 	/**
 	 * @Description: 统计收货
 	 * @Create: 2012-12-29 下午9:55:30
@@ -29,9 +31,11 @@ public interface ReceiveService extends BaseService<Receive,String>{
 	 * @param kind 
 	 * @update logs
 	 * @param model
+	 * @param endDate 
+	 * @param beginDate 
 	 * @return
 	 */
-	ServiceResult getTotalCount(String kind, Receive model);
+	ServiceResult getTotalCount(String kind, Receive model, String beginDate, String endDate);
 	/**
 	 * @Description: 保存收货单
 	 * @Create: 2013-1-3 上午10:45:08
@@ -149,6 +153,13 @@ public interface ReceiveService extends BaseService<Receive,String>{
 	ServiceResult queryNeedPay(String beginDate, String endDate,
 			String supplierId, String ids, Receive model, Integer page,
 			Integer rows);
+	/**
+	 * @Description: 取得入库单系统配置
+	 * @Created: 2013-9-9 下午9:13:20
+	 * @Author lys
+	 * @return
+	 */
+	ServiceResult getSysConfig();
 	
 	
 
