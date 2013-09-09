@@ -147,7 +147,7 @@ function addTab(title,href){
 	                    }
 	                    if (window['LYS']) {
 	                        var id = LYS.genId();
-	                        return d.replace(/\$\{id\}/, id);
+	                        return d.replace(/\$\{id\}/g, id);
 	                    }
 	                    return d;
 	                },

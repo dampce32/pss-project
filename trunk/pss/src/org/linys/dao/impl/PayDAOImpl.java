@@ -1,5 +1,6 @@
 package org.linys.dao.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public class PayDAOImpl extends BaseDAOImpl<Pay, String> implements PayDAO {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Pay> query(Pay model, Integer page, Integer rows) {
+	public List<Pay> query(Pay model, Integer page, Integer rows, Date beginDate, Date endDate) {
 		Criteria criteria  = getCurrentSession().createCriteria(Pay.class);
 		
 		criteria.createAlias("supplier", "supplier",CriteriaSpecification.LEFT_JOIN);
@@ -39,7 +40,15 @@ public class PayDAOImpl extends BaseDAOImpl<Pay, String> implements PayDAO {
 		if(model!=null&&StringUtils.isNotEmpty(model.getPayCode())){
 			criteria.add(Restrictions.like("payCode", model.getPayCode(),MatchMode.ANYWHERE));
 		}
-		
+		if(model!=null&&model.getSupplier()!=null&&StringUtils.isNotEmpty(model.getSupplier().getSupplierId())){
+			criteria.add(Restrictions.eq("supplier", model.getSupplier()));
+		}
+		if(beginDate!=null){	
+			criteria.add(Restrictions.ge("payDate",beginDate ));
+		}
+		if(endDate!=null){
+			criteria.add(Restrictions.le("payDate", endDate));
+		}
 		if(page==null||page<1){
 			page = 1;
 		}
@@ -61,13 +70,21 @@ public class PayDAOImpl extends BaseDAOImpl<Pay, String> implements PayDAO {
 	 * @see org.linys.dao.PayDAO#getTotalCount(org.linys.model.Pay)
 	 */
 	@Override
-	public Long getTotalCount(Pay model) {
+	public Long getTotalCount(Pay model, Date beginDate, Date endDate) {
 		Criteria criteria  = getCurrentSession().createCriteria(Pay.class);
 		
 		if(model!=null&&StringUtils.isNotEmpty(model.getPayCode())){
 			criteria.add(Restrictions.like("payCode", model.getPayCode(),MatchMode.ANYWHERE));
 		}
-		
+		if(model!=null&&model.getSupplier()!=null&&StringUtils.isNotEmpty(model.getSupplier().getSupplierId())){
+			criteria.add(Restrictions.eq("supplier", model.getSupplier()));
+		}
+		if(beginDate!=null){	
+			criteria.add(Restrictions.ge("payDate",beginDate ));
+		}
+		if(endDate!=null){
+			criteria.add(Restrictions.le("payDate", endDate));
+		}
 		criteria.setProjection(Projections.rowCount());
 		return new Long(criteria.uniqueResult().toString());
 	}

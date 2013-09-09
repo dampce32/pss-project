@@ -173,6 +173,7 @@
 	    onClose:function(){
 	    	lastIndex = null;
 	    	$(editForm).form('clear');
+	    	search(true);
 			$(buyDetail).datagrid({url:LYS.ClearUrl});
 	    },
 	    toolbar:[	

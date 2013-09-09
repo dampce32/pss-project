@@ -41,6 +41,14 @@ public class SystemConfig extends BaseModel {
 	 * 公司地址
 	 */
 	private String companyAddr;
+	/**
+	 * 是否实付金额默认等于应付金额 
+	 */
+	private Integer isAmountEqPayAmount;
+	/**
+	 * 运费是否加入到应付金额
+	 */
+	private Integer isOtherAmountInPayAmount;
 
 	// Constructors
 
@@ -110,6 +118,22 @@ public class SystemConfig extends BaseModel {
 
 	public void setCompanyAddr(String companyAddr) {
 		this.companyAddr = companyAddr;
+	}
+	@Column(name = "isAmountEqPayAmount")
+	public Integer getIsAmountEqPayAmount() {
+		return isAmountEqPayAmount;
+	}
+
+	public void setIsAmountEqPayAmount(Integer isAmountEqPayAmount) {
+		this.isAmountEqPayAmount = isAmountEqPayAmount;
+	}
+	@Column(name = "isOtherAmountInPayAmount")
+	public Integer getIsOtherAmountInPayAmount() {
+		return isOtherAmountInPayAmount;
+	}
+
+	public void setIsOtherAmountInPayAmount(Integer isOtherAmountInPayAmount) {
+		this.isOtherAmountInPayAmount = isOtherAmountInPayAmount;
 	}
 
 }

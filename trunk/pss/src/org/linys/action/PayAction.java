@@ -39,7 +39,7 @@ public class PayAction extends BaseAction implements ModelDriven<Pay> {
 	public void query(){
 		ServiceResult result = new ServiceResult(false);
 		try {
-			result = payService.query(model,page,rows);
+			result = payService.query(model,page,rows,beginDate,endDate);
 		} catch (Exception e) {
 			result.setMessage("分页查询付款单失败");
 			logger.error("分页查询付款单失败", e);
@@ -57,7 +57,7 @@ public class PayAction extends BaseAction implements ModelDriven<Pay> {
 	public void getTotalCount(){
 		ServiceResult result = new ServiceResult(false);
 		try {
-			result = payService.getTotalCount(model);
+			result = payService.getTotalCount(model,beginDate,endDate);
 		} catch (Exception e) {
 			result.setMessage("统计付款单失败");
 			result.setIsSuccess(false);

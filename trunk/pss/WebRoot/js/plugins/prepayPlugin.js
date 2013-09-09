@@ -233,13 +233,15 @@
 	var initChoose = function(){
 		//供应商
 		$('#supplier',editForm).combogrid({  
-		    panelWidth:450,  
+			pagination:true,
+			rownumbers:true,
+		    panelWidth:560,  
 		    idField:'supplierId',  
 		    textField:'supplierName',  
 		    url:'dict/queryCombogridSupplier.do',  
 		    columns:[[  
 		        {field:'supplierCode',title:'供应商编号',width:120},
-		        {field:'supplierName',title:'供应商名称',width:120}
+		        {field:'supplierName',title:'供应商名称',width:320}
 		    ]]  
 		});
 		//银行

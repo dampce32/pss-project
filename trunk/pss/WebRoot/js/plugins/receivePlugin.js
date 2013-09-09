@@ -24,6 +24,8 @@
 	  var pageSize = 10;
 	  
 	  var changeSearch = false;
+	  var isAmountEqPayAmount = null;
+	  var isOtherAmountInPayAmount = null;
 	  
 	  var statusList = [{"value":"-1","text":"所有","selected":true},{"value":"1","text":"已审"},{"value":"0","text":"未审"}]; 
 	  $('#statusSearch',queryContent).combobox({
@@ -33,7 +35,20 @@
 		width:50,
 		data:statusList
 	  })
-	  
+	  //供应商
+		$('#supplierSearch',queryContent).combogrid({  
+			url:'dict/queryCombogridSupplier.do',
+			mode: 'remote',  
+			pagination:true,
+			rownumbers:true,
+		    panelWidth:450,  
+		    idField:'supplierId',  
+		    textField:'supplierName',  
+		    columns:[[  
+		        {field:'supplierCode',title:'供应商编号',width:120},
+		        {field:'supplierName',title:'供应商名称',width:230}
+		    ]]  
+		});
 	  var isPayList = [{"value":"-1","text":"所有","selected":true},{"value":"1","text":"已付"},{"value":"0","text":"未付"}]; 
 	  $('#isPaySearch',queryContent).combobox({
 		editable:false,
@@ -43,6 +58,14 @@
 		data:isPayList
 	  })
 	  
+	  var url = 'inWarehouse/getSysConfigReceive.do';
+	  asyncCallService(url,function(result){
+		if(result.isSuccess){
+			var data = result.data;
+			isAmountEqPayAmount = data.isAmountEqPayAmount;
+			isOtherAmountInPayAmount = data.isOtherAmountInPayAmount;
+		}
+	  })
 	  //列表
 	  $(viewList).datagrid({
 		  fit:true,
@@ -73,6 +96,7 @@
 				{field:'deliverCode',title:'送货单号',width:120,align:"center"},
 				{field:'warehouseName',title:'存入仓库',width:90,align:"center"},
 				{field:'supplierName',title:'供应商',width:170,align:"center"},
+				{field:'otherAmount',title:'运费',width:80,align:"center"},
 				{field:'amount',title:'应付款',width:80,align:"center"},
 				{field:'payAmount',title:'已付款',width:80,align:"center"},
 				{field:'discountAmount',title:'优惠',width:80,align:"center"},
@@ -164,9 +188,13 @@
 	var search = function(flag){
 		var receiveCode = $('#receiveCodeSearch',queryContent).val();
 		var status = $('#statusSearch',queryContent).combobox('getValue');
+		var supplierId = $('#supplierSearch',queryContent).combogrid('getValue');
+		var beginDate = $('#beginDateSearch_'+id).val();
+		var endDate = $('#endDateSearch_'+id,queryContent).val();
 		var isPay = $('#isPaySearch',queryContent).combobox('getValue');
 		var url = "inWarehouse/queryReceive.do";
-		var content = {receiveCode:receiveCode,status:status,isPay:isPay,page:pageNumber,rows:pageSize};
+		var content = {receiveCode:receiveCode,'supplier.supplierId':supplierId,beginDate:beginDate,
+				endDate:endDate,status:status,isPay:isPay,page:pageNumber,rows:pageSize};
 		var result = syncCallService(url,content);
 		if(result.isSuccess){
 			var data = result.data;
@@ -209,6 +237,7 @@
 	    	lastIndex = null;
 	    	$(receiveDetail).datagrid({url:LYS.ClearUrl});
 	    	$(editForm).form('clear');
+	    	search(true);
 	    },
 	    toolbar:[	
 		 			{id:'save'+id,text:'保存',iconCls:'icon-save',handler:function(){onSave();}},'-',
@@ -789,7 +818,9 @@
 				}
 				totalAmount+=parseFloat(newValue); 
 				var otherAmount = $('#otherAmount',editForm).numberbox('getValue');
-				totalAmount+=parseFloat(otherAmount); 
+				if(isOtherAmountInPayAmount==1){
+					totalAmount+=parseFloat(otherAmount); 
+				}
 		    	$('#amount',editForm).numberbox('setValue',totalAmount);
 		    }}}},
 		    {field:'buyCode',title:'采购单号',width:120,align:"center"},
@@ -957,19 +988,47 @@
 		}
 		$('#amount',editForm).numberbox('setValue',totalAmount);
 	 }
-	//运费发生改变
+	//应付金额
+	 $('#amount',editForm).numberbox({
+		 onChange:function(newValue,oldValue){
+			 if(newValue==''){
+				 $('#amount',editForm).numberbox('setValue',0.00);
+				 newValue = 0.00;
+			 }
+			 var discountAmount = $('#discountAmount',editForm).numberbox('getValue');
+			 if(isAmountEqPayAmount==1){
+				var amount = $('#amount',editForm).numberbox('getValue');
+				$('#payAmount',editForm).numberbox('setValue',amount-discountAmount);
+			 }
+		 }
+	});
 	 $('#otherAmount',editForm).numberbox({
 		 onChange:function(newValue,oldValue){
 			 if(newValue==''){
 				 $('#otherAmount',editForm).numberbox('setValue',0.00);
 				 newValue = 0.00;
 			 }
-			var amount = $('#amount',editForm).numberbox('getValue');
-			var totalAmount=parseFloat(amount)+parseFloat(newValue-oldValue); 
-			 $('#amount',editForm).numberbox('setValue',totalAmount);
+			 if(isOtherAmountInPayAmount==1){
+				var amount = $('#amount',editForm).numberbox('getValue');
+				var totalAmount=parseFloat(amount)+parseFloat(newValue-oldValue); 
+				$('#amount',editForm).numberbox('setValue',totalAmount);
+			 }
 		 }
 	});
-	 
+	 $('#discountAmount',editForm).numberbox({
+		 onChange:function(newValue,oldValue){
+			 if(newValue==''){
+				 $('#discountAmount',editForm).numberbox('setValue',0.00);
+				 newValue = 0.00;
+			 }
+			 if(newValue!=0){
+				 isAmountEqPayAmount = 1;//自动开启应付金额等于实付金额
+			 }
+			var amount = $('#amount',editForm).numberbox('getValue');
+			var totalAmount=parseFloat(amount)-newValue; 
+			$('#payAmount',editForm).numberbox('setValue',totalAmount);
+		 }
+	});
 	 //实付金额
 	 $('#payAmount',editForm).numberbox({
 		 onChange:function(newValue,oldValue){

@@ -58,7 +58,8 @@ public class SystemConfigAction extends BaseAction implements
 		ServiceResult result = new ServiceResult(false);
 		try {
 			result = systemConfigService.init();
-		} catch (Exception e) {
+		} catch (Throwable e) {
+			e.printStackTrace();
 			result.setMessage("打开初始化失败");
 			logger.error("打开初始化失败", e);
 		}

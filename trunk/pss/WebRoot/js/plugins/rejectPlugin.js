@@ -179,6 +179,7 @@
 	    closable:false,
 	    onClose:function(){
 	    	lastIndex = null;
+	    	search(true);
 	    },
 	    toolbar:[	
 		 			{id:'save'+id,text:'保存',iconCls:'icon-save',handler:function(){onSave();}},'-',
