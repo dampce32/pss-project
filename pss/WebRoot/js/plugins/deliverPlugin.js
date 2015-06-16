@@ -690,7 +690,29 @@
 	    var priceEditor = editors[2];  
 	    var discountEditor = editors[3];  
 	    var amountEditor = editors[4];  
-	    qtyEditor.target.bind('change', function(){  
+	    qtyEditor.target.bind('change', function(){ 
+	    	
+	    	var g = $('#customer',editDialog).combogrid('grid');
+	    	if(g!=null){
+				 var r = g.datagrid('getSelected');
+				 if(r!=null){
+					 priceLevel = r.priceLevel;
+				 }
+			}
+	    	var selectRow = $(deliverDetail).datagrid('getSelected'); 
+	    	var qty = qtyEditor.target.val();
+	    	//取得数量对应的价格
+	    	var url ='dict/getPriceByQtyProductPriceRange.do';
+	    	var content ={'product.productId':selectRow.productId,priceLevel:priceLevel,qty:qty};
+	    	var result = syncCallService(url,content);
+			if(result.isSuccess){
+				var data = result.data;
+				if(data.price!=undefined){
+					 $(priceEditor.target).numberbox('setValue',data.price);
+				}
+			}else{
+				$.messager.alert('提示',result.message,'error');
+			}
 	        calculate(rowIndex);  
 	    });  
 	    priceEditor.target.bind('change', function(){  

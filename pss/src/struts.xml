@@ -62,6 +62,7 @@
 	</package>
 	
 	<package name="dict" namespace="/dict" extends="basePackage">
+		<action name="*ProductPriceRange" class="productPriceRangeAction" method="{1}"></action>
 		<action name="*InvoiceType" class="invoiceTypeAction" method="{1}"></action>
 		<action name="*Employee" class="employeeAction" method="{1}"></action>
 		<action name="*Bank" class="bankAction" method="{1}"></action>

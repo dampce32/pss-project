@@ -54,4 +54,5 @@
 	<table name="t_split" catalog="pss" class="Split"></table>
 	<table name="t_splitdetail" catalog="pss" class="SplitDetail"></table>
 	<table name="t_systemconfig" catalog="pss" class="SystemConfig"></table>
+	<table name="t_productrange" catalog="pss" class="ProductRange"></table>
 </hibernate-reverse-engineering>

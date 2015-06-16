@@ -13,5 +13,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/org.lys.jxl"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/org.lys.ssh"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/org.lys.poi"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/org.lys.Struts2.3.1Spring3.07Hiberate3.3.2"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/org.lys.jcaptcha"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>
