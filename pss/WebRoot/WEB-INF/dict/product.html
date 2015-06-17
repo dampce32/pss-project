@@ -26,7 +26,7 @@
 									</td>
 									<td class="tdFirstTitle">商品名称:</td>
 									<td class="tdFirstContent">
-										<input type="text" name="productName" id="productName" class="text" style="width: 250px" size="40" />
+										<input type="text" name="productName" id="productName" class="text easyui-validatebox" data-options="required:true" style="width: 250px" size="40" />
 									</td>
 								</tr>
 								<tr>
@@ -107,6 +107,24 @@
 							<input type="hidden" name="pricesWholesalePrice"  id="pricesWholesalePrice" />
 							<input type="hidden" name="qtyBeginsWholesalePrice"  id="qtyBeginsWholesalePrice" />
 							<input type="hidden" name="qtyEndsWholesalePrice"  id="qtyEndsWholesalePrice" />
+							
+							<input type="hidden" name="productPriceRangeIdsVipPrice"  id="productPriceRangeIdsVipPrice" />
+							<input type="hidden" name="deleleIdsVipPrice"  id="deleleIdsVipPrice" />
+							<input type="hidden" name="pricesVipPrice"  id="pricesVipPrice" />
+							<input type="hidden" name="qtyBeginsVipPrice"  id="qtyBeginsVipPrice" />
+							<input type="hidden" name="qtyEndsVipPrice"  id="qtyEndsVipPrice" />
+							
+							<input type="hidden" name="productPriceRangeIdsMemberPrice"  id="productPriceRangeIdsMemberPrice" />
+							<input type="hidden" name="deleleIdsMemberPrice"  id="deleleIdsMemberPrice" />
+							<input type="hidden" name="pricesMemberPrice"  id="pricesMemberPrice" />
+							<input type="hidden" name="qtyBeginsMemberPrice"  id="qtyBeginsMemberPrice" />
+							<input type="hidden" name="qtyEndsMemberPrice"  id="qtyEndsMemberPrice" />
+							
+							<input type="hidden" name="productPriceRangeIdsSalePrice"  id="productPriceRangeIdsSalePrice" />
+							<input type="hidden" name="deleleIdsSalePrice"  id="deleleIdsSalePrice" />
+							<input type="hidden" name="pricesSalePrice"  id="pricesSalePrice" />
+							<input type="hidden" name="qtyBeginsSalePrice"  id="qtyBeginsSalePrice" />
+							<input type="hidden" name="qtyEndsSalePrice"  id="qtyEndsSalePrice" />
 						</form>
 					</div>
 					<div  data-options="region:'east'" style="width: 300px;border: 0px">
@@ -140,11 +158,14 @@
 				    <div title="批发价格区间">   
 				        <div id="wholesalePriceList" data-options="border:false" ></div>   
 				    </div>
-				    <div title="VIP价格区间">   
+				    <div title="VIP价格区间"> 
+				    	<div id="vipPriceList" data-options="border:false" ></div>  
 				    </div>
 				    <div title="会员价格区间">   
+				    	<div id="memberPriceList" data-options="border:false" ></div>  
 				    </div>
 				    <div title="零售价格区间">   
+				    	<div id="salePriceList" data-options="border:false" ></div>  
 				    </div>  
 				</div>  
 			</div>

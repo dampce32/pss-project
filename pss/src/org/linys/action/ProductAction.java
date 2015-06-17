@@ -52,8 +52,30 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 			String qtyBeginsWholesalePrice = getParameter("qtyBeginsWholesalePrice");
 			String qtyEndsWholesalePrice = getParameter("qtyEndsWholesalePrice");
 			
+			String productPriceRangeIdsVipPrice = getParameter("productPriceRangeIdsVipPrice");
+			String deleleIdsVipPrice = getParameter("deleleIdsVipPrice");
+			String pricesVipPrice = getParameter("pricesVipPrice");
+			String qtyBeginsVipPrice = getParameter("qtyBeginsVipPrice");
+			String qtyEndsVipPrice = getParameter("qtyEndsVipPrice");
+			
+			String productPriceRangeIdsMemberPrice = getParameter("productPriceRangeIdsMemberPrice");
+			String deleleIdsMemberPrice = getParameter("deleleIdsMemberPrice");
+			String pricesMemberPrice = getParameter("pricesMemberPrice");
+			String qtyBeginsMemberPrice = getParameter("qtyBeginsMemberPrice");
+			String qtyEndsMemberPrice = getParameter("qtyEndsMemberPrice");
+			
+			String productPriceRangeIdsSalePrice = getParameter("productPriceRangeIdsSalePrice");
+			String deleleIdsSalePrice = getParameter("deleleIdsSalePrice");
+			String pricesSalePrice = getParameter("pricesSalePrice");
+			String qtyBeginsSalePrice = getParameter("qtyBeginsSalePrice");
+			String qtyEndsSalePrice = getParameter("qtyEndsSalePrice");
+			
 			result = productService.save(model,defaultPackagingIds,deleleIds,productIds,qtys,
-					productPriceRangeIdsWholesalePrice,deleleIdsWholesalePrice,pricesWholesalePrice,qtyBeginsWholesalePrice,qtyEndsWholesalePrice);
+					productPriceRangeIdsWholesalePrice,deleleIdsWholesalePrice,pricesWholesalePrice,qtyBeginsWholesalePrice,qtyEndsWholesalePrice,
+					productPriceRangeIdsVipPrice,deleleIdsVipPrice,pricesVipPrice,qtyBeginsVipPrice,qtyEndsVipPrice,
+					productPriceRangeIdsMemberPrice,deleleIdsMemberPrice,pricesMemberPrice,qtyBeginsMemberPrice,qtyEndsMemberPrice,
+					productPriceRangeIdsSalePrice,deleleIdsSalePrice,pricesSalePrice,qtyBeginsSalePrice,qtyEndsSalePrice
+					);
 		} catch (Exception e) {
 			result.setMessage("保存商品失败");
 			logger.error("保存商品失败", e);

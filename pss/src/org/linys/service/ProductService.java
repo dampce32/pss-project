@@ -57,9 +57,28 @@ public interface ProductService extends BaseService<Product,String>{
 	 * @param pricesWholesalePrice 
 	 * @param deleleIdsWholesalePrice 
 	 * @param productPriceRangeIdsWholesalePrice 
+	 * @param qtyEndsSalePrice 
+	 * @param qtyBeginsSalePrice 
+	 * @param pricesSalePrice 
+	 * @param deleleIdsSalePrice 
+	 * @param productPriceRangeIdsSalePrice 
+	 * @param qtyEndsMemberPrice 
+	 * @param qtyBeginsMemberPrice 
+	 * @param pricesMemberPrice 
+	 * @param deleleIdsMemberPrice 
+	 * @param productPriceRangeIdsMemberPrice 
+	 * @param qtyEndsVipPrice 
+	 * @param qtyBeginsVipPrice 
+	 * @param pricesVipPrice 
+	 * @param deleleIdsVipPrice 
+	 * @param productPriceRangeIdsVipPrice 
 	 * @return
 	 */
-	ServiceResult save(Product model, String defaultPackagingIds, String deleleIds, String productIds, String qtys, String productPriceRangeIdsWholesalePrice, String deleleIdsWholesalePrice, String pricesWholesalePrice, String qtyBeginsWholesalePrice, String qtyEndsWholesalePrice);
+	ServiceResult save(Product model, String defaultPackagingIds, String deleleIds, String productIds, String qtys, 
+			String productPriceRangeIdsWholesalePrice, String deleleIdsWholesalePrice, String pricesWholesalePrice, String qtyBeginsWholesalePrice, String qtyEndsWholesalePrice,
+			String productPriceRangeIdsVipPrice, String deleleIdsVipPrice, String pricesVipPrice, String qtyBeginsVipPrice, String qtyEndsVipPrice, 
+			String productPriceRangeIdsMemberPrice, String deleleIdsMemberPrice, String pricesMemberPrice, String qtyBeginsMemberPrice, String qtyEndsMemberPrice, 
+			String productPriceRangeIdsSalePrice, String deleleIdsSalePrice, String pricesSalePrice, String qtyBeginsSalePrice, String qtyEndsSalePrice);
 	/**
 	 * @Description: 选择商品
 	 * @Create: 2012-12-30 上午10:25:02

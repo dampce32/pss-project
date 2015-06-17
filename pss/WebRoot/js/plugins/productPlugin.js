@@ -203,6 +203,7 @@
 			idField: 'productTypeId',  
 			textField: 'productTypeName',  
 			pagination:true,
+			required:true,
 			columns: [[  
 			    {field:'productTypeName',title:'商品类型',width:150,sortable:true},  
 			    {field:'productTypeCode',title:'商品类型编号',width:150,sortable:true}
@@ -227,17 +228,12 @@
 	}
 	//保存前的赋值操作
 	var setValue = function(){
-		var productName = $.trim($('#productName',editForm).val());
-		if(productName==''){
-			$.messager.alert('提示','请填写商品名称','warning');
-			return false;
+		var isValid = $(editForm).form('validate');
+		if (!isValid){
+			return isValid;
 		}
 		//商品类别
 		var productTypeId = $('#productType',editForm).combogrid('getValue');
-		if(productTypeId==''){
-			$.messager.alert('提示','请选择商品类别','warning');
-			return false;
-		}
 		var productTypeName = $('#productType',editForm).combogrid('getText');
 		$('#productTypeId',editForm).val(productTypeId);
 		$('#productTypeName',editForm).val(productTypeName);
@@ -305,6 +301,90 @@
 			qtyEndWholesalePriceArray.push(rowsWholesalePrice[i].qtyEnd);
 		}
 		
+		$(vipPriceList).datagrid('endEdit', lastIndexVipPrice);
+		$(vipPriceList).datagrid('unselectAll');
+		lastIndexVipPrice = null;
+		var rowsVipPrice =  $(vipPriceList).datagrid('getRows');
+		for ( var i = 0; i < rowsVipPrice.length; i++) {
+			var rowVipPrice = rowsVipPrice[i];
+			if(rowVipPrice.price==0){
+				var msg = '第'+(i+1)+'行价格为0,请输入';
+				$.messager.alert('提示',msg,'warning');
+				return false;
+			}
+			if(rowVipPrice.qtyBegin>rowVipPrice.qtyEnd){
+				var msg = '第'+(i+1)+'行数量下限大于数量上限,请调整';
+				$.messager.alert('提示',msg,'warning');
+				return false;
+			}
+		}
+		var productPriceRangeIdVipPriceArray = new Array();
+		var priceVipPriceArray = new Array();
+		var qtyBeginVipPriceArray = new Array();
+		var qtyEndVipPriceArray = new Array();
+		for ( var i = 0; i < rowsVipPrice.length; i++) {
+			productPriceRangeIdVipPriceArray.push(rowsVipPrice[i].productPriceRangeId);
+			priceVipPriceArray.push(rowsVipPrice[i].price);
+			qtyBeginVipPriceArray.push(rowsVipPrice[i].qtyBegin);
+			qtyEndVipPriceArray.push(rowsVipPrice[i].qtyEnd);
+		}
+		
+		$(memberPriceList).datagrid('endEdit', lastIndexMemberPrice);
+		$(memberPriceList).datagrid('unselectAll');
+		lastIndexMemberPrice = null;
+		var rowsMemberPrice =  $(memberPriceList).datagrid('getRows');
+		for ( var i = 0; i < rowsMemberPrice.length; i++) {
+			var rowMemberPrice = rowsMemberPrice[i];
+			if(rowMemberPrice.price==0){
+				var msg = '第'+(i+1)+'行价格为0,请输入';
+				$.messager.alert('提示',msg,'warning');
+				return false;
+			}
+			if(rowMemberPrice.qtyBegin>rowMemberPrice.qtyEnd){
+				var msg = '第'+(i+1)+'行数量下限大于数量上限,请调整';
+				$.messager.alert('提示',msg,'warning');
+				return false;
+			}
+		}
+		var productPriceRangeIdMemberPriceArray = new Array();
+		var priceMemberPriceArray = new Array();
+		var qtyBeginMemberPriceArray = new Array();
+		var qtyEndMemberPriceArray = new Array();
+		for ( var i = 0; i < rowsMemberPrice.length; i++) {
+			productPriceRangeIdMemberPriceArray.push(rowsMemberPrice[i].productPriceRangeId);
+			priceMemberPriceArray.push(rowsMemberPrice[i].price);
+			qtyBeginMemberPriceArray.push(rowsMemberPrice[i].qtyBegin);
+			qtyEndMemberPriceArray.push(rowsMemberPrice[i].qtyEnd);
+		}
+		
+		$(salePriceList).datagrid('endEdit', lastIndexSalePrice);
+		$(salePriceList).datagrid('unselectAll');
+		lastIndexSalePrice = null;
+		var rowsSalePrice =  $(salePriceList).datagrid('getRows');
+		for ( var i = 0; i < rowsSalePrice.length; i++) {
+			var rowSalePrice = rowsSalePrice[i];
+			if(rowSalePrice.price==0){
+				var msg = '第'+(i+1)+'行价格为0,请输入';
+				$.messager.alert('提示',msg,'warning');
+				return false;
+			}
+			if(rowSalePrice.qtyBegin>rowSalePrice.qtyEnd){
+				var msg = '第'+(i+1)+'行数量下限大于数量上限,请调整';
+				$.messager.alert('提示',msg,'warning');
+				return false;
+			}
+		}
+		var productPriceRangeIdSalePriceArray = new Array();
+		var priceSalePriceArray = new Array();
+		var qtyBeginSalePriceArray = new Array();
+		var qtyEndSalePriceArray = new Array();
+		for ( var i = 0; i < rowsSalePrice.length; i++) {
+			productPriceRangeIdSalePriceArray.push(rowsSalePrice[i].productPriceRangeId);
+			priceSalePriceArray.push(rowsSalePrice[i].price);
+			qtyBeginSalePriceArray.push(rowsSalePrice[i].qtyBegin);
+			qtyEndSalePriceArray.push(rowsSalePrice[i].qtyEnd);
+		}
+		
 		$('#defaultPackagingIds',editForm).val(defaultPackagingIdArray.join(LYS.join));
 		$('#deleleIds',editForm).val(deleleIdArray.join(LYS.join));
 		$('#productIds',editForm).val(productIdArray.join(LYS.join));
@@ -315,6 +395,24 @@
 		$('#pricesWholesalePrice',editForm).val(priceWholesalePriceArray.join(LYS.join));
 		$('#qtyBeginsWholesalePrice',editForm).val(qtyBeginWholesalePriceArray.join(LYS.join));
 		$('#qtyEndsWholesalePrice',editForm).val(qtyEndWholesalePriceArray.join(LYS.join));
+		
+		$('#productPriceRangeIdsVipPrice',editForm).val(productPriceRangeIdVipPriceArray.join(LYS.join));
+		$('#deleleIdsVipPrice',editForm).val(deleleIdVipPriceArray.join(LYS.join));
+		$('#pricesVipPrice',editForm).val(priceVipPriceArray.join(LYS.join));
+		$('#qtyBeginsVipPrice',editForm).val(qtyBeginVipPriceArray.join(LYS.join));
+		$('#qtyEndsVipPrice',editForm).val(qtyEndVipPriceArray.join(LYS.join));
+		
+		$('#productPriceRangeIdsMemberPrice',editForm).val(productPriceRangeIdMemberPriceArray.join(LYS.join));
+		$('#deleleIdsMemberPrice',editForm).val(deleleIdMemberPriceArray.join(LYS.join));
+		$('#pricesMemberPrice',editForm).val(priceMemberPriceArray.join(LYS.join));
+		$('#qtyBeginsMemberPrice',editForm).val(qtyBeginMemberPriceArray.join(LYS.join));
+		$('#qtyEndsMemberPrice',editForm).val(qtyEndMemberPriceArray.join(LYS.join));
+		
+		$('#productPriceRangeIdsSalePrice',editForm).val(productPriceRangeIdSalePriceArray.join(LYS.join));
+		$('#deleleIdsSalePrice',editForm).val(deleleIdSalePriceArray.join(LYS.join));
+		$('#pricesSalePrice',editForm).val(priceSalePriceArray.join(LYS.join));
+		$('#qtyBeginsSalePrice',editForm).val(qtyBeginSalePriceArray.join(LYS.join));
+		$('#qtyEndsSalePrice',editForm).val(qtyEndSalePriceArray.join(LYS.join));
 		
 		$(editDialog).mask({maskMsg:'正在保存'});
 		return true;
@@ -411,9 +509,20 @@
 				var productPriceRangeWholesalePriceData = eval("("+data.productPriceRangeWholesalePriceData+")");
 				$(wholesalePriceList).datagrid('loadData',productPriceRangeWholesalePriceData);
 				
+				var productPriceRangeVipPriceData = eval("("+data.productPriceRangeVipPriceData+")");
+				$(vipPriceList).datagrid('loadData',productPriceRangeVipPriceData);
+				
+				var productPriceRangeMemberPriceData = eval("("+data.productPriceRangeMemberPriceData+")");
+				$(memberPriceList).datagrid('loadData',productPriceRangeMemberPriceData);
+
+				var productPriceRangeSalePriceData = eval("("+data.productPriceRangeSalePriceData+")");
+				$(salePriceList).datagrid('loadData',productPriceRangeSalePriceData);
 				
 				deleleIdArray = new Array();
 				deleleIdWholesalePriceArray = new Array();
+				deleleIdVipPriceArray = new Array();
+				deleleIdMemberPriceArray = new Array();
+				deleleIdSalePriceArray = new Array();
 				updateBtnStatus();
 				showImg();
 			}else{
@@ -714,63 +823,240 @@
 	 });
 	 
 	//------批发价格区间--------
-		var wholesalePriceList = $('#wholesalePriceList',editDialog);
-		var lastIndexWholesalePrice=null;
-		var deleleIdWholesalePriceArray = new Array();
-		$(wholesalePriceList).datagrid({
-		  singleSelect:true,	
-		  fit:true,
-		  columns:[[
-			    {field:'price',title:'价格',width:90,align:"center",editor:{type:'numberbox',options:{required:true,precision:5}}},
-				{field:'qtyBegin',title:'数量下限',width:100,align:"center",editor:{type:'numberbox',options:{required:true,precision:0}}},
-			    {field:'qtyEnd',title:'数量上限',width:100,align:"center",editor:{type:'numberbox',options:{required:true,precision:0}}}
-		  ]],
-		  rownumbers:true,
-		  pagination:false,
-		  toolbar:[	
-				{id:'addWholesalePrice'+id,text:'添加',iconCls:'icon-add',handler:function(){onAddWholesalePrice()}},
-				{id:'deleteWholesalePrice'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDeleteWholesalePrice()}}
-		  ],
-		  onBeforeLoad:function(){
-				$(this).datagrid('rejectChanges');
-		  },
-		  onClickRow:function(rowIndex){
-			if (lastIndexWholesalePrice != rowIndex){
-				$(wholesalePriceList).datagrid('endEdit', lastIndexWholesalePrice);
-				$(wholesalePriceList).datagrid('beginEdit', rowIndex);
-				setEditingWholesalePrice(rowIndex);
-			}
-			lastIndexWholesalePrice = rowIndex;
-		  }
-		 });
-		function setEditingWholesalePrice(rowIndex){  
-		    var editors = $(wholesalePriceList).datagrid('getEditors', rowIndex);  
-		    var priceEditor = editors[0];  
-		    var qtyBeginEditor = editors[1];  
-		    var qtyEndEditor = editors[2];  
-		    qtyBeginEditor.target.bind('change', function(){ 
-		    	var qtyEnd = qtyEndEditor.target.val();
-		    }); 
-		    qtyBeginEditor.target.bind('change', function(){  
-		    });
-		} 
-		var onAddWholesalePrice = function(){
-			$(wholesalePriceList).datagrid('appendRow',{
-				productPriceRangeId:'',
-				 price:0,
-				 qtyBegin:0,
-				 qtyEnd:0
-			});
-		};
-		//删除批发价格区间
-		 var onDeleteWholesalePrice = function(){
-			 var row = $(wholesalePriceList).datagrid('getSelected');
-			 var rowIndex = $(wholesalePriceList).datagrid('getRowIndex',row);
-			 if(row.productPriceRangeId!=''){
-				 deleleIdWholesalePriceArray.push(row.productPriceRangeId);
-			 }
-			 $(wholesalePriceList).datagrid('deleteRow',rowIndex);
-			 lastIndexWholesalePrice = null;
+	var wholesalePriceList = $('#wholesalePriceList',editDialog);
+	var lastIndexWholesalePrice=null;
+	var deleleIdWholesalePriceArray = new Array();
+	$(wholesalePriceList).datagrid({
+	  singleSelect:true,	
+	  fit:true,
+	  columns:[[
+		    {field:'price',title:'价格',width:90,align:"center",editor:{type:'numberbox',options:{required:true,precision:5}}},
+			{field:'qtyBegin',title:'数量下限',width:100,align:"center",editor:{type:'numberbox',options:{required:true,precision:0}}},
+		    {field:'qtyEnd',title:'数量上限',width:100,align:"center",editor:{type:'numberbox',options:{required:true,precision:0}}}
+	  ]],
+	  rownumbers:true,
+	  pagination:false,
+	  toolbar:[	
+			{id:'addWholesalePrice'+id,text:'添加',iconCls:'icon-add',handler:function(){onAddWholesalePrice()}},
+			{id:'deleteWholesalePrice'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDeleteWholesalePrice()}}
+	  ],
+	  onBeforeLoad:function(){
+			$(this).datagrid('rejectChanges');
+	  },
+	  onClickRow:function(rowIndex){
+		if (lastIndexWholesalePrice != rowIndex){
+			$(wholesalePriceList).datagrid('endEdit', lastIndexWholesalePrice);
+			$(wholesalePriceList).datagrid('beginEdit', rowIndex);
+			setEditingWholesalePrice(rowIndex);
+		}
+		lastIndexWholesalePrice = rowIndex;
+	  }
+	 });
+	function setEditingWholesalePrice(rowIndex){  
+	    var editors = $(wholesalePriceList).datagrid('getEditors', rowIndex);  
+	    var priceEditor = editors[0];  
+	    var qtyBeginEditor = editors[1];  
+	    var qtyEndEditor = editors[2];  
+	    qtyBeginEditor.target.bind('change', function(){ 
+	    	var qtyEnd = qtyEndEditor.target.val();
+	    }); 
+	    qtyBeginEditor.target.bind('change', function(){  
+	    });
+	} 
+	var onAddWholesalePrice = function(){
+		$(wholesalePriceList).datagrid('appendRow',{
+			productPriceRangeId:'',
+			 price:0,
+			 qtyBegin:0,
+			 qtyEnd:0
+		});
+	};
+	//删除批发价格区间
+	 var onDeleteWholesalePrice = function(){
+		 var row = $(wholesalePriceList).datagrid('getSelected');
+		 var rowIndex = $(wholesalePriceList).datagrid('getRowIndex',row);
+		 if(row.productPriceRangeId!=''){
+			 deleleIdWholesalePriceArray.push(row.productPriceRangeId);
 		 }
+		 $(wholesalePriceList).datagrid('deleteRow',rowIndex);
+		 lastIndexWholesalePrice = null;
+	 }
+	//------VIP价格区间--------
+	var vipPriceList = $('#vipPriceList',editDialog);
+	var lastIndexVipPrice=null;
+	var deleleIdVipPriceArray = new Array();
+	$(vipPriceList).datagrid({
+	  singleSelect:true,	
+	  fit:true,
+	  columns:[[
+		    {field:'price',title:'价格',width:90,align:"center",editor:{type:'numberbox',options:{required:true,precision:5}}},
+			{field:'qtyBegin',title:'数量下限',width:100,align:"center",editor:{type:'numberbox',options:{required:true,precision:0}}},
+		    {field:'qtyEnd',title:'数量上限',width:100,align:"center",editor:{type:'numberbox',options:{required:true,precision:0}}}
+	  ]],
+	  rownumbers:true,
+	  pagination:false,
+	  toolbar:[	
+			{id:'addVipPrice'+id,text:'添加',iconCls:'icon-add',handler:function(){onAddVipPrice()}},
+			{id:'deleteVipPrice'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDeleteVipPrice()}}
+	  ],
+	  onBeforeLoad:function(){
+			$(this).datagrid('rejectChanges');
+	  },
+	  onClickRow:function(rowIndex){
+		if (lastIndexVipPrice != rowIndex){
+			$(vipPriceList).datagrid('endEdit', lastIndexVipPrice);
+			$(vipPriceList).datagrid('beginEdit', rowIndex);
+			setEditingVipPrice(rowIndex);
+		}
+		lastIndexVipPrice = rowIndex;
+	  }
+	 });
+	function setEditingVipPrice(rowIndex){  
+	    var editors = $(vipPriceList).datagrid('getEditors', rowIndex);  
+	    var priceEditor = editors[0];  
+	    var qtyBeginEditor = editors[1];  
+	    var qtyEndEditor = editors[2];  
+	    qtyBeginEditor.target.bind('change', function(){ 
+	    	var qtyEnd = qtyEndEditor.target.val();
+	    }); 
+	    qtyBeginEditor.target.bind('change', function(){  
+	    });
+	} 
+	var onAddVipPrice = function(){
+		$(vipPriceList).datagrid('appendRow',{
+			productPriceRangeId:'',
+			 price:0,
+			 qtyBegin:0,
+			 qtyEnd:0
+		});
+	};
+	//删除VIP价格区间
+	var onDeleteVipPrice = function(){
+		 var row = $(vipPriceList).datagrid('getSelected');
+		 var rowIndex = $(vipPriceList).datagrid('getRowIndex',row);
+		 if(row.productPriceRangeId!=''){
+			 deleleIdVipPriceArray.push(row.productPriceRangeId);
+		 }
+		 $(vipPriceList).datagrid('deleteRow',rowIndex);
+		 lastIndexVipPrice = null;
+	}
+	//------会员价格区间--------
+	var memberPriceList = $('#memberPriceList',editDialog);
+	var lastIndexMemberPrice=null;
+	var deleleIdMemberPriceArray = new Array();
+	$(memberPriceList).datagrid({
+	  singleSelect:true,	
+	  fit:true,
+	  columns:[[
+		    {field:'price',title:'价格',width:90,align:"center",editor:{type:'numberbox',options:{required:true,precision:5}}},
+			{field:'qtyBegin',title:'数量下限',width:100,align:"center",editor:{type:'numberbox',options:{required:true,precision:0}}},
+		    {field:'qtyEnd',title:'数量上限',width:100,align:"center",editor:{type:'numberbox',options:{required:true,precision:0}}}
+	  ]],
+	  rownumbers:true,
+	  pagination:false,
+	  toolbar:[	
+			{id:'addMemberPrice'+id,text:'添加',iconCls:'icon-add',handler:function(){onAddMemberPrice()}},
+			{id:'deleteMemberPrice'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDeleteMemberPrice()}}
+	  ],
+	  onBeforeLoad:function(){
+			$(this).datagrid('rejectChanges');
+	  },
+	  onClickRow:function(rowIndex){
+		if (lastIndexMemberPrice != rowIndex){
+			$(memberPriceList).datagrid('endEdit', lastIndexMemberPrice);
+			$(memberPriceList).datagrid('beginEdit', rowIndex);
+			setEditingMemberPrice(rowIndex);
+		}
+		lastIndexMemberPrice = rowIndex;
+	  }
+	 });
+	function setEditingMemberPrice(rowIndex){  
+	    var editors = $(memberPriceList).datagrid('getEditors', rowIndex);  
+	    var priceEditor = editors[0];  
+	    var qtyBeginEditor = editors[1];  
+	    var qtyEndEditor = editors[2];  
+	    qtyBeginEditor.target.bind('change', function(){ 
+	    	var qtyEnd = qtyEndEditor.target.val();
+	    }); 
+	    qtyBeginEditor.target.bind('change', function(){  
+	    });
+	} 
+	var onAddMemberPrice = function(){
+		$(memberPriceList).datagrid('appendRow',{
+			productPriceRangeId:'',
+			 price:0,
+			 qtyBegin:0,
+			 qtyEnd:0
+		});
+	};
+	//删除会员价格区间
+	var onDeleteMemberPrice = function(){
+		 var row = $(memberPriceList).datagrid('getSelected');
+		 var rowIndex = $(memberPriceList).datagrid('getRowIndex',row);
+		 if(row.productPriceRangeId!=''){
+			 deleleIdMemberPriceArray.push(row.productPriceRangeId);
+		 }
+		 $(memberPriceList).datagrid('deleteRow',rowIndex);
+		 lastIndexMemberPrice = null;
+	}
+	//------零售价格区间--------
+	var salePriceList = $('#salePriceList',editDialog);
+	var lastIndexSalePrice=null;
+	var deleleIdSalePriceArray = new Array();
+	$(salePriceList).datagrid({
+	  singleSelect:true,	
+	  fit:true,
+	  columns:[[
+		    {field:'price',title:'价格',width:90,align:"center",editor:{type:'numberbox',options:{required:true,precision:5}}},
+			{field:'qtyBegin',title:'数量下限',width:100,align:"center",editor:{type:'numberbox',options:{required:true,precision:0}}},
+		    {field:'qtyEnd',title:'数量上限',width:100,align:"center",editor:{type:'numberbox',options:{required:true,precision:0}}}
+	  ]],
+	  rownumbers:true,
+	  pagination:false,
+	  toolbar:[	
+			{id:'addSalePrice'+id,text:'添加',iconCls:'icon-add',handler:function(){onAddSalePrice()}},
+			{id:'deleteSalePrice'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDeleteSalePrice()}}
+	  ],
+	  onBeforeLoad:function(){
+			$(this).datagrid('rejectChanges');
+	  },
+	  onClickRow:function(rowIndex){
+		if (lastIndexSalePrice != rowIndex){
+			$(salePriceList).datagrid('endEdit', lastIndexSalePrice);
+			$(salePriceList).datagrid('beginEdit', rowIndex);
+			setEditingSalePrice(rowIndex);
+		}
+		lastIndexSalePrice = rowIndex;
+	  }
+	 });
+	function setEditingSalePrice(rowIndex){  
+	    var editors = $(salePriceList).datagrid('getEditors', rowIndex);  
+	    var priceEditor = editors[0];  
+	    var qtyBeginEditor = editors[1];  
+	    var qtyEndEditor = editors[2];  
+	    qtyBeginEditor.target.bind('change', function(){ 
+	    	var qtyEnd = qtyEndEditor.target.val();
+	    }); 
+	    qtyBeginEditor.target.bind('change', function(){  
+	    });
+	} 
+	var onAddSalePrice = function(){
+		$(salePriceList).datagrid('appendRow',{
+			productPriceRangeId:'',
+			 price:0,
+			 qtyBegin:0,
+			 qtyEnd:0
+		});
+	};
+	//删除零售价格区间
+	var onDeleteSalePrice = function(){
+		 var row = $(salePriceList).datagrid('getSelected');
+		 var rowIndex = $(salePriceList).datagrid('getRowIndex',row);
+		 if(row.productPriceRangeId!=''){
+			 deleleIdSalePriceArray.push(row.productPriceRangeId);
+		 }
+		 $(salePriceList).datagrid('deleteRow',rowIndex);
+		 lastIndexSalePrice = null;
+	}
   }
 })(jQuery);   

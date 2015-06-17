@@ -94,8 +94,11 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 	 * (non-Javadoc)   
 	 * @see org.linys.service.ProductService#save(org.linys.model.Product)
 	 */
-	public ServiceResult save(Product model, String defaultPackagingIds, String deleleIds, String productIds, String qtys,
-			String productPriceRangeIdsWholesalePrice, String deleleIdsWholesalePrice, String pricesWholesalePrice, String qtyBeginsWholesalePrice, String qtyEndsWholesalePrice) {
+	public ServiceResult save(Product model, String defaultPackagingIds, String deleleIds, String productIds, String qtys, 
+			String productPriceRangeIdsWholesalePrice, String deleleIdsWholesalePrice, String pricesWholesalePrice, String qtyBeginsWholesalePrice, String qtyEndsWholesalePrice,
+			String productPriceRangeIdsVipPrice, String deleleIdsVipPrice, String pricesVipPrice, String qtyBeginsVipPrice, String qtyEndsVipPrice, 
+			String productPriceRangeIdsMemberPrice, String deleleIdsMemberPrice, String pricesMemberPrice, String qtyBeginsMemberPrice, String qtyEndsMemberPrice, 
+			String productPriceRangeIdsSalePrice, String deleleIdsSalePrice, String pricesSalePrice, String qtyBeginsSalePrice, String qtyEndsSalePrice) {
 		ServiceResult result = new ServiceResult(false);
 		if(model==null){
 			result.setMessage("请填写商品信息");
@@ -170,6 +173,25 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 		String[] qtyBeginWholesalePriceArray = StringUtil.split(qtyBeginsWholesalePrice);
 		String[] qtyEndWholesalePriceArray = StringUtil.split(qtyEndsWholesalePrice);
 		
+		String[] productPriceRangeIdVipPriceArray = StringUtil.split(productPriceRangeIdsVipPrice);
+		String[] deleleIdVipPriceArray = StringUtil.split(deleleIdsVipPrice);
+		String[] priceVipPriceArray = StringUtil.split(pricesVipPrice);
+		String[] qtyBeginVipPriceArray = StringUtil.split(qtyBeginsVipPrice);
+		String[] qtyEndVipPriceArray = StringUtil.split(qtyEndsVipPrice);
+		
+		String[] productPriceRangeIdMemberPriceArray = StringUtil.split(productPriceRangeIdsMemberPrice);
+		String[] deleleIdMemberPriceArray = StringUtil.split(deleleIdsMemberPrice);
+		String[] priceMemberPriceArray = StringUtil.split(pricesMemberPrice);
+		String[] qtyBeginMemberPriceArray = StringUtil.split(qtyBeginsMemberPrice);
+		String[] qtyEndMemberPriceArray = StringUtil.split(qtyEndsMemberPrice);
+		
+		String[] productPriceRangeIdSalePriceArray = StringUtil.split(productPriceRangeIdsSalePrice);
+		String[] deleleIdSalePriceArray = StringUtil.split(deleleIdsSalePrice);
+		String[] priceSalePriceArray = StringUtil.split(pricesSalePrice);
+		String[] qtyBeginSalePriceArray = StringUtil.split(qtyBeginsSalePrice);
+		String[] qtyEndSalePriceArray = StringUtil.split(qtyEndsSalePrice);
+		
+		
 		if(StringUtils.isEmpty(model.getProductId())){//新增
 			//检查编号是否已存在
 			Product oldModel = productDAO.load("productCode",model.getProductCode());
@@ -202,7 +224,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 				defaultPackagingDAO.save(defaultPackaging);
 			}
 			
-			for (int i = 0; i < priceWholesalePriceArray.length; i++) {
+			for (int i = 0; i < priceWholesalePriceArray.length&&StringUtils.isNotEmpty(priceWholesalePriceArray[i]); i++) {
 				Double price = Double.parseDouble(priceWholesalePriceArray[i]);
 				Double qtyBegin = Double.parseDouble(qtyBeginWholesalePriceArray[i]);
 				Double qtyEnd = Double.parseDouble(qtyEndWholesalePriceArray[i]);
@@ -210,6 +232,48 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 				ProductPriceRange productPriceRange = new ProductPriceRange();
 				productPriceRange.setProduct(model);
 				productPriceRange.setPriceLevel("wholesalePrice");
+				productPriceRange.setPrice(price);
+				productPriceRange.setQtyBegin(qtyBegin);
+				productPriceRange.setQtyEnd(qtyEnd);
+				productPriceRangeDAO.save(productPriceRange);
+			}
+			
+			for (int i = 0; i < priceVipPriceArray.length&&StringUtils.isNotEmpty(priceVipPriceArray[i]); i++) {
+				Double price = Double.parseDouble(priceVipPriceArray[i]);
+				Double qtyBegin = Double.parseDouble(qtyBeginVipPriceArray[i]);
+				Double qtyEnd = Double.parseDouble(qtyEndVipPriceArray[i]);
+				
+				ProductPriceRange productPriceRange = new ProductPriceRange();
+				productPriceRange.setProduct(model);
+				productPriceRange.setPriceLevel("vipPrice");
+				productPriceRange.setPrice(price);
+				productPriceRange.setQtyBegin(qtyBegin);
+				productPriceRange.setQtyEnd(qtyEnd);
+				productPriceRangeDAO.save(productPriceRange);
+			}
+			
+			for (int i = 0; i < priceMemberPriceArray.length&&StringUtils.isNotEmpty(priceMemberPriceArray[i]); i++) {
+				Double price = Double.parseDouble(priceMemberPriceArray[i]);
+				Double qtyBegin = Double.parseDouble(qtyBeginMemberPriceArray[i]);
+				Double qtyEnd = Double.parseDouble(qtyEndMemberPriceArray[i]);
+				
+				ProductPriceRange productPriceRange = new ProductPriceRange();
+				productPriceRange.setProduct(model);
+				productPriceRange.setPriceLevel("memberPrice");
+				productPriceRange.setPrice(price);
+				productPriceRange.setQtyBegin(qtyBegin);
+				productPriceRange.setQtyEnd(qtyEnd);
+				productPriceRangeDAO.save(productPriceRange);
+			}
+			
+			for (int i = 0; i < priceSalePriceArray.length&&StringUtils.isNotEmpty(priceSalePriceArray[i]); i++) {
+				Double price = Double.parseDouble(priceSalePriceArray[i]);
+				Double qtyBegin = Double.parseDouble(qtyBeginSalePriceArray[i]);
+				Double qtyEnd = Double.parseDouble(qtyEndSalePriceArray[i]);
+				
+				ProductPriceRange productPriceRange = new ProductPriceRange();
+				productPriceRange.setProduct(model);
+				productPriceRange.setPriceLevel("salePrice");
 				productPriceRange.setPrice(price);
 				productPriceRange.setQtyBegin(qtyBegin);
 				productPriceRange.setQtyEnd(qtyEnd);
@@ -349,7 +413,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 				}
 			}
 			//根据Id更新或新增
-			for (int i = 0 ;i<productPriceRangeIdWholesalePriceArray.length;i++) {
+			for (int i = 0 ;i<priceWholesalePriceArray.length&&StringUtils.isNotEmpty(priceWholesalePriceArray[i]);i++) {
 				String productPriceRangeIdWholesalePrice = productPriceRangeIdWholesalePriceArray[i];
 				Double price = Double.parseDouble(priceWholesalePriceArray[i]);
 				Double qtyBegin = Double.parseDouble(qtyBeginWholesalePriceArray[i]);
@@ -366,6 +430,111 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 					productPriceRangeDAO.save(productPriceRange);
 				}else{
 					ProductPriceRange  oldProductPriceRange = productPriceRangeDAO.load(productPriceRangeIdWholesalePrice);
+					oldProductPriceRange.setPrice(price);
+					oldProductPriceRange.setQtyBegin(qtyBegin);
+					oldProductPriceRange.setQtyEnd(qtyEnd);
+				}
+			}
+			
+			//删除已删的VIP价格区间
+			if(!"".equals(deleleIdVipPriceArray)){
+				for (String deleleIdVipPrice : deleleIdVipPriceArray) {
+					if(StringUtils.isNotEmpty(deleleIdVipPrice)){
+						ProductPriceRange  oldProductPriceRange = productPriceRangeDAO.load(deleleIdVipPrice);
+						if(oldProductPriceRange!=null){
+							productPriceRangeDAO.delete(oldProductPriceRange);
+						}
+					}
+				}
+			}
+			//根据Id更新或新增
+			for (int i = 0 ;i<priceVipPriceArray.length&&StringUtils.isNotEmpty(priceVipPriceArray[i]);i++) {
+				String productPriceRangeIdVipPrice = productPriceRangeIdVipPriceArray[i];
+				Double price = Double.parseDouble(priceVipPriceArray[i]);
+				Double qtyBegin = Double.parseDouble(qtyBeginVipPriceArray[i]);
+				Double qtyEnd = Double.parseDouble(qtyEndVipPriceArray[i]);
+				
+				if(StringUtils.isEmpty(productPriceRangeIdVipPrice)){//新增
+					
+					ProductPriceRange productPriceRange = new ProductPriceRange();
+					productPriceRange.setProduct(oldModel);
+					productPriceRange.setPriceLevel("vipPrice");
+					productPriceRange.setPrice(price);
+					productPriceRange.setQtyBegin(qtyBegin);
+					productPriceRange.setQtyEnd(qtyEnd);
+					productPriceRangeDAO.save(productPriceRange);
+				}else{
+					ProductPriceRange  oldProductPriceRange = productPriceRangeDAO.load(productPriceRangeIdVipPrice);
+					oldProductPriceRange.setPrice(price);
+					oldProductPriceRange.setQtyBegin(qtyBegin);
+					oldProductPriceRange.setQtyEnd(qtyEnd);
+				}
+			}
+			
+			//删除已删的会员价格区间
+			if(!"".equals(deleleIdMemberPriceArray)){
+				for (String deleleIdMemberPrice : deleleIdMemberPriceArray) {
+					if(StringUtils.isNotEmpty(deleleIdMemberPrice)){
+						ProductPriceRange  oldProductPriceRange = productPriceRangeDAO.load(deleleIdMemberPrice);
+						if(oldProductPriceRange!=null){
+							productPriceRangeDAO.delete(oldProductPriceRange);
+						}
+					}
+				}
+			}
+			//根据Id更新或新增
+			for (int i = 0 ;i<priceMemberPriceArray.length&&StringUtils.isNotEmpty(priceMemberPriceArray[i]);i++) {
+				String productPriceRangeIdMemberPrice = productPriceRangeIdMemberPriceArray[i];
+				Double price = Double.parseDouble(priceMemberPriceArray[i]);
+				Double qtyBegin = Double.parseDouble(qtyBeginMemberPriceArray[i]);
+				Double qtyEnd = Double.parseDouble(qtyEndMemberPriceArray[i]);
+				
+				if(StringUtils.isEmpty(productPriceRangeIdMemberPrice)){//新增
+					
+					ProductPriceRange productPriceRange = new ProductPriceRange();
+					productPriceRange.setProduct(oldModel);
+					productPriceRange.setPriceLevel("memberPrice");
+					productPriceRange.setPrice(price);
+					productPriceRange.setQtyBegin(qtyBegin);
+					productPriceRange.setQtyEnd(qtyEnd);
+					productPriceRangeDAO.save(productPriceRange);
+				}else{
+					ProductPriceRange  oldProductPriceRange = productPriceRangeDAO.load(productPriceRangeIdMemberPrice);
+					oldProductPriceRange.setPrice(price);
+					oldProductPriceRange.setQtyBegin(qtyBegin);
+					oldProductPriceRange.setQtyEnd(qtyEnd);
+				}
+			}
+			
+			//删除已删的零售价格区间
+			if(!"".equals(deleleIdSalePriceArray)){
+				for (String deleleIdSalePrice : deleleIdSalePriceArray) {
+					if(StringUtils.isNotEmpty(deleleIdSalePrice)){
+						ProductPriceRange  oldProductPriceRange = productPriceRangeDAO.load(deleleIdSalePrice);
+						if(oldProductPriceRange!=null){
+							productPriceRangeDAO.delete(oldProductPriceRange);
+						}
+					}
+				}
+			}
+			//根据Id更新或新增
+			for (int i = 0 ;i<priceSalePriceArray.length&&StringUtils.isNotEmpty(priceSalePriceArray[i]);i++) {
+				String productPriceRangeIdSalePrice = productPriceRangeIdSalePriceArray[i];
+				Double price = Double.parseDouble(priceSalePriceArray[i]);
+				Double qtyBegin = Double.parseDouble(qtyBeginSalePriceArray[i]);
+				Double qtyEnd = Double.parseDouble(qtyEndSalePriceArray[i]);
+				
+				if(StringUtils.isEmpty(productPriceRangeIdSalePrice)){//新增
+					
+					ProductPriceRange productPriceRange = new ProductPriceRange();
+					productPriceRange.setProduct(oldModel);
+					productPriceRange.setPriceLevel("salePrice");
+					productPriceRange.setPrice(price);
+					productPriceRange.setQtyBegin(qtyBegin);
+					productPriceRange.setQtyEnd(qtyEnd);
+					productPriceRangeDAO.save(productPriceRange);
+				}else{
+					ProductPriceRange  oldProductPriceRange = productPriceRangeDAO.load(productPriceRangeIdSalePrice);
 					oldProductPriceRange.setPrice(price);
 					oldProductPriceRange.setQtyBegin(qtyBegin);
 					oldProductPriceRange.setQtyEnd(qtyEnd);
@@ -500,6 +669,17 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 		String productPriceRangeWholesalePriceData = JSONUtil.toJson(productPriceRangeWholesalePriceList,propertiesProductPriceRange);
 		result.addData("productPriceRangeWholesalePriceData", productPriceRangeWholesalePriceData);
 		
+		List<ProductPriceRange> productPriceRangeVipPriceList = productPriceRangeDAO.queryByProduct(product,"vipPrice");
+		String productPriceRangeVipPriceData = JSONUtil.toJson(productPriceRangeVipPriceList,propertiesProductPriceRange);
+		result.addData("productPriceRangeVipPriceData", productPriceRangeVipPriceData);
+		
+		List<ProductPriceRange> productPriceRangeMemberPriceList = productPriceRangeDAO.queryByProduct(product,"memberPrice");
+		String productPriceRangeMemberPriceData = JSONUtil.toJson(productPriceRangeMemberPriceList,propertiesProductPriceRange);
+		result.addData("productPriceRangeMemberPriceData", productPriceRangeMemberPriceData);
+		
+		List<ProductPriceRange> productPriceRangeSalePriceList = productPriceRangeDAO.queryByProduct(product,"salePrice");
+		String productPriceRangeSalePriceData = JSONUtil.toJson(productPriceRangeSalePriceList,propertiesProductPriceRange);
+		result.addData("productPriceRangeSalePriceData", productPriceRangeSalePriceData);
 		result.setIsSuccess(true);
 		return result;
 	}
