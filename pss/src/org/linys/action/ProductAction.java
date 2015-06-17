@@ -45,7 +45,15 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 			String deleleIds = getParameter("deleleIds");
 			String productIds = getParameter("productIds");
 			String qtys = getParameter("qtys");
-			result = productService.save(model,defaultPackagingIds,deleleIds,productIds,qtys);
+			
+			String productPriceRangeIdsWholesalePrice = getParameter("productPriceRangeIdsWholesalePrice");
+			String deleleIdsWholesalePrice = getParameter("deleleIdsWholesalePrice");
+			String pricesWholesalePrice = getParameter("pricesWholesalePrice");
+			String qtyBeginsWholesalePrice = getParameter("qtyBeginsWholesalePrice");
+			String qtyEndsWholesalePrice = getParameter("qtyEndsWholesalePrice");
+			
+			result = productService.save(model,defaultPackagingIds,deleleIds,productIds,qtys,
+					productPriceRangeIdsWholesalePrice,deleleIdsWholesalePrice,pricesWholesalePrice,qtyBeginsWholesalePrice,qtyEndsWholesalePrice);
 		} catch (Exception e) {
 			result.setMessage("保存商品失败");
 			logger.error("保存商品失败", e);

@@ -144,11 +144,11 @@
 	    		$(defaultPackagingList).datagrid('loadData',LYS.ClearData);
 	    	}
 	    },
-	    toolbar:[{id:'save'+id,text:'保存',iconCls:'icon-save',handler:function(){onSave();}},'-',
-	             {id:'add'+id,text:'新增',iconCls:'icon-add',handler:function(){onAdd();}},'-',
-				{id:'delete'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDeleteIn();}},'-',
-	 			{id:'pre'+id,text:'上一笔',iconCls:'icon-left',handler:function(){onOpenIndex(-1);}},'-',
-	 			{id:'next'+id,text:'下一笔',iconCls:'icon-right',handler:function(){onOpenIndex(1);}},'-',
+	    toolbar:[{id:'save'+id,text:'保存',iconCls:'icon-save',handler:function(){onSave();}},
+	             {id:'add'+id,text:'新增',iconCls:'icon-add',handler:function(){onAdd();}},
+				{id:'delete'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDeleteIn();}},
+	 			{id:'pre'+id,text:'上一笔',iconCls:'icon-left',handler:function(){onOpenIndex(-1);}},
+	 			{id:'next'+id,text:'下一笔',iconCls:'icon-right',handler:function(){onOpenIndex(1);}},
 	 			{text:'退出',iconCls:'icon-cancel',handler:function(){
 	 					$(editDialog).dialog('close');
 	 				}
@@ -276,10 +276,45 @@
 			productIdArray.push(rows[i].productId);
 			qtyArray.push(rows[i].qty);
 		}
+		
+		$(wholesalePriceList).datagrid('endEdit', lastIndexWholesalePrice);
+		$(wholesalePriceList).datagrid('unselectAll');
+		lastIndexWholesalePrice = null;
+		var rowsWholesalePrice =  $(wholesalePriceList).datagrid('getRows');
+		for ( var i = 0; i < rowsWholesalePrice.length; i++) {
+			var rowWholesalePrice = rowsWholesalePrice[i];
+			if(rowWholesalePrice.price==0){
+				var msg = '第'+(i+1)+'行价格为0,请输入';
+				$.messager.alert('提示',msg,'warning');
+				return false;
+			}
+			if(rowWholesalePrice.qtyBegin>rowWholesalePrice.qtyEnd){
+				var msg = '第'+(i+1)+'行数量下限大于数量上限,请调整';
+				$.messager.alert('提示',msg,'warning');
+				return false;
+			}
+		}
+		var productPriceRangeIdWholesalePriceArray = new Array();
+		var priceWholesalePriceArray = new Array();
+		var qtyBeginWholesalePriceArray = new Array();
+		var qtyEndWholesalePriceArray = new Array();
+		for ( var i = 0; i < rowsWholesalePrice.length; i++) {
+			productPriceRangeIdWholesalePriceArray.push(rowsWholesalePrice[i].productPriceRangeId);
+			priceWholesalePriceArray.push(rowsWholesalePrice[i].price);
+			qtyBeginWholesalePriceArray.push(rowsWholesalePrice[i].qtyBegin);
+			qtyEndWholesalePriceArray.push(rowsWholesalePrice[i].qtyEnd);
+		}
+		
 		$('#defaultPackagingIds',editForm).val(defaultPackagingIdArray.join(LYS.join));
 		$('#deleleIds',editForm).val(deleleIdArray.join(LYS.join));
 		$('#productIds',editForm).val(productIdArray.join(LYS.join));
 		$('#qtys',editForm).val(qtyArray.join(LYS.join));
+		
+		$('#productPriceRangeIdsWholesalePrice',editForm).val(productPriceRangeIdWholesalePriceArray.join(LYS.join));
+		$('#deleleIdsWholesalePrice',editForm).val(deleleIdWholesalePriceArray.join(LYS.join));
+		$('#pricesWholesalePrice',editForm).val(priceWholesalePriceArray.join(LYS.join));
+		$('#qtyBeginsWholesalePrice',editForm).val(qtyBeginWholesalePriceArray.join(LYS.join));
+		$('#qtyEndsWholesalePrice',editForm).val(qtyEndWholesalePriceArray.join(LYS.join));
 		
 		$(editDialog).mask({maskMsg:'正在保存'});
 		return true;
@@ -373,7 +408,12 @@
 			   	var defaultPackagingData = eval("("+data.defaultPackagingData+")");
 				$(defaultPackagingList).datagrid('loadData',defaultPackagingData);
 				
+				var productPriceRangeWholesalePriceData = eval("("+data.productPriceRangeWholesalePriceData+")");
+				$(wholesalePriceList).datagrid('loadData',productPriceRangeWholesalePriceData);
+				
+				
 				deleleIdArray = new Array();
+				deleleIdWholesalePriceArray = new Array();
 				updateBtnStatus();
 				showImg();
 			}else{
@@ -444,7 +484,6 @@
 	var productList = $('#productList',selectDialog);
 	var lastIndex=null;
 	$(defaultPackagingList).datagrid({
-	  title:'默认商品组装',
 	  singleSelect:true,	
 	  fit:true,
 	  columns:[[
@@ -459,7 +498,7 @@
 	  rownumbers:true,
 	  pagination:false,
 	  toolbar:[	
-			{id:'addProduct'+id,text:'添加商品',iconCls:'icon-add',handler:function(){onSelectProduct()}},'-',
+			{id:'addProduct'+id,text:'添加商品',iconCls:'icon-add',handler:function(){onSelectProduct()}},
 			{id:'deleteProduct'+id,text:'删除商品',iconCls:'icon-remove',handler:function(){onDeleteProduct()}}
 	  ],
 	  onBeforeLoad:function(){
@@ -673,5 +712,65 @@
 			});
 		 }
 	 });
+	 
+	//------批发价格区间--------
+		var wholesalePriceList = $('#wholesalePriceList',editDialog);
+		var lastIndexWholesalePrice=null;
+		var deleleIdWholesalePriceArray = new Array();
+		$(wholesalePriceList).datagrid({
+		  singleSelect:true,	
+		  fit:true,
+		  columns:[[
+			    {field:'price',title:'价格',width:90,align:"center",editor:{type:'numberbox',options:{required:true,precision:5}}},
+				{field:'qtyBegin',title:'数量下限',width:100,align:"center",editor:{type:'numberbox',options:{required:true,precision:0}}},
+			    {field:'qtyEnd',title:'数量上限',width:100,align:"center",editor:{type:'numberbox',options:{required:true,precision:0}}}
+		  ]],
+		  rownumbers:true,
+		  pagination:false,
+		  toolbar:[	
+				{id:'addWholesalePrice'+id,text:'添加',iconCls:'icon-add',handler:function(){onAddWholesalePrice()}},
+				{id:'deleteWholesalePrice'+id,text:'删除',iconCls:'icon-remove',handler:function(){onDeleteWholesalePrice()}}
+		  ],
+		  onBeforeLoad:function(){
+				$(this).datagrid('rejectChanges');
+		  },
+		  onClickRow:function(rowIndex){
+			if (lastIndexWholesalePrice != rowIndex){
+				$(wholesalePriceList).datagrid('endEdit', lastIndexWholesalePrice);
+				$(wholesalePriceList).datagrid('beginEdit', rowIndex);
+				setEditingWholesalePrice(rowIndex);
+			}
+			lastIndexWholesalePrice = rowIndex;
+		  }
+		 });
+		function setEditingWholesalePrice(rowIndex){  
+		    var editors = $(wholesalePriceList).datagrid('getEditors', rowIndex);  
+		    var priceEditor = editors[0];  
+		    var qtyBeginEditor = editors[1];  
+		    var qtyEndEditor = editors[2];  
+		    qtyBeginEditor.target.bind('change', function(){ 
+		    	var qtyEnd = qtyEndEditor.target.val();
+		    }); 
+		    qtyBeginEditor.target.bind('change', function(){  
+		    });
+		} 
+		var onAddWholesalePrice = function(){
+			$(wholesalePriceList).datagrid('appendRow',{
+				productPriceRangeId:'',
+				 price:0,
+				 qtyBegin:0,
+				 qtyEnd:0
+			});
+		};
+		//删除批发价格区间
+		 var onDeleteWholesalePrice = function(){
+			 var row = $(wholesalePriceList).datagrid('getSelected');
+			 var rowIndex = $(wholesalePriceList).datagrid('getRowIndex',row);
+			 if(row.productPriceRangeId!=''){
+				 deleleIdWholesalePriceArray.push(row.productPriceRangeId);
+			 }
+			 $(wholesalePriceList).datagrid('deleteRow',rowIndex);
+			 lastIndexWholesalePrice = null;
+		 }
   }
 })(jQuery);   

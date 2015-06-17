@@ -7,6 +7,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.linys.dao.ProductPriceRangeDAO;
+import org.linys.model.Product;
 import org.linys.model.ProductPriceRange;
 import org.springframework.stereotype.Repository;
 /**
@@ -39,6 +40,21 @@ public class ProductPriceRangeDAOImpl extends
 			return list.get(0);
 		}
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ProductPriceRange> queryByProduct(Product product,
+			String priceLevel) {
+		Criteria criteria  = getCurrentSession().createCriteria(ProductPriceRange.class);
+		if(product!=null&&StringUtils.isNotEmpty(product.getProductId())){
+			criteria.add(Restrictions.eq("product", product));
+		}
+		if(StringUtils.isNotEmpty(priceLevel)){
+			criteria.add(Restrictions.eq("priceLevel", priceLevel));
+		}
+		criteria.addOrder(Order.asc("qtyBegin"));
+		return criteria.list();
 	}
 
 }

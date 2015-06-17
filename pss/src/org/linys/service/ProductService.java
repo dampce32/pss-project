@@ -52,9 +52,14 @@ public interface ProductService extends BaseService<Product,String>{
 	 * @param productIds 
 	 * @param deleleIds 
 	 * @param defaultPackagingIds 
+	 * @param qtyEndsWholesalePrice 
+	 * @param qtyBeginsWholesalePrice 
+	 * @param pricesWholesalePrice 
+	 * @param deleleIdsWholesalePrice 
+	 * @param productPriceRangeIdsWholesalePrice 
 	 * @return
 	 */
-	ServiceResult save(Product model, String defaultPackagingIds, String deleleIds, String productIds, String qtys);
+	ServiceResult save(Product model, String defaultPackagingIds, String deleleIds, String productIds, String qtys, String productPriceRangeIdsWholesalePrice, String deleleIdsWholesalePrice, String pricesWholesalePrice, String qtyBeginsWholesalePrice, String qtyEndsWholesalePrice);
 	/**
 	 * @Description: 选择商品
 	 * @Create: 2012-12-30 上午10:25:02

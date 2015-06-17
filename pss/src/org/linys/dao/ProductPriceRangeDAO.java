@@ -1,5 +1,8 @@
 package org.linys.dao;
 
+import java.util.List;
+
+import org.linys.model.Product;
 import org.linys.model.ProductPriceRange;
 /**
  * @description 商品价格区间DAO
@@ -18,5 +21,15 @@ public interface ProductPriceRangeDAO  extends BaseDAO<ProductPriceRange,String>
 	 * @return
 	 */
 	ProductPriceRange getPriceByQty(ProductPriceRange model);
+	/**
+	 * @description   查询商品product价格等级为priceLevel的价格区间
+	 * @createTime 2015-6-17 下午11:48:02
+	 * @author 以宋
+	 * @updateLogs 
+	 * @param product
+	 * @param priceLevel
+	 * @return
+	 */
+	List<ProductPriceRange> queryByProduct(Product product, String priceLevel);
 
 }

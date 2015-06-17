@@ -10,10 +10,12 @@ import org.apache.commons.lang.StringUtils;
 import org.linys.dao.DataDictionaryDAO;
 import org.linys.dao.DefaultPackagingDAO;
 import org.linys.dao.ProductDAO;
+import org.linys.dao.ProductPriceRangeDAO;
 import org.linys.dao.ProductTypeDAO;
 import org.linys.model.DataDictionary;
 import org.linys.model.DefaultPackaging;
 import org.linys.model.Product;
+import org.linys.model.ProductPriceRange;
 import org.linys.model.ProductType;
 import org.linys.service.ProductService;
 import org.linys.util.FileUtil;
@@ -33,6 +35,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 	private DataDictionaryDAO dataDictionaryDAO;
 	@Resource
 	private ProductTypeDAO productTypeDAO;
+	@Resource
+	private ProductPriceRangeDAO productPriceRangeDAO;
 	/*
 	 * (non-Javadoc)   
 	 * @see org.linys.service.ProductService#delete(org.linys.model.Product)
@@ -90,7 +94,8 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 	 * (non-Javadoc)   
 	 * @see org.linys.service.ProductService#save(org.linys.model.Product)
 	 */
-	public ServiceResult save(Product model, String defaultPackagingIds, String deleleIds, String productIds, String qtys) {
+	public ServiceResult save(Product model, String defaultPackagingIds, String deleleIds, String productIds, String qtys,
+			String productPriceRangeIdsWholesalePrice, String deleleIdsWholesalePrice, String pricesWholesalePrice, String qtyBeginsWholesalePrice, String qtyEndsWholesalePrice) {
 		ServiceResult result = new ServiceResult(false);
 		if(model==null){
 			result.setMessage("请填写商品信息");
@@ -158,6 +163,13 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 			}
 			
 		}
+		
+		String[] productPriceRangeIdWholesalePriceArray = StringUtil.split(productPriceRangeIdsWholesalePrice);
+		String[] deleleIdWholesalePriceArray = StringUtil.split(deleleIdsWholesalePrice);
+		String[] priceWholesalePriceArray = StringUtil.split(pricesWholesalePrice);
+		String[] qtyBeginWholesalePriceArray = StringUtil.split(qtyBeginsWholesalePrice);
+		String[] qtyEndWholesalePriceArray = StringUtil.split(qtyEndsWholesalePrice);
+		
 		if(StringUtils.isEmpty(model.getProductId())){//新增
 			//检查编号是否已存在
 			Product oldModel = productDAO.load("productCode",model.getProductCode());
@@ -169,6 +181,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 			model.setQtyStore(0.0);
 			model.setAmountStore(0.0);
 			productDAO.save(model);
+			
 			for (int i = 0; i < productIdArray.length&&StringUtils.isNotEmpty(productIdArray[i]); i++) {
 				String productId = productIdArray[i];
 				String qty = qtyArray[i];
@@ -187,6 +200,20 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 					defaultPackaging.setQty(0);
 				}
 				defaultPackagingDAO.save(defaultPackaging);
+			}
+			
+			for (int i = 0; i < priceWholesalePriceArray.length; i++) {
+				Double price = Double.parseDouble(priceWholesalePriceArray[i]);
+				Double qtyBegin = Double.parseDouble(qtyBeginWholesalePriceArray[i]);
+				Double qtyEnd = Double.parseDouble(qtyEndWholesalePriceArray[i]);
+				
+				ProductPriceRange productPriceRange = new ProductPriceRange();
+				productPriceRange.setProduct(model);
+				productPriceRange.setPriceLevel("wholesalePrice");
+				productPriceRange.setPrice(price);
+				productPriceRange.setQtyBegin(qtyBegin);
+				productPriceRange.setQtyEnd(qtyEnd);
+				productPriceRangeDAO.save(productPriceRange);
 			}
 		}else{
 			Product oldModel = productDAO.load(model.getProductId());
@@ -274,7 +301,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 				for (String deleleId : deleleIdArray) {
 					if(StringUtils.isNotEmpty(deleleId)){
 						DefaultPackaging  oldDefaultPackaging = defaultPackagingDAO.load(deleleId);
-						if(oldModel!=null){
+						if(oldDefaultPackaging!=null){
 							defaultPackagingDAO.delete(oldDefaultPackaging);
 						}
 					}
@@ -308,6 +335,40 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 					}else{
 						oldDefaultPackaging.setQty(0);
 					}
+				}
+			}
+			//删除已删的批发价格区间
+			if(!"".equals(deleleIdWholesalePriceArray)){
+				for (String deleleIdWholesalePrice : deleleIdWholesalePriceArray) {
+					if(StringUtils.isNotEmpty(deleleIdWholesalePrice)){
+						ProductPriceRange  oldProductPriceRange = productPriceRangeDAO.load(deleleIdWholesalePrice);
+						if(oldProductPriceRange!=null){
+							productPriceRangeDAO.delete(oldProductPriceRange);
+						}
+					}
+				}
+			}
+			//根据Id更新或新增
+			for (int i = 0 ;i<productPriceRangeIdWholesalePriceArray.length;i++) {
+				String productPriceRangeIdWholesalePrice = productPriceRangeIdWholesalePriceArray[i];
+				Double price = Double.parseDouble(priceWholesalePriceArray[i]);
+				Double qtyBegin = Double.parseDouble(qtyBeginWholesalePriceArray[i]);
+				Double qtyEnd = Double.parseDouble(qtyEndWholesalePriceArray[i]);
+				
+				if(StringUtils.isEmpty(productPriceRangeIdWholesalePrice)){//新增
+					
+					ProductPriceRange productPriceRange = new ProductPriceRange();
+					productPriceRange.setProduct(oldModel);
+					productPriceRange.setPriceLevel("wholesalePrice");
+					productPriceRange.setPrice(price);
+					productPriceRange.setQtyBegin(qtyBegin);
+					productPriceRange.setQtyEnd(qtyEnd);
+					productPriceRangeDAO.save(productPriceRange);
+				}else{
+					ProductPriceRange  oldProductPriceRange = productPriceRangeDAO.load(productPriceRangeIdWholesalePrice);
+					oldProductPriceRange.setPrice(price);
+					oldProductPriceRange.setQtyBegin(qtyBegin);
+					oldProductPriceRange.setQtyEnd(qtyEnd);
 				}
 			}
 		}
@@ -433,6 +494,12 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String> impleme
 				"qty","product.buyingPrice:price","amount"};
 		String defaultPackagingData = JSONUtil.toJson(defaultPackagingList,propertiesDetail);
 		result.addData("defaultPackagingData", defaultPackagingData);
+		
+		List<ProductPriceRange> productPriceRangeWholesalePriceList = productPriceRangeDAO.queryByProduct(product,"wholesalePrice");
+		String[] propertiesProductPriceRange = {"productPriceRangeId","price","qtyBegin","qtyEnd"};
+		String productPriceRangeWholesalePriceData = JSONUtil.toJson(productPriceRangeWholesalePriceList,propertiesProductPriceRange);
+		result.addData("productPriceRangeWholesalePriceData", productPriceRangeWholesalePriceData);
+		
 		result.setIsSuccess(true);
 		return result;
 	}
