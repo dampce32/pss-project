@@ -285,7 +285,7 @@
 				return false;
 			}
 			if(rowWholesalePrice.qtyBegin>rowWholesalePrice.qtyEnd){
-				var msg = '第'+(i+1)+'行数量下限大于数量上限,请调整';
+				var msg = '第'+(i+1)+'行批发价格区间数量下限大于数量上限,请调整';
 				$.messager.alert('提示',msg,'warning');
 				return false;
 			}
@@ -313,7 +313,7 @@
 				return false;
 			}
 			if(rowVipPrice.qtyBegin>rowVipPrice.qtyEnd){
-				var msg = '第'+(i+1)+'行数量下限大于数量上限,请调整';
+				var msg = '第'+(i+1)+'行VIP价格区间数量下限大于数量上限,请调整';
 				$.messager.alert('提示',msg,'warning');
 				return false;
 			}
@@ -341,7 +341,7 @@
 				return false;
 			}
 			if(rowMemberPrice.qtyBegin>rowMemberPrice.qtyEnd){
-				var msg = '第'+(i+1)+'行数量下限大于数量上限,请调整';
+				var msg = '第'+(i+1)+'行会员价格区间数量下限大于数量上限,请调整';
 				$.messager.alert('提示',msg,'warning');
 				return false;
 			}
@@ -369,7 +369,7 @@
 				return false;
 			}
 			if(rowSalePrice.qtyBegin>rowSalePrice.qtyEnd){
-				var msg = '第'+(i+1)+'行数量下限大于数量上限,请调整';
+				var msg = '第'+(i+1)+'行零售价格区间数量下限大于数量上限,请调整';
 				$.messager.alert('提示',msg,'warning');
 				return false;
 			}
